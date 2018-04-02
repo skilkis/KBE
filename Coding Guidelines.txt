@@ -17,6 +17,8 @@ p : propulsion
 Examples:
 aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 
+THIS IS SANS ADDITION
+
 a_mtow (Aircraft Maximum Take-Off Weight)
 w_airfoil (Wing Airfoil)
 
