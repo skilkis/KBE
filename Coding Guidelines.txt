@@ -4,4 +4,19 @@ https://stackoverflow.com/questions/1523427/what-is-the-common-header-format-of-
 
 BLAH BLAH BLAH THIS IS A TEST
 
+Variable Naming Syntax:
+
+ParentObject_ChildObject_Clarification
+
+a : aircraft
+f : fuselage
+w : wing
+t : tail
+p : propulsion
+
+Examples:
+
+a_mtow (Aircraft Maximum Take-Off Weight)
+w_airfoil (Wing Airfoil)
+
 This is another test
