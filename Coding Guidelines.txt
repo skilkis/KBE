@@ -13,11 +13,9 @@ f : fuselage
 w : wing
 t : tail
 p : propulsion
-I am Nelson
-Examples:
-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 
-THIS IS SANS ADDITION
+Examples:
+
 
 a_mtow (Aircraft Maximum Take-Off Weight)
 w_airfoil (Wing Airfoil)
