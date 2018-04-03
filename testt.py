@@ -13,6 +13,8 @@ rho_cr = 0.9091         #ISA density at 3000m.
 
 V_s_hand = 8            #Assumed Hand Launched Stall Speed
 V_s_nonhand = 20        #Assiumed Non-Hand-Launched Stall Speed
+
+
 ## Wing Loading Requirements For Stall Speed for Various C_Lmax
 WsStall_hand_1 = 0.5*rho*C_Lmax[0]*V_s_hand**2 #Array of 3 wing loadings with various cl max
 WsStall_hand_2 = 0.5*rho*C_Lmax[1]*V_s_hand**2 #Array of 3 wing loadings with various cl max
@@ -84,13 +86,13 @@ plt.plot(Ws_range,WpCr_1,'b', label = 'RC, AR = 6')
 plt.plot(Ws_range,WpCr_2,'g', label = 'RC, AR = 9')
 plt.plot(Ws_range,WpCr_3,'r', label = 'RC, AR = 12')
 
-plt.plot(Ws_range,WpCg_1,'b.', label = 'Gradient, C_L = 0.8')
-plt.plot(Ws_range,WpCg_2,'g.', label = 'Gradient, C_L = 1.05')
-plt.plot(Ws_range,WpCg_3,'r.', label = 'Gradient, C_L = 1.3')
+plt.plot(Ws_range,WpCg_1,'b-.', label = 'Gradient, C_Lmax = 1')
+plt.plot(Ws_range,WpCg_2,'g-.', label = 'Gradient, C_Lmax = 1.25')
+plt.plot(Ws_range,WpCg_3,'r-.', label = 'Gradient, C_Lmax = 1.5')
 
-plt.axvline(x= WsStall_hand_1, label = 'C_Lmax_h = 1', color = 'c')
-plt.axvline(x= WsStall_hand_2, label = 'C_Lmax_h = 1.25', color = 'm')
-plt.axvline(x= WsStall_hand_3,  label = 'C_Lmax_h = 1.5', color = 'y')
+plt.axvline(x= WsStall_hand_1, label = 'C_Lmax_h = 1', color = 'c', linestyle = '-.')
+plt.axvline(x= WsStall_hand_2, label = 'C_Lmax_h = 1.25', color = 'm', linestyle = '-.')
+plt.axvline(x= WsStall_hand_3,  label = 'C_Lmax_h = 1.5', color = 'y', linestyle = '-.')
 plt.axvline(x= WsStall_nonhand_1, label = 'C_Lmax_nh = 1', color = 'c')
 plt.axvline(x= WsStall_nonhand_2, label = 'C_Lmax_nh = 1.25', color = 'm')
 plt.axvline(x= WsStall_nonhand_3,  label = 'C_Lmax_nh = 1.5', color = 'y')
