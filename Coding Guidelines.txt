@@ -13,6 +13,8 @@ f : fuselage
 w : wing
 t : tail
 p : propulsion
+pl : payload
+b : battery
 
 Examples:
 
