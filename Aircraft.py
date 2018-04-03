@@ -1,14 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-""" Aircraft.py aims to instantiate all primitive classes of a parametric UAV based on user-input of configuration type
-    Other user-inputs cover global aircraft attributes and allow changes either through the use of the ParaPy GUI or
-    through the use of the userinput.xlsx file.
-"""
-
 # Required ParaPy Modules
-# from parapy.geom import *
-# from parapy.core import *
+from parapy.geom import *
+from parapy.core import *
 
 # Useful package for checking working directory as well as the files inside this directory
 import os
@@ -16,81 +11,57 @@ import os
 # Necessary package for importing Excel Files
 import xlrd
 
-
-# class Aircraft(Base):
-#
-#     endurance = Input(2.0)
-#
-#     @Attribute
-#     def get_userinput(self):
-#         """
-#         An attribute, that when evaluated, reads the input excel file present in the working directory and updates input values
-#         of the Aircraft class
-#
-#         :return: Array of updated values which over-write the default ones in the Aircraft class
-#         """
-#
-#         # Assign spreadsheet filename to `file`
-#         filename = 'userinput.xlsx'
-#
-#         # Load Excel file specified by filename
-#         ex = pd.ExcelFile(filename)
-#
-#         # Load a sheet into a DataFrame by name: userinputs
-#         userinputs = ex.parse('export_ready_inputs')
-#
-#         self.endurance = 0.5
-#
-#         print(userinputs.range)
-#
-#         return self.endurance
-#
-#
-# if __name__ == '__main__':
-#     from parapy.gui import display
-#
-#     obj = Aircraft(label="myAircraft")
-#     display(obj)
+# These variables determine the default filename/sheetname(s)
+filename = 'userinput.xlsx'
+sheetname = 'export_ready_inputs'
 
 
+class Aircraft(Base):
+    """ Aircraft.py aims to instantiate all primitive classes of a parametric UAV based on user-input of configuration type
+        Other user-inputs cover global aircraft attributes and allow changes either through the use of the ParaPy GUI or
+        through the use of the userinput.xlsx file.
+    """
 
-# d = {}
-# wb = xlrd.open_workbook('userinput.xlsx')
-# sh = wb.sheet_by_name('export_ready_inputs')
-# for i in range(138):
-#     cell_value_class = sh.cell(i,2).value
-#     cell_value_id = sh.cell(i,0).value
-#     d[cell_value_class] = cell_value_id
-
-wb = xlrd.open_workbook('userinput.xlsx')
-ws = wb.sheet_by_name('export_ready_inputs')
-
-a_range = [i[1] for i in ws._cell_values if i[0] == 'range'],
-a_endurance = [i[1] for i in ws._cell_values if i[0] == 'endurance'],
-pl_weight = [i[1] for i in ws._cell_values if i[0] == 'payload'],
-pl_type = [i[1] for i in ws._cell_values if i[0] == 'payload_size'],
-a_mtow = [i[1] for i in ws._cell_values if i[0] == 'mtow'],
-a_configuration = [i[1] for i in ws._cell_values if i[0] == 'configuration'],
-a_handlaunch = [i[1] for i in ws._cell_values if i[0] == 'handlaunch'],
-a_portable = [i[1] for i in ws._cell_values if i[0] == 'portable']
-
-userinputs=[range, endurance, weight_payload, weight_mtow, size_payload, configuration, handlaunch, portable]
+    user_input_file = Input([filename, sheetname])
+    performance_goal = Input('endurance')
+    goal_value = Input(1.0)
+    weight_target = Input('payload')
+    target_value = Input(0.25)
+    payload_type = Input('eoir')
+    configuration = Input('conventional')
+    handlaunch = Input(True)
+    portable = Input(True)
 
 
+    @Attribute
+    def get_userinput(self):
+        """ An attribute, that when evaluated, reads the input excel file present in the working directory and updates input values
+        of the Aircraft class
 
-# for col in range(ws.ncols):
-#     column_names.append(str(ws.cell_value(0, col)))
-# transform the workbook to a list of dictionaries
-# data = []
-# [item for item in column_names if ]
-# for row in range(1, ws.nrows):
-#     current_row = {}
-#     for col in range(ws.ncols):
-#         current_row[column_names[col]] = ws.cell_value(row, col)
-#     data.append(current_row)
-# print data
+        :return: Array of updated values which over-write the default ones in the Aircraft class
+        """
 
-# x = {}
-# x['name']=0.2
+        # Load Excel file specified by filename and open Excel sheet specified by sheetname
+        wb = xlrd.open_workbook(self.user_input_file[0])
+        ws = wb.sheet_by_name(self.user_input_file[1])
 
+        # Extracts relevant inputs from user excel-file in which the variable order does not matter
+        # if correct variable names are not present no inputs will be replaced in the GUI
 
+        self.performance_goal = [str(i[1]) for i in ws._cell_values if i[0] == 'performance_goal'][0]
+        self.goal_value = [i[1] for i in ws._cell_values if i[0] == 'goal_value'][0]
+        self.weight_target = [str(i[1]) for i in ws._cell_values if i[0] == 'weight_target'][0]
+        self.target_value = [i[1] for i in ws._cell_values if i[0] == 'target_value'][0]
+        self.payload_type = [str(i[1]) for i in ws._cell_values if i[0] == 'payload_type'][0]
+        self.configuration = [str(i[1]) for i in ws._cell_values if i[0] == 'configuration'][0]
+        self.handlaunch = [True if str(i[1]) == 'True' else False for i in ws._cell_values if i[0] == 'handlaunch'][0]
+        self.portable = [True if str(i[1]) == 'True' else False for i in ws._cell_values if i[0] == 'portable'][0]
+
+        return (self.performance_goal, self.goal_value, self.weight_target, self.target_value, self.payload_type,
+                self.configuration, self.handlaunch, self.portable)
+
+if __name__ == '__main__':
+    from parapy.gui import display
+
+    obj = Aircraft(label="myAircraftParameters")
+    display(obj)
