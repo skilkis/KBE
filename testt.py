@@ -38,7 +38,9 @@ e_factor = 0.8
 
 
 
-Ws_range = np.linspace(1,400,100)  #Dummy array for iterating in W/P Equations Below.
+
+Ws_range = [float(i) for i in range(1,401)]
+print Ws_range
 
 ## Calculate Required Power for Climb Rate Requirement at 3000 m for various AR.
 WpCr_1 = []  #Empty List for appending W/P Data for AR[0]
@@ -60,7 +62,9 @@ for i in range(0,len(Ws_range)):
 
 ## Below are the Equations for the Required Climb Gradient of G
 
-C_Lcg = [C_Lmax[0] - 0.2, C_Lmax[1] - 0.2, C_Lmax[2] - 0.2 ]  #subtracting 0.2 from climb gradient C_l to keep away from stall during climb out
+
+C_Lcg = [C_Lmax[0] - 0.2, C_Lmax[1] - 0.2, C_Lmax[2] - 0.2]
+#subtracting 0.2 from climb gradient C_l to keep away from stall during climb out
 
 
 C_D = [] #For loop to generate C_D for Climb Gradient Equation, assuming
@@ -101,6 +105,3 @@ plt.xlabel('W/S [N*m^-2]')
 plt.legend()
 plt.title('Wing and Power Loading (RC = 1 m/s)')
 plt.show()
-
-
-
