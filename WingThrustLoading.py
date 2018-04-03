@@ -34,13 +34,6 @@ class WingPowerLoading(GeomBase):
     RC = 1.524                  #  Assumption for Required Climb Rate, Same as Sparta UAV 1.1.2.
     G = 0.507                   #  Assumed Climb Gradient to clear 10m object 17m away.
 
-    C_Lcg = [C_Lmax[0] - 0.2, C_Lmax[1] - 0.2, C_Lmax[2] - 0.2]
-        #  Above we subtract 0.2 from climb gradient C_l to keep away from stall during climb out
-
-    C_D = []  # For loop to generate C_D for Climb Gradient Equation.
-    for i in range(0, len(C_Lcg)):
-        C_D1 = C_D0 + C_Lcg[i] ** 2 / (pi * AR[i] * e_factor)
-        C_D.append(C_D1)
 
     WS_range = [float(i) for i in range(1, 401)]
     #  Above is a dummy list of wing loadings for iterating in the Power Loading Equations.
@@ -84,6 +77,24 @@ class WingPowerLoading(GeomBase):
 
 
 #  In the following block, the equations for the required power loading are coded.
+
+    @Attribute
+    def climblift(self):
+        C_Lcg = [self.C_Lmax[0] - 0.2, self.C_Lmax[1] - 0.2, self.C_Lmax[2] - 0.2]
+        #  Above we subtract 0.2 from climb gradient C_l to keep away from stall during climb out
+        return C_Lcg
+
+    @Attribute
+    def climbdrag(self):    #  For loop to generate C_D for Climb Gradient Equation.
+        C_Dcg = []
+        for i in range(0, len(self.climblift)):
+            C_Dcg1 = self.C_D0 + self.climblift[i] ** 2 / (pi * self.AR[i] * self.e_factor)
+            C_Dcg.append(C_Dcg1)
+        C_Dcg = [C_Dcg[0], C_Dcg[1], C_Dcg[2]]
+        return C_Dcg
+
+
+
     @Attribute
     def WP_rate(self):
         ## Calculate Required Power for Climb Rate Requirement at 3000 m for various AR.
@@ -91,43 +102,32 @@ class WingPowerLoading(GeomBase):
         for i in range(0, len(self.WS_range)):
             WpCri_1 = self.n_p / (self.RC + sqrt(self.WS_range[i] * (2.0 / self.rho_cr) * (sqrt(self.C_D0) / (1.81 * ((self.AR[0] * e) ** (3.0 / 2.0))))))
             WpCr_1.append(WpCri_1)  # Above is calculation of W/P for Rate of Climb at 3km alt.
-
         WpCr_2 = []  # Empty List for appending W/P Data for AR[1].
         for i in range(0, len(self.WS_range)):
             WpCri_2 = self.n_p / (self.RC + sqrt(self.WS_range[i] * (2.0 / self.rho_cr) * (sqrt(self.C_D0) / (1.81 * ((self.AR[1] * e) ** (3.0 / 2.0))))))
             WpCr_2.append(WpCri_2)  # Above is calculation of W/P for Rate of Climb at 3km alt.
-
         WpCr_3 = []  # Empty List for appending W/P Data for AR[2].
         for i in range(0, len(self.WS_range)):
             WpCri_3 = self.n_p / (self.RC + sqrt(self.WS_range[i] * (2.0 / self.rho_cr) * (sqrt(self.C_D0) / (1.81 * ((self.AR[2] * e) ** (3.0 / 2.0))))))
             WpCr_3.append(WpCri_3)  # Above is calculation of W/P for Rate of Climb at 3km alt.
         return [WpCr_1,WpCr_2,WpCr_3]
 
-
-
-
-
+    @Attribute
     def WP_gradient(self):
         ## Calculate Required Power for Climb Gradient Requirement 10m high object 10m away.
         WpCg_1 = []
         for i in range(0, len(self.WS_range)):
-            WpCgi_1 = self.n_p / (sqrt(self.WS_range[i] * (2.0 / self.rho) * (1 / self.C_Lcg[0])) * (self.G + (self.C_D[0] / self.C_Lcg[0])))
+            WpCgi_1 = self.n_p / (sqrt(self.WS_range[i] * (2.0 / self.rho) * (1 / self.climblift[0])) * (self.G + (self.climbdrag[0] / self.climblift[0])))
             WpCg_1.append(WpCgi_1)
         WpCg_2 = []
         for i in range(0, len(self.WS_range)):
-            WpCgi_2 = self.n_p / (sqrt(self.WS_range[i] * (2.0 / self.rho) * (1 / self.C_Lcg[1])) * (self.G + (self.C_D[1] / self.C_Lcg[1])))
+            WpCgi_2 = self.n_p / (sqrt(self.WS_range[i] * (2.0 / self.rho) * (1 / self.climblift[1])) * (self.G + (self.climbdrag[1] / self.climblift[1])))
             WpCg_2.append(WpCgi_2)
         WpCg_3 = []
         for i in range(0, len(self.WS_range)):
-            WpCgi_3 = self.n_p / (sqrt(self.WS_range[i] * (2.0 / self.rho) * (1 / self.C_Lcg[2])) * (self.G + (self.C_D[2] / self.C_Lcg[2])))
+            WpCgi_3 = self.n_p / (sqrt(self.WS_range[i] * (2.0 / self.rho) * (1 / self.climblift[2])) * (self.G + (self.climbdrag[2] / self.climblift[2])))
             WpCg_3.append(WpCgi_3)
         return [WpCg_1, WpCg_2, WpCg_3]
-
-
-
-
-
-
 
 
 
