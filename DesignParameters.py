@@ -12,15 +12,16 @@ import os
 import xlrd
 
 # Importing Necessary Classes
-from WingThrustLoading import WingPowerLoading
+from WingPowerLoading import WingPowerLoading
+from WeightEstimator import *
 
 # These variables determine the default filename/sheetname(s)
 filename = 'userinput.xlsx'
 sheetname = 'export_ready_inputs'
 
 
-class Aircraft(Base):
-    """ Aircraft.py aims to instantiate all primitive classes of a parametric UAV based on user-input of configuration type
+class DesignParameters(Base):
+    """ DesignParameters.py aims to instantiate all primitive classes of a parametric UAV based on user-input of configuration type
         Other user-inputs cover global aircraft attributes and allow changes either through the use of the ParaPy GUI or
         through the use of the userinput.xlsx file.
     """
@@ -65,10 +66,14 @@ class Aircraft(Base):
 
     @Part
     def WingPowerLoading(self):
-        return WingPowerLoading(pass_down="performance_goal, goal_value, weight_target, target_value")
+        return WingPowerLoading(pass_down="handlaunch")
+
+    @Part
+    def WeightEstimation(self):
+        return ClassOne(pass_down="weight_target, target_value")
 
 if __name__ == '__main__':
     from parapy.gui import display
 
-    obj = Aircraft(label="DesignParameters")
+    obj = DesignParameters(label="DesignParameters")
     display(obj)

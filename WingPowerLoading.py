@@ -1,3 +1,5 @@
+
+# TODO Update Header
 #This class will perform the Class I weight estimation for the fixed wing electric drone
 #based on the input MTOW.
 #There are assumed values for: C_lmax, Stall speed, propellor efficiency,
@@ -14,27 +16,16 @@ import matplotlib.pyplot as plt
 
 class WingPowerLoading(Base):
 
-    # INPUTS:
-    #: Defines which weight the user is trying to design for, current options are 'payload', 'mtow'
-    #: :type: string
-    weight_target = Input('payload')
-
-    #: Value attributed to the target weight defined above
-    #: If weight_target = 'mtow' then target value is MTOW = target_value
-    #: :type: float
-    target_value = Input(0.25)
-
     #: Boolean operator to determine if the user requires the UAV to be hand launched
     #: This parameter changes the stall-speed used for the Wing Loading
+    #: :type: Boolean
     handlaunch = Input(True)
 
-    #                             #  The inputs required for the Wing/Power Loading Diagrams are Below:
     C_Lmax = Input([1.0, 1.25, 1.5])  # These are 3 assumed values for C_Lmax
     AR = Input([6, 9, 12])  # These are the 3 assumed Aspect Ratios
 
     n_p = Input(0.7)  # Assumption for the propellor efficiency.
     e_factor = Input(0.8)  # Assumed Oswald Efficiency Factor.
-
 
     rho = 1.225                 #  STD ISA sea level density
     rho_cr = 0.9091             #  ISA 3km Density for climb rate power loading equation.
@@ -47,27 +38,9 @@ class WingPowerLoading(Base):
     G = 0.507                   #  Assumed Climb Gradient to clear 10m object 17m away.
 
 
-#  This first Block is an estmiation of MTOW if user supplies m_pl also, this estimates m_pl
-#  if user supplies MTOW with the same equation.
-    @Attribute
-    def MTOW(self):
-        if self.weight_target == 'payload':
-            MTOW = 4.7551*self.target_value+0.59962
-            #  Estimation of MTOW from payload mass from DSE Midterm Report.
-            #  It is valid for UAVs with payload masses between 0 and 50 kg.
-            return MTOW
-
-    @Attribute
-    def m_pl_derived(self):
-        if self.weight_target == 'mtow':
-            m_pl_derived = 0.2103*self.target_value-0.1261
-            #  Estimation of m_pl from MTOW with reveresed Eq.
-            return m_pl_derived
-
-
     @Attribute
     def wingloading(self):
-        # REMEMBER TO ADD ATTRIBUTE HEADER COMMENT HERE
+        # TODO REMEMBER TO ADD ATTRIBUTE HEADER COMMENT HERE
         if self.handlaunch:
             V_s = self.V_s_hand
             ws_string = '_hand'
