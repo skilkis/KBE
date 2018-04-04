@@ -11,8 +11,8 @@ import xlrd
 from parapy.core import*
 
 # Importing Necessary Classes
-from Design.wingpowerloading import WingPowerLoading
-from Design.weightestimator import *
+from design.wingpowerloading import WingPowerLoading
+from design.weightestimator import *
 
 # These variables determine the default filename/sheetname(s)
 filename = 'userinput.xlsx'
@@ -74,5 +74,5 @@ class ParameterGenerator(Base):
 if __name__ == '__main__':
     from parapy.gui import display
 
-    obj = ParameterGenerator(label="Design Parameters")
+    obj = ParameterGenerator(label="design Parameters")
     display(obj)

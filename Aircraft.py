@@ -1,6 +1,4 @@
-from Design.wingpowerloading import WingPowerLoading
-from Design.weightestimator import *
-from Design.paramgenerator import *
+from design.paramgenerator import *
 
 
 class Aircraft(Base):
