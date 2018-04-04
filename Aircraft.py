@@ -38,8 +38,8 @@ class Aircraft(Base):
 
     @Attribute
     def get_userinput(self):
-        """ An attribute, that when evaluated, reads the input excel file present in the working directory and updates input values
-        of the Aircraft class
+        """ An attribute, that when evaluated, reads the input excel file present in the working directory and updates
+        input values of the Aircraft class
 
         :return: Array of updated values which over-write the default ones in the Aircraft class
         """
@@ -63,12 +63,12 @@ class Aircraft(Base):
         return (self.performance_goal, self.goal_value, self.weight_target, self.target_value, self.payload_type,
                 self.configuration, self.handlaunch, self.portable)
 
-    # @Part
-    # def WingPowerLoading(self):
-    #     return WingPowerLoading()
+    @Part
+    def WingPowerLoading(self):
+        return WingPowerLoading(pass_down="performance_goal, goal_value, weight_target, target_value")
 
 if __name__ == '__main__':
     from parapy.gui import display
 
-    obj = Aircraft(label="myAircraftParameters")
+    obj = Aircraft(label="DesignParameters")
     display(obj)
