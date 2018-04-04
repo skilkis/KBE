@@ -10,7 +10,7 @@ from parapy.core import *
 from parapy.geom import *
 from math import *
 import matplotlib.pyplot as plt
-
+from Aircraft import Aircraft
 
 class WingPowerLoading(GeomBase):
                                 #  The inputs are Below:
@@ -37,6 +37,10 @@ class WingPowerLoading(GeomBase):
 
     WS_range = [float(i) for i in range(1, 401)]
     #  Above is a dummy list of wing loadings for iterating in the Power Loading Equations.
+
+
+
+
 
 #  This first Block is an estmiation of MTOW if user supplies m_pl also, this estimates m_pl
 #  if user supplies MTOW with the same equation.
@@ -155,6 +159,13 @@ class WingPowerLoading(GeomBase):
         plt.title('Wing and Power Loading (RC = 1 m/s)')
         plt.show()
         return "Plot generated and closed"
+
+
+  #  @Attribute
+  #  def design_point(self):
+  #      hand_launch_choice = Aircraft.handlaunch
+  #      return hand_launch_choice
+
 
 
 
