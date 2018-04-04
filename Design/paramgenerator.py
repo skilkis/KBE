@@ -2,26 +2,25 @@
 # -*- coding: utf-8 -*-
 
 # Required ParaPy Modules
-from parapy.geom import *
-from parapy.core import *
 
 # Useful package for checking working directory as well as the files inside this directory
-import os
 
 # Necessary package for importing Excel Files
 import xlrd
 
+from parapy.core import*
+
 # Importing Necessary Classes
-from WingPowerLoading import WingPowerLoading
-from WeightEstimator import *
+from Design.wingpowerloading import WingPowerLoading
+from Design.weightestimator import *
 
 # These variables determine the default filename/sheetname(s)
 filename = 'userinput.xlsx'
 sheetname = 'export_ready_inputs'
 
 
-class DesignParameters(Base):
-    """ DesignParameters.py aims to instantiate all primitive classes of a parametric UAV based on user-input of configuration type
+class ParameterGenerator(Base):
+    """ paramgenerator.py aims to instantiate all primitive classes of a parametric UAV based on user-input of configuration type
         Other user-inputs cover global aircraft attributes and allow changes either through the use of the ParaPy GUI or
         through the use of the userinput.xlsx file.
     """
@@ -65,15 +64,15 @@ class DesignParameters(Base):
                 self.configuration, self.handlaunch, self.portable)
 
     @Part
-    def WingPowerLoading(self):
-        return WingPowerLoading(pass_down="handlaunch")
+    def wingpowerloading(self):
+        return WingPowerLoading(pass_down="handlaunch", label="Wing & Thrust Loading")
 
     @Part
-    def WeightEstimation(self):
-        return ClassOne(pass_down="weight_target, target_value")
+    def weightestimator(self):
+        return ClassOne(pass_down="weight_target, target_value", label="Weight Estimation")
 
 if __name__ == '__main__':
     from parapy.gui import display
 
-    obj = DesignParameters(label="DesignParameters")
+    obj = ParameterGenerator(label="Design Parameters")
     display(obj)
