@@ -11,6 +11,9 @@ import os
 # Necessary package for importing Excel Files
 import xlrd
 
+# Importing Necessary Classes
+from WingThrustLoading import WingPowerLoading
+
 # These variables determine the default filename/sheetname(s)
 filename = 'userinput.xlsx'
 sheetname = 'export_ready_inputs'
@@ -59,6 +62,10 @@ class Aircraft(Base):
 
         return (self.performance_goal, self.goal_value, self.weight_target, self.target_value, self.payload_type,
                 self.configuration, self.handlaunch, self.portable)
+
+    # @Part
+    # def WingPowerLoading(self):
+    #     return WingPowerLoading()
 
 if __name__ == '__main__':
     from parapy.gui import display
