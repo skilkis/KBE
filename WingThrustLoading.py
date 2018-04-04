@@ -47,13 +47,6 @@ class WingPowerLoading(Base):
     G = 0.507                   #  Assumed Climb Gradient to clear 10m object 17m away.
 
 
-    WS_range = [float(i) for i in range(1, 401)]
-    #  Above is a dummy list of wing loadings for iterating in the Power Loading Equations.
-
-
-
-
-
 #  This first Block is an estmiation of MTOW if user supplies m_pl also, this estimates m_pl
 #  if user supplies MTOW with the same equation.
     @Attribute
@@ -74,8 +67,7 @@ class WingPowerLoading(Base):
 
     @Attribute
     def wingloading(self):
-
-# REMEMBER TO ADD ATTRIBUTE HEADER COMMENT HERE
+        # REMEMBER TO ADD ATTRIBUTE HEADER COMMENT HERE
         if self.handlaunch:
             V_s = self.V_s_hand
             ws_string = '_hand'
@@ -86,26 +78,6 @@ class WingPowerLoading(Base):
         for i in range(len(self.C_Lmax)):
             ws.append(0.5 * self.rho * self.C_Lmax[i] * V_s ** 2)
         return {'values': ws, 'flag': ws_string}
-
-#  In the following block, the equations for the required power loading are coded.
-
-
-    @Attribute
-    def climbcoefs(self):
-        """ An attribute which adds a safety factor to the lift coefficient in order to not stall out
-        during climb-out. Modifying the lift coefficient changes drag coefficients as well due to induced drag
-        the latter part of this code computes the new drag coefficients.
-
-        :return: Dictionary containing modified lift coefficients ('climb_lift') and drag coefficients ('climb_drag')
-        """
-        C_Lcg = [num - 0.2 for num in self.C_Lmax]
-        # Above we subtract 0.2 from climb gradient C_l to keep away from stall during climb out
-        C_Dcg = []
-        for i in range(len(self.AR)):
-            C_Dcg.append([(self.C_D0 + num ** 2 / (pi * self.AR[i] * self.e_factor)) for num in self.C_Lmax])
-            # Due to how C_Dcg is defined the first array dim is aspect ratios, the second dim is lift coefficient
-            # Thus accessing the 2nd aspect ratio and 1st lift coefficient would be C_dcg[1][0]
-        return {'lift': C_Lcg, 'drag': C_Dcg}
 
     @Attribute
     def powerloading(self):
@@ -124,16 +96,18 @@ class WingPowerLoading(Base):
 
             ## Calculate Required Power for Climb Gradient Requirement 10m high object 10m away.
 
-        #Picks the middle-aspect ratio and proceeds
+        #Picks the first aspect ratio and proceeds since the climb-gradient requirement is not influenced heavily by AR
         wp_cg = []
         for i in range(len(self.C_Lmax)):
             wp_cg.append([self.n_p / (sqrt(num * (2.0 / self.rho) * (1 / self.climbcoefs['lift'][i])) *
-                                      self.G + (self.climbcoefs['drag'][1][i] / self.climbcoefs['lift'][i]))
+                                      self.G + (self.climbcoefs['drag'][0][i] / self.climbcoefs['lift'][i]))
                           for num in self.WS_range])
 
-        return {'climb_rate': wp_cr, 'climb_gradient': wp_cg}
+        return {'climb_rate': wp_cr,
+                'climb_gradient': wp_cg}
 
     @Attribute
+    # TODO Make this a pretty graph with pretty colloooorrss please
     def loadingdiagram(self):
 
 
@@ -150,19 +124,112 @@ class WingPowerLoading(Base):
                      label='CR, AR = %d' % self.AR[i],
                      color=wp_cr_colors[i])
 
-        # wp_cg_colors = ['m', 'b', 'r']
-        # for i in range(len(self.AR)):
-        #     plt.plot(self.WS_range,
-        #              self.powerloading['climb_gradient'][i],
-        #              label='C_Lmax%s = %.2f' % (self.wingloading['flag'], self.C_Lmax[i]),
-        #              color=wp_cg_colors[i])
+        wp_cg_colors = ['m', 'b', 'r']
+        for i in range(len(self.C_Lmax)):
+            plt.plot(self.WS_range,
+                     self.powerloading['climb_gradient'][i],
+                     label='CG, C_Lmax = %.2f' % self.C_Lmax[i],
+                     color=wp_cg_colors[i])
+
+        plt.scatter(self.designpoint['wing_loading'],
+                    self.designpoint['power_loading'],
+                    label="Design Point",
+                    marker='^',
+                    s=50)
 
         plt.ylabel('W/P [N*W^-1]')
         plt.xlabel('W/S [N*m^-2]')
         plt.legend()
-        plt.title('Wing and Power Loading (RC = 1 m/s)')
+        plt.title('Wing and Power Loading (Handlaunch = %s)' % self.handlaunch)
+        plt.ion()
         plt.show()
         return "Plot generated and closed"
+
+    @Attribute
+    def designpoint(self):
+        #TODO This header for design point
+        """ An attribute which adds a safety factor to the lift coefficient in order to not stall out
+        during climb-out. Modifying the lift coefficient changes drag coefficients as well due to induced drag
+        the latter part of this code computes the new drag coefficients.
+
+        :return: Dictionary containing design_point variables ('lift_coefficient') and drag coefficients ('climb_drag')
+        """
+
+        #: This value is based on the typical maximum lift that an airfoil generated by a clean airfoil
+        #: :type: float
+        C_L_realistic = 1.2
+
+        #: Evaluation of the distance between C_L_realistic and user-inputed values for C_L
+        #: :type: float array
+        error = [abs(num - C_L_realistic) for num in self.C_Lmax]
+
+        #: idx1 is the index corresponding to the minimum value within the array 'error'
+        #: in other words idx1 is the index corresponding to the closest user-input value to C_L_realistic
+        #: :type: integer
+        idx1 = error.index(min(error))
+
+        #: WS is the chosen Wing Loading based on idx1
+        #: :type: float
+        WS=self.wingloading['values'][idx1]
+
+        #: Evaluation of the distance (error) between the chosen wing-loading and all values in WS_range
+        # :type: float array
+        error = [abs(num - WS) for num in self.WS_range]
+
+        #: idx2 is the index corresponding to the closest value in WS_range to the chosen design wing-loading
+        #: :type: integer
+        idx2 = error.index(min(error))
+
+        #TODO Add knowledge base assumption for best aspect ratio
+        optimal_ARs=[7, 10]
+        if self.handlaunch:
+            optimal_AR = optimal_ARs[0]
+        else:
+            optimal_AR = optimal_ARs[1]
+
+        #: Evaluation of the distance(error) between user-input aspect ratio and the optimal aspect ratio
+        error = [abs(num - optimal_AR) for num in self.AR]
+
+        #: idx3 corresponds to the index of the closest value within self.AR to the optimal_AR defined by the rule above
+        #: :type: integer
+        idx3 = error.index(min(error))
+
+        WP_choices = [self.powerloading['climb_rate'][idx3][idx2],
+                      self.powerloading['climb_gradient'][idx1][idx2]]
+        if self.handlaunch:
+            WP = WP_choices[1]
+        else:
+            WP = WP_choices[0]
+
+        return{'lift_coefficient': self.C_Lmax[idx1],
+               'aspect_ratio': self.AR[idx3],
+               'wing_loading': WS,
+               'power_loading': WP}
+
+    @Attribute
+    def climbcoefs(self):
+        """ An attribute which adds a safety factor to the lift coefficient in order to not stall out
+        during climb-out. Modifying the lift coefficient changes drag coefficients as well due to induced drag
+        the latter part of this code computes the new drag coefficients.
+
+        :return: Dictionary containing modified lift coefficients ('climb_lift') and drag coefficients ('climb_drag')
+        """
+        C_Lcg = [num - 0.2 for num in self.C_Lmax]
+        # Above we subtract 0.2 from climb gradient C_l to keep away from stall during climb out
+        C_Dcg = []
+        for i in range(len(self.AR)):
+            C_Dcg.append([(self.C_D0 + num ** 2 / (pi * self.AR[i] * self.e_factor)) for num in self.C_Lmax])
+            # Due to how C_Dcg is defined the first array dim is aspect ratios, the second dim is lift coefficient
+            # Thus accessing the 2nd aspect ratio and 1st lift coefficient would be C_dcg[1][0]
+        return {'lift': C_Lcg,
+                'drag': C_Dcg}
+
+    @Attribute
+    def WS_range(self):
+        WS_limit = max(self.wingloading['values'])
+        values = [float(i) for i in range(1, int(ceil(WS_limit / 100.0)) * 100)]
+        return values
+    #  Above is a dummy list of wing loadings for iterating in the Power Loading Equations.
 
 
 if __name__ == '__main__':
