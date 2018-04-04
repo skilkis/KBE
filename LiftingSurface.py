@@ -11,69 +11,46 @@ class LiftingSurface(GeomBase):
     #  Required inputs for each instantiation: Wing Area, Aspect Ratio, Taper Ratio, Sweep Angle airfoil type and choice
     #  or Wing Area, Aspect Ratio, airfoil type and choice and Elliptical shape
 
-    S_req = Input(0.8)
+    S_req = Input(0.8)  #MUST GET THIS INPUT FROM CLASS I!!!!!!!!!!!!!!!!!!!!!!!!!!
     #  Above is the Required Wing Area from Wing Loading Diagram.
-    taper = Input(0.5)
-    #  Above is the Requested Taper Ratio.
-    sweep = Input(20.0)
-    #  Above is the Required Sweep Angle.
-    elliptical = Input(False)
-    #  Above Elliptical wing or not.
+    AR = Input(9.0)  # MUST GET THIS FROM CLASS i!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    #  Above is the requested
+    taper = Input(0.6)
+    #  Above is the User Requested Taper Ratio.
+    dihedral = Input(5.0)
+    #  Above is the User Required Dihedral Angle.
     airfoil_type = Input('cambered')  #MAKE ERROR IF WRONG NAME INPUT!!!!!!!!!!!!!!
     #  Above is the standard airfoil type.
     airfoil_choice = Input('SD7062')  #MAKE ERROR IF WRONG NAME INPUT!!!!!!!!!!!!!!
     #  Above the Standard airfoil. The Cambered Symmetric and reflexed airfoil database is in folder 'airfoils'
+    offset = Input(None)
 
+    @Attribute
+    def semispan(self):
+        #  This attribute calculated the required semi-span based on the Class I area and Aspect Ratio
+        return sqrt(self.AR*self.S_req)*0.5
 
+    @Attribute
+    def root_chord(self):
+        #  This attribute calculates the required root chord, with an assumed taper ratio.
+        return self.S_req/((1+self.taper)*self.semispan)
+
+    @Attribute
+    def tipp_offsett(self):
+        #  This attribute determines the spanwise offset of the root and tip leading edges.
+        #  The STANDARD OFFSET INPUT(none) causes the TE to be unswept (offset = c_r-c_t), however,
+        #  if the user inputs 0 in the GUI, then the leading edge becomes unswept (with taper ratio < 1)
+        if self.offset is not None:
+            tip_offset = self.offset
+        else:
+            tip_offset = self.root_chord-(self.root_chord*self.taper)
+        return tip_offset
 
 
 
     @Attribute
-    def symm_data(self):  #  Pull Symmetric 0012 Airfoil Data and store as symm_data
-        with open('airfoils/symmetric/NACA0012.dat', 'r') as f:
-            pts = []
-            for i in f:
-                x,y = i.split(' ',1)
-                pts.append(Point(float(x), float(y)))
-        return pts
-
-    @Attribute
-    def camb_data(self):
-        #  Pull Cambered SD7062 Airfoil Data and store as camb_data
-        with open('airfoils/cambered/SD7062.dat', 'r') as f:
-            pts = []
-            for i in f:
-                x,y = i.split(' ',1)
-                pts.append(Point(float(x), float(y)))
-        return pts
-
-    @Attribute
-    def reflex_data(self):
-        #  Pull reflexed Airfoil Data and store as reflex_data
-        with open('airfoils/reflexed/E182.dat', 'r') as f:
-            pts = []
-            for i in f:
-                x,y = i.split(' ',1)
-                pts.append(Point(float(x), float(y)))
-        return pts
-
-    @Part
-    def symm_airfoil(self):
-        #  Create Symmetric Airfoil
-        return FittedCurve(points = self.symm_data)
-
-    @Part
-    def camb_airfoil(self):
-        #  Create Cambered Airfoil
-        return FittedCurve(points = self.camb_data)
-    @Part
-    def refl_airfoil(self):
-        #  Create refleced Airfoil
-        return FittedCurve(points = self.reflex_data)
-
-
-    @Attribute
-    def data(self):  #  Pull Symmetric 0012 Airfoil Data and store as symm_data
+    def airfoil_data(self):
+        #  This reads and scans User chosen Airfoil Data from the database and stores it as airfoil_data.
         with open('airfoils/%s/%s.dat' % (self.airfoil_type, self.airfoil_choice), 'r') as f:
             pts = []
             for i in f:
@@ -81,10 +58,45 @@ class LiftingSurface(GeomBase):
                 pts.append(Point(float(x), float(y)))
         return pts
 
+    @Part
+    def airfoil(self):
+        #  This creates an original Airfoil from the data from the chosen airfoil.
+        return FittedCurve(points = self.airfoil_data)
+
+
+#  Below we build the wing  with the Leading Edge at (x,y,z) = (0,0,0), x is chordwise and y is up.
+    @Part
+    def root_airfoil(self):
+        # This scales original airfoil to required root chord.
+        return ScaledCurve(curve_in = self.airfoil, reference_point = self.airfoil.position, factor = self.root_chord)
+
+    @Part
+    def scaled_tip(self):
+        #  This scales the original airfoil to the required tip chord.
+        return ScaledCurve(curve_in = self.airfoil, reference_point = self.airfoil.position, factor = (self.root_chord*self.taper))
+
+    @Part
+    def tip_airfoil(self):
+        #  This orients the tip airfoil with respect to the required semispan, requested/standard offset
+        #  and the dihedral angle.
+        return TransformedCurve(curve_in = self.scaled_tip,
+                                from_position = self.scaled_tip.position,
+                                to_position = translate(self.scaled_tip.position,
+                                                        'z', self.semispan,
+                                                        'x', self.tipp_offsett,
+                                                        'y', self.semispan*tan(radians(self.dihedral))))
+
+    @Part
+    def wing_surf(self):
+        # This generates a solid wing half with the sign convention mentioned above.
+        return LoftedSolid([self.root_airfoil,self.tip_airfoil])
 
 
 if __name__ == '__main__':
     from parapy.gui import display
 
-    obj = LiftingSurface(label="LiftingSurface")
+    obj = LiftingSurface()
     display(obj)
+
+
+
