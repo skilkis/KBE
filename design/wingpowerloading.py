@@ -106,7 +106,7 @@ class WingPowerLoading(Base):
 
         plt.scatter(self.designpoint['wing_loading'],
                     self.designpoint['power_loading'],
-                    label="design Point",
+                    label="Design Point",
                     marker='^',
                     s=50)
 
