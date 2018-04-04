@@ -1,3 +1,28 @@
 https://pep8.org/#comments
 
 https://stackoverflow.com/questions/1523427/what-is-the-common-header-format-of-python-files
+
+BLAH BLAH BLAH THIS IS A TEST
+
+Variable Naming Syntax:
+
+ParentObject_ChildObject_Clarification
+
+a : aircraft
+f : fuselage
+w : wing
+t : tail
+p : propulsion
+pl : payload
+b : battery
+
+Examples:
+
+helooooooo
+This is a test from San
+
+
+a_mtow (Aircraft Maximum Take-Off Weight)
+w_airfoil (Wing Airfoil)
+
+This is another test
