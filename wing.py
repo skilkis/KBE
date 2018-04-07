@@ -29,15 +29,16 @@ class Wing(GeomBase):
     #  Above the Standard airfoil. The Cambered Symmetric and reflexed airfoil database is in folder 'airfoils'
     offset = Input(None)
 
+    #  TODO Fix CH10 bug?
 
     @Attribute
     def S_req_half(self):
-        # This calculation of the required wing area from the design point is HALVED to work consistently
-        return self.MTOW/self.WS_pt
+        # This calculation of the required wing area from the design point is HALVED to work consistently with liftingsurface.py
+        return (self.MTOW/self.WS_pt)*0.5
 
     @Part
     def wing_oop(self):
-        return LiftingSurface(S_req = self.S_req,
+        return LiftingSurface(S_req = self.S_req_half,
                               AR = self.AR,
                               taper = self.taper,
                               dihedral = self.dihedral,
