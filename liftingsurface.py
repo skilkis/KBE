@@ -19,6 +19,8 @@ class LiftingSurface(GeomBase):
     #  Above is the User Requested Taper Ratio.
     dihedral = Input(5.0)
     #  Above is the User Required Dihedral Angle.
+    phi = Input(5.0)
+    #  Above is the twist of the tip section with respect to the root section.
     airfoil_type = Input('cambered')  #MAKE ERROR IF WRONG NAME INPUT!!!!!!!!!!!!!!
     #  Above is the standard airfoil type.
     airfoil_choice = Input('SD7062')  #MAKE ERROR IF WRONG NAME INPUT!!!!!!!!!!!!!!
@@ -76,7 +78,7 @@ class LiftingSurface(GeomBase):
         return ScaledCurve(curve_in = self.airfoil, reference_point = self.airfoil.position, factor = (self.root_chord*self.taper))
 
     @Part
-    def tip_airfoil(self):
+    def tip_airfoil_notwist(self):
         #  This orients the tip airfoil with respect to the required semispan, requested/standard offset
         #  and the dihedral angle.
         return TransformedCurve(curve_in = self.scaled_tip,
@@ -85,6 +87,15 @@ class LiftingSurface(GeomBase):
                                                         'z', self.semispan,
                                                         'x', self.tipp_offsett,
                                                         'y', self.semispan*tan(radians(self.dihedral))))
+    @Part
+    def tip_airfoil(self):
+        #  This orients the tip airfoil over the wing twist angle input. The rotation is about the leading edge.
+        return TransformedCurve(curve_in = self.tip_airfoil_notwist,
+                                from_position = self.tip_airfoil_notwist.position,
+                                to_position = rotate(self.tip_airfoil_notwist.position,
+                                                     'z',
+                                                     -radians(self.phi)))
+
 
     @Part
     def wing_surf(self):
