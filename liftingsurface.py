@@ -11,9 +11,9 @@ class LiftingSurface(GeomBase):
     #  Required inputs for each instantiation: Wing Area, Aspect Ratio, Taper Ratio, Sweep Angle airfoil type and choice
     #  or Wing Area, Aspect Ratio, airfoil type and choice and Elliptical shape
 
-    S_req = Input(0.8)  #MUST GET THIS INPUT FROM CLASS I!!!!!!!!!!!!!!!!!!!!!!!!!!
-    #  Above is the Required Wing Area from Wing Loading Diagram.
-    AR = Input(9.0)  # MUST GET THIS FROM CLASS i!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    S_req = Input(0.8)
+    #  Above is the Required TOTAL Wing Area for this SINGLE lifting surface.
+    AR = Input(9.0)
     #  Above is the requested
     taper = Input(0.6)
     #  Above is the User Requested Taper Ratio.
@@ -26,16 +26,18 @@ class LiftingSurface(GeomBase):
     airfoil_choice = Input('SD7062')  #MAKE ERROR IF WRONG NAME INPUT!!!!!!!!!!!!!!
     #  Above the Standard airfoil. The Cambered Symmetric and reflexed airfoil database is in folder 'airfoils'
     offset = Input(None)
+    #  The STANDARD OFFSET INPUT(none) causes the TE to be unswept (offset = c_r-c_t), however,
+    #  if the user inputs 0 in the GUI, then the leading edge becomes unswept (with taper ratio < 1)
 
     @Attribute
     def semispan(self):
         #  This attribute calculated the required semi-span based on the Class I area and Aspect Ratio
-        return sqrt(self.AR*self.S_req)*0.5
+        return sqrt(self.AR*self.S_req*0.5)
 
     @Attribute
     def root_chord(self):
         #  This attribute calculates the required root chord, with an assumed taper ratio.
-        return self.S_req/((1+self.taper)*self.semispan)
+        return 2*self.S_req/((1+self.taper)*self.semispan)
 
     @Attribute
     def tipp_offsett(self):
