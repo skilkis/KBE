@@ -7,9 +7,8 @@
 #Also, the climb rate and climb gradient must be assumed.
 #All Values are in SI Units unless stated.
 
-
+# Importing required local packages
 from parapy.core import *
-from parapy.geom import *
 from math import *
 import matplotlib.pyplot as plt
 
@@ -81,6 +80,7 @@ class WingPowerLoading(Base):
 
     @Attribute
     # TODO Make this a pretty graph with pretty colloooorrss please
+    # TODO Make this plot appear ontop of GUI & Be Eager
     def loadingdiagram(self):
 
 

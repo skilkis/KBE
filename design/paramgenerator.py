@@ -8,11 +8,11 @@
 # Necessary package for importing Excel Files
 import xlrd
 
-from parapy.core import*
+from parapy.core import *
 
 # Importing Necessary Classes
-from design.wingpowerloading import WingPowerLoading
-from design.weightestimator import *
+from wingpowerloading import WingPowerLoading
+from weightestimator import *
 
 # These variables determine the default filename/sheetname(s)
 filename = 'userinput.xlsx'
@@ -74,5 +74,5 @@ class ParameterGenerator(Base):
 if __name__ == '__main__':
     from parapy.gui import display
 
-    obj = ParameterGenerator(label="design Parameters")
+    obj = ParameterGenerator(label="Design Parameters")
     display(obj)

@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# Required ParaPy Modules
-from parapy.geom import *
+# # Required ParaPy Modules
 from parapy.core import *
+
+__all__ = ["ClassOne", "ClassTwo"]
 
 
 class ClassOne(Base):

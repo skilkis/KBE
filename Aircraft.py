@@ -1,4 +1,5 @@
-from design.paramgenerator import *
+from design import *
+from parapy.core import *
 
 
 class Aircraft(Base):
@@ -6,6 +7,11 @@ class Aircraft(Base):
     @Part
     def test(self):
         return ParameterGenerator(label="Design Parameters")
+
+    @Attribute
+    def lalalala(self):
+        return self.test.handlaunch
+
 
 
 if __name__ == '__main__':
