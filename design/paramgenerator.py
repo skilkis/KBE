@@ -13,10 +13,11 @@ from parapy.core import *
 # Importing Necessary Classes
 from wingpowerloading import WingPowerLoading
 from weightestimator import *
+from directories import *
 
 # These variables determine the default filename/sheetname(s)
-filename = 'userinput.xlsx'
-sheetname = 'export_ready_inputs'
+filename = "userinput.xlsx"
+sheetname = "export_ready_inputs"
 
 
 class ParameterGenerator(Base):
@@ -24,6 +25,9 @@ class ParameterGenerator(Base):
         Other user-inputs cover global aircraft attributes and allow changes either through the use of the ParaPy GUI or
         through the use of the userinput.xlsx file.
     """
+
+    __initargs__ = ["weight_target", "target_value"]
+    __icon__ = os.path.join(ICON_DIR, 'weight.ico')
 
     user_input_file = Input([filename, sheetname])
     performance_goal = Input('endurance')
@@ -45,6 +49,7 @@ class ParameterGenerator(Base):
         """
 
         # Load Excel file specified by filename and open Excel sheet specified by sheetname
+        # TODO Error checking to make sure this file exists
         wb = xlrd.open_workbook(self.user_input_file[0])
         ws = wb.sheet_by_name(self.user_input_file[1])
 
@@ -63,6 +68,7 @@ class ParameterGenerator(Base):
         return (self.performance_goal, self.goal_value, self.weight_target, self.target_value, self.payload_type,
                 self.configuration, self.handlaunch, self.portable)
 
+    # TODO Explicit is better than Implicit --> maybe automatic generation of parameters is not useful for all people
     @Part
     def wingpowerloading(self):
         return WingPowerLoading(pass_down="handlaunch", label="Wing & Thrust Loading")

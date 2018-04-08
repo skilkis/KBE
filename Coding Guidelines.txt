@@ -2,8 +2,6 @@ https://pep8.org/#comments
 
 https://stackoverflow.com/questions/1523427/what-is-the-common-header-format-of-python-files
 
-BLAH BLAH BLAH THIS IS A TEST
-
 Variable Naming Syntax:
 
 ParentObject_ChildObject_Clarification
@@ -18,11 +16,26 @@ b : battery
 
 Examples:
 
-helooooooo
-This is a test from San
-
-
 a_mtow (Aircraft Maximum Take-Off Weight)
 w_airfoil (Wing Airfoil)
 
-This is another test
+Modules:
+
+Whenever there is a * it describes a module, modules are like the ParaPy packages and can be called from just a simple
+string reference, no need to describe where the file itself is located. However, to pinpoint what each module refers to
+However, a __init__.py file is required. The benefit of this is that simply stating something like:
+
+from components import * (all)
+
+Automatically imports every-class/file defined in __init__.py
+
+An example of a product tree
+components*
+    common*
+        liftingsurface.py
+        airfoils
+    wing*
+
+
+
+
