@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# Required ParaPy Modules
-
 # Useful package for checking working directory as well as the files inside this directory
 
 # Necessary package for importing Excel Files
@@ -26,10 +24,17 @@ class ParameterGenerator(Base):
         through the use of the userinput.xlsx file.
     """
 
-    __initargs__ = ["weight_target", "target_value"]
-    __icon__ = os.path.join(ICON_DIR, 'weight.ico')
+    __initargs__ = ["performance_goal",
+                    "goal_value",
+                    "weight_target",
+                    "target_value",
+                    "payload_type",
+                    "configuration",
+                    "handlaunch",
+                    "portable"]
 
-    user_input_file = Input([filename, sheetname])
+    __icon__ = os.path.join(DIRS['ICON_DIR'], 'parameters.png')
+
     performance_goal = Input('endurance')
     goal_value = Input(1.0)
     weight_target = Input('payload')
@@ -38,7 +43,8 @@ class ParameterGenerator(Base):
     configuration = Input('conventional')
     handlaunch = Input(True)
     portable = Input(True)
-
+    initialize_estimations = Input(False)
+    user_input_file = Input([filename, sheetname])
 
     @Attribute
     def get_userinput(self):
@@ -49,8 +55,9 @@ class ParameterGenerator(Base):
         """
 
         # Load Excel file specified by filename and open Excel sheet specified by sheetname
-        # TODO Error checking to make sure this file exists
-        wb = xlrd.open_workbook(self.user_input_file[0])
+        # NOTE FILE-CHECKING IS NOT NECESSARY DUE TO FILE-CHECKING IMPLEMENTATION IN get_dir
+        excel_path = get_dir(os.path.join(DIRS['USER_DIR'], self.user_input_file[0]))
+        wb = xlrd.open_workbook(excel_path)
         ws = wb.sheet_by_name(self.user_input_file[1])
 
         # Extracts relevant inputs from user excel-file in which the variable order does not matter
@@ -62,20 +69,26 @@ class ParameterGenerator(Base):
         self.target_value = [i[1] for i in ws._cell_values if i[0] == 'target_value'][0]
         self.payload_type = [str(i[1]) for i in ws._cell_values if i[0] == 'payload_type'][0]
         self.configuration = [str(i[1]) for i in ws._cell_values if i[0] == 'configuration'][0]
-        self.handlaunch = [True if str(i[1]) == 'True' else False for i in ws._cell_values if i[0] == 'handlaunch'][0]
+        self.handlaunch = [True if str(i[1]) == 'True' else False for i in ws._cell_values if i[0] == 'handlaunch'][
+            0]
         self.portable = [True if str(i[1]) == 'True' else False for i in ws._cell_values if i[0] == 'portable'][0]
 
         return (self.performance_goal, self.goal_value, self.weight_target, self.target_value, self.payload_type,
                 self.configuration, self.handlaunch, self.portable)
 
-    # TODO Explicit is better than Implicit --> maybe automatic generation of parameters is not useful for all people
-    @Part
-    def wingpowerloading(self):
-        return WingPowerLoading(pass_down="handlaunch", label="Wing & Thrust Loading")
+        # TODO A nice to have would be a listener while loop that looks for file-size to detect changes
 
-    @Part
-    def weightestimator(self):
-        return ClassOne(pass_down="weight_target, target_value", label="Weight Estimation")
+    # TODO Explicit is better than Implicit --> maybe automatic generation of parameters is not useful for all people
+
+    if initialize_estimations:
+        @Part
+        def wingpowerloading(self):
+            return WingPowerLoading(pass_down="handlaunch", label="Wing & Thrust Loading")
+
+        @Part
+        def weightestimator(self):
+            return ClassOne(pass_down="weight_target, target_value", label="Weight Estimation")
+
 
 if __name__ == '__main__':
     from parapy.gui import display
