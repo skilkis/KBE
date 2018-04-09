@@ -51,7 +51,7 @@ class ParameterGenerator(Base):
         """ An attribute, that when evaluated, reads the input excel file present in the working directory and updates
         input values of the Aircraft class
 
-        :return: Array of updated values which over-write the default ones in the Aircraft class
+        :return: Set of updated values which over-write the default ones in the ParameterGenerator class
         """
 
         # Load Excel file specified by filename and open Excel sheet specified by sheetname
@@ -78,7 +78,6 @@ class ParameterGenerator(Base):
 
         # TODO A nice to have would be a listener while loop that looks for file-size to detect changes
 
-    # TODO Explicit is better than Implicit --> maybe automatic generation of parameters is not useful for all people
 
     if initialize_estimations:
         @Part

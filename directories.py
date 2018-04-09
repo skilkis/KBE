@@ -46,6 +46,8 @@ def get_dir(folder_name=None):
         :return: The absolute path to the root directory or, if specified, to a sub directory within the root
         :rtype: unicode
 
+        Usage:
+
         [1] Obtaining Root Directory:
 
         >>> get_dir() # This will return the absolute path to root directory
@@ -73,13 +75,13 @@ def get_dir(folder_name=None):
     if folder_name is None:  # Checks if user has specified a value for field :attr:`folder_name`
         return root
     else:
-        if isinstance(folder_name, str) or isinstance(folder_name, unicode):
+        if isinstance(folder_name, str) or isinstance(folder_name, unicode):  # Check if folder_name has valid input
             subdir = os.path.join(root, folder_name)
-            if os.path.isdir(subdir) or os.path.isfile(subdir):
+            if os.path.isdir(subdir) or os.path.isfile(subdir):  # Check to see if folder_name is a valid path or file
                 return subdir
             else:
             # TODO Properly distinguish between folder and file type, a folder named '2.0' will be treated as a file
-                if subdir.find('.') != -1:  # Checking if the user is looking for a file or directory
+                if subdir.find('.') != -1:  # Error handling to see if user was looking for a file or directory
                     raise NameError('Specified file %s does not exist' % subdir)
                 else:
                     raise NameError('Specified directory %s does not exist' % subdir)

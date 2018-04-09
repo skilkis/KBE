@@ -26,6 +26,8 @@ class WingPowerLoading(Base):
     n_p = Input(0.7)  # Assumption for the propellor efficiency.
     e_factor = Input(0.8)  # Assumed Oswald Efficiency Factor.
 
+
+    # TODO make these constants into an attribute for lazy evaluation
     rho = 1.225                 #  STD ISA sea level density
     rho_cr = 0.9091             #  ISA 3km Density for climb rate power loading equation.
                                 #  Below are the assumed stall speeds for the Stall Speed Wing Loading Eq.

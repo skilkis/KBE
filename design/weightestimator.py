@@ -57,6 +57,8 @@ class ClassOne(Base):
     :attr:`weight_target`. The field :attr:`target_value` is then the corresponding value for this target weight
     which needs to be a :type:`float` in kilograms.
 
+    :param weight_target: A Test
+
         Usage:
 
         >>> from design import ClassOne
@@ -106,10 +108,11 @@ class ClassOne(Base):
         else:
             return self.errormsg
 
-    @Attribute(private=True)
+    @Attribute(private=True)  # An error message for when an incorrect value of weight_target is entered
     def errormsg(self):
         error_str = u"%s is not a valid weight_target. Valid inputs: 'payload', 'mtow'" % self.weight_target
-        return error_str, ctypes.windll.user32.MessageBoxW(None, u'WARNNING', error_str, 0)
+        raise NameError(error_str)
+        # return error_str, ctypes.windll.user32.MessageBoxW(None, u'WARNNING', error_str, 0)
 
 
 class ClassTwo(Base):

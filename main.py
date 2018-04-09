@@ -13,12 +13,12 @@ class UAV(Base):
         return ParameterGenerator(initialize_estimations=True, label="Design Parameters")
 
     @Attribute
-    def lalalala(self):
-        return self.params.handlaunch
+    def configuration(self):
+        return self.params.configuration
 
     @Attribute
-    def weight(self):
-        return ClassOne()
+    def mtow(self):
+        return self.params.weightestimator.mtow
 
     @Part
     def fuselage(self):
