@@ -12,7 +12,6 @@ import sys
 
 __all__ = ["get_dir", "DIRS", "os", "sys"]
 
-
 def is_frozen():
     """Is the current application code *frozen?*, i.e. build by a tool like
     py2exe.

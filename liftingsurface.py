@@ -72,12 +72,12 @@ class LiftingSurface(GeomBase):
     @Part
     def root_airfoil(self):
         # This scales original airfoil to required root chord.
-        return ScaledCurve(curve_in = self.airfoil, reference_point = self.airfoil.position, factor = self.root_chord)
+        return ScaledCurve(curve_in=self.airfoil, reference_point=self.airfoil.position, factor=self.root_chord)
 
     @Part
     def scaled_tip(self):
         #  This scales the original airfoil to the required tip chord.
-        return ScaledCurve(curve_in = self.airfoil, reference_point = self.airfoil.position, factor = (self.root_chord*self.taper))
+        return ScaledCurve(curve_in=self.airfoil, reference_point=self.airfoil.position, factor=(self.root_chord*self.taper))
 
     @Part
     def tip_airfoil_notwist(self):
