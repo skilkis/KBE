@@ -77,7 +77,7 @@ class ClassOne(Base):
     """
 
     __initargs__ = ["weight_target", "target_value"]
-    __icon__ = os.path.join(ICON_DIR, 'weight.ico')
+    __icon__ = os.path.join(DIRS['ICON_DIR'], 'weight.ico')
 
     # TODO Figure out validator functions here to check string
     weight_target = Input('payload')

@@ -2,8 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """ Propeller.py aims to parametrically create a propeller based on user input of diameter, as well as airfoil shape as
-optional input
-"""
+optional input """
 
 from math import pi
 
