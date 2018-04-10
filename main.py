@@ -9,6 +9,9 @@ class UAV(Base):
 
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'plane.png')
 
+    sizing_target = Input('weight')
+    sizing_value = Input(1.25)
+
     @Part
     def params(self):
         return ParameterGenerator(initialize_estimations=True, label="Design Parameters")
@@ -25,11 +28,13 @@ class UAV(Base):
     def fuselage(self):
         return Box(1, 1, 1)
 
+    @Attribute
+    def battery_capacity(self):
+        return self.sizing_value
+
     @Part
     def battery(self):
-        return Battery('capacity', 100)
-
-
+        return Battery(pass_down="sizing_target", sizing_value=self.sizing_value)
 
 
 if __name__ == '__main__':

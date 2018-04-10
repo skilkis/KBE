@@ -83,7 +83,7 @@ class ClassOne(Base):
 
     # TODO Figure out validator functions here to check string
     weight_target = Input('payload')
-    target_value = Input(0.25, validator=val.Positive())
+    target_value = Input(0.25)
 
     @Attribute
     def mtow(self):

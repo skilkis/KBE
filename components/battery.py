@@ -45,22 +45,20 @@ class Battery(GeomBase):
             e_bat = self.sizing_value * self.constants['energy_density']
             # Code to put a minimum weight to not break the code with div by zero
             if self.sizing_value < self.minimum_weight:
-                old_value = self.sizing_value
-                self.sizing_value = self.minimum_weight
-                e_bat = self.minimum_capacity
-                print Warning('%s [kg] results in a battery size that is too small to manufacture,'
-                              ' it has been changed to %s [kg]'
-                              % (old_value, self.minimum_weight))
-            return self.sizing_value and e_bat
+                raise ZeroDivisionError('%s [kg] results in a battery size that is too small to manufacture,'
+                                        ' please change it to at least %s [kg]' % (self.sizing_value,
+                                                                                   self.minimum_weight))
+            else:
+                return e_bat
         elif self.sizing_target == 'capacity':
             # Code to put a minimum size of capacity to not break the code with div by zero
+            e_bat = self.sizing_value
             if self.sizing_value < self.minimum_capacity:
-                old_value = self.sizing_value
-                self.sizing_value = self.minimum_capacity
-                raise Warning('%s [MJ] results in a battery size that is too small to manufacture,'
-                              ' it has been changed to %s [MJ]'
-                              % (old_value, self.minimum_capacity))
-            return self.sizing_value
+                raise ZeroDivisionError('%s [MJ] results in a battery size that is too small to manufacture,'
+                                        ' please change it to at least %s [MJ]' % (self.sizing_value,
+                                                                                   self.minimum_weight))
+            else:
+                return e_bat
         else:
             return self.type_errormsg
 
