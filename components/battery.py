@@ -8,6 +8,8 @@
 from parapy.core import *
 from parapy.geom import *
 
+# TODO All necessary comments and documentation
+
 # Other Modules
 from directories import *
 

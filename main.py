@@ -36,6 +36,10 @@ class UAV(Base):
     def battery(self):
         return Battery(pass_down="sizing_target", sizing_value=self.sizing_value)
 
+    @Part
+    def camera(self):
+        return EOIR()
+
 
 if __name__ == '__main__':
     from parapy.gui import display

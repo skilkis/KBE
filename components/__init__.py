@@ -1,2 +1,3 @@
 from battery import Battery
-__all__ = ["Battery"]
+from payload import EOIR
+__all__ = ["Battery", "EOIR"]

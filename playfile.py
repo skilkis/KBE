@@ -1,6 +1,7 @@
 from math import *
 
 from parapy.core import *
+from parapy.geom import *
 
 # C_L = [1.0, 1.5, 2.0]
 # C_L_realistic = 1.1;
@@ -25,6 +26,13 @@ class Play(Base):
     def _on_eggs_change(self, slot, new, old):
         msg = "slot '{:}' changed from {:} to {:}"
         print msg.format(slot.__name__, old, new)
+
+
+    @Part
+    def parametricbox(self):
+        return Box(1.0, 1.0, 1.0)
+
+
 
 
 
