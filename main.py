@@ -27,7 +27,7 @@ class UAV(Base):
 
     @Part
     def battery(self):
-        return Battery('capacity', 10000000)
+        return Battery('capacity', 100)
 
 
 

@@ -24,56 +24,62 @@ class Battery(GeomBase):
     @Attribute
     def constants(self):
         mydict = {
-            'energy_density': (1.8*(10**6)),  # MJ/kg From WikiPedia https://en.wikipedia.org/wiki/Energy_density
-            'energy_volume': (4.32*(10**9))   # MJ/m^3
+            'energy_density': (1.8*(10**6)),    # MJ/kg From WikiPedia https://en.wikipedia.org/wiki/Energy_density
+            'energy_volume': (4.32*(10**9)),    # MJ/m^3
+            'minimum_volume': 0.000015          # m^3
+
         }
         return mydict
+
+    @Attribute
+    def minimum_capacity(self):
+        return self.constants['minimum_volume'] * self.constants['energy_volume']
+
+    @Attribute
+    def minimum_weight(self):
+        return self.minimum_capacity / self.constants['energy_density']
 
     @Attribute
     def total_energy(self):
         if self.sizing_target == 'weight':
             e_bat = self.sizing_value * self.constants['energy_density']
-            return e_bat
-        elif self.sizing_target == 'capacity':
-            # Code to put a minimum size of capacity to not break the code
-            mininum_capacity = 1000000
-            if self.sizing_value < mininum_capacity:
+            # Code to put a minimum weight to not break the code with div by zero
+            if self.sizing_value < self.minimum_weight:
                 old_value = self.sizing_value
-                self.sizing_value = mininum_capacity
-                raise Warning('%s is too small of a value, it has been changed to %s'
-                              % (old_value, mininum_capacity))
+                self.sizing_value = self.minimum_weight
+                e_bat = self.minimum_capacity
+                print Warning('%s [kg] results in a battery size that is too small to manufacture,'
+                              ' it has been changed to %s [kg]'
+                              % (old_value, self.minimum_weight))
+            return self.sizing_value and e_bat
+        elif self.sizing_target == 'capacity':
+            # Code to put a minimum size of capacity to not break the code with div by zero
+            if self.sizing_value < self.minimum_capacity:
+                old_value = self.sizing_value
+                self.sizing_value = self.minimum_capacity
+                raise Warning('%s [MJ] results in a battery size that is too small to manufacture,'
+                              ' it has been changed to %s [MJ]'
+                              % (old_value, self.minimum_capacity))
             return self.sizing_value
         else:
-            return self.errormsg
-
+            return self.type_errormsg
 
     @Attribute
     def volume(self):
-        if self.sizing_target == 'weight':
-            vol_bat = (1 / self.constants['energy_volume']) * self.total_energy
-            return vol_bat
-        elif self.sizing_target == 'capacity':
-            vol_bat = self.total_energy / self.constants['energy_volume']
-            return vol_bat
-        else:
-            return self.errormsg
+        return self.total_energy / self.constants['energy_volume']
+
 
     @Attribute
     def weight(self):
-        if self.sizing_target == 'weight':
-            return self.sizing_value
-        elif self.sizing_target == 'capacity':
-            weight_bat = self.total_energy / self.constants['energy_density']
-            return weight_bat
-        else:
-            return self.errormsg
+        return self.total_energy / self.constants['energy_volume']
+
 
     @Attribute
     def cg_x(self):
         return self.battery_scaled.cog[0]
 
     @Attribute(private=True)
-    def errormsg(self):
+    def type_errormsg(self):
         error_str = "%s is not a valid weight_target. Valid inputs: 'weight', 'capacity'" % self.sizing_target
         raise TypeError(error_str)
 
@@ -81,10 +87,15 @@ class Battery(GeomBase):
     def width(self):
         return self.max_width
 
-    @Attribute
-    def length(self):
+    @Attribute(private=True)
+    def length_initial(self):
         l = self.volume / (self.width * self.height)
         return l
+
+    @Attribute
+    def length(self):
+        updated_value = self.scaling_ratio * self.length_initial
+        return updated_value
 
     @Attribute
     def height(self):
@@ -101,12 +112,12 @@ class Battery(GeomBase):
     @Attribute(private=True)
     def scaling_ratio(self):
         required_length = self.volume / self.battery_chamfer.faces[1].area
-        scaling_ratio = required_length / self.length
+        scaling_ratio = required_length / self.length_initial
         return scaling_ratio
 
     @Part
     def battery_import(self):
-        return Box(self.max_width, self.length, self.max_height, hidden=True)
+        return Box(self.max_width, self.length_initial, self.max_height, hidden=True)
 
     @Part
     def battery_chamfer(self):
