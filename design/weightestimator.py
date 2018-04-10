@@ -110,9 +110,8 @@ class ClassOne(Base):
 
     @Attribute(private=True)  # An error message for when an incorrect value of weight_target is entered
     def errormsg(self):
-        error_str = u"%s is not a valid weight_target. Valid inputs: 'payload', 'mtow'" % self.weight_target
+        error_str = "%s is not a valid weight_target. Valid inputs: 'payload', 'mtow'" % self.weight_target
         raise NameError(error_str)
-        # return error_str, ctypes.windll.user32.MessageBoxW(None, u'WARNNING', error_str, 0)
 
 
 class ClassTwo(Base):

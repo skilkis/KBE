@@ -31,17 +31,35 @@ class Battery(GeomBase):
 
     @Attribute
     def total_energy(self):
-        e_bat = self.sizing_value * self.constants['energy_density']
-        return e_bat
+        if self.sizing_target == 'weight':
+            e_bat = self.sizing_value * self.constants['energy_density']
+            return e_bat
+        elif self.sizing_target == 'capacity':
+            return self.sizing_value
+        else:
+            return self.errormsg
+
 
     @Attribute
     def volume(self):
-        value = (1 / self.constants['energy_volume']) * self.total_energy
-        return value
+        if self.sizing_target == 'weight':
+            vol_bat = (1 / self.constants['energy_volume']) * self.total_energy
+            return vol_bat
+        elif self.sizing_target == 'capacity':
+            vol_bat = self.sizing_value / self.constants['energy_volume']
+            return vol_bat
+        else:
+            return self.errormsg
+
 
     @Attribute
     def cg_x(self):
         return self.battery_scaled.cog[0]
+
+    @Attribute(private=True)
+    def errormsg(self):
+        error_str = "%s is not a valid weight_target. Valid inputs: 'payload', 'mtow'" % self.sizing_target
+        raise TypeError(error_str)
 
     @Attribute(private=True)
     def length(self):
