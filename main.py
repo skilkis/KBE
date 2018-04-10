@@ -2,6 +2,7 @@ from design import *
 from parapy.core import *
 from parapy.geom import *
 from directories import *
+from components import *
 
 
 class UAV(Base):
@@ -23,6 +24,10 @@ class UAV(Base):
     @Part
     def fuselage(self):
         return Box(1, 1, 1)
+
+    @Part
+    def battery(self):
+        return Battery('capacity', 10000000)
 
 
 
