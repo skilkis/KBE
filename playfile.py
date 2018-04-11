@@ -14,26 +14,30 @@ from parapy.geom import *
 # C_L_selected = C_L[error.index(min(C_L_selected))]
 
 
-class Play(Base):
-    """
-    Play.py is a test file.
-        :param self.Test:
-    """
+# class Play(Base):
+#     """
+#     Play.py is a test file.
+#         :param self.Test:
+#     """
+#
+#     Test = Input(2.0, doc="This is a test document")
+#
+#     @Test.on_slot_change
+#     def _on_eggs_change(self, slot, new, old):
+#         msg = "slot '{:}' changed from {:} to {:}"
+#         print msg.format(slot.__name__, old, new)
+#
+#
+#     @Part
+#     def parametricbox(self):
+#         return Box(1.0, 1.0, 1.0)
 
-    Test = Input(2.0, doc="This is a test document")
+d = "30x30x30"
+result = [float(i) for i in d.split('x')]
 
-    @Test.on_slot_change
-    def _on_eggs_change(self, slot, new, old):
-        msg = "slot '{:}' changed from {:} to {:}"
-        print msg.format(slot.__name__, old, new)
+myunicode = u's'
 
-
-    @Part
-    def parametricbox(self):
-        return Box(1.0, 1.0, 1.0)
-
-
-
+mystring = str(myunicode)
 
 
 # if __name__ == '__main__':

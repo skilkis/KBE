@@ -12,6 +12,9 @@ import sys
 
 __all__ = ["get_dir", "DIRS", "os", "sys"]
 
+# TODO Re-organize this to be a class structure if needed
+
+
 def is_frozen():
     """Is the current application code *frozen?*, i.e. build by a tool like
     py2exe.
@@ -44,8 +47,6 @@ def get_dir(folder_name=None):
 
         :return: The absolute path to the root directory or, if specified, to a sub directory within the root
         :rtype: unicode
-
-        Usage:
 
         [1] Obtaining Root Directory:
 
