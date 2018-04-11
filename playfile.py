@@ -32,12 +32,14 @@ from parapy.geom import *
 #     def parametricbox(self):
 #         return Box(1.0, 1.0, 1.0)
 
-d = "30x30x30"
-result = [float(i) for i in d.split('x')]
+from directories import *
+from random import *
+from os import listdir
 
-myunicode = u's'
+test_list = [['foo', 2], ['bar', 3]]
 
-mystring = str(myunicode)
+index = 0
+x = [num[1] for num in test_list if num[0] == "foo"]
 
 
 # if __name__ == '__main__':

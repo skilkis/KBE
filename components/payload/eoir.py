@@ -4,12 +4,16 @@
 """ eoir.py is a file which automatically generates an EO/IR Imaging system on parametric input of battery weight,
  """
 
+# TODO Comment the whole code
+# TODO add attributes necessary for fuselage class
+
 # Required ParaPy Modules
 from parapy.core import *
 from parapy.geom import *
 
 # Necessary Modules for Data Processing
 from directories import *
+from os import listdir
 import io
 
 __all__ = ["EOIR", "show_primitives"]
@@ -20,39 +24,88 @@ show_primitives = False
 
 class EOIR(GeomBase):
 
-    camera_name = Input('SPI_M2D')
+    target_weight = Input(0.2)
+    camera_name = Input(None)
 
     test_box = 0.1
     test_gimbal = 0.10
 
     @Attribute
     def specs(self):
-        return self.read_csv(self.camera_name)
+        if self.camera_name is None:
+            selected_camera_specs = [num[1] for num in self.camera_database if num[0] == self.camera_selector]
+            return selected_camera_specs[0]
+        else:
+            return self.read_csv(self.camera_name)
+
+    @Attribute
+    def specs_test(self):
+        if self.camera_name is None:
+            camera_index = [name.index(self.camera_selector) for name in self.camera_database]
+            return self.camera_database[camera_index][1]
+        else:
+            return self.read_csv(self.camera_name)
+
+    @Attribute
+    def camera_database(self):
+        database_path = DIRS['EOIR_DATA_DIR']
+        camera_names = [str(i.split('.')[0]) for i in listdir(database_path) if i.endswith('csv')]
+        cameras = [[name, self.read_csv(name)] for name in camera_names]
+        return cameras
+
+    @Attribute
+    def camera_selector(self):
+        camera_list = sorted([[name[0], name[1]['weight']] for name in self.camera_database], key=lambda f: float(f[1]))
+        error = [abs(i[1] - self.target_weight) for i in camera_list if i[1] <= self.target_weight]
+        if len(error) == 0:
+            raise ValueError('The given payload weight of %.2f [kg] is too small to find a suitable EO/IR Sensor'
+                             % self.target_weight)
+        else:
+            idx1 = error.index(min(error))
+            selected_camera = camera_list[idx1][0]
+        return selected_camera
+
+    @Attribute
+    def weight(self):
+        return self.specs['weight']
 
     @Attribute
     def box_width(self):
-        return self.read_csv['test']
+        return self.specs['box_dimensions'][0] / 1000.0
 
     @Attribute
     def box_length(self):
-        return self.test_box
+        return self.specs['box_dimensions'][1] / 1000.0
 
     @Attribute
     def box_height(self):
-        return self.test_box
-
-    @Attribute
-    def gimbal_height(self):
-        return self.test_gimbal * 1.1 # Needs to be at least 1.1 times radius
+        return self.specs['box_dimensions'][2] / 1000.0
 
     @Attribute
     def gimbal_radius(self):
-        return self.test_gimbal
+        diameter = self.specs['gimbal_dimensions'][0]  # Diameter is specified in mm
+        return diameter / (2 * 1000.0)
 
+    @Attribute
+    def gimbal_height(self):  # Total height of the gimbal arm (neglecting gimbal_radius)
+        min_height = self.gimbal_radius * 1.1
+        read_height = self.specs['gimbal_dimensions'][1] / 1000.0
+        if read_height <= min_height:
+            return min_height
+        else:
+            return read_height
+
+    @Attribute
+    def exposed_height(self):
+        return (self.specs['gimbal_dimensions'][2] / 1000.0) - self.gimbal_radius
+
+    # TODO consider moving read_csv in-case other files require the same class
     def read_csv(self, camera_name):
-        with io.open('%s.csv' % camera_name, mode='r', encoding='utf-8-sig') as f:
+        filename = ('%s.csv' % camera_name)
+        directory = get_dir(os.path.join(DIRS['EOIR_DATA_DIR'], filename))
+        with io.open(directory, mode='r', encoding='utf-8-sig') as f:
             spec_dict = {}
-            filtered = (line.replace("\n", '') for line in f)  # Removes \n from the data
+            filtered = (line.replace("\n", '') for line in f)  # Removes \n from the created as a byproduct of encoding
             for line in filtered:
                 field, value = line.split(',')
                 if self.has_number(value):
@@ -66,11 +119,15 @@ class EOIR(GeomBase):
                 else:
                     if value.find('/') != -1:
                         value = [str(i) for i in value.split('/')]
+                    elif (value.lower()).find('true') != -1:
+                        value = True
+                    elif (value.lower()).find('false') != -1:
+                        value = False
                     else:
                         value = str(value)
                 spec_dict['%s' % str(field)] = value
             f.close()
-        return spec_dict
+            return spec_dict
 
     @staticmethod
     def has_number(any_string):
@@ -86,7 +143,6 @@ class EOIR(GeomBase):
         """
         return any(char.isdigit() for char in any_string)
 
-
     # --- Output Solids: ----------------------------------------------------------------------------------------------
 
     @Attribute
@@ -100,21 +156,22 @@ class EOIR(GeomBase):
     def internals(self):
         return TransformedShape(shape_in=self.support_box_import,
                                 from_position=XOY,
-                                to_position=translate(rotate90(XOY, 'z_'), 'x_', self.box_length / 2.0),
-                                color=self.mycolors['deep_red'])
+                                to_position=translate(rotate90(XOY, 'z_'), 'x_', self.box_width / 2.0),
+                                color=self.mycolors['deep_red'],
+                                transparency=0.2)
 
 
     @Part
     def gimbal(self):
         return TranslatedShape(shape_in=self.gimbal_import,
-                               displacement=Vector(self.box_length / 2.0, 0, -self.gimbal_height),
+                               displacement=Vector(self.box_length / 2.0, 0, -self.exposed_height),
                                color=self.mycolors['light_grey'])
 
     # TODO Investigate of making this a compound improves performance
     @Part
     def camera_body(self):
         return TranslatedShape(shape_in=self.camera_body_import,
-                               displacement=Vector(self.box_length / 2.0, 0, -self.gimbal_height),
+                               displacement=Vector(self.box_length / 2.0, 0, -self.exposed_height),
                                color=self.mycolors['light_grey'])
 
     # --- Primitives: -------------------------------------------------------------------------------------------------
@@ -129,7 +186,8 @@ class EOIR(GeomBase):
 
     @Part(in_tree=show_primitives)
     def cover_cylinder(self):  # A small cylinder used to fill the gap created by the cutout-tool
-        return Cylinder(self.gimbal_radius, self.gimbal_height/2.0, position=translate(XOY, 'z', child.height))
+        return Cylinder(self.gimbal_radius, (child.radius / 2.0) + (self.gimbal_height - child.radius),
+                        position=translate(XOY, 'z', child.radius / 2.0))
 
     @Part(in_tree=show_primitives)
     def gimbal_sphere(self):  # The main sphere used to create the camera body
@@ -147,7 +205,7 @@ class EOIR(GeomBase):
     @Part(in_tree=show_primitives)
     def gimbal_cover(self):  # The top part of the gimbal_sphere is removed from 'cover_cylinder' to fill the gap
         return SubtractedSolid(shape_in=self.cover_cylinder,
-                               tool=self.gimbal_sphere)
+                               tool=self.gimbal_sphere, make_compound=True)
 
     @Part(in_tree=show_primitives)
     def gimbal_import(self):  # The final gimbal part before translation
