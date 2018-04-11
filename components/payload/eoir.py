@@ -49,20 +49,6 @@ class EOIR(GeomBase):
     def gimbal_radius(self):
         return self.test_gimbal
 
-    @staticmethod
-    def has_number(any_string):
-        """ Returns True/False depending on if the input string contains any numerical characters (i.e 0, 1, 2, 3...9)
-        :param any_string: A user-input, any valid string is accepted
-        :type any_string: str
-        :rtype: bool
-
-        >>> has_number('I do not contain any numbers')
-        False
-        >>> has_number('Oh look what we have here: 2')
-        True
-        """
-        return any(char.isdigit() for char in any_string)
-
     def read_csv(self, camera_name):
         with io.open('%s.csv' % camera_name, mode='r', encoding='utf-8-sig') as f:
             spec_dict = {}
@@ -85,6 +71,21 @@ class EOIR(GeomBase):
                 spec_dict['%s' % str(field)] = value
             f.close()
         return spec_dict
+
+    @staticmethod
+    def has_number(any_string):
+        """ Returns True/False depending on if the input string contains any numerical characters (i.e 0, 1, 2, 3...9)
+        :param any_string: A user-input, any valid string is accepted
+        :type any_string: str
+        :rtype: bool
+
+        >>> has_number('I do not contain any numbers')
+        False
+        >>> has_number('Oh look what we have here: 2')
+        True
+        """
+        return any(char.isdigit() for char in any_string)
+
 
     # --- Output Solids: ----------------------------------------------------------------------------------------------
 
