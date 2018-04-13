@@ -10,6 +10,7 @@ from math import *
 class LiftingSurface(GeomBase):
     #  Required inputs for each instantiation: Wing Area, Aspect Ratio, Taper Ratio, Sweep Angle airfoil type and choice
     #  or Wing Area, Aspect Ratio, airfoil type and choice and Elliptical shape
+    #  Below we build the wing  with the Leading Edge at (x,y,z) = (0,0,0), x is chordwise and y is up.
 
     S_req = Input(0.8)
     #  Above is the Required TOTAL Wing Area for this SINGLE lifting surface.
@@ -39,6 +40,10 @@ class LiftingSurface(GeomBase):
         #  This attribute calculates the required root chord, with an assumed taper ratio.
         return 2*self.S_req/((1+self.taper)*self.semispan)
 
+    @Attribute (in_tree = True)
+    def cog_wing(self):
+        return self.final_wing.cog
+
     @Attribute
     def tipp_offsett(self):
         #  This attribute determines the spanwise offset of the root and tip leading edges.
@@ -65,30 +70,38 @@ class LiftingSurface(GeomBase):
     @Part
     def airfoil(self):
         #  This creates an original Airfoil from the data from the chosen airfoil.
-        return FittedCurve(points = self.airfoil_data)
+        return FittedCurve(points = self.airfoil_data,
+                           hidden=True)
 
 
 #  Below we build the wing  with the Leading Edge at (x,y,z) = (0,0,0), x is chordwise and y is up.
     @Part
     def root_airfoil(self):
         # This scales original airfoil to required root chord.
-        return ScaledCurve(curve_in=self.airfoil, reference_point=self.airfoil.position, factor=self.root_chord)
+        return ScaledCurve(curve_in=self.airfoil,
+                           reference_point=self.airfoil.position,
+                           factor=self.root_chord,
+                           hidden=True)
 
     @Part
     def scaled_tip(self):
         #  This scales the original airfoil to the required tip chord.
-        return ScaledCurve(curve_in=self.airfoil, reference_point=self.airfoil.position, factor=(self.root_chord*self.taper))
+        return ScaledCurve(curve_in=self.airfoil,
+                           reference_point=self.airfoil.position,
+                           factor=(self.root_chord*self.taper),
+                           hidden=True)
 
     @Part
     def tip_airfoil_notwist(self):
         #  This orients the tip airfoil with respect to the required semispan, requested/standard offset
-        #  and the dihedral angle.
         return TransformedCurve(curve_in = self.scaled_tip,
                                 from_position = self.scaled_tip.position,
                                 to_position = translate(self.scaled_tip.position,
                                                         'z', self.semispan,
-                                                        'x', self.tipp_offsett,
-                                                        'y', self.semispan*tan(radians(self.dihedral))))
+                                                        'x', self.tipp_offsett),
+                                hidden=True)
+
+
     @Part
     def tip_airfoil(self):
         #  This orients the tip airfoil over the wing twist angle input. The rotation is about the leading edge.
@@ -96,13 +109,29 @@ class LiftingSurface(GeomBase):
                                 from_position = self.tip_airfoil_notwist.position,
                                 to_position = rotate(self.tip_airfoil_notwist.position,
                                                      'z',
-                                                     -radians(self.phi)))
+                                                     -radians(self.phi)),
+                                hidden=True)
 
 
     @Part
     def wing_surf(self):
         # This generates a solid wing half with the sign convention mentioned above.
-        return LoftedSolid([self.root_airfoil,self.tip_airfoil])
+        return LoftedSolid([self.root_airfoil,self.tip_airfoil],
+                           hidden=True)
+
+    @Part
+    def final_wing(self):
+        #  This rotates the entire solid wing over a dihedral angle.
+        return RotatedShape(shape_in = self.wing_surf,
+                            rotation_point=Point(0, 0, 0),
+                            vector = Vector(1,0,0),
+                            angle = radians(-self.dihedral))
+
+    @Part
+    def cog_wing(self):
+        # This displays a red ball at the COG location of the SOLID wing.
+        return Sphere(radius=0.05,
+                      position=self.final_wing.cog, color='red')
 
 
 if __name__ == '__main__':
