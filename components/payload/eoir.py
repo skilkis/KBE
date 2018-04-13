@@ -16,6 +16,9 @@ from directories import *
 from os import listdir
 import io
 
+# Custom Colors
+from user import *
+
 __all__ = ["EOIR", "show_primitives"]
 
 # A parameter for debugging, turns the visibility of miscellaneous parts ON/OFF
@@ -25,7 +28,7 @@ show_primitives = False
 class EOIR(GeomBase):
 
     target_weight = Input(0.2)
-    camera_name = Input(None)
+    camera_name = Input('TASE400LRS')
 
     test_box = 0.1
     test_gimbal = 0.10
@@ -35,14 +38,6 @@ class EOIR(GeomBase):
         if self.camera_name is None:
             selected_camera_specs = [num[1] for num in self.camera_database if num[0] == self.camera_selector]
             return selected_camera_specs[0]
-        else:
-            return self.read_csv(self.camera_name)
-
-    @Attribute
-    def specs_test(self):
-        if self.camera_name is None:
-            camera_index = [name.index(self.camera_selector) for name in self.camera_database]
-            return self.camera_database[camera_index][1]
         else:
             return self.read_csv(self.camera_name)
 
@@ -145,19 +140,12 @@ class EOIR(GeomBase):
 
     # --- Output Solids: ----------------------------------------------------------------------------------------------
 
-    @Attribute
-    def mycolors(self):
-        colors = {'light_grey': (128, 128, 128),
-                  'deep_red': (128, 0, 0),
-                  'dark_grey': (17, 17, 17)}
-        return colors
-
     @Part
     def internals(self):
         return TransformedShape(shape_in=self.support_box_import,
                                 from_position=XOY,
                                 to_position=translate(rotate90(XOY, 'z_'), 'x_', self.box_width / 2.0),
-                                color=self.mycolors['deep_red'],
+                                color=MyColors.deep_red,
                                 transparency=0.2)
 
 
@@ -165,14 +153,14 @@ class EOIR(GeomBase):
     def gimbal(self):
         return TranslatedShape(shape_in=self.gimbal_import,
                                displacement=Vector(self.box_length / 2.0, 0, -self.exposed_height),
-                               color=self.mycolors['light_grey'])
+                               color=MyColors.light_grey)
 
-    # TODO Investigate of making this a compound improves performance
+    # TODO Investigate if making this a compound improves performance
     @Part
     def camera_body(self):
         return TranslatedShape(shape_in=self.camera_body_import,
                                displacement=Vector(self.box_length / 2.0, 0, -self.exposed_height),
-                               color=self.mycolors['light_grey'])
+                               color=MyColors.light_grey)
 
     # --- Primitives: -------------------------------------------------------------------------------------------------
 

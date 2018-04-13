@@ -36,14 +36,15 @@ from directories import *
 from random import *
 from os import listdir
 
-test_list = [['foo', 2], ['bar', 3]]
+from parapy.geom import Face, Rectangle, Circle
+island = Rectangle(1, 1)
+hole = Circle(radius=0.3)
+obj = Face(island=island, holes=[hole])
 
-index = 0
-x = [num[1] for num in test_list if num[0] == "foo"]
+test = RotatedSurface()
 
 
-# if __name__ == '__main__':
-#     from parapy.gui import display
-#
-#     obj = Play(Test=-20)
-#     display(obj)
+if __name__ == '__main__':
+    from parapy.gui import display
+
+    display(obj)
