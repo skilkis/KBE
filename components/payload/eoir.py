@@ -22,7 +22,7 @@ from user import *
 __all__ = ["EOIR", "show_primitives"]
 
 # A parameter for debugging, turns the visibility of miscellaneous parts ON/OFF
-show_primitives = False
+show_primitives = False  # type: bool
 
 
 class EOIR(GeomBase):
@@ -63,6 +63,11 @@ class EOIR(GeomBase):
     @Attribute
     def weight(self):
         return self.specs['weight']
+
+    @Attribute
+    def bbox_intern(self):
+        self.internals.bbox.color = MyColors.deep_red
+        return self.internals.bbox
 
     @Attribute
     def box_width(self):
@@ -145,8 +150,7 @@ class EOIR(GeomBase):
         return TransformedShape(shape_in=self.support_box_import,
                                 from_position=XOY,
                                 to_position=translate(rotate90(XOY, 'z_'), 'x_', self.box_width / 2.0),
-                                color=MyColors.deep_red,
-                                transparency=0.2)
+                                color=MyColors.dark_grey)
 
 
     @Part
@@ -166,7 +170,7 @@ class EOIR(GeomBase):
 
     @Part(in_tree=show_primitives)
     def support_box_import(self):  # The un-transformed box which creates the internals
-        return Box(self.box_width, self.box_length, self.box_height, hidden=True)
+        return Box(self.box_width, self.box_length, self.box_height)
 
     @Part(in_tree=show_primitives)
     def support_cylinder(self):  # The main cylinder used to create the gimbal

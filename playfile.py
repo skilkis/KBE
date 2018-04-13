@@ -37,11 +37,8 @@ from random import *
 from os import listdir
 
 from parapy.geom import Face, Rectangle, Circle
-island = Rectangle(1, 1)
-hole = Circle(radius=0.3)
-obj = Face(island=island, holes=[hole])
 
-test = RotatedSurface()
+
 
 
 if __name__ == '__main__':

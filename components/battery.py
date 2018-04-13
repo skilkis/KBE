@@ -11,7 +11,13 @@ from parapy.geom import *
 # TODO All necessary comments and documentation
 
 # Other Modules
-from directories import *
+from user import *
+
+
+__all__ = ["Battery", "show_primitives"]
+
+# A parameter for debugging, turns the visibility of miscellaneous parts ON/OFF
+show_primitives = False  # type: bool
 
 
 class Battery(GeomBase):
@@ -60,15 +66,27 @@ class Battery(GeomBase):
     def volume(self):
         return self.total_energy / self.constants['energy_volume']
 
-
     @Attribute
     def weight(self):
-        return self.total_energy / self.constants['energy_volume']
-
+        return self.total_energy / self.constants['energy_density']
 
     @Attribute
-    def cg_x(self):
-        return self.battery_scaled.cog[0]
+    def width(self):
+        return self.max_width
+
+    @Attribute
+    def length(self):
+        length = self.volume / self.battery_profile.area
+        return length
+
+    @Attribute
+    def height(self):
+        return self.max_height
+
+    @Attribute
+    def bbox_intern(self):
+        self.battery.bbox.color = MyColors.deep_green
+        return self.battery.bbox
 
     @Attribute(private=True)
     def minimum_capacity(self):
@@ -79,71 +97,42 @@ class Battery(GeomBase):
         return self.minimum_capacity / self.constants['energy_density']
 
     @Attribute(private=True)
+    def radius(self):
+        """Defines the radius in a way that prevents the battery_profile from self-destructing.
+
+        :rtype: float
+        """
+        min_dimension = min(self.width, self.height)
+        return min_dimension / 2.0
+
+
+    @Attribute(private=True)
     def type_errormsg(self):
         error_str = "%s is not a valid weight_target. Valid inputs: 'weight', 'capacity'" % self.sizing_target
         raise TypeError(error_str)
 
-    @Attribute
-    def width(self):
-        return self.max_width
-
-    @Attribute(private=True)
-    def length_initial(self):
-        length = self.volume / (self.width * self.height)
-        return length
-
-    @Attribute
-    def length(self):
-        updated_value = self.scaling_ratio * self.length_initial
-        return updated_value
-
-    @Attribute
-    def height(self):
-        return self.max_height
-
-
-    @Attribute(private=True)
-    def chamfer(self):
-        e1, e2, e3, e4 = self.battery_import.top_face.edges
-        d = (self.max_width + self.max_height) / 20.0
-        cham_dict = {'edges': (e1, e3), 'distance': d}
-        return cham_dict
-
-    @Attribute(private=True)
-    def scaling_ratio(self):
-        required_length = self.volume / self.battery_chamfer.faces[1].area
-        scaling_ratio = required_length / self.length_initial
-        return scaling_ratio
+    # --- Output Solids: ----------------------------------------------------------------------------------------------
 
     @Part
+    def battery(self):
+        return TranslatedShape(shape_in=self.battery_import, displacement=Vector(0, 0, self.height / 2.0),
+                               color=MyColors.dark_grey)
+
+    # --- Primitives: -------------------------------------------------------------------------------------------------
+
+    @Part(in_tree=show_primitives)
+    def rectangle(self):
+        return RectangularFace(width=self.max_width, length=self.max_height,
+                               position=YOZ)
+
+    @Part(in_tree=show_primitives)
+    def battery_profile(self):
+        return FilletedFace(built_from=self.rectangle, radius=self.radius)
+
+
+    @Part(in_tree=show_primitives)
     def battery_import(self):
-        return Box(self.max_width, self.length_initial, self.max_height, hidden=True)
-
-    @Part
-    def battery_chamfer(self):
-        return ChamferedSolid(self.battery_import,
-                              distance=self.chamfer['distance'],
-                              edge_table=self.chamfer['edges'],
-                              hidden=True)
-
-    @Part
-    def battery_transformed(self):
-        return TransformedShape(shape_in=self.battery_chamfer,
-                                from_position=XOY,
-                                to_position=translate(rotate90(XOY, 'z_'), 'x_', self.max_width / 2.0),
-                                hidden=True)
-    @Part
-    def battery_scaled(self):
-        return ScaledShape(shape_in=self.battery_transformed,
-                           reference_point=XOY,
-                           factor=[self.scaling_ratio, 1.0, 1.0],
-                           transparency=0.5)
-
-    @Part
-    def center_of_gravity(self):
-        return Sphere(radius=0.01,
-                      position=self.battery_scaled.cog, color='red')
-
+        return ExtrudedSolid(face_in=self.battery_profile, distance=self.length, direction='x')
 
 if __name__ == '__main__':
     from parapy.gui import display
