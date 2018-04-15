@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 
 """ battery.py is a file which automatically generates a battery part depending on parametric input of battery weight,
- """
+or battery capacity. Utilize the parameter `show_primitives` for debugging.
+"""
 
 # Required ParaPy Modules
 from parapy.core import *
@@ -13,7 +14,6 @@ from parapy.geom import *
 # Other Modules
 from user import *
 
-
 __all__ = ["Battery", "show_primitives"]
 
 # A parameter for debugging, turns the visibility of miscellaneous parts ON/OFF
@@ -21,8 +21,6 @@ show_primitives = False  # type: bool
 
 
 class Battery(GeomBase):
-
-    __initargs__ = ["sizing_target", "sizing_value"]
 
     sizing_target = Input('capacity')
     sizing_value = Input(10000000)

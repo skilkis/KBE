@@ -27,6 +27,8 @@ show_primitives = False  # type: bool
 
 class EOIR(GeomBase):
 
+
+
     target_weight = Input(0.2)
     camera_name = Input('TASE400LRS')
 
