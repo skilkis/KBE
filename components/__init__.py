@@ -1,3 +1,4 @@
-from battery import Battery
-from payload import EOIR
-__all__ = ["Battery", "EOIR"]
+from battery import *
+from payload import *
+from fuselage import *
+

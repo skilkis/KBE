@@ -9,6 +9,8 @@ from parapy.core import *
 from primitives.fus import *
 from user import *
 
+__all__ = ["Fuselage"]
+
 
 class Fuselage(GeomBase):
 

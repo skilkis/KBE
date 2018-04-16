@@ -57,6 +57,7 @@ class FFrame(GeomBase):
         """Defines the points utilized to construct the shape of the cross-section. If a different shape is required
         these points can be edited as long as a unit-rectangle (1 x 0.5) can still fit inside the cross-section
         """
+        # return [Point(0, 0, -0.3), Point(0, 0.8, -0.1), Point(0, 0, 0.35)]  # Centered on Origin
         return [Point(0, 0, -0.05), Point(0, 0.8, 0.15), Point(0, 0, 0.6)]
 
     @Attribute(private=True)
@@ -84,7 +85,7 @@ class FFrame(GeomBase):
     @Part(in_tree=__show_primitives)
     def visualize_bounds(self):
         return Rectangle(width=self.width, length=self.height,
-                         position=translate(YOZ, 'y', self.height / 2.0),
+                         position=translate(YOZ),
                          color='red')
 
 

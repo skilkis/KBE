@@ -27,6 +27,7 @@ class Battery(GeomBase):
     sizing_value = Input(10000000, validator=val.Positive())
     max_width = Input(0.05, validator=val.Positive())
     max_height = Input(0.025, validator=val.Positive())  # Suggested to use a wider-battery, max_height = max_width / 2 for fuselage aerodynamics
+    position = Input(Position(Point(0, 0, 0)))
 
     @Attribute
     def constants(self):
@@ -113,8 +114,10 @@ class Battery(GeomBase):
     # --- Output Solids: ----------------------------------------------------------------------------------------------
 
     @Part
-    def battery(self):
-        return TranslatedShape(shape_in=self.battery_import, displacement=Vector(0, 0, self.height / 2.0),
+    def internal_shape(self):
+        return TranslatedShape(shape_in=self.battery_import, displacement=Vector(self.position.x,
+                                                                                 self.position.y,
+                                                                                 (self.height / 2.0) + self.position.z),
                                color=MyColors.dark_grey)
 
     # --- Primitives: -------------------------------------------------------------------------------------------------
