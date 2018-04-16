@@ -41,8 +41,16 @@ class LiftingSurface(GeomBase):
         return 2*self.S_req/((1+self.taper)*self.semispan)
 
     @Attribute (in_tree = True)
+    #  This will return the Wings Center of Gravity calculated from the parapy solid.
     def cog_wing(self):
         return self.final_wing.cog
+
+    @Attribute
+    #  This will clculate the mean aerodynamic chord of the swept and tapered wing.
+    def mac(self):
+        mac = (2*self.root_chord*(1 + self.taper + self.taper ** 2))/(3*(1+self.taper))
+        return mac
+
 
     @Attribute
     def tipp_offsett(self):

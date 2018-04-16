@@ -58,11 +58,16 @@ class AVLtest(GeomBase):
     def geometry(self):
         return avl.Geometry(name="MyGeometry",
                             surfaces=[self.main_surface],
-                            mach_number=0.2,
+                            mach_number=0.0,
+                            velocity=15.0,
                             ref_area=(self.S_req),
                             ref_chord=(self.my_wing1.root_chord + (self.my_wing1.root_chord*self.taper)) * 0.5,
                             ref_span=self.my_wing1.semispan * 2,
                             ref_pt= Point(0, 0, 0))
+
+    @Part
+    def runcaseee(self):
+        return avl.RunCase(filename = 'avlcases/alpha0.dat')
 
     @Part
     def interface(self):

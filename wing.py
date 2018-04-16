@@ -21,7 +21,7 @@ class Wing(GeomBase):
     #  Above is the User Requested Taper Ratio.
     dihedral = Input(5.0)
     #  Above is the User Required Dihedral Angle.
-    phi = Input(5.0)
+    twist = Input(5.0)
     #  Above is the twist of the tip section with respect to the root section.
     airfoil_type = Input('cambered')  # MAKE ERROR IF WRONG NAME INPUT!!!!!!!!!!!!!!
     #  Above is the standard airfoil type.
@@ -31,18 +31,21 @@ class Wing(GeomBase):
 
     #  TODO Fix CH10 bug?
 
+
+
     @Attribute
-    def S_req_half(self):
-        # This calculation of the required wing area from the design point is HALVED to work consistently with liftingsurface.py
-        return (self.MTOW/self.WS_pt)*0.5
+    def S_req(self):
+        # This calculation of the required wing area from the design point.
+        return (self.MTOW/self.WS_pt)
 
     @Part
+    #  This generates the wing. The area is halved because lifting surface generates one wing of that surface area.
     def wing_oop(self):
-        return LiftingSurface(S_req = self.S_req_half,
+        return LiftingSurface(S_req = self.S_req*0.5,
                               AR = self.AR,
                               taper = self.taper,
                               dihedral = self.dihedral,
-                              phi = self.phi,
+                              phi = self.twist,
                               airfoil_type = self.airfoil_type,
                               airfoil_choice = self.airfoil_choice,
                               offset = self.offset)
