@@ -37,12 +37,18 @@ class FFrame(GeomBase):
         """Defines the control points of the fuselage frame, this can be utilized to later fit a spline across all
         cross-sections of the fuselage
         """
-        return [self.frame.point1, self.frame.midpoint, self.frame.point2]
+
+        start = self.frame.point1
+        mid = self.frame.midpoint
+        end = self.frame.point2
+        mid_reflected = Point(mid[0], -mid[1], mid[2])
+
+        return [start, mid, end, mid_reflected]
 
     @Attribute(private=True)
     def framepoints(self):
-        """Defines the points utilized to construct the shape of the cross-section. If a different shape, is required
-        these points can be edited as long as a unit-square can still fit inside the cross-section
+        """Defines the points utilized to construct the shape of the cross-section. If a different shape is required
+        these points can be edited as long as a unit-rectangle (1 x 0.5) can still fit inside the cross-section
         """
         return [Point(0, 0, -0.05), Point(0, 0.8, 0.15), Point(0, 0, 0.6)]
 

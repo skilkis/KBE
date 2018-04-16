@@ -22,10 +22,10 @@ show_primitives = False  # type: bool
 
 class Battery(GeomBase):
 
-    sizing_target = Input('capacity')
+    sizing_target = Input('capacity', validator=val.OneOf([""]))
     sizing_value = Input(10000000)
-    max_width = Input(0.05)
-    max_height = Input(0.025)  # Suggested to use a wider-battery, max_height = max_width / 2 for fuselage aerodynamics
+    max_width = Input(0.05, validator=val.Positive())
+    max_height = Input(0.025, validator=val.Positive())  # Suggested to use a wider-battery, max_height = max_width / 2 for fuselage aerodynamics
 
     @Attribute
     def constants(self):

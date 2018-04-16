@@ -58,6 +58,41 @@ class Fuselage(GeomBase):
         return FusedShell(shape_in=self.surface, tool=self.surface2)
 
     @Part
+    def nose_reference(self):
+        return Point(-0.5, 0, 0)
+
+    @Attribute
+    def nose_top_guide(self):
+        start_frame = self.frame_builder[0]
+        points = start_frame.spline_points
+        return FittedCurve(points=[points[0], self.nose_reference, points[2]])
+
+    @Attribute
+    def nose_side_guide(self):
+        start_frame = self.frame_builder[0]
+        points = start_frame.spline_points
+        return FittedCurve(points=[points[1], self.nose_reference, points[3]])
+
+    @Attribute
+    def nose_frame(self):
+        start_frame = self.frame_builder[0]
+        points = start_frame.spline_points
+        return SplitCurve(curve_in=start_frame.frame, tool=points[1])
+
+    @Part
+    def nose_top_guide_split(self):
+        return SplitCurve(curve_in=self.nose_top_guide, tool=self.nose_reference)
+
+    @Part
+    def nose_side_guide_split(self):
+        return SplitCurve(curve_in=self.nose_side_guide, tool=self.nose_reference)
+
+    @Part
+    def filled_test(self):
+        return FilledSurface(curves=[self.nose_frame.edges[1], self.nose_top_guide_split.edges[1],
+                                     self.nose_side_guide_split.edges[0]])
+
+    @Part
     def fuselage(self):
         return MirroredShape(shape_in=self.half_fuselage, reference_point=YOZ,
                                vector1=Vector(1, 0, 0),
