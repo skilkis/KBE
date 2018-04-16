@@ -48,8 +48,9 @@ class UAV(Base):
     #     return FusedSolid(shape_in=self.battery, tool=self.camera)
 
     @Attribute
-    def my_method_test(self):
-        return self.frame_parameters(self.battery)
+    def frame_test(self):
+        frame1 = self.frame_parameters(self.battery)
+        frame2 = self.frame_parameters(self.camera)
 
     @Part
     def camera(self):
@@ -69,7 +70,7 @@ class UAV(Base):
 
         x = point0.x - fill_factor
         y = (width / 2.0) + point0.y
-        z = point0.z
+        z = (height/2.0) + point0.z
 
         parameter_dictionary = {'width': width,
                                 'height': height,

@@ -19,19 +19,18 @@ import io
 # Custom Colors
 from user import *
 
-__all__ = ["EOIR", "show_primitives"]
-
-# A parameter for debugging, turns the visibility of miscellaneous parts ON/OFF
-show_primitives = False  # type: bool
-
+__all__ = ["EOIR"]
 
 class EOIR(GeomBase):
 
-    target_weight = Input(0.2)
-    camera_name = Input('TASE400LRS')
+    __initargs__ = ["target_weight", "camera_name", "position"]
 
-    test_box = 0.1
-    test_gimbal = 0.10
+    # A parameter for debugging, turns the visibility of miscellaneous parts ON/OFF
+    __show_primitives = False  # type: bool
+
+    target_weight = Input(0.2, validator=val.Positive())
+    camera_name = Input(None)
+    position = Input(Position(Point(0, 0, 0)))
 
     @Attribute
     def specs(self):
@@ -66,8 +65,8 @@ class EOIR(GeomBase):
 
     @Attribute
     def bbox_intern(self):
-        self.internals.bbox.color = MyColors.deep_red
-        return self.internals.bbox
+        self.internal_shape.bbox.color = MyColors.deep_red
+        return self.internal_shape.bbox
 
     @Attribute
     def box_width(self):
@@ -146,74 +145,80 @@ class EOIR(GeomBase):
     # --- Output Solids: ----------------------------------------------------------------------------------------------
 
     @Part
-    def internals(self):
+    def internal_shape(self):
         return TransformedShape(shape_in=self.support_box_import,
                                 from_position=XOY,
-                                to_position=translate(rotate90(XOY, 'z_'), 'x_', self.box_width / 2.0),
+                                to_position=translate(translate(rotate90(XOY, 'z_'), 'x_', self.box_width / 2.0),
+                                                      'x', -self.position.y,
+                                                      'y', self.position.x,
+                                                      'z', self.position.z),
                                 color=MyColors.dark_grey)
 
 
     @Part
     def gimbal(self):
         return TranslatedShape(shape_in=self.gimbal_import,
-                               displacement=Vector(self.box_length / 2.0, 0, -self.exposed_height),
+                               displacement=Vector(self.position.x + (self.box_length / 2.0),
+                                                   self.position.y, self.position.z - self.exposed_height),
                                color=MyColors.light_grey)
 
     # TODO Investigate if making this a compound improves performance
     @Part
     def camera_body(self):
         return TranslatedShape(shape_in=self.camera_body_import,
-                               displacement=Vector(self.box_length / 2.0, 0, -self.exposed_height),
+                               displacement=Vector(self.position.x + (self.box_length / 2.0),
+                                                   self.position.y, self.position.z - self.exposed_height),
                                color=MyColors.light_grey)
 
     # --- Primitives: -------------------------------------------------------------------------------------------------
 
-    @Part(in_tree=show_primitives)
+    @Part(in_tree=__show_primitives)
     def support_box_import(self):  # The un-transformed box which creates the internals
-        return Box(self.box_width, self.box_length, self.box_height)
+        return Box(self.box_width, self.box_length, self.box_height, position=XOY)
 
-    @Part(in_tree=show_primitives)
+    @Part(in_tree=__show_primitives)
     def support_cylinder(self):  # The main cylinder used to create the gimbal
-        return Cylinder(self.gimbal_radius, self.gimbal_height)
+        return Cylinder(self.gimbal_radius, self.gimbal_height, position=XOY)
 
-    @Part(in_tree=show_primitives)
+    @Part(in_tree=__show_primitives)
     def cover_cylinder(self):  # A small cylinder used to fill the gap created by the cutout-tool
         return Cylinder(self.gimbal_radius, (child.radius / 2.0) + (self.gimbal_height - child.radius),
                         position=translate(XOY, 'z', child.radius / 2.0))
 
-    @Part(in_tree=show_primitives)
+    @Part(in_tree=__show_primitives)
     def gimbal_sphere(self):  # The main sphere used to create the camera body
-        return Sphere(self.gimbal_radius)
+        return Sphere(self.gimbal_radius, position=XOY)
 
-    @Part(in_tree=show_primitives)
+    @Part(in_tree=__show_primitives)
     def gimbal_outer_solid(self):  # A fused solid that is used to create the outer shape of the gimbal
         return FusedSolid(shape_in=self.gimbal_sphere, tool=self.support_cylinder)
 
-    @Part(in_tree=show_primitives)
+    @Part(in_tree=__show_primitives)
     def gimbal_main_support(self):  # The cutout_tool is used to empty out a space for the camera body
         return SubtractedSolid(shape_in=self.gimbal_outer_solid,
                                tool=self.cutout_tool)
 
-    @Part(in_tree=show_primitives)
+    @Part(in_tree=__show_primitives)
     def gimbal_cover(self):  # The top part of the gimbal_sphere is removed from 'cover_cylinder' to fill the gap
         return SubtractedSolid(shape_in=self.cover_cylinder,
                                tool=self.gimbal_sphere, make_compound=True)
 
-    @Part(in_tree=show_primitives)
+    @Part(in_tree=__show_primitives)
     def gimbal_import(self):  # The final gimbal part before translation
         return FusedSolid(shape_in=self.gimbal_main_support, tool=self.gimbal_cover)
 
-    @Part(in_tree=show_primitives)
+    @Part(in_tree=__show_primitives)
     def camera_body_import(self):  # The final camera part before translation
         return CommonSolid(shape_in=self.gimbal_sphere, tool=self.cutout_tool)
 
-    @Part(in_tree=show_primitives)
+    @Part(in_tree=__show_primitives)
     def cutout_tool(self):
         return Box(width=1.5 * self.gimbal_radius,
                    length=2.1 * self.gimbal_radius, # Added .1 safety factor to account for errors in subtraction
                    height=self.gimbal_radius*2.0,
                    position=rotate90(XOY, 'z'),
                    centered=True)
+
 
 if __name__ == '__main__':
     from parapy.gui import display
