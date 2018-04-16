@@ -27,8 +27,8 @@ class FFrame(GeomBase):
 
     __initargs__ = ["width", "height", "position"]
 
-    width = Input(1.0)
-    height = Input(0.5)
+    width = Input(1.0, validator=val.Positive())
+    height = Input(0.5, validator=val.Positive())
     position = Input(Position(Point(0, 0, 0)))  # Added to remove highlighted syntax errors
 
 
@@ -37,10 +37,17 @@ class FFrame(GeomBase):
         """Defines the control points of the fuselage frame, this can be utilized to later fit a spline across all
         cross-sections of the fuselage
         """
+        start = self.frame.start
 
-        start = self.frame.point1
-        mid = self.frame.midpoint
-        end = self.frame.point2
+        # This part got complicated due to the desired midpoint not being the one found through ParaPy, had to translate
+        # and scale the original point defined by the attribute `framepoints`
+        original_mid = self.framepoints[1]
+        mid = Point(original_mid.x,
+                    original_mid.y * self.width,
+                    original_mid.z * self.height * 2.0).translate(x=self.position.x,
+                                                                  z=self.position.z)
+
+        end = self.frame.end
         mid_reflected = Point(mid[0], -mid[1], mid[2])
 
         return [start, mid, end, mid_reflected]
