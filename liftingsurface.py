@@ -52,6 +52,8 @@ class LiftingSurface(GeomBase):
         return mac
 
 
+
+
     @Attribute
     def tipp_offsett(self):
         #  This attribute determines the spanwise offset of the root and tip leading edges.
@@ -140,6 +142,28 @@ class LiftingSurface(GeomBase):
         # This displays a red ball at the COG location of the SOLID wing.
         return Sphere(radius=0.05,
                       position=self.final_wing.cog, color='red')
+
+
+   # @Part
+   # def root_c_half(self):
+   #     #  This will make a point at half of the root chord to help find the half chord sweep.
+   #     return Point(x= self.root_chord*0.5,
+   #                  y = 0,
+   #                  z = 0)
+
+
+   # @Part
+   # def root_c_half(self):
+   #     #  This will make a point at half of the root chord to help find the half chord sweep.
+   #     return Point(x = self.final_wing.faces[1].position.x + 0.5*self.root_chord,
+   #                  y = self.final_wing.faces[1].position.y,
+   #                  z = self.final_wing.faces[1].position.z)
+   # @Part
+   # def tip_c_half(self):
+   #     #  This will make a point at half of the tip chord to help find the half chord sweep.
+   #     return Point(x = self.final_wing.faces[2].position.x + 0.5*self.taper*self.root_chord,
+   #                  y = self.final_wing.faces[2].position.y,
+   #                  z = self.final_wing.faces[2].position.z)
 
 
 if __name__ == '__main__':

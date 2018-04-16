@@ -65,9 +65,11 @@ class AVLtest(GeomBase):
                             ref_span=self.my_wing1.semispan * 2,
                             ref_pt= Point(0, 0, 0))
 
-    @Part
-    def runcaseee(self):
-        return avl.RunCase(filename = 'avlcases/alpha0.dat')
+   # @Part
+   # def runcaseee(self):
+   #     return avl.RunCase(filename = 'alpha010.dat')  #  THIS DOES NOT WORK.
+
+
 
     @Part
     def interface(self):
