@@ -5,7 +5,6 @@
 from parapy.core import *
 
 # Other Modules
-import ctypes
 from directories import *
 
 __all__ = ["ClassOne", "ClassTwo"]

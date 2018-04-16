@@ -5,9 +5,9 @@
 from parapy.geom import *
 from parapy.core import *
 
-__all__ = ["MFrame", "show_primitives"]
+#TODO Allow this to work with any input position
 
-show_primitives = False
+__all__ = ["MFrame"]
 
 
 class MFrame(GeomBase):
@@ -21,9 +21,11 @@ class MFrame(GeomBase):
 
     __initargs__ = ["motor_radius", "position"]
 
+    # A parameter for debugging, turns the visibility of miscellaneous parts ON/OFF
+    __show_primitives = False  # type: bool
+
     motor_radius = Input(0.5, validator=val.Positive())
     position = Input(Position(Point(0, 0, 0)))  # Added to remove highlighted syntax errors
-
 
     @Attribute(in_tree=True)
     def spline_points(self):
@@ -40,8 +42,9 @@ class MFrame(GeomBase):
 
     @Attribute(private=True)
     def framepoints(self):
-        """Defines the points utilized to construct the shape of the cross-section. If a different shape is required
-        these points can be edited as long as a unit-rectangle (1 x 0.5) can still fit inside the cross-section
+        """Defines the points utilized to construct the shape of the motor-mount cross-section. If a different shape
+        is required these points can be edited as long as a unit-circle (radius = 1) can still fit inside the
+        cross-section at the origin.
         """
         return [Point(0, 0, -self.motor_radius), Point(0, self.motor_radius, 0), Point(0, 0, self.motor_radius)]
 
@@ -54,7 +57,7 @@ class MFrame(GeomBase):
 
     # --- Primitives: -------------------------------------------------------------------------------------------------
 
-    @Part(in_tree=show_primitives)
+    @Part(in_tree=__show_primitives)
     def unit_hcircle_import(self):
         return Arc3P(point1=self.framepoints[0], point2=self.framepoints[1], point3=self.framepoints[2])
 

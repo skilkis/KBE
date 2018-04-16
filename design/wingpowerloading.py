@@ -12,6 +12,8 @@ from parapy.core import *
 from math import *
 import matplotlib.pyplot as plt
 
+__all__ = ["WingPowerLoading"]
+
 
 class WingPowerLoading(Base):
 

@@ -4,15 +4,12 @@
 # Required ParaPy Modules
 from parapy.geom import *
 from parapy.core import *
-from primitives import *
 
-from user import *
+# Required Modules
+from fframe import *
 from directories import *
 
-__all__ = ["FCone", "show_primitives"]
-
-# A parameter for debugging, turns the visibility of miscellaneous parts ON/OFF
-show_primitives = False  # type: bool
+__all__ = ["FCone"]
 
 
 class FCone(GeomBase):
@@ -20,9 +17,12 @@ class FCone(GeomBase):
     __initargs__ = ["support_frame", "direction", "slenderness_ratio", "fuselage_length", "tip_point_z"]
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'cone.png')
 
+    # A parameter for debugging, turns the visibility of miscellaneous parts ON/OFF
+    __show_primitives = False  # type: bool
+
     support_frame = Input(FFrame(width=1.0, height=0.5))  #
     direction = Input('x', validator=val.OneOf(["x", "x_"]))
-    slenderness_ratio = Input(0.5, validator=val.Positive())  # nose-cone length / fuselage_length
+    slenderness_ratio = Input(0.3, validator=val.Positive())  # nose-cone length / fuselage_length
     fuselage_length = Input(3.0, validator=val.Positive())
 
     @Attribute
@@ -69,29 +69,29 @@ class FCone(GeomBase):
 
     # --- Primitives: -------------------------------------------------------------------------------------------------
 
-    @Part(in_tree=show_primitives)
+    @Part(in_tree=__show_primitives)
     def filled_top(self):
         return FilledSurface(curves=[self.guides['f_curve'][1], self.guides['v_curve'][1].reversed,
                                      self.guides['h_curve'][0].reversed])
 
-    @Part(in_tree=show_primitives)
+    @Part(in_tree=__show_primitives)
     def filled_bot(self):
         return FilledSurface(curves=[self.guides['h_curve'][0], self.guides['v_curve'][0].reversed,
                                      self.guides['f_curve'][0]])
 
-    @Part(in_tree=show_primitives)
+    @Part(in_tree=__show_primitives)
     def fused_left(self):
         return FusedShell(shape_in=self.filled_top, tool=self.filled_bot)
 
-    @Part(in_tree=show_primitives)
+    @Part(in_tree=__show_primitives)
     def mirrored_right(self):
         return MirroredShape(shape_in=self.fused_left, reference_point=YOZ,
-                               vector1=Vector(1, 0, 0),
-                               vector2=Vector(0, 0, 1))
+                             vector1=Vector(1, 0, 0),
+                             vector2=Vector(0, 0, 1))
 
 
 if __name__ == '__main__':
     from parapy.gui import display
 
-    obj = FCone(color=MyColors.light_grey)
+    obj = FCone()
     display(obj)

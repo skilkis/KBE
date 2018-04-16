@@ -3,10 +3,11 @@
 
 # Useful package for checking working directory as well as the files inside this directory
 
+# Required ParaPy Modules
+from parapy.core import *
+
 # Necessary package for importing Excel Files
 import xlrd
-
-from parapy.core import *
 
 # Importing Necessary Classes
 from wingpowerloading import WingPowerLoading
@@ -77,7 +78,6 @@ class ParameterGenerator(Base):
                 self.configuration, self.handlaunch, self.portable)
 
         # TODO A nice to have would be a listener while loop that looks for file-size to detect changes
-
 
     if initialize_estimations:
         @Part

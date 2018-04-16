@@ -1,5 +1,4 @@
-from paramgenerator import ParameterGenerator
+from paramgenerator import *
 from weightestimator import *
-from wingpowerloading import WingPowerLoading
+from wingpowerloading import *
 
-__all__ = ["ParameterGenerator", "ClassOne", "ClassTwo", "WingPowerLoading"]

@@ -6,7 +6,7 @@ from parapy.geom import *
 from parapy.core import *
 
 # Required Modules
-from primitives import *
+from primitives.fus import *
 from user import *
 
 
@@ -70,9 +70,9 @@ class Fuselage(GeomBase):
     # def tailcone(self):
     #     return FCone(support_frame=self.boom, direction='x_')
 
-    # @Part
-    # def tailcone_2(self):
-    #     return FCone(support_frame=self.frame_builder[3], direction='x_')
+    @Part
+    def tailcone_2(self):
+        return FCone(support_frame=self.motor, direction='x_')
 
     # @Part
     # def nose_reference(self):

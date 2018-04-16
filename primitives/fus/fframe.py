@@ -5,9 +5,7 @@
 from parapy.geom import *
 from parapy.core import *
 
-__all__ = ["FFrame", "show_primitives"]
-
-show_primitives = False
+__all__ = ["FFrame"]
 
 
 class FFrame(GeomBase):
@@ -27,10 +25,12 @@ class FFrame(GeomBase):
 
     __initargs__ = ["width", "height", "position"]
 
+    # A parameter for debugging, turns the visibility of miscellaneous parts ON/OFF
+    __show_primitives = False  # type: bool
+
     width = Input(1.0, validator=val.Positive())
     height = Input(0.5, validator=val.Positive())
     position = Input(Position(Point(0, 0, 0)))  # Added to remove highlighted syntax errors
-
 
     @Attribute(in_tree=True)
     def spline_points(self):
@@ -71,17 +71,17 @@ class FFrame(GeomBase):
 
     # --- Primitives: -------------------------------------------------------------------------------------------------
 
-    @Part(in_tree=show_primitives)
+    @Part(in_tree=__show_primitives)
     def unit_curve_import(self):
         return InterpolatedCurve(points=self.framepoints,
                                  tangents=self.tangents)
 
-    @Part(in_tree=show_primitives)
+    @Part(in_tree=__show_primitives)
     def unit_curve(self):
         return ScaledCurve(curve_in=self.unit_curve_import,
                            reference_point=YOZ, factor=(1, self.width, self.height * 2.0))
 
-    @Part(in_tree=show_primitives)
+    @Part(in_tree=__show_primitives)
     def visualize_bounds(self):
         return Rectangle(width=self.width, length=self.height,
                          position=translate(YOZ, 'y', self.height / 2.0),

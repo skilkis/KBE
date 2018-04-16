@@ -14,6 +14,8 @@ __all__ = ["get_dir", "DIRS", "os", "sys"]
 
 # TODO Re-organize this to be a class structure if needed
 
+# TODO Maybe re-write to use os.getcwd()
+
 
 def is_frozen():
     """Is the current application code *frozen?*, i.e. build by a tool like
