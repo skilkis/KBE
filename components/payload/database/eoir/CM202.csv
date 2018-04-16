@@ -1,0 +1,8 @@
+﻿capability,EO/IR/LRF
+weight,3.5
+power,55
+id_range,1640
+resolution,640x480
+gimbal_dimensions,190x105x180
+box_dimensions,230x250x105
+rectractable,FALSE
