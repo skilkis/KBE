@@ -18,7 +18,7 @@ class ConventionalTail(GeomBase):
     AR = Input(9.0)     #  NEED THIS INPUT FROM CLASS II FOR CURRENT AIRCRAFT!!!!!!!!1
     e = Input(0.8)      #  NEED THIS INPUT FROM CLASS I FOR CURRENT A/C!!!!!!!!!
     CD0 = Input(0.02)   #  NEED THIS FROM CLASS I!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-#  FOR CONTROLABILITY CURVE, WE NEED TO FIND CL_A-H AT THE MINIMUM STALL SPEED-> MUST FIND CL_MAX FOR DIFFERENT WINGS!!!
+
 
 
     SM = Input(0.05)    #  This is the input Safety Margin

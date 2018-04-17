@@ -8,8 +8,8 @@ from parapy.core import *
 from parapy.geom import *
 from math import *
 from liftingsurface import LiftingSurface
-from avlwrapper import Geometry, Surface, Section, Point, Spacing, Session, Case, Parameter, NacaAirfoil
-
+from avl import Geometry, Surface, Section, Point, Spacing, Session, Case, Parameter, DataAirfoil
+import json
 
 #from design.wingpowerloading import designpoint['wing_loading']
 #from design.weightestimator import mtow
@@ -39,7 +39,7 @@ class Wing(GeomBase):
 
     @Attribute
     def S_req(self):
-        # This calculation of the required wing area from the design point.
+        # This calculation of the required TOTAL wing area from the design point.
         return (self.MTOW/self.WS_pt)
 
     @Part
@@ -53,23 +53,77 @@ class Wing(GeomBase):
                               airfoil_type = self.airfoil_type,
                               airfoil_choice = self.airfoil_choice,
                               offset = self.offset)
-    @Part
+
+    # control surface definition of a flap (to be used in the wing)
+
+
+
+
+
+    # TODO
+
+    @Attribute
+    def airfoil_data_conversion(self):
+        data = [[i.x, i.y] for i in self.wing_test.airfoil_data]
+        return data
+
+
+
+
+
+    @Attribute
     def root_section(self):
-        return Section(leading_edge_point = Point(0, 0, 0),
-                           chord=1.0,
-                           airfoil=NacaAirfoil(naca='2414'))
+        return Section(leading_edge_point=Point(0, 0, 0),
+                       chord=self.wing_test.root_chord,
+                       airfoil=DataAirfoil(x_data = self.airfoil_data_conversion[0], z_data=self.airfoil_data_conversion[1]))
+
+    @Attribute
+    def tip_section(self):
+        return Section(leading_edge_point=Point(self.wing_test.semispan*tan(self.wing_test.LE_sweep),
+                                                self.wing_test.semispan*tan(self.dihedral),
+                                                self.wing_test.semispan),
+                       chord=self.wing_test.root_chord*self.taper,
+                       angle = radians(self.twist),
+                       airfoil=DataAirfoil(x_data = self.airfoil_data_conversion[0], z_data=self.airfoil_data_conversion[1]))
+    @Attribute
+    def wing_surface(self):
+        return Surface(name="Wing",
+                       n_chordwise=8,
+                       chord_spacing=Spacing.cosine,
+                       n_spanwise=12,
+                       span_spacing=Spacing.cosine,
+                       y_duplicate=0.0,
+                       sections=[self.root_section, self.tip_section])
+
+    @Attribute
+    def wing_geom(self):
+        return Geometry(name="Test wing",
+                        reference_area=self.S_req,
+                        reference_chord= self.wing_test.mac,
+                        reference_span=self.wing_test.semispan*2.0,
+                        reference_point=Point(0.21, 0, 0.15),
+                        surfaces=[self.wing_surface])
+    @Attribute
+    def cruise_case(self):
+        return Case(name='Cruise', alpha=4.0)  # Case defined by one angle-of-attack
+    @Attribute
+    def avl_session(self):
+        return Session(geometry=self.wing_geom, cases=[self.cruise_case])
+
+    @Attribute
+    def show_avlgeom(self):
+        self.avl_session.show_geometry()
+        return 'Done'
+
+    @Attribute
+    def write_results(self):
+        results = self.avl_session.get_results()
+        with open('out.json', 'w') as f:
+            f.write(json.dumps(results))
+        return 'Done'
 
 
-  #  @Part
-  #  def wing_surface(self):
-  #      wing_surface = Surface(name="AVLWing",
-  #                             n_chordwise=8,
-  #                             chord_spacing=Spacing.cosine,
-  #                             n_spanwise=12,
-  #                             span_spacing=Spacing.cosine,
-  #                             y_duplicate=0.0,
-  #                             sections=[self.wing_test.final_wing.faces[1], self.wing_test.final_wing.faces[2]])
-  #      return wing_surface
+
 
 
 
