@@ -11,7 +11,9 @@ __all__ = ["FFrame"]
 class FFrame(GeomBase):
     """FFrame (Fuselage-Frame) is a class which utilizes a scaled 'unit curve' to define a fuselage cross-section
     that can fit a user-input `width` and `height`. Furthermore, to facilitate utilization of this class in batch mode,
-    the location of the cross-sections on to x-axis can be supplied with the parameter position=Translate
+    the location of the cross-sections on to x-axis can be supplied with the parameter position=Translate.
+    NOTE: the fuselage is constructed in a way to have a flat surface, thus when specifying a position of a `bbox` make
+    sure that it is the location of the front-bottom edge (furthest toward the nose and nadir direction)
 
     :param width: Internal usable width of the fuselage
     :type width: float
@@ -19,7 +21,7 @@ class FFrame(GeomBase):
     :param height: Internal usable height of the fuselage
     :type height: float
 
-    :param x_loc: Position of the cross-section on the x-axis
+    :param x_loc: Position of the cross-section in 3D space.
     :type x_loc: float
     """
 
@@ -45,10 +47,11 @@ class FFrame(GeomBase):
         mid = Point(original_mid.x,
                     original_mid.y * self.width,
                     original_mid.z * self.height * 2.0).translate(x=self.position.x,
+                                                                  y=self.position.y,
                                                                   z=self.position.z)
 
         end = self.frame.end
-        mid_reflected = Point(mid[0], -mid[1], mid[2])
+        mid_reflected = Point(mid[0], -mid[1], mid[2]).translate(y=2.0 * self.position.y)
 
         return [start, mid, end, mid_reflected]
 
@@ -68,7 +71,9 @@ class FFrame(GeomBase):
 
     @Part
     def frame(self):
-        return TranslatedCurve(curve_in=self.unit_curve, displacement=Vector(self.position.x, 0, self.position.z))
+        return TranslatedCurve(curve_in=self.unit_curve, displacement=Vector(self.position.x,
+                                                                             self.position.y,
+                                                                             self.position.z))
 
     # --- Primitives: -------------------------------------------------------------------------------------------------
 
@@ -85,7 +90,9 @@ class FFrame(GeomBase):
     @Part(in_tree=__show_primitives)
     def visualize_bounds(self):
         return Rectangle(width=self.width, length=self.height,
-                         position=translate(YOZ),
+                         # x is y, y is z, z is x
+                         position=translate(YOZ, 'x', self.position.y, 'y', (self.height / 2.0) + self.position.z,
+                                            'z', self.position.x),
                          color='red')
 
 

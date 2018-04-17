@@ -43,7 +43,7 @@ class Fuselage(GeomBase):
 
     @Part
     def motor(self):
-        return MFrame(motor_radius=0.2, position=translate(self.position, 'x', 4))
+        return MFrame(motor_radius=0.1, position=translate(self.position, 'x', 4, 'z', 0.1))
 
     @Part
     def surface(self):
@@ -53,16 +53,12 @@ class Fuselage(GeomBase):
     def surface2(self):
         return LoftedSurface(profiles=[self.frame_grabber[-1], self.boom.frame])
 
-    # @Part
-    # def boom(self):
-    #     return FFrame(width=0.1, height=0.1,
-    #                   position=translate(self.position,
-    #                                      'x', (self.frame_grabber[-1].frame.position.x / 2.0) + self.boom_length,
-    #                                      'z', self.frame_grabber[-1].frame.position.z))
-
-    # @Part
-    # def half_fuselage(self):
-    #     return FusedShell(shape_in=self.surface, tool=self.surface2)
+    @Part
+    def boom(self):
+        return FFrame(width=0.1, height=0.1,
+                      position=translate(self.position,
+                                         'x', (self.frame_grabber[-1].frame.position.x / 2.0) + self.boom_length,
+                                         'z', self.frame_grabber[-1].frame.position.z))
 
     @Part
     def nosecone(self):
@@ -72,9 +68,9 @@ class Fuselage(GeomBase):
     # def tailcone(self):
     #     return FCone(support_frame=self.boom, direction='x_')
 
-    @Part
-    def tailcone_2(self):
-        return FCone(support_frame=self.motor, direction='x_')
+    # @Part
+    # def tailcone_2(self):
+    #     return FCone(support_frame=self.motor, direction='x_')
 
     # @Part
     # def nose_reference(self):
