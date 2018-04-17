@@ -22,7 +22,7 @@ class Fuselage(GeomBase):
 
     @Attribute
     def frame_grabber(self):
-        frames = [self.frame_builder[i].frame for i in range(0, self.frame_builder.number_of_items)]
+        frames = [i.frame for i in self.frame_builder]
         frames.append(self.motor.frame)
         return frames
 

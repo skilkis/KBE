@@ -21,6 +21,7 @@ from user import *
 
 __all__ = ["EOIR"]
 
+
 class EOIR(GeomBase):
 
     __initargs__ = ["target_weight", "camera_name", "position"]
