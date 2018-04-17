@@ -1,2 +1,5 @@
+# PyCharm Project Folder
 .idea/
-avl/avlwrapper/config.cfg
+
+# User-Config Files
+.cfg
