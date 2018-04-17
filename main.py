@@ -36,7 +36,8 @@ class UAV(Base):
     @Part
     def battery(self):
         return Battery(pass_down="sizing_target", max_width=self.camera.box_width * 2.0,
-                       sizing_value=self.sizing_value)
+                       max_height=self.camera.box_height * 2.0,
+                       sizing_value=self.sizing_value, position=Position(Point(-0.01, 0, 0)))
 
     @Part
     def frame_builder(self):
@@ -52,10 +53,6 @@ class UAV(Base):
     @Part
     def test2(self):
         return LoftedSurface(profiles=self.frame_grabber)
-
-    # @Part
-    # def test2(self):
-    #     return FusedSolid(shape_in=self.battery, tool=self.camera)
 
     @Attribute
     def position_camera(self):
@@ -87,6 +84,7 @@ class UAV(Base):
 
     @staticmethod
     def frame_parameters(sizing_part):
+
         corners = sizing_part.internal_shape.bbox.corners
         point0 = min(corners)
         point1 = max(corners)
@@ -108,6 +106,29 @@ class UAV(Base):
 
         return parameter_dictionary
 
+    @staticmethod
+    def bbox_joiner(sizing_part):
+        if type(sizing_part) == list and len(sizing_part) > 1:
+            shape_in = sizing_part[0].internal_shape
+            for i in range(0, len(sizing_part) - 1):
+                new_part = Fused(shape_in=shape_in, tool=sizing_part[i+1].internal_shape)
+                shape_in = new_part
+
+            shape_out = shape_in
+        elif len(sizing_part):
+            shape_out = sizing_part[0]
+        else:
+            raise TypeError('The supplied sizing parts %s could not be merged' % sizing_part)
+        return shape_out.bbox
+
+
+    @Attribute
+    def test_merge(self):
+        return self.bbox_joiner([self.camera, self.battery])
+
+    @Attribute
+    def type_test(self):
+        return type(self.camera)
 
 if __name__ == '__main__':
     from parapy.gui import display
