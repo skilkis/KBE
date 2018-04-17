@@ -63,8 +63,8 @@ class UAV(Base):
 
     @Attribute
     def frame_test(self):
-        frame1 = self.frame_parameters(self.camera)
-        frame2 = self.frame_parameters(self.battery)
+        frame1 = self.frame_parameters(self.camera.internal_shape.bbox)
+        frame2 = self.frame_parameters(self.battery.internal_shape.bbox)
         return [frame1, frame2]
 
     @Attribute
@@ -85,7 +85,7 @@ class UAV(Base):
     @staticmethod
     def frame_parameters(sizing_part):
 
-        corners = sizing_part.internal_shape.bbox.corners
+        corners = sizing_part.corners
         point0 = min(corners)
         point1 = max(corners)
 
@@ -103,32 +103,30 @@ class UAV(Base):
                                 'height': height,
                                 'length': length,
                                 'position': Position(Point(x, y, z))}
-
         return parameter_dictionary
 
     @staticmethod
-    def bbox_joiner(sizing_part):
-        if type(sizing_part) == list and len(sizing_part) > 1:
-            shape_in = sizing_part[0].internal_shape
-            for i in range(0, len(sizing_part) - 1):
-                new_part = Fused(shape_in=shape_in, tool=sizing_part[i+1].internal_shape)
+    def bbox_joiner(sizing_components):
+        shape_out = None
+        if len(sizing_components) > 1:
+            shape_in = sizing_components[0].internal_shape
+            for i in range(0, len(sizing_components) - 1):
+                new_part = Fused(shape_in=shape_in, tool=sizing_components[i+1].internal_shape)
                 shape_in = new_part
-
             shape_out = shape_in
-        elif len(sizing_part):
-            shape_out = sizing_part[0]
-        else:
-            raise TypeError('The supplied sizing parts %s could not be merged' % sizing_part)
+        elif len(sizing_components) <= 1:
+            shape_out = sizing_components.internal_shape
         return shape_out.bbox
 
 
     @Attribute
     def test_merge(self):
-        return self.bbox_joiner([self.camera, self.battery])
+        return self.bbox_joiner()
 
     @Attribute
     def type_test(self):
         return type(self.camera)
+
 
 if __name__ == '__main__':
     from parapy.gui import display

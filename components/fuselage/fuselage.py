@@ -14,16 +14,29 @@ __all__ = ["Fuselage"]
 
 class Fuselage(GeomBase):
 
-    widths = Input([0.5, 0.8, 0.8, 0.5])
+    widths = Input([0.4, 0.8, 0.8, 0.5])
     heights = Input([0.2, 0.4, 0.4, 0.3])
     boom_length = Input(4.0)
     x_locs = Input([0, 1, 2, 3])
     z_locs = Input([0, 0, 0, 0])
 
+    # @Part
+    # def frame0(self):
+    #     return FFrame(width=self.widths[0], height=self.heights[0])
+    #
+    #
+    # @Part
+    # def frame1(self):
+    #     return FFrame(width=self.widths[1], height=self.heights[1], position=Position(Point(1, 0, 0)))
+    #
+    # @Part
+    # def cone_test(self):
+    #     return LoftedShell(profiles=[self.frame0.frame, self.frame1.frame])#, is_v_periodic=True)
+
     @Attribute
     def frame_grabber(self):
         frames = [i.frame for i in self.frame_builder]
-        frames.append(self.motor.frame)
+        # frames.append(self.motor.frame)
         return frames
 
     @Attribute
@@ -40,29 +53,31 @@ class Fuselage(GeomBase):
         return FFrame(quantify=len(self.widths), width=self.widths[child.index],
                       height=self.heights[child.index],
                       position=translate(self.position, 'x', self.x_locs[child.index], 'z', self.z_locs[child.index]))
+    #
+    # @Part
+    # def motor(self):
+    #     return MFrame(motor_radius=0.1, position=translate(self.position, 'x', 4, 'z', 0.1))
+    #
 
     @Part
-    def motor(self):
-        return MFrame(motor_radius=0.1, position=translate(self.position, 'x', 4, 'z', 0.1))
-
-    @Part
-    def surface(self):
+    def right(self):
         return LoftedSurface(profiles=self.frame_grabber)
 
-    @Part
-    def surface2(self):
-        return LoftedSurface(profiles=[self.frame_grabber[-1], self.boom.frame])
-
-    @Part
-    def boom(self):
-        return FFrame(width=0.1, height=0.1,
-                      position=translate(self.position,
-                                         'x', (self.frame_grabber[-1].frame.position.x / 2.0) + self.boom_length,
-                                         'z', self.frame_grabber[-1].frame.position.z))
-
-    @Part
-    def nosecone(self):
-        return FCone(support_frame=self.frame_builder[0], color=MyColors.light_grey)
+    #
+    # @Part
+    # def surface2(self):
+    #     return LoftedSurface(profiles=[self.frame_grabber[0], self.nosecone.tip_point])
+    #
+    # @Part
+    # def boom(self):
+    #     return FFrame(width=0.1, height=0.1,
+    #                   position=translate(self.position,
+    #                                      'x', (self.frame_grabber[-1].frame.position.x / 2.0) + self.boom_length,
+    #                                      'z', self.frame_grabber[-1].frame.position.z))
+    #
+    # @Part
+    # def nosecone(self):
+    #     return FCone(support_frame=self.frame_builder[0], color=MyColors.light_grey)
 
     # @Part
     # def tailcone(self):
@@ -107,16 +122,16 @@ class Fuselage(GeomBase):
     #     return FilledSurface(curves=[self.nose_frame.edges[1], self.nose_top_guide_split.edges[1],
     #                                  self.nose_side_guide_split.edges[0]])
 
-    @Part
-    def fuselage(self):
-        return MirroredShape(shape_in=self.half_fuselage, reference_point=YOZ,
-                               vector1=Vector(1, 0, 0),
-                               vector2=Vector(0, 0, 1),
-                               color=MyColors.light_grey)
-
-    @Part
-    def end_fuselage(self):
-        return FusedShell(shape_in=self.half_fuselage, tool=self.fuselage, color=MyColors.light_grey)
+    # @Part
+    # def fuselage(self):
+    #     return MirroredShape(shape_in=self.half_fuselage, reference_point=YOZ,
+    #                            vector1=Vector(1, 0, 0),
+    #                            vector2=Vector(0, 0, 1),
+    #                            color=MyColors.light_grey)
+    #
+    # @Part
+    # def end_fuselage(self):
+    #     return FusedShell(shape_in=self.half_fuselage, tool=self.fuselage, color=MyColors.light_grey)
 
 
 if __name__ == '__main__':
