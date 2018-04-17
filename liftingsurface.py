@@ -12,7 +12,7 @@ class LiftingSurface(GeomBase):
     #  or Wing Area, Aspect Ratio, airfoil type and choice and Elliptical shape
     #  Below we build the wing  with the Leading Edge at (x,y,z) = (0,0,0), x is chordwise and y is up.
 
-    S_req = Input(0.8)
+    S = Input(0.8)
     #  Above is the Required TOTAL Wing Area for this SINGLE lifting surface.
     AR = Input(9.0)
     #  Above is the requested
@@ -33,12 +33,12 @@ class LiftingSurface(GeomBase):
     @Attribute
     def semispan(self):
         #  This attribute calculated the required semi-span based on the Class I area and Aspect Ratio
-        return sqrt(self.AR*self.S_req*0.5)
+        return sqrt(self.AR*self.S*0.5)
 
     @Attribute
     def root_chord(self):
         #  This attribute calculates the required root chord, with an assumed taper ratio.
-        return 2*self.S_req/((1+self.taper)*self.semispan)
+        return 2*self.S/((1+self.taper)*self.semispan)
 
     @Attribute (in_tree = True)
     #  This will return the Wings Center of Gravity calculated from the parapy solid.
@@ -50,6 +50,28 @@ class LiftingSurface(GeomBase):
     def mac(self):
         mac = (2*self.root_chord*(1 + self.taper + self.taper ** 2))/(3*(1+self.taper))
         return mac
+    @Attribute
+    def LE_sweep(self):
+        #  This will calculate the leading edge sweep of the wing. (before dihedral applied)
+        le_sweep = degrees(atan(self.tip_airfoil.position.x/self.semispan))
+        return le_sweep
+
+    @Part
+    def LE(self):
+        #  This makes a line indicating the leading edge, which will be used to calculate the sweep.
+        return LineSegment(start= self.root_airfoil.position, end = self.tip_airfoil.position)
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -119,8 +141,7 @@ class LiftingSurface(GeomBase):
                                 from_position = self.tip_airfoil_notwist.position,
                                 to_position = rotate(self.tip_airfoil_notwist.position,
                                                      'z',
-                                                     -radians(self.phi)),
-                                hidden=True)
+                                                     -radians(self.phi)))
 
 
     @Part
