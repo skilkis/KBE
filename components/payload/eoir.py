@@ -6,6 +6,7 @@
 
 # TODO Comment the whole code
 # TODO add attributes necessary for fuselage class
+# TODO add database as input w/ custom validator function
 
 # Required ParaPy Modules
 from parapy.core import *
@@ -14,7 +15,7 @@ from parapy.geom import *
 # Necessary Modules for Data Processing
 from directories import *
 from os import listdir
-import io
+from my_csv2dict import *
 
 # Custom Colors
 from user import *
@@ -39,13 +40,13 @@ class EOIR(GeomBase):
             selected_camera_specs = [num[1] for num in self.camera_database if num[0] == self.camera_selector]
             return selected_camera_specs[0]
         else:
-            return self.read_csv(self.camera_name)
+            return read_csv(self.camera_name, DIRS['EOIR_DATA_DIR'])
 
     @Attribute
     def camera_database(self):
         database_path = DIRS['EOIR_DATA_DIR']
         camera_names = [str(i.split('.')[0]) for i in listdir(database_path) if i.endswith('csv')]
-        cameras = [[name, self.read_csv(name)] for name in camera_names]
+        cameras = [[name, read_csv(name, DIRS['EOIR_DATA_DIR'])] for name in camera_names]
         return cameras
 
     @Attribute
@@ -98,50 +99,6 @@ class EOIR(GeomBase):
     @Attribute
     def exposed_height(self):
         return (self.specs['gimbal_dimensions'][2] / 1000.0) - self.gimbal_radius
-
-    # TODO consider moving read_csv in-case other files require the same class
-    def read_csv(self, camera_name):
-        filename = ('%s.csv' % camera_name)
-        directory = get_dir(os.path.join(DIRS['EOIR_DATA_DIR'], filename))
-        with io.open(directory, mode='r', encoding='utf-8-sig') as f:
-            spec_dict = {}
-            filtered = (line.replace("\n", '') for line in f)  # Removes \n from the created as a byproduct of encoding
-            for line in filtered:
-                field, value = line.split(',')
-                if self.has_number(value):
-                    if value.find('x') != -1:
-                        if value.find('.') != -1:
-                            value = [float(i) for i in value.split('x')]
-                        else:
-                            value = [int(i) for i in value.split('x')]
-                    else:
-                        value = float(value)
-                else:
-                    if value.find('/') != -1:
-                        value = [str(i) for i in value.split('/')]
-                    elif (value.lower()).find('true') != -1:
-                        value = True
-                    elif (value.lower()).find('false') != -1:
-                        value = False
-                    else:
-                        value = str(value)
-                spec_dict['%s' % str(field)] = value
-            f.close()
-            return spec_dict
-
-    @staticmethod
-    def has_number(any_string):
-        """ Returns True/False depending on if the input string contains any numerical characters (i.e 0, 1, 2, 3...9)
-        :param any_string: A user-input, any valid string is accepted
-        :type any_string: str
-        :rtype: bool
-
-        >>> has_number('I do not contain any numbers')
-        False
-        >>> has_number('Oh look what we have here: 2')
-        True
-        """
-        return any(char.isdigit() for char in any_string)
 
     # --- Output Solids: ----------------------------------------------------------------------------------------------
 

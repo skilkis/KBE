@@ -1,0 +1,10 @@
+diameter,35.0
+length,36.0
+kv,1200
+constant_power,500
+burst_power,650
+weight,102
+shaft_diameter,4.0
+esc_recommendation,45
+voltage_range,11.1x14.8
+prop_recommendation,"10x7E/11x7E"

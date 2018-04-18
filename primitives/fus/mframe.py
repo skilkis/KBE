@@ -36,7 +36,7 @@ class MFrame(GeomBase):
         start = self.frame.start
         mid = self.frame.midpoint
         end = self.frame.end
-        mid_reflected = Point(mid[0], -mid[1], mid[2])
+        mid_reflected = Point(mid[0], -mid[1], mid[2]).translate(y=2.0 * self.position.y)
 
         return [start, mid, end, mid_reflected]
 
@@ -53,7 +53,7 @@ class MFrame(GeomBase):
     @Part
     def frame(self):
         return TranslatedCurve(curve_in=self.unit_hcircle_import,
-                               displacement=Vector(self.position.x, 0, self.position.z))
+                               displacement=Vector(self.position.x, self.position.y, self.position.z))
 
     # --- Primitives: -------------------------------------------------------------------------------------------------
 

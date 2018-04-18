@@ -25,8 +25,8 @@ class Battery(GeomBase):
     sizing_target = Input('capacity', validator=val.OneOf(["capacity", "weight"]))
     # TODO link this to custom validator function
     sizing_value = Input(10000000.0, validator=val.Positive())
-    max_width = Input(0.05, validator=val.Positive())
-    max_height = Input(0.025, validator=val.Positive())  # Suggested to use a wider-battery, max_height = max_width / 2 for fuselage aerodynamics
+    max_width = Input(0.15, validator=val.Positive())
+    max_height = Input(0.1, validator=val.Positive())  # Suggested to use a wider-battery, max_height = max_width / 2 for fuselage aerodynamics
     position = Input(Position(Point(0, 0, 0)))
 
     @Attribute
