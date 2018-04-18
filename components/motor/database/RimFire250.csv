@@ -1,0 +1,10 @@
+diameter,28.0
+length,13
+kv,1750
+constant_power,90
+burst_power,120
+weight,20
+shaft_diameter,3.0
+esc_recommendation,8
+voltage_range,7.4x11.1
+prop_recommendation,"7x6SF/8x4SF"
