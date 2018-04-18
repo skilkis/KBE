@@ -2,7 +2,7 @@ clc
 close all
 clear all
 
-fid= fopen('cambered/NACA22112.dat','r'); % Filename can be changed as required
+fid= fopen('cambered/S4083.dat','r'); % Filename can be changed as required
 Coor = fscanf(fid,'%g %g',[2 Inf]) ; 
 fclose(fid) ; 
 Coorpr = Coor';

@@ -15,8 +15,10 @@ e = 0.8
 C_Dcg = [(C_D_0 + num ** 2 / (pi * AR * e)) for num in C_Lcg]
 x_cgslt = np.linspace(0,10,101)
 
+xtan = tan(radians(10.0))
+alphas = np.linspace(0.0,4.0,20)
 
-print x_cgslt
+print alphas, range(0,len(alphas)+1)
 
 #
 # rho = 1.225             #ISA SL Density

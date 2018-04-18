@@ -5,6 +5,7 @@
 from parapy.core import *
 from parapy.geom import *
 from math import *
+from directories import *
 
 
 class LiftingSurface(GeomBase):
@@ -20,7 +21,7 @@ class LiftingSurface(GeomBase):
     #  Above is the User Requested Taper Ratio.
     dihedral = Input(5.0)
     #  Above is the User Required Dihedral Angle.
-    phi = Input(5.0)
+    phi = Input(1.0)
     #  Above is the twist of the tip section with respect to the root section.
     airfoil_type = Input('cambered')  #MAKE ERROR IF WRONG NAME INPUT!!!!!!!!!!!!!!
     #  Above is the standard airfoil type.
@@ -50,6 +51,19 @@ class LiftingSurface(GeomBase):
     def mac(self):
         mac = (2*self.root_chord*(1 + self.taper + self.taper ** 2))/(3*(1+self.taper))
         return mac
+    @Attribute
+    #  This will determine the x and y location of the mac
+    def mac_y(self):
+        return ((self.semispan*2)/6.0)*((1+2*self.taper)/(1+self.taper))
+    @Attribute
+    #  This will determine the x location of the MAC
+    def mac_x(self):
+        return (self.mac_y*tan(radians(self.LE_sweep)))
+
+    @Attribute
+    def mac_z(self):
+        return (self.mac_y*tan(radians(self.dihedral)))
+
     @Attribute
     def LE_sweep(self):
         #  This will calculate the leading edge sweep of the wing. (before dihedral applied)
@@ -92,11 +106,12 @@ class LiftingSurface(GeomBase):
     @Attribute
     def airfoil_data(self):
         #  This reads and scans User chosen Airfoil Data from the database and stores it as airfoil_data.
-        with open('airfoils/%s/%s.dat' % (self.airfoil_type, self.airfoil_choice), 'r') as f:
+        filepath = get_dir(os.path.join('airfoils', self.airfoil_type,'%s.dat' %self.airfoil_choice))
+        with open(filepath, 'r') as f:
             pts = []
             for i in f:
                 x,y = i.split(' ',1)
-                pts.append(Point(float(x), float(y)))
+                pts.append(Point(float(x), 0, float(y)))
         return pts
 
     @Part
@@ -129,7 +144,7 @@ class LiftingSurface(GeomBase):
         return TransformedCurve(curve_in = self.scaled_tip,
                                 from_position = self.scaled_tip.position,
                                 to_position = translate(self.scaled_tip.position,
-                                                        'z', self.semispan,
+                                                        'y', self.semispan,
                                                         'x', self.tipp_offsett),
                                 hidden=True)
 
@@ -140,7 +155,7 @@ class LiftingSurface(GeomBase):
         return TransformedCurve(curve_in = self.tip_airfoil_notwist,
                                 from_position = self.tip_airfoil_notwist.position,
                                 to_position = rotate(self.tip_airfoil_notwist.position,
-                                                     'z',
+                                                     'y',
                                                      -radians(self.phi)))
 
 
@@ -156,7 +171,7 @@ class LiftingSurface(GeomBase):
         return RotatedShape(shape_in = self.wing_surf,
                             rotation_point=Point(0, 0, 0),
                             vector = Vector(1,0,0),
-                            angle = radians(-self.dihedral))
+                            angle = radians(self.dihedral))
 
     @Part
     def cog_wing(self):
@@ -164,28 +179,24 @@ class LiftingSurface(GeomBase):
         return Sphere(radius=0.05,
                       position=self.final_wing.cog, color='red')
 
-
-   # @Part
-   # def root_c_half(self):
-   #     #  This will make a point at half of the root chord to help find the half chord sweep.
-   #     return Point(x= self.root_chord*0.5,
-   #                  y = 0,
-   #                  z = 0)
-
-
-   # @Part
-   # def root_c_half(self):
-   #     #  This will make a point at half of the root chord to help find the half chord sweep.
-   #     return Point(x = self.final_wing.faces[1].position.x + 0.5*self.root_chord,
-   #                  y = self.final_wing.faces[1].position.y,
-   #                  z = self.final_wing.faces[1].position.z)
-   # @Part
-   # def tip_c_half(self):
-   #     #  This will make a point at half of the tip chord to help find the half chord sweep.
-   #     return Point(x = self.final_wing.faces[2].position.x + 0.5*self.taper*self.root_chord,
-   #                  y = self.final_wing.faces[2].position.y,
-   #                  z = self.final_wing.faces[2].position.z)
-
+    @Part
+    def mac_notwist(self):
+        #  This will make a visual MAC on the wing.
+        return ScaledCurve(curve_in=self.airfoil,
+                           reference_point=Point(self.mac_x,
+                                                 self.mac_y,
+                                                 self.mac_z),
+                           factor=self.mac,
+                           hidden = True)
+    @Part
+    def mac_dummy(self):
+        #  This orients the tip airfoil over the wing twist angle input. The rotation is about the leading edge.
+        return TransformedCurve(curve_in = self.mac_notwist,
+                                from_position = self.mac_notwist.position,
+                                to_position = rotate(self.mac_notwist.position,
+                                                     'y',
+                                                     -radians((self.phi/self.semispan)*self.mac_y)),
+                                color = 'red')
 
 if __name__ == '__main__':
     from parapy.gui import display
