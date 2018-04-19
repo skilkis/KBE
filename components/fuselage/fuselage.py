@@ -6,11 +6,10 @@ from parapy.geom import *
 from parapy.core import *
 
 # Required Modules
-from primitives.fus import *
 from user import *
 from primitives import *
 from components import *
-from directories import *
+
 
 __all__ = ["Fuselage"]
 
@@ -34,11 +33,12 @@ class Fuselage(GeomBase):
     #                 Box(position=YOZ, width=1, length=0.5, height=2, centered=True),
     #                 Box(position=translate(YOZ, z=2.2), width=1.5, length=0.5, height=2, centered=True),
     #                 Cylinder(position=translate(YOZ, z=2.5), radius=0.1, height=0.2)])
+
+
     sizing_parts = Input([None,
                           EOIR(position=translate(YOZ, 'z', -0.2)),
                           [Battery(position=Position(Point(0, 0, 0))),
-                          EOIR(position=translate(XOY, 'z', 0.5))],
-                          Cylinder(position=translate(YOZ, z=3.0), radius=0.1, height=0.1)])
+                          EOIR(position=translate(XOY, 'z', 0.5))], Motor()])
 
     @Attribute
     def frame_builder(self):

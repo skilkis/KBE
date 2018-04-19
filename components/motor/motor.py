@@ -10,7 +10,6 @@ from my_csv2dict import *
 from directories import *
 from os import listdir
 
-
 __all__ = ["Motor"]
 
 
@@ -19,7 +18,7 @@ class Motor(GeomBase):
     __initargs__ = ["target_power", "motor_name", "position"]
 
     # A parameter for debugging, turns the visibility of miscellaneous parts ON/OFF
-    __show_primitives = True  # type: bool
+    __show_primitives = False  # type: bool
 
     target_power = Input(100.0, validator=val.Positive())
     motor_name = Input(None)
@@ -130,7 +129,7 @@ class Motor(GeomBase):
     def internals(self):
         return ChamferedSolid(built_from=self.motor_body_import,
                               distance=self.shaft_diameter,
-                              edge_table=(self.chamfer_edges[0], self.chamfer_edges[1]))
+                              edge_table=self.chamfer_edges)
 
     @Part
     def shaft(self):

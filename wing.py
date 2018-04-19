@@ -19,15 +19,12 @@ import matplotlib.pyplot as plt
 from design import *
 
 
-class Wing(GeomBase, WingPowerLoading, ClassOne):  # TODO experiment if this works, multiple inheritance
+# class Wing(GeomBase, WingPowerLoading, ClassOne):  # TODO experiment if this works, multiple inheritance
+class Wing(GeomBase):
 
-    @Attribute
-    def WS_pt(self):
-        return self.designpoint['wing_loading']
-
-    # WS_pt = Input(50.0)  # MUST GET THIS INPUT FROM CLASS I!!!!!!!!!!!!!!!!!!!!!!!!!!
+    WS_pt = Input(50.0)  # MUST GET THIS INPUT FROM CLASS I!!!!!!!!!!!!!!!!!!!!!!!!!!
     MTOW = Input(25.0)  # MUST GET THIS INPUT FROM CLASS I!!!!!!!!!!!!!!!!!!!!!!!!!!
-    AR = Input([3])  # MUST GET THIS FROM CLASS i!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    AR = Input(12)  # MUST GET THIS FROM CLASS i!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     V_s = Input(15.0)  # MUST GET THIS INPUT FROM CLASS I!!!!!!!!!!!!!!!!!!!!!!!!!!
     #  Above is the required stall speed from the class I estimation.
 
@@ -56,7 +53,7 @@ class Wing(GeomBase, WingPowerLoading, ClassOne):  # TODO experiment if this wor
     @Attribute
     def S_req(self):
         # This calculation of the required TOTAL wing area from the design point.
-        return (self.MTOW/self.WS_pt)
+        return ((self.MTOW * 9.81)/self.WS_pt) # TODO wing loading is in N/m^2 thus we have to have a global variable for g
 
 
     @Attribute
@@ -70,7 +67,7 @@ class Wing(GeomBase, WingPowerLoading, ClassOne):  # TODO experiment if this wor
     #  This generates the wing. The area is halved because lifting surface generates one wing of that surface area.
     def wing_test(self):
         return LiftingSurface(S=self.S_req*0.5,
-                              AR=self.AR[0],
+                              AR=self.AR,
                               taper=self.taper,
                               dihedral=self.dihedral,
                               phi=self.twist,
