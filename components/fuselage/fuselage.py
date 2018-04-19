@@ -10,7 +10,6 @@ from user import *
 from primitives import *
 from components import *
 
-
 __all__ = ["Fuselage"]
 
 
@@ -28,17 +27,27 @@ class Fuselage(GeomBase):
     # def motor(self):
     #     return Cylinder(position=translate(YOZ, z=4), radius=0.2, height=0.4)
 
-    compartment_type = Input(['nose', 'container', 'container', 'motor'])
+    compartment_type = Input(['nose', 'container', 'container', 'container', 'motor'])
     # sizing_parts = ([None,
     #                 Box(position=YOZ, width=1, length=0.5, height=2, centered=True),
     #                 Box(position=translate(YOZ, z=2.2), width=1.5, length=0.5, height=2, centered=True),
     #                 Cylinder(position=translate(YOZ, z=2.5), radius=0.1, height=0.2)])
 
-
     sizing_parts = Input([None,
                           EOIR(position=translate(YOZ, 'z', -0.2)),
-                          [Battery(position=Position(Point(0, 0, 0))),
-                          EOIR(position=translate(XOY, 'z', 0.5))], Motor()])
+                          [Battery(position=Position(Point(0, 0, 0))), EOIR(position=translate(XOY, 'z', 0.02))],
+                          EOIR(position=translate(YOZ, 'z', 0.5)),
+                          Motor(position=translate(XOY, 'x', 1.0))])
+
+    nose_loc = Input(Point(-0.3, 0, 0))
+
+    # sizing_parts = Input([None,
+    #                       EOIR(position=translate(YOZ, 'z', -0.2)),
+    #                       EOIR(position=translate(YOZ, 'z', 0.2), camera_name='TASE400LRS'),
+    #                       EOIR(position=translate(YOZ, 'z', 0.5)),
+    #                       EOIR(position=translate(YOZ, 'z', 0.7)),
+    #                       Motor(position=translate(XOY, 'x', 1.0))])
+
 
     @Attribute
     def frame_builder(self):
@@ -47,22 +56,71 @@ class Fuselage(GeomBase):
 
             frames = []
             still_to_build = []
-            for i in range(0, len(self.compartment_type)):
+            first_container = True
+            apex_reached = False
+            build_loc = 'start'
+            for i in range(0, len(self.compartment_type) - 1):
+                _type = self.compartment_type[i]
+                _next_type = self.compartment_type[i+1]
+                print i
 
-                if i == 0 and self.compartment_type[i] == 'nose':
+                if i == 0 and _type == 'nose':
                     still_to_build.append(['nose', i])
 
-                if self.compartment_type[i] == 'container':
-                    bbox = self.bbox_extractor(self.sizing_parts[i])
-                    frames.append(self.bbox_to_frame(bbox))
+                if _type == 'container':
+                    if first_container:
+                        _bbox = self.bbox_extractor(self.sizing_parts[i])
+                        frames.append(self.bbox_to_frame(_bbox, build_loc))
+                        first_container = False
+                    else:
+                        if _next_type == 'container':
+                            _bbox = self.bbox_extractor(self.sizing_parts[i])
+                            _frame = self.bbox_to_frame(_bbox, build_loc)
 
-                elif self.compartment_type[i] == 'motor':
-                    frames.append([MFrame(motor_radius=self.sizing_parts[i].radius,
-                                          position=self.sizing_parts[i].position), None])
+                            _next_bbox = self.bbox_extractor(self.sizing_parts[i+1])
+                            _next_frame = self.bbox_to_frame(_next_bbox, build_loc)
+
+                            # True means that the next frame is larger than the current
+                            _width_check = (True
+                                            if _frame[1]['width'] < _next_frame[1]['width']
+                                            else False)
+                            _height_check = (True
+                                             if _frame[1]['height'] < _next_frame[1]['height']
+                                             else False)
+
+                            if _width_check and _height_check is True:
+                                frames.append(self.bbox_to_frame(_bbox, build_loc))
+                            else:
+                                if not apex_reached:
+                                    frames.append(self.bbox_to_frame(_bbox, build_loc))
+                                    build_loc = 'end'
+                                    frames.append(self.bbox_to_frame(_bbox, build_loc))
+                                    apex_reached = True
+                                    print "apex reached"
+                                elif apex_reached:
+                                    raise TypeError('Only a fuselage with one apex (location of maximum area) is '
+                                                    'allowed. Please re-arrange internals so that maximum thickness'
+                                                    ' occurs only once')
+                        elif _next_type != 'container':
+                            _bbox = self.bbox_extractor(self.sizing_parts[i])
+                            frames.append(self.bbox_to_frame(_bbox, build_loc))
+                            build_loc = 'end'
+                            frames.append(self.bbox_to_frame(_bbox, build_loc))
+
+                if i + 2 == len(self.compartment_type):
+                    if _next_type == 'motor':
+                        frames.append([MFrame(motor_diameter=self.sizing_parts[i+1].diameter,
+                                              position=self.sizing_parts[i+1].position), None])
+                #     elif
+                #     print "LALALALALALALAL"
         else:
             raise IndexError('The supplied ')
 
         return frames
+
+    @Attribute
+    def nose_cone_frame(self):
+        return FFrame(0.01, 0.01, Position(self.nose_loc))
 
     @Attribute
     def frame_grabber(self):
@@ -70,14 +128,25 @@ class Fuselage(GeomBase):
 
     @Part
     def fuselage_left(self):
-        return LoftedSurface(profiles=self.frame_grabber)
+        return LoftedShell(profiles=self.frame_grabber, check_compatibility=True)
+
+    @Attribute
+    def length(self):
+        return self.fuselage_left.bbox.width
+
+    @Part
+    def test(self):
+        return FCone(support_frame=self.frame_builder[0][0],
+                     fuselage_length=self.fuselage_left.bbox.width,
+                     direction='x')
+
 
 
 
 
 
     @staticmethod
-    def bbox_to_frame(bbox):
+    def bbox_to_frame(bbox, placement='start'):
 
         corners = bbox.corners
         point0 = min(corners)
@@ -89,7 +158,7 @@ class Fuselage(GeomBase):
 
         # fill_factor = 0.01*length
 
-        x = point0.x
+        x = (point0.x if placement == 'start' else point0.x + length if placement == 'end' else 0)
         y = (width / 2.0) + point0.y
         z = point0.z
         position = Position(Point(x, y, z))

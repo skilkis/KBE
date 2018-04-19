@@ -24,7 +24,7 @@ class MFrame(GeomBase):
     # A parameter for debugging, turns the visibility of miscellaneous parts ON/OFF
     __show_primitives = False  # type: bool
 
-    motor_radius = Input(0.5, validator=val.Positive())
+    motor_diameter = Input(0.5, validator=val.Positive())
     position = Input(Position(Point(0, 0, 0)))  # Added to remove highlighted syntax errors
 
     @Attribute(in_tree=True)
@@ -39,6 +39,10 @@ class MFrame(GeomBase):
         mid_reflected = Point(mid[0], -mid[1], mid[2]).translate(y=2.0 * self.position.y)
 
         return [start, mid, end, mid_reflected]
+
+    @Attribute
+    def motor_radius(self):
+        return self.motor_diameter / 2.0
 
     @Attribute(private=True)
     def framepoints(self):

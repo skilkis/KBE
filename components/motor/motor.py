@@ -126,7 +126,7 @@ class Motor(GeomBase):
     # --- Output Parts: -----------------------------------------------------------------------------------------------
 
     @Part
-    def internals(self):
+    def internal_shape(self):
         return ChamferedSolid(built_from=self.motor_body_import,
                               distance=self.shaft_diameter,
                               edge_table=self.chamfer_edges)
