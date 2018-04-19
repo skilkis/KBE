@@ -10,6 +10,7 @@ from primitives.fus import *
 from user import *
 from primitives import *
 from components import *
+from directories import *
 
 __all__ = ["Fuselage"]
 
@@ -74,6 +75,7 @@ class Fuselage(GeomBase):
 
 
 
+
     @staticmethod
     def bbox_to_frame(bbox):
 
@@ -115,6 +117,7 @@ class Fuselage(GeomBase):
         else:
             shape_out = sizing_components.internal_shape
         return shape_out.bbox
+
 
 
 

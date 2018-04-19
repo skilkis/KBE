@@ -32,7 +32,7 @@ class EOIR(GeomBase):
 
     target_weight = Input(0.2, validator=val.Positive())
     camera_name = Input(None)
-    position = Input(Position(Point(0, 0, 0)))
+    position = Input(YOZ)
 
     @Attribute
     def specs(self):

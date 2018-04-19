@@ -1,0 +1,10 @@
+diameter, 15
+length, 15.9
+kv, 3000
+constant_power, 21
+burst_power, 24
+weight, 7.1
+shaft_diameter, 1.5
+esc_recommendation, 6
+prop_recommendation_min, 5x4.3
+prop_recommendation_max, 5x4.3

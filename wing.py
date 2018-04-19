@@ -7,21 +7,27 @@
 from parapy.core import *
 from parapy.geom import *
 from math import *
+
+from design.wingpowerloading import WingPowerLoading
 from liftingsurface import LiftingSurface
 from avl import Geometry, Surface, Section, Point, Spacing, Session, Case, DataAirfoil, NacaAirfoil, FileAirfoil
 import json
 from directories import *
 import numpy as np
+import matplotlib.pyplot as plt
 
-#from design.wingpowerloading import designpoint['wing_loading']
-#from design.weightestimator import mtow
+from design import *
 
 
+class Wing(GeomBase, WingPowerLoading, ClassOne):  # TODO experiment if this works, multiple inheritance
 
-class Wing(GeomBase):
-    WS_pt = Input(50.0)  # MUST GET THIS INPUT FROM CLASS I!!!!!!!!!!!!!!!!!!!!!!!!!!
+    @Attribute
+    def WS_pt(self):
+        return self.designpoint['wing_loading']
+
+    # WS_pt = Input(50.0)  # MUST GET THIS INPUT FROM CLASS I!!!!!!!!!!!!!!!!!!!!!!!!!!
     MTOW = Input(25.0)  # MUST GET THIS INPUT FROM CLASS I!!!!!!!!!!!!!!!!!!!!!!!!!!
-    AR = Input(12.0)  # MUST GET THIS FROM CLASS i!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    AR = Input([3])  # MUST GET THIS FROM CLASS i!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     V_s = Input(15.0)  # MUST GET THIS INPUT FROM CLASS I!!!!!!!!!!!!!!!!!!!!!!!!!!
     #  Above is the required stall speed from the class I estimation.
 
@@ -31,17 +37,20 @@ class Wing(GeomBase):
     #  Above is the User Required Dihedral Angle.
     twist = Input(2.0)
     #  Above is the twist of the tip section with respect to the root section.
-    airfoil_type = Input('cambered')  # MAKE ERROR IF WRONG NAME INPUT!!!!!!!!!!!!!!
+    airfoil_type = Input('cambered', validator=val.OneOf(['cambered', 'reflexed', 'symmetric']))  # MAKE ERROR IF WRONG NAME INPUT!!!!!!!!!!!!!!
     #  Above is the standard airfoil type.
     airfoil_choice = Input('SA7036')  # MAKE ERROR IF WRONG NAME INPUT!!!!!!!!!!!!!!
     #  Above the Standard airfoil. The Cambered Symmetric and reflexed airfoil database is in folder 'airfoils'
     offset = Input(None)
 
-    rho = Input(1.225)
-    #  Above is the density used to calculate the C_L for controlability curve
+    # rho = Input(1.225)
+    #  Above is the density used to calculate the C_L for the controlability curve
 
     #  TODO Fix CH10 bug?
 
+    @Attribute
+    def test_mtow(self):
+        return self.mtow
 
 
     @Attribute
@@ -60,14 +69,14 @@ class Wing(GeomBase):
     @Part
     #  This generates the wing. The area is halved because lifting surface generates one wing of that surface area.
     def wing_test(self):
-        return LiftingSurface(S = self.S_req*0.5,
-                              AR = self.AR,
-                              taper = self.taper,
-                              dihedral = self.dihedral,
-                              phi = self.twist,
-                              airfoil_type = self.airfoil_type,
-                              airfoil_choice = self.airfoil_choice,
-                              offset = self.offset)
+        return LiftingSurface(S=self.S_req*0.5,
+                              AR=self.AR[0],
+                              taper=self.taper,
+                              dihedral=self.dihedral,
+                              phi=self.twist,
+                              airfoil_type=self.airfoil_type,
+                              airfoil_choice=self.airfoil_choice,
+                              offset=self.offset)
 
     # control surface definition of a flap (to be used in the wing)
 
@@ -77,18 +86,19 @@ class Wing(GeomBase):
 
 
 
-    @Attribute
-    def airfoil_data_conversion(self):
-        data = [[i.x, i.z] for i in self.wing_test.airfoil_data]
-        x = [i[0] for i in data]
-        z = [j[1] for j in data]
-        return x, z
+    # @Attribute
+    # def airfoil_data_conversion(self):
+    #     data = [[i.x, i.z] for i in self.wing_test.airfoil_data]
+    #     x = [i[0] for i in data]
+    #     z = [j[1] for j in data]
+    #     return x, z
 
     @Attribute
     def root_section(self):
         return Section(leading_edge_point=Point(0, 0, 0),
                        chord=self.wing_test.root_chord,
-                       airfoil=FileAirfoil(get_dir(os.path.join('airfoils', self.airfoil_type,'%s.dat' %self.airfoil_choice))))
+                       airfoil=FileAirfoil(get_dir(os.path.join('airfoils', self.airfoil_type,
+                                                                '%s.dat' % self.airfoil_choice))))
 
     @Attribute
     def tip_section(self):
@@ -97,8 +107,9 @@ class Wing(GeomBase):
                                                 self.wing_test.semispan,
                                                 self.wing_test.semispan*tan(radians(self.dihedral))),
                        chord=self.wing_test.root_chord*self.taper,
-                       angle = 0.0,
-                       airfoil=FileAirfoil(get_dir(os.path.join('airfoils', 'cambered', '%s.dat' % self.airfoil_choice))))
+                       angle=0.0,
+                       airfoil=FileAirfoil(get_dir(os.path.join('airfoils', self.airfoil_type,
+                                                                '%s.dat' % self.airfoil_choice))))
 
     @Attribute
     def wing_surface(self):
@@ -121,14 +132,14 @@ class Wing(GeomBase):
 
     @Attribute
     def cruise_case(self):
-        return Case(name='Cruise', alpha = 2.75, velocity = 1.2*self.V_s)  # Case defined by one angle-of-attack
+        return Case(name='Cruise', alpha=2.75, velocity=1.2*self.V_s)  # Case defined by one angle-of-attack
 
     @Attribute
     def alpha_cases(self):
         alphas = np.linspace(0.0,5.0,20)
         alpha_case = []
         for i in range(0,len(alphas)):
-            alpha_case.append(Case(name='alpha%s' % i, alpha = alphas[i], velocity = 1.2*self.V_s))
+            alpha_case.append(Case(name='alpha%s' % i, alpha=alphas[i], velocity=1.2*self.V_s))
         return alpha_case
 
     @Attribute
@@ -146,10 +157,37 @@ class Wing(GeomBase):
 
     @Attribute
     def cl_vs_alpha(self):
-        my_array=[]
-        my_array = sorted([[self.results[alpha]['Totals']['Alpha'], self.results[alpha]['Totals']['CLtot']]
-                          for alpha in self.results], key=lambda f: float(f[0]))
-        return my_array
+        cl_alpha_array = (sorted([[self.results[alpha]['Totals']['Alpha'], self.results[alpha]['Totals']['CLtot']]
+                            for alpha in self.results], key=lambda f: float(f[0])))
+
+        alpha_deg = [i[0] for i in cl_alpha_array]
+        alpha_rad = [radians(i[0]) for i in cl_alpha_array]
+        cl = [i[1] for i in cl_alpha_array]
+
+        # Plotting
+        plt.style.use('ggplot')
+        plt.figure('LiftCoefficientGradient')
+        plt.plot(alpha_deg, cl, marker='o')
+        plt.title('Lift Coefficient Gradient')
+        plt.xlabel('Angle of Attack [deg]')
+        plt.ylabel('Lift Coefficient [-]')
+        plt.show()
+
+        # Calculating the Gradient w/ a quick list comprehension (NOTE: THIS VALUE IS IN RADIANS)
+        cl_alpha = np.mean([(cl[i+1] - cl[i]) / (alpha_rad[i+1] - alpha_rad[i]) for i in range(0, len(alpha_rad) - 1)])
+
+        return cl_alpha
+
+    # @Attribute
+    # def controllability_params(self):
+    #     cl_array = (sorted([[alpha, self.results[alpha]['Totals']['CLtot']]
+    #                         for alpha in self.results], key=lambda f: float(f[1])))
+    #     error = [for i in cl_array]
+    #     return cl_array
+
+
+
+
 
   #  @Attribute
   #  #  Now we must get the data corresponding to C_L_cont derived above.

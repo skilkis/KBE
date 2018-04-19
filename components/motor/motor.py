@@ -124,6 +124,20 @@ class Motor(GeomBase):
         edges = [i for i in self.motor_body_import.edges if len(i.sample_points) > 2]
         return edges[0], edges[1]
 
+    # --- Output Parts: -----------------------------------------------------------------------------------------------
+
+    @Part
+    def internals(self):
+        return ChamferedSolid(built_from=self.motor_body_import,
+                              distance=self.shaft_diameter,
+                              edge_table=(self.chamfer_edges[0], self.chamfer_edges[1]))
+
+    @Part
+    def shaft(self):
+        return ExtrudedSolid(island=self.shaft_circle,
+                             distance=self.shaft_length,
+                             direction=self.extrude_direction['shaft'])
+
     # --- Primitives: -------------------------------------------------------------------------------------------------
 
     @Part(in_tree=__show_primitives)
@@ -141,18 +155,6 @@ class Motor(GeomBase):
         return ExtrudedSolid(island=self.motor_circle,
                              distance=self.length,
                              direction=self.extrude_direction['body'])
-
-    @Part(in_tree=__show_primitives)
-    def shaft_import(self):
-        return ExtrudedSolid(island=self.shaft_circle,
-                             distance=self.shaft_diameter,
-                             direction=self.extrude_direction['shaft'])
-
-    @Part
-    def internals(self):
-        return ChamferedSolid(built_from=self.motor_body_import,
-                              distance=0.01,
-                              edge_table=(self.chamfer_edges[0], self.chamfer_edges[1]))
 
 
 if __name__ == '__main__':

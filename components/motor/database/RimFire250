@@ -1,0 +1,9 @@
+diameter,18
+length,18.8
+kv,2400
+constant_power,36
+burst_power,47
+weight,12.4
+shaft_diameter,2.0
+esc_recommendation,6
+prop_recommendation,"7x3.5"

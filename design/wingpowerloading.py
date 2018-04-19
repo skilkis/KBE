@@ -84,29 +84,26 @@ class WingPowerLoading(Base):
 
     @Attribute
     # TODO Make this a pretty graph with pretty colloooorrss please
-    # TODO Make this plot appear ontop of GUI & Be Eager
+    # TODO Make this plot appear ontop of GUI & Be Eager (This can be accomplished by making it a part)
     def loadingdiagram(self):
 
+        plt.figure('LoadingDiagram')
+        plt.style.use('ggplot')
 
-        ws_colors = ['c', 'm', 'y']
         for i in range(len(self.C_Lmax)):
-            plt.axvline(x=self.wingloading['values'][i],
-                        label='C_Lmax%s = %.2f' % (self.wingloading['flag'], self.C_Lmax[i]),
-                        color=ws_colors[i])
+            wing_loading = self.wingloading['values'][i]
+            plt.plot([wing_loading, wing_loading], [0, 2.0],
+                     label='C_Lmax%s = %.2f' % (self.wingloading['flag'], self.C_Lmax[i]))
 
-        wp_cr_colors = ['b', 'r', 'g']
         for i in range(len(self.AR)):
             plt.plot(self.WS_range,
-                     self.powerloading['climb_rate'][i],
-                     label='CR, AR = %d' % self.AR[i],
-                     color=wp_cr_colors[i])
+                     self.powerloading['climb_rate'][i], '--',
+                     label='CR, AR = %d' % self.AR[i])
 
-        wp_cg_colors = ['m', 'b', 'r']
         for i in range(len(self.C_Lmax)):
             plt.plot(self.WS_range,
-                     self.powerloading['climb_gradient'][i],
-                     label='CG, C_Lmax = %.2f' % self.C_Lmax[i],
-                     color=wp_cg_colors[i])
+                     self.powerloading['climb_gradient'][i], '-.',
+                     label='CG, C_Lmax = %.2f' % self.C_Lmax[i])
 
         plt.scatter(self.designpoint['wing_loading'],
                     self.designpoint['power_loading'],
@@ -116,6 +113,7 @@ class WingPowerLoading(Base):
 
         plt.ylabel('W/P [N*W^-1]')
         plt.xlabel('W/S [N*m^-2]')
+        plt.axis([min(self.WS_range), max(self.WS_range), 0, 1.0])
         plt.legend()
         plt.title('Wing and Power Loading (Handlaunch = %s)' % self.handlaunch)
         plt.ion()

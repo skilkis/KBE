@@ -4,6 +4,7 @@ from parapy.geom import *
 from directories import *
 from components import *
 from primitives import *
+from wing import *
 
 
 class UAV(Base):
@@ -16,6 +17,10 @@ class UAV(Base):
     @Part
     def params(self):
         return ParameterGenerator(initialize_estimations=True, label="Design Parameters")
+
+    @Part
+    def wing(self):
+        return Wing()
 
     @Attribute
     def configuration(self):
@@ -80,7 +85,7 @@ class UAV(Base):
 
     @Part
     def camera(self):
-        return EOIR(camera_name=self.camera_selection[0], position=Position(Point(-self.camera_selection[1], 0, 0)))
+        return EOIR(camera_name=self.camera_selection[0])
 
     @staticmethod
     def frame_parameters(sizing_part):
