@@ -1,11 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# Required ParaPy Modules
-from parapy.geom import *
-from parapy.core import *
+from parapy.geom import *  # \
+from parapy.core import *  # / Required ParaPy Modules
 
-# Required Modules
 from user import *
 from primitives import *
 from components import *
@@ -19,46 +17,15 @@ __all__ = ["Fuselage"]
 
 class Fuselage(GeomBase):
 
-    # @Part
-    # def box1(self):
-    #     return Box(position=YOZ, width=1, length=0.5, height=2, centered=True)
-    #
-    # @Part
-    # def box2(self):
-    #     return Box(position=translate(YOZ, z=2.2), width=1.5, length=0.5, height=2, centered=True)
-    #
-    # @Part
-    # def motor(self):
-    #     return Cylinder(position=translate(YOZ, z=4), radius=0.2, height=0.4)
-
-    compartment_type = Input(['nose', 'container', 'container', 'container', 'motor', 'tail'])
-    # compartment_type = Input(['nose', 'container', 'container', 'container', 'container', 'motor'])
-    # sizing_parts = ([None,
-    #                 Box(position=YOZ, width=1, length=0.5, height=2, centered=True),
-    #                 Box(position=translate(YOZ, z=2.2), width=1.5, length=0.5, height=2, centered=True),
-    #                 Cylinder(position=translate(YOZ, z=2.5), radius=0.1, height=0.2)])
-
+    compartment_type = Input(['nose', 'container', 'container', 'container', 'motor'])
     sizing_parts = Input([None,
                           EOIR(position=translate(YOZ, 'z', -0.2)),
                           [Battery(position=Position(Point(0, 0, 0))), EOIR(position=translate(XOY, 'z', 0.02))],
                           EOIR(position=translate(YOZ, 'z', 0.5)),
-                          Motor(position=translate(XOY, 'x', 1.0)), None])
-
+                          Motor(position=translate(XOY, 'x', 1.0))])
     nose_loc = Input(Point(-0.3, 0, 0))
-
-    # sizing_parts = Input([None,
-    #                       EOIR(position=translate(YOZ, 'z', -0.2)),
-    #                       EOIR(position=translate(YOZ, 'z', 0.2), camera_name='CM100'),
-    #                       EOIR(position=translate(YOZ, 'z', 0.5), camera_name='TASE400LRS'),
-    #                       EOIR(position=translate(YOZ, 'z', 0.7)),
-    #                       Motor(position=translate(XOY, 'x', 1.0))])
-
     minimize_frames = Input(False)
-
-    # @Part
-    # def wing(self):
-    #     return Wing()
-
+    ruled = Input(False)
 
     @Attribute
     def frame_builder(self):
@@ -74,11 +41,15 @@ class Fuselage(GeomBase):
             for i in range(0, len(self.compartment_type) - 1):
                 _type = self.compartment_type[i]
                 _next_type = self.compartment_type[i+1]
-                print i #debugging
+                print i  #debugging
 
                 # Start Boundary Condition
-                if i == 0 and _type == 'nose':
-                    still_to_build.append(['nose', i])
+                if i == 0:
+                    if _type == 'nose':
+                        still_to_build.append(['nose', i])
+                    elif _type == 'boom':
+                        raise Exception('A boom has been requested with no supports. Please try again with a boom'
+                                        ' instance surrounded by at least 2 frame containers')
 
                 # Container Logic
                 if _type == 'container':
@@ -124,6 +95,10 @@ class Fuselage(GeomBase):
                                 frames.append(self.bbox_to_frame(_bbox, 'start'))
                                 frames.append(self.bbox_to_frame(_bbox, 'end'))
                                 apex_index = i - 1
+
+                # Boom Logic
+                elif _type == 'boom':
+                    still_to_build.append(['boom', i])
 
                 # End Boundary Condition
                 if i + 2 == len(self.compartment_type):
@@ -215,7 +190,7 @@ class Fuselage(GeomBase):
 
     @Attribute(in_tree=True)
     def fuselage_left(self):
-        return LoftedShell(profiles=self.curve_grabber, check_compatibility=True)
+        return LoftedShell(profiles=self.curve_grabber, check_compatibility=True, ruled=self.ruled)
 
     # @Part
     # def fuselage_left(self):
@@ -230,9 +205,13 @@ class Fuselage(GeomBase):
         if not self.frame_builder['fuselage_complete']:
             nose_cone = (FCone(support_frame=self.frame_grabber[0], top_tangent=self.top_bc[0], side_tangent=self.side_bc[0],
                          direction='x_') if self.frame_builder['still_to_build'][0][0] is 'nose' else None)
-            tail_cone = (FCone(support_frame=self.frame_grabber[-1], top_tangent=self.top_bc[1], side_tangent=self.side_bc[1],
-                         direction='x') if self.frame_builder['still_to_build'][1][0] is 'tail' else None)
-        return nose_cone, tail_cone
+            # tail_cone = (FCone(support_frame=self.frame_grabber[-1], top_tangent=self.top_bc[1], side_tangent=self.side_bc[1],
+            #              direction='x') if self.frame_builder['still_to_build'][1][0] is 'tail' else None)
+        return nose_cone
+
+    # @Part
+    # def nose_cone(self):
+    #     return ScaledShape(shape_in=self.fuselage_nose[0].cone, reference_point=XOY, factor=1)
 
 
 
