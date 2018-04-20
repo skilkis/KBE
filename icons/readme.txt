@@ -1,1 +1,0 @@
-http://www.iconarchive.com/show/copland-5-icons-by-iconfactory.1.html

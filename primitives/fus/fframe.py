@@ -5,6 +5,9 @@
 from parapy.geom import *
 from parapy.core import *
 
+from directories import *
+
+__author = "Şan Kılkış"
 __all__ = ["FFrame"]
 
 
@@ -26,6 +29,7 @@ class FFrame(GeomBase):
     """
 
     __initargs__ = ["width", "height", "position"]
+    __icon__ = os.path.join(DIRS['ICON_DIR'], 'frame.png')
 
     # A parameter for debugging, turns the visibility of miscellaneous parts ON/OFF
     __show_primitives = False  # type: bool

@@ -10,6 +10,7 @@ from user import *
 from primitives import *
 from components import *
 
+__author__ = "Şan Kılkış"
 __all__ = ["Fuselage"]
 
 
@@ -28,6 +29,7 @@ class Fuselage(GeomBase):
     #     return Cylinder(position=translate(YOZ, z=4), radius=0.2, height=0.4)
 
     compartment_type = Input(['nose', 'container', 'container', 'container', 'motor'])
+    # compartment_type = Input(['nose', 'container', 'container', 'container', 'container', 'motor'])
     # sizing_parts = ([None,
     #                 Box(position=YOZ, width=1, length=0.5, height=2, centered=True),
     #                 Box(position=translate(YOZ, z=2.2), width=1.5, length=0.5, height=2, centered=True),
@@ -43,10 +45,12 @@ class Fuselage(GeomBase):
 
     # sizing_parts = Input([None,
     #                       EOIR(position=translate(YOZ, 'z', -0.2)),
-    #                       EOIR(position=translate(YOZ, 'z', 0.2), camera_name='TASE400LRS'),
-    #                       EOIR(position=translate(YOZ, 'z', 0.5)),
+    #                       EOIR(position=translate(YOZ, 'z', 0.2), camera_name='CM100'),
+    #                       EOIR(position=translate(YOZ, 'z', 0.5), camera_name='TASE400LRS'),
     #                       EOIR(position=translate(YOZ, 'z', 0.7)),
     #                       Motor(position=translate(XOY, 'x', 1.0))])
+
+    minimize_frames = Input(False)
 
 
     @Attribute
@@ -55,18 +59,21 @@ class Fuselage(GeomBase):
         if len(self.compartment_type) == len(self.sizing_parts):
 
             frames = []
-            still_to_build = []
-            first_container = True
-            apex_reached = False
-            build_loc = 'start'
+            still_to_build = []  # Special parts which require the fuselage to be completed before instantiation
+            first_container = True  # Boolean to determine if current instance is first occurance of a container frame
+            apex_reached = False  # Boolean that indicates if a maxima in  fuselage thickness has been reached
+            apex_index = 0
+            build_loc = 'start'  # Switch case to determine frame placement
             for i in range(0, len(self.compartment_type) - 1):
                 _type = self.compartment_type[i]
                 _next_type = self.compartment_type[i+1]
-                print i
+                print i #debugging
 
+                # Start Boundary Condition
                 if i == 0 and _type == 'nose':
                     still_to_build.append(['nose', i])
 
+                # Container Logic
                 if _type == 'container':
                     if first_container:
                         _bbox = self.bbox_extractor(self.sizing_parts[i])
@@ -96,6 +103,7 @@ class Fuselage(GeomBase):
                                     build_loc = 'end'
                                     frames.append(self.bbox_to_frame(_bbox, build_loc))
                                     apex_reached = True
+                                    apex_index = i
                                     print "apex reached"
                                 elif apex_reached:
                                     raise TypeError('Only a fuselage with one apex (location of maximum area) is '
@@ -106,29 +114,94 @@ class Fuselage(GeomBase):
                             frames.append(self.bbox_to_frame(_bbox, build_loc))
                             build_loc = 'end'
                             frames.append(self.bbox_to_frame(_bbox, build_loc))
+                            apex_index = i
 
+                # End Boundary Condition
                 if i + 2 == len(self.compartment_type):
                     if _next_type == 'motor':
                         frames.append([MFrame(motor_diameter=self.sizing_parts[i+1].diameter,
                                               position=self.sizing_parts[i+1].position), None])
-                #     elif
-                #     print "LALALALALALALAL"
-        else:
-            raise IndexError('The supplied ')
+                    elif _next_type == 'tail':
+                        still_to_build.append(['tail', i])
 
-        return frames
+
+        else:
+            raise IndexError('The supplied inputs do not have the same dimension')
+
+        return [frames, still_to_build, apex_index]
 
     @Attribute
     def nose_cone_frame(self):
         return FFrame(0.01, 0.01, Position(self.nose_loc))
 
     @Attribute
+    # TODO Minimize frames does not work properly, too tired to figure this out now
     def frame_grabber(self):
-        return [i[0].frame for i in self.frame_builder]
+        grabbed_frames = [i[0] for i in self.frame_builder[0]]
+        apex_index = self.frame_builder[2]
+        if (apex_index > 1) and self.minimize_frames:
+            if apex_index == 2:
+                del grabbed_frames[1]
+            else:
+                del grabbed_frames[1:apex_index-1]
+
+            del grabbed_frames[3]
+            if len(grabbed_frames) > 4:
+                if len(grabbed_frames) == 5:
+                    del grabbed_frames[3]
+                else:
+                    del grabbed_frames[3:(len(grabbed_frames) - 2)]
+        return grabbed_frames
+
+    @Attribute
+    def curve_grabber(self):
+        return [i.frame for i in self.frame_grabber]
+
+    @Attribute
+    def point_grabber(self):
+        return [i.spline_points for i in self.frame_grabber]
+
+    @Attribute
+    def side_bc(self):
+        # Point 0 = Bottom, Point 1 = Side, Point 2 = Top, Point 3 = Side Reflected
+        # Make this into a block comment
+        points = [i[1] for i in self.point_grabber]
+        spline = FittedCurve(points)
+
+        start_tangent = spline.tangent1
+        x = start_tangent.x
+        y = start_tangent.y
+        z = start_tangent.z
+        start_tangent = Vector(-x, -y, -z)  # Opposite direction required due to sign convention in FFrame
+
+        end_tangent = spline.tangent2
+        return [start_tangent, end_tangent]
+
+    @Attribute
+    def top_bc(self):
+        # Due to the sign convention edge 1 will always be the top curve
+        spline = self.fuselage_left.edges[1]
+
+        start_tangent = spline.tangent1
+
+        end_tangent = spline.tangent2
+        x = end_tangent.x
+        y = 0  # Forced to zero to avoid minute floating point errors
+        z = end_tangent.z
+        end_tangent = Vector(-x, y, -z)  # Opposite direction required due to sign convention in FFrame
+        return [start_tangent, end_tangent]
+
+    # @Attribute
+    # def selected_bcs(self):
+    #     if
 
     @Part
     def fuselage_left(self):
-        return LoftedShell(profiles=self.frame_grabber, check_compatibility=True)
+        return LoftedShell(profiles=self.curve_grabber, check_compatibility=True)
+
+    # @Part
+    # def fuselage_left(self):
+    #     return LoftedSurface(profiles=self.curve_grabber)
 
     @Attribute
     def length(self):
@@ -136,9 +209,8 @@ class Fuselage(GeomBase):
 
     @Part
     def test(self):
-        return FCone(support_frame=self.frame_builder[0][0],
-                     fuselage_length=self.fuselage_left.bbox.width,
-                     direction='x')
+        return FCone(support_frame=self.frame_grabber[0], top_tangent=self.top_bc[0], side_tangent=self.side_bc[0],
+                     direction='x_')
 
 
 
