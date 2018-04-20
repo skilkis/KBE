@@ -46,11 +46,6 @@ class Wing(GeomBase):
     #  TODO Fix CH10 bug?
 
     @Attribute
-    def test_mtow(self):
-        return self.mtow
-
-
-    @Attribute
     def S_req(self):
         # This calculation of the required TOTAL wing area from the design point.
         return ((self.MTOW * 9.81)/self.WS_pt) # TODO wing loading is in N/m^2 thus we have to have a global variable for g

@@ -74,7 +74,7 @@ class FCone(GeomBase):
 
         h_curve = InterpolatedCurve(points=[points[1], self.tip_point, points[3]],
                                     tangents=[self.side_tangent,
-                                              Vector(0, self.build_direction, 0),  # Mid-Point Vector (Forced y-)
+                                              Vector(0, -1, 0),  # Mid-Point Vector (Forced y-)
                                               self.side_tangent_reflected])
         h_curve_split = SplitCurve(curve_in=h_curve, tool=self.tip_point).edges
 

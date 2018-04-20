@@ -9,9 +9,12 @@ from parapy.core import *
 from user import *
 from primitives import *
 from components import *
+from wing import Wing
 
 __author__ = "Şan Kılkış"
 __all__ = ["Fuselage"]
+
+# TODO Add boom, add tail cone
 
 
 class Fuselage(GeomBase):
@@ -28,7 +31,7 @@ class Fuselage(GeomBase):
     # def motor(self):
     #     return Cylinder(position=translate(YOZ, z=4), radius=0.2, height=0.4)
 
-    compartment_type = Input(['nose', 'container', 'container', 'container', 'motor'])
+    compartment_type = Input(['nose', 'container', 'container', 'container', 'motor', 'tail'])
     # compartment_type = Input(['nose', 'container', 'container', 'container', 'container', 'motor'])
     # sizing_parts = ([None,
     #                 Box(position=YOZ, width=1, length=0.5, height=2, centered=True),
@@ -39,7 +42,7 @@ class Fuselage(GeomBase):
                           EOIR(position=translate(YOZ, 'z', -0.2)),
                           [Battery(position=Position(Point(0, 0, 0))), EOIR(position=translate(XOY, 'z', 0.02))],
                           EOIR(position=translate(YOZ, 'z', 0.5)),
-                          Motor(position=translate(XOY, 'x', 1.0))])
+                          Motor(position=translate(XOY, 'x', 1.0)), None])
 
     nose_loc = Input(Point(-0.3, 0, 0))
 
@@ -51,6 +54,10 @@ class Fuselage(GeomBase):
     #                       Motor(position=translate(XOY, 'x', 1.0))])
 
     minimize_frames = Input(False)
+
+    # @Part
+    # def wing(self):
+    #     return Wing()
 
 
     @Attribute
@@ -103,7 +110,7 @@ class Fuselage(GeomBase):
                                     build_loc = 'end'
                                     frames.append(self.bbox_to_frame(_bbox, build_loc))
                                     apex_reached = True
-                                    apex_index = i
+                                    apex_index = i - 1  # Making up for i = 1 being the first frame
                                     print "apex reached"
                                 elif apex_reached:
                                     raise TypeError('Only a fuselage with one apex (location of maximum area) is '
@@ -111,10 +118,12 @@ class Fuselage(GeomBase):
                                                     ' occurs only once')
                         elif _next_type != 'container':
                             _bbox = self.bbox_extractor(self.sizing_parts[i])
-                            frames.append(self.bbox_to_frame(_bbox, build_loc))
-                            build_loc = 'end'
-                            frames.append(self.bbox_to_frame(_bbox, build_loc))
-                            apex_index = i
+                            if apex_reached:
+                                frames.append(self.bbox_to_frame(_bbox, build_loc))
+                            else:
+                                frames.append(self.bbox_to_frame(_bbox, 'start'))
+                                frames.append(self.bbox_to_frame(_bbox, 'end'))
+                                apex_index = i - 1
 
                 # End Boundary Condition
                 if i + 2 == len(self.compartment_type):
@@ -124,11 +133,15 @@ class Fuselage(GeomBase):
                     elif _next_type == 'tail':
                         still_to_build.append(['tail', i])
 
-
+            fuselage_complete = (True if len(still_to_build) is 0 else False)
         else:
             raise IndexError('The supplied inputs do not have the same dimension')
 
-        return [frames, still_to_build, apex_index]
+        # return [frames, still_to_build, apex_index]
+        return {'built_frames': frames,
+                'apex_index': apex_index,
+                'still_to_build': still_to_build,
+                'fuselage_complete': fuselage_complete}
 
     @Attribute
     def nose_cone_frame(self):
@@ -137,20 +150,25 @@ class Fuselage(GeomBase):
     @Attribute
     # TODO Minimize frames does not work properly, too tired to figure this out now
     def frame_grabber(self):
-        grabbed_frames = [i[0] for i in self.frame_builder[0]]
-        apex_index = self.frame_builder[2]
-        if (apex_index > 1) and self.minimize_frames:
-            if apex_index == 2:
-                del grabbed_frames[1]
-            else:
-                del grabbed_frames[1:apex_index-1]
+        grabbed_frames = [i[0] for i in self.frame_builder['built_frames']]
+        apex_index = self.frame_builder['apex_index']
+        if self.minimize_frames:
+            index_to_keep = [0, apex_index, apex_index+1, len(grabbed_frames) - 1]
+            grabbed_frames = [grabbed_frames[i] for i in range(0, len(grabbed_frames))
+                              if i in index_to_keep]
 
-            del grabbed_frames[3]
-            if len(grabbed_frames) > 4:
-                if len(grabbed_frames) == 5:
-                    del grabbed_frames[3]
-                else:
-                    del grabbed_frames[3:(len(grabbed_frames) - 2)]
+        # if (apex_index > 1) and self.minimize_frames:
+        #     if apex_index == 2:
+        #         del grabbed_frames[1]
+        #     else:
+        #         del grabbed_frames[1:apex_index-1]
+        #
+        #     del grabbed_frames[3]
+        #     if len(grabbed_frames) > 4:
+        #         if len(grabbed_frames) == 5:
+        #             del grabbed_frames[3]
+        #         else:
+        #             del grabbed_frames[3:(len(grabbed_frames) - 2)]
         return grabbed_frames
 
     @Attribute
@@ -175,7 +193,7 @@ class Fuselage(GeomBase):
         start_tangent = Vector(-x, -y, -z)  # Opposite direction required due to sign convention in FFrame
 
         end_tangent = spline.tangent2
-        return [start_tangent, end_tangent]
+        return [start_tangent, end_tangent, spline]
 
     @Attribute
     def top_bc(self):
@@ -195,7 +213,7 @@ class Fuselage(GeomBase):
     # def selected_bcs(self):
     #     if
 
-    @Part
+    @Attribute(in_tree=True)
     def fuselage_left(self):
         return LoftedShell(profiles=self.curve_grabber, check_compatibility=True)
 
@@ -207,11 +225,14 @@ class Fuselage(GeomBase):
     def length(self):
         return self.fuselage_left.bbox.width
 
-    @Part
-    def test(self):
-        return FCone(support_frame=self.frame_grabber[0], top_tangent=self.top_bc[0], side_tangent=self.side_bc[0],
-                     direction='x_')
-
+    @Attribute
+    def fuselage_nose(self):
+        if not self.frame_builder['fuselage_complete']:
+            nose_cone = (FCone(support_frame=self.frame_grabber[0], top_tangent=self.top_bc[0], side_tangent=self.side_bc[0],
+                         direction='x_') if self.frame_builder['still_to_build'][0][0] is 'nose' else None)
+            tail_cone = (FCone(support_frame=self.frame_grabber[-1], top_tangent=self.top_bc[1], side_tangent=self.side_bc[1],
+                         direction='x') if self.frame_builder['still_to_build'][1][0] is 'tail' else None)
+        return nose_cone, tail_cone
 
 
 
