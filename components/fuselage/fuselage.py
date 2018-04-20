@@ -17,11 +17,11 @@ __all__ = ["Fuselage"]
 
 class Fuselage(GeomBase):
 
-    compartment_type = Input(['nose', 'container', 'container', 'boom', 'motor'])
+    compartment_type = Input(['nose', 'container', 'container', 'container', 'motor'])
     sizing_parts = Input([None,
                           EOIR(position=translate(YOZ, 'z', -0.2)),
                           [Battery(position=Position(Point(0, 0, 0))), EOIR(position=translate(XOY, 'z', 0.02))],
-                         None,
+                          EOIR(position=translate(YOZ, 'z', 0.5)),
                           Motor(position=translate(XOY, 'x', 1.0))])
     nose_loc = Input(Point(-0.3, 0, 0))
     minimize_frames = Input(False)
@@ -97,9 +97,9 @@ class Fuselage(GeomBase):
                                 apex_index = i - 1
 
                 # Boom Logic
+                # TODO (TBD) Currently not implemented, it doesn't do anything, but would be nice to have in the future
                 elif _type == 'boom':
                     still_to_build.append(['boom', i])
-                    first_container = True  # Switching to make sure next-created frame is
 
                 # End Boundary Condition
                 if i + 2 == len(self.compartment_type):
@@ -120,61 +120,22 @@ class Fuselage(GeomBase):
                 'fuselage_complete': fuselage_complete}
 
     @Attribute
-    def has_boom(self):
-        return any('boom' in s for s in self.compartment_type)
+    def nose_cone_frame(self):
+        return FFrame(0.01, 0.01, Position(self.nose_loc))
 
     @Attribute
     def frame_grabber(self):
         grabbed_frames = [i[0] for i in self.frame_builder['built_frames']]
-        if self.has_boom:
-            boom_loc = [i[1] for i in self.frame_builder['still_to_build'] if i[0] == 'boom'][0] - 1
-            if type(boom_loc) == int:
-                _nose_half = [grabbed_frames[:boom_loc]]
-                _boom = [[grabbed_frames[boom_loc], grabbed_frames[boom_loc+1]]]
-                _tail_half = [grabbed_frames[boom_loc+1:]]
-                grabbed_frames = _nose_half + _boom +_tail_half
-            else:
-                raise Exception('You have specified more than one boom, currently only one boom is supported')
-        elif self.has_boom and self.minimize_frames:
-            raise Exception('Currently automated frame minimization is not supported with boomed structures')
-        else:
-            apex_index = self.frame_builder['apex_index']
-            if self.minimize_frames:
-                index_to_keep = [0, apex_index, apex_index+1, len(grabbed_frames) - 1]
-                grabbed_frames = [grabbed_frames[i] for i in range(0, len(grabbed_frames))
-                                  if i in index_to_keep]
+        apex_index = self.frame_builder['apex_index']
+        if self.minimize_frames:
+            index_to_keep = [0, apex_index, apex_index+1, len(grabbed_frames) - 1]
+            grabbed_frames = [grabbed_frames[i] for i in range(0, len(grabbed_frames))
+                              if i in index_to_keep]
         return grabbed_frames
 
     @Attribute
-    def fuselage_lofter(self):
-        surfaces = []
-        for i in self.curve_grabber:
-            surfaces.append(LoftedShell(profiles=i, check_compatibility=True, ruled=self.ruled))
-        return surfaces
-
-
-        # if (apex_index > 1) and self.minimize_frames:
-        #     if apex_index == 2:
-        #         del grabbed_frames[1]
-        #     else:
-        #         del grabbed_frames[1:apex_index-1]
-        #
-        #     del grabbed_frames[3]
-        #     if len(grabbed_frames) > 4:
-        #         if len(grabbed_frames) == 5:
-        #             del grabbed_frames[3]
-        #         else:
-        #             del grabbed_frames[3:(len(grabbed_frames) - 2)]
-
-    @Attribute
     def curve_grabber(self):
-        if self.has_boom:
-            curves = []
-            for section in self.frame_grabber:
-
-
-            curves = ([i.frame for i in self.frame_grabber] if self.has_boom else [i.frame for i in self.frame_grabber])
-        return [i.frame for i in self.frame_grabber] if self.has_boom else
+        return [i.frame for i in self.frame_grabber]
 
     @Attribute
     def point_grabber(self):
