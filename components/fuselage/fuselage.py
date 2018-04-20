@@ -17,11 +17,11 @@ __all__ = ["Fuselage"]
 
 class Fuselage(GeomBase):
 
-    compartment_type = Input(['nose', 'container', 'container', 'container', 'motor'])
+    compartment_type = Input(['nose', 'container', 'container', 'boom', 'motor'])
     sizing_parts = Input([None,
                           EOIR(position=translate(YOZ, 'z', -0.2)),
                           [Battery(position=Position(Point(0, 0, 0))), EOIR(position=translate(XOY, 'z', 0.02))],
-                          EOIR(position=translate(YOZ, 'z', 0.5)),
+                         None,
                           Motor(position=translate(XOY, 'x', 1.0))])
     nose_loc = Input(Point(-0.3, 0, 0))
     minimize_frames = Input(False)
@@ -99,6 +99,7 @@ class Fuselage(GeomBase):
                 # Boom Logic
                 elif _type == 'boom':
                     still_to_build.append(['boom', i])
+                    first_container = True  # Switching to make sure next-created frame is
 
                 # End Boundary Condition
                 if i + 2 == len(self.compartment_type):
@@ -119,18 +120,38 @@ class Fuselage(GeomBase):
                 'fuselage_complete': fuselage_complete}
 
     @Attribute
-    def nose_cone_frame(self):
-        return FFrame(0.01, 0.01, Position(self.nose_loc))
+    def has_boom(self):
+        return any('boom' in s for s in self.compartment_type)
 
     @Attribute
-    # TODO Minimize frames does not work properly, too tired to figure this out now
     def frame_grabber(self):
         grabbed_frames = [i[0] for i in self.frame_builder['built_frames']]
-        apex_index = self.frame_builder['apex_index']
-        if self.minimize_frames:
-            index_to_keep = [0, apex_index, apex_index+1, len(grabbed_frames) - 1]
-            grabbed_frames = [grabbed_frames[i] for i in range(0, len(grabbed_frames))
-                              if i in index_to_keep]
+        if self.has_boom:
+            boom_loc = [i[1] for i in self.frame_builder['still_to_build'] if i[0] == 'boom'][0] - 1
+            if type(boom_loc) == int:
+                _nose_half = [grabbed_frames[:boom_loc]]
+                _boom = [[grabbed_frames[boom_loc], grabbed_frames[boom_loc+1]]]
+                _tail_half = [grabbed_frames[boom_loc+1:]]
+                grabbed_frames = _nose_half + _boom +_tail_half
+            else:
+                raise Exception('You have specified more than one boom, currently only one boom is supported')
+        elif self.has_boom and self.minimize_frames:
+            raise Exception('Currently automated frame minimization is not supported with boomed structures')
+        else:
+            apex_index = self.frame_builder['apex_index']
+            if self.minimize_frames:
+                index_to_keep = [0, apex_index, apex_index+1, len(grabbed_frames) - 1]
+                grabbed_frames = [grabbed_frames[i] for i in range(0, len(grabbed_frames))
+                                  if i in index_to_keep]
+        return grabbed_frames
+
+    @Attribute
+    def fuselage_lofter(self):
+        surfaces = []
+        for i in self.curve_grabber:
+            surfaces.append(LoftedShell(profiles=i, check_compatibility=True, ruled=self.ruled))
+        return surfaces
+
 
         # if (apex_index > 1) and self.minimize_frames:
         #     if apex_index == 2:
@@ -144,11 +165,16 @@ class Fuselage(GeomBase):
         #             del grabbed_frames[3]
         #         else:
         #             del grabbed_frames[3:(len(grabbed_frames) - 2)]
-        return grabbed_frames
 
     @Attribute
     def curve_grabber(self):
-        return [i.frame for i in self.frame_grabber]
+        if self.has_boom:
+            curves = []
+            for section in self.frame_grabber:
+
+
+            curves = ([i.frame for i in self.frame_grabber] if self.has_boom else [i.frame for i in self.frame_grabber])
+        return [i.frame for i in self.frame_grabber] if self.has_boom else
 
     @Attribute
     def point_grabber(self):
