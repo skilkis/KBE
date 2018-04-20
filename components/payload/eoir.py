@@ -7,10 +7,14 @@
 # TODO Comment the whole code
 # TODO add attributes necessary for fuselage class
 # TODO add database as input w/ custom validator function
+# TODO add custom file read class that opens a nice GUI
+# TODO make the geometry complicated to show robustness of code
 
-# Required ParaPy Modules
-from parapy.core import *
-from parapy.geom import *
+from parapy.geom import *  # \
+from parapy.core import *  # / Required ParaPy Modules
+
+# Component Class Definition
+from definitions import *
 
 # Necessary Modules for Data Processing
 from directories import *
@@ -21,26 +25,37 @@ from my_csv2dict import *
 from user import *
 
 __all__ = ["EOIR"]
+__author__ = "Şan Kılkış"
+
+# A parameter for debugging, turns the visibility of miscellaneous parts ON/OFF
+__show_primitives = False  # type: bool
 
 
-class EOIR(GeomBase):
+class EOIR(Component):
 
     __initargs__ = ["target_weight", "camera_name", "position"]
+    __icon__ = os.path.join(DIRS['ICON_DIR'], 'camera.png')
 
     # A parameter for debugging, turns the visibility of miscellaneous parts ON/OFF
     __show_primitives = False  # type: bool
 
     target_weight = Input(0.2, validator=val.Positive())
     camera_name = Input(None)
-    position = Input(YOZ)
+
+    @Input
+    def label(self):
+        """Overwrites the inherited slot `label' with the chosen camera_name"""
+        return self.specs['name']
 
     @Attribute
     def specs(self):
         if self.camera_name is None:
-            selected_camera_specs = [num[1] for num in self.camera_database if num[0] == self.camera_selector]
-            return selected_camera_specs[0]
+            selected_camera_specs = [num[1] for num in self.camera_database if num[0] == self.camera_selector][0]
+            selected_camera_specs['name'] = self.camera_selector
         else:
-            return read_csv(self.camera_name, DIRS['EOIR_DATA_DIR'])
+            selected_camera_specs = read_csv(self.camera_name, DIRS['EOIR_DATA_DIR'])
+            selected_camera_specs['name'] = self.camera_name
+        return selected_camera_specs
 
     @Attribute
     def camera_database(self):
@@ -65,29 +80,24 @@ class EOIR(GeomBase):
     def weight(self):
         return self.specs['weight']
 
-    @Attribute
-    def bbox_intern(self):
-        self.internal_shape.bbox.color = MyColors.deep_red
-        return self.internal_shape.bbox
-
-    @Attribute
+    @Attribute(private=True)
     def box_width(self):
         return self.specs['box_dimensions'][0] / 1000.0
 
-    @Attribute
+    @Attribute(private=True)
     def box_length(self):
         return self.specs['box_dimensions'][1] / 1000.0
 
-    @Attribute
+    @Attribute(private=True)
     def box_height(self):
         return self.specs['box_dimensions'][2] / 1000.0
 
-    @Attribute
+    @Attribute(private=True)
     def gimbal_radius(self):
         diameter = self.specs['gimbal_dimensions'][0]  # Diameter is specified in mm
         return diameter / (2 * 1000.0)
 
-    @Attribute
+    @Attribute(private=True)
     def gimbal_height(self):  # Total height of the gimbal arm (neglecting gimbal_radius)
         min_height = self.gimbal_radius * 1.1
         read_height = self.specs['gimbal_dimensions'][1] / 1000.0
@@ -96,7 +106,7 @@ class EOIR(GeomBase):
         else:
             return read_height
 
-    @Attribute
+    @Attribute(private=True)
     def exposed_height(self):
         return (self.specs['gimbal_dimensions'][2] / 1000.0) - self.gimbal_radius
 

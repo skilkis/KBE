@@ -1,3 +1,4 @@
+# from definition import *
 from battery import *
 from payload import *
 from motor import *

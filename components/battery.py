@@ -5,14 +5,14 @@
 or battery capacity. Utilize the parameter `show_primitives` for debugging.
 """
 
-# Required ParaPy Modules
-from parapy.core import *
-from parapy.geom import *
+from parapy.geom import *  # \
+from parapy.core import *  # / Required ParaPy Modules
 
 # TODO All necessary comments and documentation
 
 # Other Modules
 from user import *
+from definitions import *
 
 __all__ = ["Battery", "show_primitives"]
 
@@ -20,14 +20,20 @@ __all__ = ["Battery", "show_primitives"]
 show_primitives = False  # type: bool
 
 
-class Battery(GeomBase):
+class Battery(Component):
 
     sizing_target = Input('capacity', validator=val.OneOf(["capacity", "weight"]))
     # TODO link this to custom validator function
     sizing_value = Input(10000000.0, validator=val.Positive())
     max_width = Input(0.15, validator=val.Positive())
     max_height = Input(0.1, validator=val.Positive())  # Suggested to use a wider-battery, max_height = max_width / 2 for fuselage aerodynamics
-    position = Input(Position(Point(0, 0, 0)))
+    # position = Input(Position(Point(0, 0, 0)))
+    label = Input('LiPo Battery')
+
+
+    @Attribute
+    def weight(self):
+        return self.total_energy / self.constants['energy_density']
 
     @Attribute
     def constants(self):
@@ -65,10 +71,6 @@ class Battery(GeomBase):
     @Attribute
     def volume(self):
         return self.total_energy / self.constants['energy_volume']
-
-    @Attribute
-    def weight(self):
-        return self.total_energy / self.constants['energy_density']
 
     @Attribute
     def width(self):
@@ -111,14 +113,14 @@ class Battery(GeomBase):
         error_str = "%s is not a valid weight_target. Valid inputs: 'weight', 'capacity'" % self.sizing_target
         raise TypeError(error_str)
 
-    # --- Output Solids: ----------------------------------------------------------------------------------------------
+    # --- Output Solid: -----------------------------------------------------------------------------------------------
 
     @Part
     def internal_shape(self):
         return TranslatedShape(shape_in=self.battery_import, displacement=Vector(self.position.x,
                                                                                  self.position.y,
                                                                                  (self.height / 2.0) + self.position.z),
-                               color=MyColors.dark_grey)
+                               color=MyColors.deep_green)
 
     # --- Primitives: -------------------------------------------------------------------------------------------------
 
@@ -140,4 +142,4 @@ if __name__ == '__main__':
     from parapy.gui import display
 
     obj = Battery()
-    display(obj)
+    display(obj, background_image=False)

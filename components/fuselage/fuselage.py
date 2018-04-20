@@ -7,12 +7,14 @@ from parapy.core import *  # / Required ParaPy Modules
 from user import *
 from primitives import *
 from components import *
+from definitions import *
 from wing import Wing
 
 __author__ = "Şan Kılkış"
 __all__ = ["Fuselage"]
 
 # TODO Add boom, add tail cone
+# TODO add validator to make sure proper instance list is entered [validator=val.InstanceList(Component)]
 
 
 class Fuselage(GeomBase):
@@ -199,9 +201,6 @@ class Fuselage(GeomBase):
     # @Part
     # def nose_cone(self):
     #     return ScaledShape(shape_in=self.fuselage_nose[0].cone, reference_point=XOY, factor=1)
-
-
-
 
 
     @staticmethod

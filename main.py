@@ -1,11 +1,15 @@
+# from components import Battery
 from design import *
 from parapy.core import *
 from parapy.geom import *
 from directories import *
-from components import *
+# from components import Battery, EOIR
 from primitives import *
 from wing import *
+from components import *
 
+
+# TODO Make sure that excel read and things are top level program features (not buried within the tree)
 
 class UAV(Base):
 
@@ -13,6 +17,7 @@ class UAV(Base):
 
     sizing_target = Input('weight')
     sizing_value = Input(1.25)
+    show_labels = Input(True)
 
     @Part
     def params(self):
@@ -38,11 +43,15 @@ class UAV(Base):
     def battery_capacity(self):
         return self.sizing_value
 
-    @Part
+    # @Part
+    # def battery(self):
+    #     return Battery(pass_down="sizing_target", max_width=self.camera.box_width * 2.0,
+    #                    max_height=self.camera.box_height * 2.0,
+    #                    sizing_value=self.sizing_value, position=Position(Point(-0.01, 0, 0)))
+
+    @Attribute
     def battery(self):
-        return Battery(pass_down="sizing_target", max_width=self.camera.box_width * 2.0,
-                       max_height=self.camera.box_height * 2.0,
-                       sizing_value=self.sizing_value, position=Position(Point(-0.01, 0, 0)))
+        return Battery()
 
     # @Part
     # def frame_builder(self):
@@ -59,12 +68,12 @@ class UAV(Base):
     # def test2(self):
     #     return LoftedSurface(profiles=self.frame_grabber)
 
-    # @Attribute
-    # def position_camera(self):
-    #     camera_pos = self.camera.position
-    #     camera_length = self.camera.box_length
-    #     self.camera.position = Point(camera_pos.x - camera_length, 0, 0)
-    #     return self.camera.position
+    @Attribute
+    def position_camera(self):
+        camera_pos = self.camera.position
+        camera_length = self.camera.box_length
+        self.camera.position = Point(camera_pos.x - camera_length, 0, 0)
+        return self.camera.position
 
     # @Attribute
     # def frame_test(self):
@@ -72,20 +81,20 @@ class UAV(Base):
     #     frame2 = self.frame_parameters(self.battery.internal_shape.bbox)
     #     return [frame1, frame2]
     #
-    # @Attribute
-    # def camera_selection(self):
-    #     selected_camera = EOIR(target_weight=self.payload)
-    #     camera_name = selected_camera.camera_selector
-    #     camera_length = selected_camera.box_length
-    #     return [camera_name, camera_length]
+    @Attribute
+    def camera_selection(self):
+        selected_camera = EOIR(target_weight=self.payload)
+        camera_name = selected_camera.camera_selector
+        camera_length = selected_camera.box_length
+        return [camera_name, camera_length]
     #
     # @Part
     # def nose_cone(self):
     #     return FCone(support_frame=self.frame_builder[0], fuselage_length=0.7, slenderness_ratio=1.0)
     #
-    # @Part
-    # def camera(self):
-    #     return EOIR(camera_name=self.camera_selection[0])
+    @Part
+    def camera(self):
+        return EOIR(camera_name=self.camera_selection[0])
     #
     # @staticmethod
     # def frame_parameters(sizing_part):

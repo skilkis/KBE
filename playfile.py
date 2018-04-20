@@ -39,7 +39,11 @@ x = '"7.5x10"'
 
 x=x.replace('"', '')
 
-print x
-x=[0, 1, 2, 3]
-y = [i for i in x if i == 2]
-print y
+from parapy.core import *
+from parapy.geom import Point
+
+x = (float(0), float(1), float(1))
+for i in x:
+    i = i + 0.05
+
+
