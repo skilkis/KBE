@@ -1,0 +1,8 @@
+﻿capability,EO/IR/LI
+weight,0.8
+power,12
+id_range,120
+resolution,640x480
+gimbal_dimensions,100x79x129
+box_dimensions,110x110x50
+rectractable,FALSE

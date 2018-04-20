@@ -1,0 +1,8 @@
+﻿capability,EO/IR/LRF/LI
+weight,1.45
+power,18
+id_range,220
+resolution,640x512
+gimbal_dimensions,160x157x180
+box_dimensions,220x240x120
+rectractable,TRUE
