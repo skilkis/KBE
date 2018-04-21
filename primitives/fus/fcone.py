@@ -27,8 +27,7 @@ class FCone(GeomBase):
     side_tangent = Input(Vector(-0.88, -0.65, 0))
     top_tangent = Input(Vector(0.8851351164623547, 0, 0.46533410105554684))
     direction = Input('x_', validator=val.OneOf(["x", "x_"]))
-    slenderness_ratio = Input(0.3, validator=val.Positive())  # Nose-cone length / frame diagonal
-    transparency = Input(0.5)
+    slenderness_ratio = Input(0.5, validator=val.Range(0, 1))  # Nose-cone length / frame diagonal
 
     @Attribute
     def length(self):
@@ -46,7 +45,6 @@ class FCone(GeomBase):
         y = self.side_tangent.y
         z = self.side_tangent.z
         return Vector(x, -y, z)
-
 
     @Attribute
     def tip_point(self):
@@ -81,8 +79,8 @@ class FCone(GeomBase):
     # --- Output Surface: ---------------------------------------------------------------------------------------------
 
     @Part
-    def cone_right(self):
-        return SewnShell([self.filled_top, self.filled_bot])
+    def cone(self):
+        return SewnShell([self.cone_right, self.cone_left])
 
     # --- Primitives: -------------------------------------------------------------------------------------------------
 
@@ -95,6 +93,17 @@ class FCone(GeomBase):
     def filled_bot(self):
         return FilledSurface(curves=[self.guides['h_curve'][0], self.guides['v_curve'][0].reversed,
                                      self.guides['f_curve'][0]])
+    @Part(in_tree=__show_primitives)
+    def cone_right(self):
+        return SewnShell([self.filled_top, self.filled_bot])
+
+    @Attribute(in_tree=__show_primitives)
+    def cone_left(self):
+        return MirroredShape(shape_in=self.cone_right,
+                             reference_point=self.position,
+                             vector1=self.position.Vx_,
+                             vector2=self.position.Vz,
+                             color=MyColors.light_grey)
 
 if __name__ == '__main__':
     from parapy.gui import display

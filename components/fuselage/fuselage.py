@@ -19,31 +19,55 @@ __all__ = ["Fuselage"]
 
 class Fuselage(GeomBase):
 
-    compartment_type = Input(['nose', 'container', 'container', 'container', 'motor'])
+
+    compartment_type = Input(['nose', 'container', 'container', 'container', 'motor', 'tail'])
     sizing_parts = Input([None,
                           EOIR(position=translate(YOZ, 'z', -0.2)),
                           [Battery(position=Position(Point(0, 0, 0))), EOIR()],
                           EOIR(position=translate(YOZ, 'z', 0.5)),
-                          Motor(position=translate(XOY, 'x', 0.7, 'z', 0.05))])
+                          Motor(position=translate(XOY, 'x', 0.7, 'z', 0.05)), None])
+    # compartment_type = Input(['nose', 'container', 'container', 'container', 'motor'])
+    # sizing_parts = Input([None,
+    #                       EOIR(position=translate(YOZ, 'z', -0.2)),
+    #                       [Battery(position=Position(Point(0, 0, 0))), EOIR()],
+    #                       EOIR(position=translate(YOZ, 'z', 0.5)),
+    #                       Motor(position=translate(XOY, 'x', 0.7, 'z', 0.05))])
     minimize_frames = Input(False)
     ruled = Input(False)
     show_inernals = Input(True)
 
     @Attribute(private=True)
     def frame_builder(self):
+        """ This attribute codifies the knowledge for the fuselage and automatically generates the required frames by
+        extracting the dimensions of the supplied `sizing_parts' through the methods `bbox_extractor` and `bbox_2_frame`
+        This has proven to be a very robust method since it does not depend on the complexity of the input part. Since
+        these drones operate at very low mach numbers, the area rule which is commonly used for transonic aircraft
+        is not valid. Instead these small drones can benefit from a lifting fuselage which is accomplished through
+        having an airfoil like shape (thus a single location of maximum thickness). This location is
+        referred to as the fuselage apex and is obtained by comparing the current frame to its sequential neighbor
+        which links to a switch case, `apex_reached` and `build_loc`. A forward-chaining inference procedure is used
+        in a for loop that traverses the fuselage from nose to tail and fires all fire-able rules sequentially.
+        This procedure is preferred since multiple possibilities at each frame location exist (nose, container, motor,
+        or tail) along with the same number of possibilities existing at the nearest neighbor. Finally, the start
+        and end boundary conditions reject the creation of a nose or tail-cone before the fuselage is built, since both
+        of these classes require tangency conditions at the start and end of the fuselage. Thus, the requested class
+        is appended to a string array of `still_to_build` which is referenced later in the code.
 
-        if len(self.compartment_type) == len(self.sizing_parts):
+        :return: A collection of frame variables that are used later in the fuselage class
+        :rtype: dict
+        """
+
+        if len(self.compartment_type) == len(self.sizing_parts):  # Checking supplied inputs for concurrent dimensions
 
             frames = []
             still_to_build = []  # Special parts which require the fuselage to be completed before instantiation
-            first_container = True  # Boolean to determine if current instance is first occurance of a container frame
+            first_container = True  # Boolean to determine if current instance is first occurrence of a container frame
             apex_reached = False  # Boolean that indicates if a maxima in  fuselage thickness has been reached
             apex_index = 0
             build_loc = 'start'  # Switch case to determine frame placement
             for i in range(0, len(self.compartment_type) - 1):
                 _type = self.compartment_type[i]
                 _next_type = self.compartment_type[i+1]
-                print i  #debugging
 
                 # Start Boundary Condition
                 if i == 0:
@@ -55,15 +79,13 @@ class Fuselage(GeomBase):
 
                 # Container Logic
                 if _type == 'container':
-                    if first_container:
-                        _bbox = self.bbox_extractor(self.sizing_parts[i])
+                    _bbox = self.bbox_extractor(self.sizing_parts[i])  # Fetching current bbox
+                    if first_container:  # If current container is the first container a frame is returned
                         frames.append(self.bbox_to_frame(_bbox, build_loc))
                         first_container = False
                     else:
                         if _next_type == 'container':
-                            _bbox = self.bbox_extractor(self.sizing_parts[i])
                             _frame = self.bbox_to_frame(_bbox, build_loc)
-
                             _next_bbox = self.bbox_extractor(self.sizing_parts[i+1])
                             _next_frame = self.bbox_to_frame(_next_bbox, build_loc)
 
@@ -78,19 +100,17 @@ class Fuselage(GeomBase):
                             if _width_check and _height_check is True:
                                 frames.append(self.bbox_to_frame(_bbox, build_loc))
                             else:
-                                if not apex_reached:
+                                if not apex_reached:  # Creates a frame in-front and behind the largest bbox
                                     frames.append(self.bbox_to_frame(_bbox, build_loc))
                                     build_loc = 'end'
                                     frames.append(self.bbox_to_frame(_bbox, build_loc))
                                     apex_reached = True
                                     apex_index = i - 1  # Making up for i = 1 being the first frame
-                                    print "apex reached"
                                 elif apex_reached:
                                     raise TypeError('Only a fuselage with one apex (location of maximum area) is '
                                                     'allowed. Please re-arrange internals so that maximum thickness'
                                                     ' occurs only once')
                         elif _next_type != 'container':
-                            _bbox = self.bbox_extractor(self.sizing_parts[i])
                             if apex_reached:
                                 frames.append(self.bbox_to_frame(_bbox, build_loc))
                             else:
@@ -182,28 +202,27 @@ class Fuselage(GeomBase):
         return MirroredShape(shape_in=self.center_section_left,
                              reference_point=self.position,
                              vector1=self.position.Vx_,
-                             vector2=self.position.Vz,
-                             transparency=self.transparency)
+                             vector2=self.position.Vz)
+
     @Part
     def center_section(self):
         return SewnShell([self.center_section_left, self.center_section_right])
 
-    # @Attribute(in_tree=True)
-    # def center_section(self):
-    #     return FusedShell(shape_in=self.center_section_left, tool=self.center_section_right)
-
-    # @Attribute
-    # def length(self):
-    #     return self.fuselage_left.bbox.width
+    @Attribute
+    def nose_left(self):
+        nose_cone = []
+        if any('nose' in i for i in self.frame_builder['still_to_build']):
+            nose_cone = FCone(support_frame=self.frames[0],
+                              top_tangent=self.top_bc[0], side_tangent=self.side_bc[0], direction='x_')
+        return [nose_cone]
 
     @Attribute
-    def fuselage_nose(self):
-        if any('nose' in i for i in self.frame_builder['still_to_build']):
-            nose_cone = (FCone(support_frame=self.frames[0], top_tangent=self.top_bc[0], side_tangent=self.side_bc[0],
-                         direction='x_') if self.frame_builder['still_to_build'][0][0] is 'nose' else None)
-            # tail_cone = (FCone(support_frame=self.frame_grabber[-1], top_tangent=self.top_bc[1], side_tangent=self.side_bc[1],
-            #              direction='x') if self.frame_builder['still_to_build'][1][0] is 'tail' else None)
-        return nose_cone
+    def tail_left(self):
+        tail_cone = []
+        if any('tail' in i for i in self.frame_builder['still_to_build']):
+            tail_cone = FCone(support_frame=self.frames[-1],
+                              top_tangent=self.top_bc[1], side_tangent=self.side_bc[1], direction='x')
+        return [tail_cone]
 
     @staticmethod
     def bbox_to_frame(bbox, placement='start'):
