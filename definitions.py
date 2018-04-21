@@ -38,6 +38,13 @@ class Component(GeomBase):
         """
         return Point(0, 0, 0)
 
+    @Attribute
+    def text_label_position(self):
+        """ Sets the default position of the text_label to be on the front-left corner of the internal_shape
+        :rtype: Point
+        """
+        return self.internal_shape.bbox.corners[0]
+
     @Part
     def internal_shape(self):
         """ The geometry of the component that will be placed inside a structure, (i.e in a wing or fuselage)
@@ -48,12 +55,14 @@ class Component(GeomBase):
 
     @Part
     def text_label(self):
-        """ The geometry of the component that will be placed inside a structure, (i.e in a wing or fuselage)
+        """ Automatically creates a text label that inherits whatever object is labelled as. This can be hidden
+        through use of the Input parameter `hide_labels`
 
-        :rtype: Te
+        :rtype: TextLabel
         """
-        return TextLabel(text="%s" % self.label,
-                         position=self.internal_shape.bbox.corners[0], hidden=self.hide_labels)
+        return TextLabel(text="     %s" % self.label,
+                         position=self.text_label_position, hidden=self.hide_labels)
+
 
 if __name__ == '__main__':
     from parapy.gui import display

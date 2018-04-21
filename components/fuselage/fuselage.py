@@ -22,14 +22,14 @@ class Fuselage(GeomBase):
     compartment_type = Input(['nose', 'container', 'container', 'container', 'motor'])
     sizing_parts = Input([None,
                           EOIR(position=translate(YOZ, 'z', -0.2)),
-                          [Battery(position=Position(Point(0, 0, 0))), EOIR(position=translate(XOY, 'z', 0.02))],
+                          [Battery(position=Position(Point(0, 0, 0))), EOIR()],
                           EOIR(position=translate(YOZ, 'z', 0.5)),
-                          Motor(position=translate(XOY, 'x', 1.0))])
-    nose_loc = Input(Point(-0.3, 0, 0))
+                          Motor(position=translate(XOY, 'x', 0.7, 'z', 0.05))])
     minimize_frames = Input(False)
     ruled = Input(False)
+    show_inernals = Input(True)
 
-    @Attribute
+    @Attribute(private=True)
     def frame_builder(self):
 
         if len(self.compartment_type) == len(self.sizing_parts):
@@ -107,7 +107,7 @@ class Fuselage(GeomBase):
                 if i + 2 == len(self.compartment_type):
                     if _next_type == 'motor':
                         frames.append([MFrame(motor_diameter=self.sizing_parts[i+1].diameter,
-                                              position=self.sizing_parts[i+1].position), None])
+                                              position=self.sizing_parts[i+1].position)])
                     elif _next_type == 'tail':
                         still_to_build.append(['tail', i])
 
@@ -122,11 +122,7 @@ class Fuselage(GeomBase):
                 'fuselage_complete': fuselage_complete}
 
     @Attribute
-    def nose_cone_frame(self):
-        return FFrame(0.01, 0.01, Position(self.nose_loc))
-
-    @Attribute
-    def frame_grabber(self):
+    def frames(self):
         grabbed_frames = [i[0] for i in self.frame_builder['built_frames']]
         apex_index = self.frame_builder['apex_index']
         if self.minimize_frames:
@@ -136,19 +132,19 @@ class Fuselage(GeomBase):
         return grabbed_frames
 
     @Attribute
-    def curve_grabber(self):
-        return [i.frame for i in self.frame_grabber]
+    def curves(self):
+        return [i.frame for i in self.frames]
 
     @Attribute
-    def point_grabber(self):
-        return [i.spline_points for i in self.frame_grabber]
+    def points(self):
+        return [i.spline_points for i in self.frames]
 
     @Attribute
     def side_bc(self):
         # Point 0 = Bottom, Point 1 = Side, Point 2 = Top, Point 3 = Side Reflected
         # Make this into a block comment
-        points = [i[1] for i in self.point_grabber]
-        spline = FittedCurve(points)
+        points = [i[1] for i in self.points]
+        spline = FittedCurve(points)  # Fitted Curve best reproduces the algorithm present in LoftedShell
 
         start_tangent = spline.tangent1
         x = start_tangent.x
@@ -162,7 +158,7 @@ class Fuselage(GeomBase):
     @Attribute
     def top_bc(self):
         # Due to the sign convention edge 1 will always be the top curve
-        spline = self.fuselage_left.edges[1]
+        spline = self.center_section_left.edges[1]
 
         start_tangent = spline.tangent1
 
@@ -173,35 +169,41 @@ class Fuselage(GeomBase):
         end_tangent = Vector(-x, y, -z)  # Opposite direction required due to sign convention in FFrame
         return [start_tangent, end_tangent]
 
+    @Attribute(private=True)
+    def transparency(self):
+        return 0.5 if self.show_inernals else 0
+
+    @Attribute(private=True)
+    def center_section_left(self):
+        return LoftedShell(profiles=self.curves, check_compatibility=True, ruled=self.ruled)
+
+    @Attribute(private=True)
+    def center_section_right(self):
+        return MirroredShape(shape_in=self.center_section_left,
+                             reference_point=self.position,
+                             vector1=self.position.Vx_,
+                             vector2=self.position.Vz,
+                             transparency=self.transparency)
+    @Part
+    def center_section(self):
+        return SewnShell([self.center_section_left, self.center_section_right])
+
+    # @Attribute(in_tree=True)
+    # def center_section(self):
+    #     return FusedShell(shape_in=self.center_section_left, tool=self.center_section_right)
+
     # @Attribute
-    # def selected_bcs(self):
-    #     if
-
-    @Attribute(in_tree=True)
-    def fuselage_left(self):
-        return LoftedShell(profiles=self.curve_grabber, check_compatibility=True, ruled=self.ruled)
-
-    # @Part
-    # def fuselage_left(self):
-    #     return LoftedSurface(profiles=self.curve_grabber)
-
-    @Attribute
-    def length(self):
-        return self.fuselage_left.bbox.width
+    # def length(self):
+    #     return self.fuselage_left.bbox.width
 
     @Attribute
     def fuselage_nose(self):
-        if not self.frame_builder['fuselage_complete']:
-            nose_cone = (FCone(support_frame=self.frame_grabber[0], top_tangent=self.top_bc[0], side_tangent=self.side_bc[0],
+        if any('nose' in i for i in self.frame_builder['still_to_build']):
+            nose_cone = (FCone(support_frame=self.frames[0], top_tangent=self.top_bc[0], side_tangent=self.side_bc[0],
                          direction='x_') if self.frame_builder['still_to_build'][0][0] is 'nose' else None)
             # tail_cone = (FCone(support_frame=self.frame_grabber[-1], top_tangent=self.top_bc[1], side_tangent=self.side_bc[1],
             #              direction='x') if self.frame_builder['still_to_build'][1][0] is 'tail' else None)
         return nose_cone
-
-    # @Part
-    # def nose_cone(self):
-    #     return ScaledShape(shape_in=self.fuselage_nose[0].cone, reference_point=XOY, factor=1)
-
 
     @staticmethod
     def bbox_to_frame(bbox, placement='start'):

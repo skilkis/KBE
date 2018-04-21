@@ -40,7 +40,7 @@ class EOIR(Component):
     __show_primitives = False  # type: bool
 
     target_weight = Input(0.2, validator=val.Positive())
-    camera_name = Input(None)
+    camera_name = Input('Not Specified')
 
     @Input
     def label(self):
@@ -49,7 +49,7 @@ class EOIR(Component):
 
     @Attribute
     def specs(self):
-        if self.camera_name is None:
+        if self.camera_name == 'Not Specified':
             selected_camera_specs = [num[1] for num in self.camera_database if num[0] == self.camera_selector][0]
             selected_camera_specs['name'] = self.camera_selector
         else:
@@ -110,6 +110,17 @@ class EOIR(Component):
     def exposed_height(self):
         return (self.specs['gimbal_dimensions'][2] / 1000.0) - self.gimbal_radius
 
+    @Attribute
+    def center_of_gravity(self):
+        """ The center of gravity of the EOIR sensor is assumed to be the center of the bottom face"""
+        return self.internal_shape.faces[4].cog
+
+    @Attribute
+    def text_label_position(self):
+        """ Overwrites the default text_label position to put it closer to the gimbal """
+        return self.gimbal.edges[0].midpoint
+
+
     # --- Output Solids: ----------------------------------------------------------------------------------------------
 
     @Part
@@ -120,7 +131,7 @@ class EOIR(Component):
                                                       'x', -self.position.y,
                                                       'y', self.position.x,
                                                       'z', self.position.z),
-                                color=MyColors.dark_grey)
+                                color=MyColors.deep_red)
 
 
     @Part

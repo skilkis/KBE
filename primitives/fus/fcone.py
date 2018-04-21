@@ -8,6 +8,7 @@ from parapy.core import *
 # Required Modules
 from fframe import *
 from directories import *
+from user import MyColors
 from math import sqrt
 
 __all__ = ["FCone"]
@@ -22,20 +23,17 @@ class FCone(GeomBase):
     __show_primitives = False  # type: bool
 
     support_frame = Input(FFrame(width=1.0, height=0.5))  #
-    tangents = Input(['test']) # Bottom Vector, Side Vector Top Vector
+    tangents = Input(['test'])  # Bottom Vector, Side Vector Top Vector
     side_tangent = Input(Vector(-0.88, -0.65, 0))
     top_tangent = Input(Vector(0.8851351164623547, 0, 0.46533410105554684))
     direction = Input('x_', validator=val.OneOf(["x", "x_"]))
     slenderness_ratio = Input(0.3, validator=val.Positive())  # Nose-cone length / frame diagonal
+    transparency = Input(0.5)
 
     @Attribute
     def length(self):
         diagonal = sqrt((self.support_frame.height ** 2) + (self.support_frame.width ** 2))
         return self.slenderness_ratio * diagonal
-
-    @Attribute
-    def cog(self):
-        return self.cone.cog
 
     @Attribute
     def build_direction(self):
@@ -83,8 +81,8 @@ class FCone(GeomBase):
     # --- Output Surface: ---------------------------------------------------------------------------------------------
 
     @Part
-    def cone(self):
-        return FusedShell(shape_in=self.filled_top, tool=self.filled_bot)
+    def cone_right(self):
+        return SewnShell([self.filled_top, self.filled_bot])
 
     # --- Primitives: -------------------------------------------------------------------------------------------------
 
@@ -97,7 +95,6 @@ class FCone(GeomBase):
     def filled_bot(self):
         return FilledSurface(curves=[self.guides['h_curve'][0], self.guides['v_curve'][0].reversed,
                                      self.guides['f_curve'][0]])
-
 
 if __name__ == '__main__':
     from parapy.gui import display
