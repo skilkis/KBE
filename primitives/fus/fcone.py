@@ -16,18 +16,20 @@ __all__ = ["FCone"]
 
 class FCone(GeomBase):
 
-    __initargs__ = ["support_frame", "direction", "slenderness_ratio", "fuselage_length", "tip_point_z"]
+
+    # TODO cleanup init args and inputs, write documentation
+    __initargs__ = ["support_frame", "side_tangent", "top_tangent", "direction", "tip_point_z"]
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'cone.png')
 
     # A parameter for debugging, turns the visibility of miscellaneous parts ON/OFF
     __show_primitives = False  # type: bool
 
     support_frame = Input(FFrame(width=1.0, height=0.5))  #
-    tangents = Input(['test'])  # Bottom Vector, Side Vector Top Vector
     side_tangent = Input(Vector(-0.88, -0.65, 0))
     top_tangent = Input(Vector(0.8851351164623547, 0, 0.46533410105554684))
     direction = Input('x_', validator=val.OneOf(["x", "x_"]))
     slenderness_ratio = Input(0.5, validator=val.Range(0, 1))  # Nose-cone length / frame diagonal
+    transparency = Input(None)
 
     @Attribute
     def length(self):
@@ -59,7 +61,7 @@ class FCone(GeomBase):
         start_frame = self.support_frame
         points = start_frame.spline_points
 
-        frame_curve = self.support_frame.frame
+        frame_curve = self.support_frame.curve
         frame_curve_split = SplitCurve(curve_in=frame_curve, tool=points[1]).edges
 
         v_curve = InterpolatedCurve(points=[points[0], self.tip_point, points[2]],
@@ -80,7 +82,7 @@ class FCone(GeomBase):
 
     @Part
     def cone(self):
-        return SewnShell([self.cone_right, self.cone_left])
+        return SewnShell([self.cone_right, self.cone_left], transparency=self.transparency)
 
     # --- Primitives: -------------------------------------------------------------------------------------------------
 
@@ -97,13 +99,12 @@ class FCone(GeomBase):
     def cone_right(self):
         return SewnShell([self.filled_top, self.filled_bot])
 
-    @Attribute(in_tree=__show_primitives)
+    @Part(in_tree=__show_primitives)
     def cone_left(self):
         return MirroredShape(shape_in=self.cone_right,
                              reference_point=self.position,
                              vector1=self.position.Vx_,
-                             vector2=self.position.Vz,
-                             color=MyColors.light_grey)
+                             vector2=self.position.Vz)
 
 if __name__ == '__main__':
     from parapy.gui import display

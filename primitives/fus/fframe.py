@@ -15,8 +15,8 @@ class FFrame(GeomBase):
     """FFrame (Fuselage-Frame) is a class which utilizes a scaled 'unit curve' to define a fuselage cross-section
     that can fit a user-input `width` and `height`. Furthermore, to facilitate utilization of this class in batch mode,
     the location of the cross-sections on to x-axis can be supplied with the parameter position=Translate.
-    NOTE: the fuselage is constructed in a way to have a flat surface, thus when specifying a position of a `bbox` make
-    sure that it is the location of the front-bottom edge (furthest toward the nose and nadir direction)
+    NOTE: the fuselage is constructed in a way to have a flat surface on the bottom, thus when specifying a position of
+    a `bbox` make sure that it is the location of the front-bottom edge (furthest toward the nose and nadir direction)
 
     :param width: Internal usable width of the fuselage
     :type width: float
@@ -24,8 +24,8 @@ class FFrame(GeomBase):
     :param height: Internal usable height of the fuselage
     :type height: float
 
-    :param x_loc: Position of the cross-section in 3D space.
-    :type x_loc: float
+    :param position: Position of the cross-section in 3D space.
+    :type position: Position(Point)
     """
 
     __initargs__ = ["width", "height", "position"]
@@ -43,24 +43,24 @@ class FFrame(GeomBase):
         """Defines the control points of the fuselage frame, this can be utilized to later fit a spline across all
         cross-sections of the fuselage
         """
-        start = self.frame.start
+        start = self.curve.start
 
         # This part got complicated due to the desired midpoint not being the one found through ParaPy, had to translate
-        # and scale the original point defined by the attribute `framepoints`
-        original_mid = self.framepoints[1]
+        # and scale the original point defined by the attribute `curvepoints`
+        original_mid = self.curvepoints[1]
         mid = Point(original_mid.x,
                     original_mid.y * self.width,
                     original_mid.z * self.height * 2.0).translate(x=self.position.x,
                                                                   y=self.position.y,
                                                                   z=self.position.z)
 
-        end = self.frame.end
+        end = self.curve.end
         mid_reflected = Point(mid[0], -mid[1], mid[2]).translate(y=2.0 * self.position.y)
 
         return [start, mid, end, mid_reflected]
 
     @Attribute(private=True)
-    def framepoints(self):
+    def curvepoints(self):
         """Defines the points utilized to construct the shape of the cross-section. If a different shape is required
         these points can be edited as long as a unit-rectangle (1 x 0.5) can still fit inside the cross-section
         """
@@ -74,7 +74,7 @@ class FFrame(GeomBase):
     # --- Output Frame: -----------------------------------------------------------------------------------------------
 
     @Part
-    def frame(self):
+    def curve(self):
         return TranslatedCurve(curve_in=self.unit_curve, displacement=Vector(self.position.x,
                                                                              self.position.y,
                                                                              self.position.z))
@@ -83,7 +83,7 @@ class FFrame(GeomBase):
 
     @Part(in_tree=__show_primitives)
     def unit_curve_import(self):
-        return InterpolatedCurve(points=self.framepoints,
+        return InterpolatedCurve(points=self.curvepoints,
                                  tangents=self.tangents)
 
     @Part(in_tree=__show_primitives)

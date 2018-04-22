@@ -13,28 +13,23 @@ from wing import Wing
 __author__ = "Şan Kılkış"
 __all__ = ["Fuselage"]
 
-# TODO Add boom, add tail cone
-# TODO add validator to make sure proper instance list is entered [validator=val.InstanceList(Component)]
+# TODO Incorporate possibility of having a boom structure
+# TODO Weight Estimation w/ Material choice
 
 
 class Fuselage(GeomBase):
 
-
-    compartment_type = Input(['nose', 'container', 'container', 'container', 'motor', 'tail'])
+    compartment_type = Input(['nose', 'container', 'container', 'container', 'motor'])
     sizing_parts = Input([None,
                           EOIR(position=translate(YOZ, 'z', -0.2)),
                           [Battery(position=Position(Point(0, 0, 0))), EOIR()],
-                          EOIR(position=translate(YOZ, 'z', 0.5)),
-                          Motor(position=translate(XOY, 'x', 0.7, 'z', 0.05)), None])
-    # compartment_type = Input(['nose', 'container', 'container', 'container', 'motor'])
-    # sizing_parts = Input([None,
-    #                       EOIR(position=translate(YOZ, 'z', -0.2)),
-    #                       [Battery(position=Position(Point(0, 0, 0))), EOIR()],
-    #                       EOIR(position=translate(YOZ, 'z', 0.5)),
-    #                       Motor(position=translate(XOY, 'x', 0.7, 'z', 0.05))])
+                          EOIR(position=translate(YOZ, 'z', 0.25)),
+                          Motor(position=translate(XOY, 'x', 0.3, 'z', 0.025))])
+    material = Input('cfrp')
     minimize_frames = Input(False)
     ruled = Input(False)
-    show_inernals = Input(True)
+    make_transparent = Input(False)
+    color = Input(MyColors.light_grey)
 
     @Attribute(private=True)
     def frame_builder(self):
@@ -76,6 +71,9 @@ class Fuselage(GeomBase):
                     elif _type == 'boom':
                         raise Exception('A boom has been requested with no supports. Please try again with a boom'
                                         ' instance surrounded by at least 2 frame containers')
+                    elif _type == 'motor':
+                        frames.append([MFrame(motor_diameter=self.sizing_parts[i].diameter,
+                                              position=self.sizing_parts[i].position)])
 
                 # Container Logic
                 if _type == 'container':
@@ -89,7 +87,7 @@ class Fuselage(GeomBase):
                             _next_bbox = self.bbox_extractor(self.sizing_parts[i+1])
                             _next_frame = self.bbox_to_frame(_next_bbox, build_loc)
 
-                            # True means that the next frame is larger than the current
+                            # True would mean that the next frame is larger than the current
                             _width_check = (True
                                             if _frame[1]['width'] < _next_frame[1]['width']
                                             else False)
@@ -100,7 +98,7 @@ class Fuselage(GeomBase):
                             if _width_check and _height_check is True:
                                 frames.append(self.bbox_to_frame(_bbox, build_loc))
                             else:
-                                if not apex_reached:  # Creates a frame in-front and behind the largest bbox
+                                if not apex_reached:  # Creates a frame in-front and behind the largest bbox (apex)
                                     frames.append(self.bbox_to_frame(_bbox, build_loc))
                                     build_loc = 'end'
                                     frames.append(self.bbox_to_frame(_bbox, build_loc))
@@ -119,7 +117,7 @@ class Fuselage(GeomBase):
                                 apex_index = i - 1
 
                 # Boom Logic
-                # TODO (TBD) Currently not implemented, it doesn't do anything, but would be nice to have in the future
+                # TODO (TBD) Currently not implemented, but would be nice to have in the future
                 elif _type == 'boom':
                     still_to_build.append(['boom', i])
 
@@ -135,14 +133,20 @@ class Fuselage(GeomBase):
         else:
             raise IndexError('The supplied inputs do not have the same dimension')
 
-        # return [frames, still_to_build, apex_index]
-        return {'built_frames': frames,
-                'apex_index': apex_index,
-                'still_to_build': still_to_build,
-                'fuselage_complete': fuselage_complete}
+        return {'built_frames': frames,  # type: list
+                'apex_index': apex_index,  # type: int
+                'still_to_build': still_to_build,  # type: list
+                'fuselage_complete': fuselage_complete}  # type: bool
 
     @Attribute
     def frames(self):
+        """ Collection of all center-fuselage section frames (those that were built by `frame_builder`. Each frame has
+        an :attr: `frame` and :attr: `points`. If the user option `minimize_frames` is True then only the following
+        frames are kept: [start, apex_start, apex_end, end].
+
+        :return: List of center-fuselage section frames
+        :rtype: list
+        """
         grabbed_frames = [i[0] for i in self.frame_builder['built_frames']]
         apex_index = self.frame_builder['apex_index']
         if self.minimize_frames:
@@ -153,76 +157,170 @@ class Fuselage(GeomBase):
 
     @Attribute
     def curves(self):
-        return [i.frame for i in self.frames]
+        """ Grabs all curves out of the list `frames`
+
+        :return: List of curves
+        :rtype: list
+        """
+        return [i.curve for i in self.frames]
 
     @Attribute
     def points(self):
+        """ Grabs all spline_points out of the list `frames`. Due to how the primitive class `Frame` is defined
+        the significance of the points in order is as follows: Point 0 = Bottom (start), Point 1 = Right Side,
+        Point 2 = Top (end), Point 3 = Left Side
+
+        :return: List of spline_points
+        """
         return [i.spline_points for i in self.frames]
 
     @Attribute
     def side_bc(self):
+        """ The side tangency boundary condition required for the fuselage nose and tail. This is obtained by fitting
+        a curve through all side-points (Point 1 of Attribute `points`). Since, the fuselage shell is lofted from nose
+        to tail (toward positive `x`) the start tangent and end tangents, obtained from a `FittedCurve`
+        both face this direction. Thus, to create a nose cone, which has a build direction of `x_` the direction of the
+        start_tangent must be reversed. BC 0 = Start Tangent (Direction x_), BC 1 = End Tangent (Direction x).
+
+        :returns: List containing the start and end tangent vectors, and construction spline, included for debugging
+        :rtype: Vector
+
+
+        """
         # Point 0 = Bottom, Point 1 = Side, Point 2 = Top, Point 3 = Side Reflected
         # Make this into a block comment
         points = [i[1] for i in self.points]
         spline = FittedCurve(points)  # Fitted Curve best reproduces the algorithm present in LoftedShell
 
-        start_tangent = spline.tangent1
-        x = start_tangent.x
-        y = start_tangent.y
-        z = start_tangent.z
-        start_tangent = Vector(-x, -y, -z)  # Opposite direction required due to sign convention in FFrame
-
+        start_tangent = spline.tangent1.reverse  # Opposite direction required due to sign convention in FFrame
         end_tangent = spline.tangent2
-        return [start_tangent, end_tangent, spline]
+
+        return start_tangent, end_tangent, spline
 
     @Attribute
     def top_bc(self):
-        # Due to the sign convention edge 1 will always be the top curve
+        """ The top tangency boundary condition required for the fuselage nose and tail. This is obtained by extracting
+        the start and end tangents of the inner top edge from the attribute `center_section_left`. Keeping in-line with
+        the definition of points in the frame primitives, the interpolated curve is conveniently constructed from the
+        bottom point (Point 0) to the top point (Point 2). However, due to this convention the direction of the end
+        tangent must be reversed.
+
+        :returns: List containing the start and end tangent vectors
+        :rtype: Vector
+        """
+        # Due to the build order edge 1 will always be the top curve
         spline = self.center_section_left.edges[1]
 
         start_tangent = spline.tangent1
 
-        end_tangent = spline.tangent2
+        # TODO Make this more robust, currently the end_tangent does not produce good results when ruled mode is on
+        end_tangent = spline.tangent2  # Not true when ruled mode is turned
         x = end_tangent.x
         y = 0  # Forced to zero to avoid minute floating point errors
         z = end_tangent.z
-        end_tangent = Vector(-x, y, -z)  # Opposite direction required due to sign convention in FFrame
-        return [start_tangent, end_tangent]
+        end_tangent = Vector(-x, y, -z)  # Opposite direction required due to the build convention in Frame
+
+        return start_tangent, end_tangent
+
+    @Attribute
+    def center_of_gravity(self):
+        """ Area weighted average of center of gravity
+
+        :return: Position of the center of gravity in 3D space (x, y, z) w.r.t the origin XOY
+        :rtype: Point
+        """
+        # Array Index 0 = Area, Array Index 1 = cog
+        nose = ([self.nose.cone.area, self.nose.cone.cog]
+                if self.build_nose
+                else [0, Point(0, 0, 0)])
+        tail = ([self.tail.cone.area, self.tail.cone.cog]
+                if self.build_tail
+                else [0, Point(0, 0, 0)])
+        center = [self.center_section.area, self.center_section.cog]
+
+        total_area = nose[0] + tail[0] + center[0]
+
+        x_loc = (nose[0] * nose[1].x) + (tail[0] * tail[1].x) + (center[0] * center[1].x) / total_area
+        y_loc = (nose[0] * nose[1].y) + (tail[0] * tail[1].y) + (center[0] * center[1].y) / total_area
+        z_loc = (nose[0] * nose[1].z) + (tail[0] * tail[1].z) + (center[0] * center[1].z) / total_area
+
+        return Point(x_loc, y_loc, z_loc)
+
+    # --- Output Shapes: ----------------------------------------------------------------------------------------------
+
+    @Attribute(in_tree=True)
+    def center_section(self):
+        """ The main output shape of the class Fuselage, constructed from the Private Attributes below """
+        return SewnShell([self.center_section_left, self.center_section_right],
+                         color=self.color,
+                         transparency=self.transparency)
+
+    @Attribute(in_tree=True)
+    def nose(self):
+        """ Returns the nose cone of the fuselage is asked, otherwise returns a hidden circle. NOTE: This workaround
+        was necessary to produce the parts in the tree, while still preserving lazy evaluation """
+        if self.build_nose:
+            shape_out = FCone(support_frame=self.frames[0],
+                              top_tangent=self.top_bc[0], side_tangent=self.side_bc[0], direction='x_',
+                              color=self.color,
+                              transparency=self.transparency)
+        else:
+            shape_out = Circle(radius=0, hidden=True)
+        return shape_out
+
+    @Attribute(in_tree=True)
+    def tail(self):
+        """ Returns the tail cone of the fuselage is asked, otherwise returns a hidden circle. NOTE: This workaround
+         was necessary to produce the parts in the tree, while still preserving lazy evaluation """
+        if self.build_tail:
+            shape_out = FCone(support_frame=self.frames[-1],
+                              top_tangent=self.top_bc[1], side_tangent=self.side_bc[1], direction='x',
+                              color=self.color,
+                              transparency=self.transparency)
+        else:
+            shape_out = Circle(radius=0.0, hidden=True)
+        return shape_out
+
+    # --- Private Attributes: -----------------------------------------------------------------------------------------
 
     @Attribute(private=True)
     def transparency(self):
-        return 0.5 if self.show_inernals else 0
+        """ Switch case that returns the proper transparency value based on the status of `show_internals`
+
+        :return: Transparency value
+        """
+        return 0.5 if self.make_transparent else None
 
     @Attribute(private=True)
     def center_section_left(self):
+        """ The main fuselage section excluding nose and tail """
         return LoftedShell(profiles=self.curves, check_compatibility=True, ruled=self.ruled)
 
     @Attribute(private=True)
     def center_section_right(self):
+        """ The mirror image of `center_section_left` since by definition half-frames are used """
         return MirroredShape(shape_in=self.center_section_left,
                              reference_point=self.position,
                              vector1=self.position.Vx_,
                              vector2=self.position.Vz)
 
-    @Part
-    def center_section(self):
-        return SewnShell([self.center_section_left, self.center_section_right])
+    @Attribute(private=True)
+    def build_nose(self):
+        """ Switch case that that returns True/False if a nose is specified in `compartment_type`
 
-    @Attribute
-    def nose_left(self):
-        nose_cone = []
-        if any('nose' in i for i in self.frame_builder['still_to_build']):
-            nose_cone = FCone(support_frame=self.frames[0],
-                              top_tangent=self.top_bc[0], side_tangent=self.side_bc[0], direction='x_')
-        return [nose_cone]
+        :rtype: bool
+        """
+        return any('nose' in i for i in self.frame_builder['still_to_build'])
 
-    @Attribute
-    def tail_left(self):
-        tail_cone = []
-        if any('tail' in i for i in self.frame_builder['still_to_build']):
-            tail_cone = FCone(support_frame=self.frames[-1],
-                              top_tangent=self.top_bc[1], side_tangent=self.side_bc[1], direction='x')
-        return [tail_cone]
+    @Attribute(private=True)
+    def build_tail(self):
+        """ Switch case that that returns True/False if a tail is specified in `compartment_type`
+
+        :rtype: bool
+        """
+        return any('tail' in i for i in self.frame_builder['still_to_build'])
+
+    # --- Methods: ----------------------------------------------------------------------------------------------------
 
     @staticmethod
     def bbox_to_frame(bbox, placement='start'):
@@ -265,116 +363,6 @@ class Fuselage(GeomBase):
         else:
             shape_out = sizing_components.internal_shape
         return shape_out.bbox
-
-
-
-
-
-    # widths = Input([0.4, 0.8, 0.8, 0.5])
-    # heights = Input([0.2, 0.4, 0.4, 0.3])
-    # boom_length = Input(4.0)
-    # x_locs = Input([0, 1, 2, 3])
-    # z_locs = Input([0, 0, 0, 0])
-
-    # @Attribute
-    # def frame_grabber(self):
-    #     frames = [i.frame for i in self.frame_builder]
-    #     # frames.append(self.motor.frame)
-    #     return frames
-    #
-    # @Attribute
-    # def current_pos(self):
-    #     self.position = translate(self.position, 'x', 10)
-    #     return self.position
-    #
-    # @Attribute
-    # def weird_pos(self):
-    #     return self.frame_grabber[-1].position.x / 2.0  # What the hell is going on here? this number comes out doubled
-    #
-    # @Part
-    # def frame_builder(self):
-    #     return FFrame(quantify=len(self.widths), width=self.widths[child.index],
-    #                   height=self.heights[child.index],
-    #                   position=translate(self.position, 'x', self.x_locs[child.index], 'z', self.z_locs[child.index]))
-    # #
-    # # @Part
-    # # def motor(self):
-    # #     return MFrame(motor_radius=0.1, position=translate(self.position, 'x', 4, 'z', 0.1))
-    # #
-    #
-    # @Part
-    # def right(self):
-    #     return LoftedSurface(profiles=self.frame_grabber)
-    #
-    # #
-    # # @Part
-    # # def surface2(self):
-    # #     return LoftedSurface(profiles=[self.frame_grabber[0], self.nosecone.tip_point])
-    # #
-    # # @Part
-    # # def boom(self):
-    # #     return FFrame(width=0.1, height=0.1,
-    # #                   position=translate(self.position,
-    # #                                      'x', (self.frame_grabber[-1].frame.position.x / 2.0) + self.boom_length,
-    # #                                      'z', self.frame_grabber[-1].frame.position.z))
-    # #
-    # # @Part
-    # # def nosecone(self):
-    # #     return FCone(support_frame=self.frame_builder[0], color=MyColors.light_grey)
-    #
-    # # @Part
-    # # def tailcone(self):
-    # #     return FCone(support_frame=self.boom, direction='x_')
-    #
-    # # @Part
-    # # def tailcone_2(self):
-    # #     return FCone(support_frame=self.motor, direction='x_')
-    #
-    # # @Part
-    # # def nose_reference(self):
-    # #     return Point(-0.5, 0, 0)
-    # #
-    # # @Attribute
-    # # def nose_top_guide(self):
-    # #     start_frame = self.frame_builder[0]
-    # #     points = start_frame.spline_points
-    # #     return FittedCurve(points=[points[0], self.nose_reference, points[2]])
-    # #
-    # # @Attribute
-    # # def nose_side_guide(self):
-    # #     start_frame = self.frame_builder[0]
-    # #     points = start_frame.spline_points
-    # #     return FittedCurve(points=[points[1], self.nose_reference, points[3]])
-    # #
-    # # @Attribute
-    # # def nose_frame(self):
-    # #     start_frame = self.frame_builder[0]
-    # #     points = start_frame.spline_points
-    # #     return SplitCurve(curve_in=start_frame.frame, tool=points[1])
-    # #
-    # # @Part
-    # # def nose_top_guide_split(self):
-    # #     return SplitCurve(curve_in=self.nose_top_guide, tool=self.nose_reference)
-    # #
-    # # @Part
-    # # def nose_side_guide_split(self):
-    # #     return SplitCurve(curve_in=self.nose_side_guide, tool=self.nose_reference)
-    # #
-    # # @Part
-    # # def filled_test(self):
-    # #     return FilledSurface(curves=[self.nose_frame.edges[1], self.nose_top_guide_split.edges[1],
-    # #                                  self.nose_side_guide_split.edges[0]])
-    #
-    # # @Part
-    # # def fuselage(self):
-    # #     return MirroredShape(shape_in=self.half_fuselage, reference_point=YOZ,
-    # #                            vector1=Vector(1, 0, 0),
-    # #                            vector2=Vector(0, 0, 1),
-    # #                            color=MyColors.light_grey)
-    # #
-    # # @Part
-    # # def end_fuselage(self):
-    # #     return FusedShell(shape_in=self.half_fuselage, tool=self.fuselage, color=MyColors.light_grey)
 
 
 if __name__ == '__main__':

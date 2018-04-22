@@ -40,10 +40,10 @@ x = '"7.5x10"'
 x=x.replace('"', '')
 
 from parapy.core import *
-from parapy.geom import Point
+from parapy.geom import Point, Vector
 
-x = (float(0), float(1), float(1))
+x = Vector(0, 1, 2).reverse
+
 for i in x:
-    i = i + 0.05
-
+    print x
 
