@@ -6,9 +6,9 @@ from parapy.core import *  # / Required ParaPy Modules
 
 from user import *
 from primitives import *
-from components import *
-from definitions import *
-from wing import Wing
+from components import *  # This is an unecessary class, or might be
+from directories import *
+
 
 __author__ = "Şan Kılkış"
 __all__ = ["Fuselage"]
@@ -19,16 +19,35 @@ __all__ = ["Fuselage"]
 
 class Fuselage(GeomBase):
 
+    __initargs__ = ["compartment_type", "sizing_parts"]
+    __icon__ = os.path.join(DIRS['ICON_DIR'], 'fuselage.png')
+
+    #: Type of containers at each station, possible entries (nose, container, motor, tail)
+    #: :type: str list
     compartment_type = Input(['nose', 'container', 'container', 'container', 'motor'])
+
+    #: Parts that the fuselage will be sized for, these must correspond to the entries given in `compartment_type`
+    #: :type: list
     sizing_parts = Input([None,
                           EOIR(position=translate(YOZ, 'z', -0.2)),
                           [Battery(position=Position(Point(0, 0, 0))), EOIR()],
                           EOIR(position=translate(YOZ, 'z', 0.25)),
                           Motor(position=translate(XOY, 'x', 0.3, 'z', 0.025))])
-    material = Input('cfrp')
+
+    #: Initiates the automatic frame minimization NOTE: May lead to intersecting surfaces
+    #: :type: bool
     minimize_frames = Input(False)
+
+    #: Linearly joins the frames of the center fuselage NOTE: May lead to errors at the tail cone
+    #: :type: bool
     ruled = Input(False)
+
+    #: Toggles transparency of the fuselage
+    #: :type: bool
     make_transparent = Input(False)
+
+    #: Sets the color of the fuselage (Overwritten from the default yellow)
+    #: :type: str or Tuple
     color = Input(MyColors.light_grey)
 
     @Attribute(private=True)
@@ -323,6 +342,7 @@ class Fuselage(GeomBase):
     # --- Methods: ----------------------------------------------------------------------------------------------------
 
     @staticmethod
+    # TODO Comment class methods
     def bbox_to_frame(bbox, placement='start'):
 
         corners = bbox.corners
@@ -349,6 +369,7 @@ class Fuselage(GeomBase):
         return [frame, param_dict]
 
     @staticmethod
+    # TODO comment this class method
     def bbox_extractor(sizing_components):
         shape_out = None
         if type(sizing_components) == list:
