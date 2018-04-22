@@ -16,6 +16,10 @@ __all__ = ["Fuselage"]
 # TODO Incorporate possibility of having a boom structure
 # TODO Weight Estimation w/ Material choice
 
+# http://www.dupont.com/content/dam/dupont/products-and-services/fabrics-fibers-and-nonwovens/fibers/documents/Kevlar_Technical_Guide.pdf
+
+# ^ Potential knowledge base for materials
+
 
 class Fuselage(GeomBase):
 
@@ -24,15 +28,14 @@ class Fuselage(GeomBase):
 
     #: Type of containers at each station, possible entries (nose, container, motor, tail)
     #: :type: str list
-    compartment_type = Input(['nose', 'container', 'container', 'container', 'motor'])
+    compartment_type = Input(['nose', 'container', 'container', 'motor'])
 
     #: Parts that the fuselage will be sized for, these must correspond to the entries given in `compartment_type`
     #: :type: list
     sizing_parts = Input([None,
                           EOIR(position=translate(YOZ, 'z', -0.2)),
                           [Battery(position=Position(Point(0, 0, 0))), EOIR()],
-                          EOIR(position=translate(YOZ, 'z', 0.25)),
-                          Motor(position=translate(XOY, 'x', 0.3, 'z', 0.025))])
+                          Motor(position=translate(XOY, 'x', 0.5, 'z', 0.025))])
 
     #: Initiates the automatic frame minimization NOTE: May lead to intersecting surfaces
     #: :type: bool
@@ -207,7 +210,6 @@ class Fuselage(GeomBase):
 
         """
         # Point 0 = Bottom, Point 1 = Side, Point 2 = Top, Point 3 = Side Reflected
-        # Make this into a block comment
         points = [i[1] for i in self.points]
         spline = FittedCurve(points)  # Fitted Curve best reproduces the algorithm present in LoftedShell
 
@@ -345,22 +347,26 @@ class Fuselage(GeomBase):
     # TODO Comment class methods
     def bbox_to_frame(bbox, placement='start'):
 
+        # Extracting corners from bbox
         corners = bbox.corners
         point0 = min(corners)
         point1 = max(corners)
 
+        # Determining width, height, and length of each frame (More robust than calling ordered faces)
         width = abs(point1.y-point0.y)
         height = abs(point1.z-point0.z)
         length = abs(point1.x-point0.x)
 
-        # fill_factor = 0.01*length
-
+        # Determining frame placement
         x = (point0.x if placement == 'start' else point0.x + length if placement == 'end' else 0)
         y = (width / 2.0) + point0.y
         z = point0.z
         position = Position(Point(x, y, z))
 
+        # Instantiating the frame
         frame = FFrame(width, height, position)
+
+        # Placing parameters used to create the frame into a dictionary for reference/debugging
         param_dict = {'width': width,
                       'height': height,
                       'length': length,
