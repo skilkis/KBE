@@ -5,15 +5,18 @@
 from parapy.geom import *
 from parapy.core import *
 
+from definitions import *
+
 # Required Modules
 from my_csv2dict import *
 from directories import *
 from os import listdir
+from user import MyColors
 
 __all__ = ["Motor"]
 
 
-class Motor(GeomBase):
+class Motor(Component):
 
     __initargs__ = ["target_power", "motor_name", "position"]
 
@@ -21,18 +24,33 @@ class Motor(GeomBase):
     __show_primitives = False  # type: bool
 
     target_power = Input(100.0, validator=val.Positive())
-    motor_name = Input(None)
+    motor_name = Input('Not Specified')
     integration = Input('pusher', validator=val.OneOf(["pusher", "puller"]))
     position = Input(Position(Point(0, 0, 0)))
     database_path = Input(DIRS['MOTOR_DATA_DIR'])
 
+    @Input
+    def label(self):
+        """Overwrites the inherited slot `label' with the chosen motor_name"""
+        return self.specs['name']
+
     @Attribute
     def specs(self):
-        if self.motor_name is None:
-            selected_motor_specs = [num[1] for num in self.motor_database if num[0] == self.motor_selector]
-            return selected_motor_specs[0]
+        if self.motor_name == 'Not Specified':
+            selected_motor_specs = [num[1] for num in self.motor_database if num[0] == self.motor_selector][0]
+            selected_motor_specs['name'] = self.motor_selector
         else:
-            return read_csv(self.motor_name, self.database_path)
+            selected_motor_specs = read_csv(self.motor_name, DIRS['EOIR_DATA_DIR'])
+            selected_motor_specs['name'] = self.motor_name
+        return selected_motor_specs
+    #
+    # @Attribute
+    # def specs(self):
+    #     if self.motor_name is None:
+    #         selected_motor_specs = [num[1] for num in self.motor_database if num[0] == self.motor_selector]
+    #         return selected_motor_specs[0]
+    #     else:
+    #         return read_csv(self.motor_name, self.database_path)
 
     @Attribute
     def motor_database(self):
@@ -51,30 +69,26 @@ class Motor(GeomBase):
         :return: Name of the selected motor
         :rtype: str
         """
-        if self.motor_name is None:
-            tolerance = 0.1
-            motor_list = sorted([[name[0], name[1]['constant_power'], name[1]['weight']]
-                                 for name in self.motor_database],
-                                key=lambda f: float(f[1]))
-            allowed_motors = [[i[0], abs(i[1] - self.target_power), i[2]]
-                              for i in motor_list if i[1] >= self.target_power * (1-tolerance)]
-            if len(allowed_motors) == 0:
-                raise ValueError('The target power of %.2f [W] is too large to find a suitable motor'
-                                 % self.target_power)
-            else:
-                error_list = [i[1] for i in allowed_motors]
-                weight_list = [i[2] for i in allowed_motors]
-                idx1 = error_list.index(min(error_list))  # Index of minimum error (provided power - desired)
-                idx2 = weight_list.index(min(weight_list))  # Index of minimum weight
-                if idx1 != idx2:  # Code to prefer minimum error over minimum weight
-                    selected_index = idx1
-                else:
-                    selected_index = idx2
-                selected_motor = allowed_motors[selected_index][0]
-            return selected_motor
+        tolerance = 0.1
+        motor_list = sorted([[name[0], name[1]['constant_power'], name[1]['weight']]
+                             for name in self.motor_database],
+                            key=lambda f: float(f[1]))
+        allowed_motors = [[i[0], abs(i[1] - self.target_power), i[2]]
+                          for i in motor_list if i[1] >= self.target_power * (1-tolerance)]
+        if len(allowed_motors) == 0:
+            raise ValueError('The target power of %.2f [W] is too large to find a suitable motor'
+                             % self.target_power)
         else:
-            raise Warning('You have already selected a motor, '
-                          'please invalidate the motor_name slot to run the motor-selection algorithm')
+            error_list = [i[1] for i in allowed_motors]
+            weight_list = [i[2] for i in allowed_motors]
+            idx1 = error_list.index(min(error_list))  # Index of minimum error (provided power - desired)
+            idx2 = weight_list.index(min(weight_list))  # Index of minimum weight
+            if idx1 != idx2:  # Code to prefer minimum error over minimum weight
+                selected_index = idx1
+            else:
+                selected_index = idx2
+            selected_motor = allowed_motors[selected_index][0]
+        return selected_motor
 
     @Attribute
     def weight(self):
@@ -97,12 +111,12 @@ class Motor(GeomBase):
         return 0.3 * self.length
 
     @Attribute
-    def length(self):
-        return self.specs['length'] / 1000.0
-
-    @Attribute
     def power(self):
         return [self.specs['constant_power'], self.specs['burst_power']]
+
+    @Attribute
+    def efficiency(self):
+        return 0.9
 
     @Attribute
     def extrude_direction(self):
@@ -129,13 +143,15 @@ class Motor(GeomBase):
     def internal_shape(self):
         return ChamferedSolid(built_from=self.motor_body_import,
                               distance=self.shaft_diameter,
-                              edge_table=self.chamfer_edges)
+                              edge_table=self.chamfer_edges,
+                              color=MyColors.gold)
 
     @Part
     def shaft(self):
         return ExtrudedSolid(island=self.shaft_circle,
                              distance=self.shaft_length,
-                             direction=self.extrude_direction['shaft'])
+                             direction=self.extrude_direction['shaft'],
+                             color=MyColors.dark_grey)
 
     # --- Primitives: -------------------------------------------------------------------------------------------------
 

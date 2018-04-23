@@ -6,7 +6,7 @@ from parapy.core import *  # / Required ParaPy Modules
 
 from user import *
 from primitives import *
-from components import *  # This is an unecessary class, or might be
+from components import *
 from directories import *
 
 
@@ -22,6 +22,8 @@ __all__ = ["Fuselage"]
 
 
 class Fuselage(GeomBase):
+
+    # TODO Class description and use cases
 
     __initargs__ = ["compartment_type", "sizing_parts"]
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'fuselage.png')
@@ -192,7 +194,7 @@ class Fuselage(GeomBase):
         the significance of the points in order is as follows: Point 0 = Bottom (start), Point 1 = Right Side,
         Point 2 = Top (end), Point 3 = Left Side
 
-        :return: List of spline_points
+        :return: List of spline_points in
         """
         return [i.spline_points for i in self.frames]
 
@@ -247,7 +249,7 @@ class Fuselage(GeomBase):
     def center_of_gravity(self):
         """ Area weighted average of center of gravity
 
-        :return: Position of the center of gravity in 3D space (x, y, z) w.r.t the origin XOY
+        :return: Position of the center of gravity in 3D space (x, y, z) w.r.t the origin XOY in [SI Meter]
         :rtype: Point
         """
         # Array Index 0 = Area, Array Index 1 = cog
