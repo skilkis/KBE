@@ -127,8 +127,7 @@ class LiftingSurface(GeomBase):
         # This scales original airfoil to required root chord.
         return ScaledCurve(curve_in=self.airfoil,
                            reference_point=self.airfoil.position,
-                           factor=self.root_chord,
-                           hidden=True)
+                           factor=self.root_chord)
 
     @Part
     def scaled_tip(self):

@@ -15,7 +15,7 @@ class ScissorPlot(GeomBase):
     #  Sh/S inputs
     x_cg = Input(0.0)   #  NEED THIIS INPUT FROM CG SCRIPT FOR CURRENT AIRCRAFT!!!!!!!!!!!!!!!!!!!!!!!!!!
     x_ac = Input(0.1)   #  NEED THIS INPUT FROM LIFTING SURFACE SCRIPT! FOR COMPLETE WING OF CURRENT AIRCR!!!!!!!
-
+#  TODO CONNECT ALL OF THIS TO MAIN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     AR = Input(12.0)     #  NEED THIS INPUT FROM CLASS II FOR CURRENT AIRCRAFT!!!!!!!!1
     e = Input(0.8)      #  NEED THIS INPUT FROM CLASS I FOR CURRENT A/C!!!!!!!!!
     CD0 = Input(0.02)   #  NEED THIS FROM CLASS I!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -29,17 +29,18 @@ class ScissorPlot(GeomBase):
     VhV_canard = 1.0    #  This is the speed ratio for a canard aircraft.
 
 
-    #  a_0 = 2*pi          # This is the assumed (thin) airfoil lift slope.
+    a_0 = 2*pi          # This is the assumed (thin) airfoil lift slope.
 
 
 
     Cl_w = Input(0.5)       #  This is the maximum lift coeficcent of the wing at 1.2*V_s IMPORT FROM WING.
                             #  There is a correction for the main wing if canard is chosen.
     C_mac = Input(-0.32)    #  This is the C_m of the wing from AVL IMPORT FROM WING
-    Cla_w = Input(5.14)      #  This is the lift curve slope of the wing from AVL. IMPORT FROM WING
+    Cla_w = Input(5.14)     #  This is the lift curve slope of the wing from AVL. IMPORT FROM WING
     delta_xcg = Input(0.3)  #  This is the change in the cg location due to dropping a payload. IMPORT FROM CG EST
     Cla_h = Input(4.9)      # This is the lift curve slope of the tail. IMPORT FROM TAIL WING INSTANTIATION
-#  TODO In main code, get cla_h from AVL using wing primitive.
+
+#  TODO In main code, get cla_h from AVL using wing primitive. -> NOT POSSIBLE? BC SH DETERMINED FROM THOSE EQUATIONS BELOW!
     configuration = Input('Conventional', validator=val.OneOf(['Canard', 'Conventional']))
 
    # @Attribute
@@ -55,9 +56,6 @@ class ScissorPlot(GeomBase):
    #     Cla_h = self.a_0/(1+(self.a_0 / (pi * self.AR_h * self.e_h) ))
    #     return Cla_h
 
-   # @Attribute
-   # def x_np(self):
-   #     return x_cg+
 
     @Attribute
     def downwash_a(self):
