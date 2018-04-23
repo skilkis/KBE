@@ -178,9 +178,6 @@ class Wing(GeomBase):
         cll = [i[1] for i in cll_array]
         error = [abs(cll[i] - self.C_L_cont) for i in range(0,len(cll))]
         cl_cont_index = error.index(min(error))
-        print cll_array
-        print self.C_L_cont
-        print error
         return cl_cont_index
 
     @Attribute
@@ -189,20 +186,13 @@ class Wing(GeomBase):
         casename = self.results['alpha%s' % self.C_L_cont_index]['Totals']['Cmtot']
         return casename
 
-
-
     @Attribute
     def write_results(self):
         results = self.avl_session.get_results()
         with open('out.json', 'w') as f:
             f.write(json.dumps(results))
         return 'Done'
-
-
-
-
-
-
+#  TODO add get_dir to directory here above, such that the output file goes to the user folder.
 
 if __name__ == '__main__':
     from parapy.gui import display
