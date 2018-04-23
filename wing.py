@@ -40,7 +40,7 @@ class Wing(GeomBase):
     #  Above the Standard airfoil. The Cambered Symmetric and reflexed airfoil database is in folder 'airfoils'
     offset = Input(None)
 
-    # rho = Input(1.225)
+    rho = Input(1.225)
     #  Above is the density used to calculate the C_L for the controlability curve
 
     #  TODO Fix CH10 bug?
@@ -54,7 +54,7 @@ class Wing(GeomBase):
     @Attribute
     def C_L_cont(self):
         #  This is the Required C_L from the lift equation at 1.2*V_s @ MTOW for the controllability curve of scissor plot.
-        clreq = 2*self.MTOW/(self.rho*((1.2*self.V_s)**2)*self.S_req)
+        clreq = 2*9.81*self.MTOW/(self.rho*((1.2*self.V_s)**2)*self.S_req)
         return clreq
 
 
@@ -122,13 +122,13 @@ class Wing(GeomBase):
                         reference_point=Point(0.0, 0.0, 0.0),
                         surfaces=[self.wing_surface])
 
-    @Attribute
-    def cruise_case(self):
-        return Case(name='Cruise', alpha=2.75, velocity=1.2*self.V_s)  # Case defined by one angle-of-attack
+  #  @Attribute
+  #  def cruise_case(self):
+  #      return Case(name='Cruise', alpha=2.75, velocity=1.2*self.V_s)  # One Case defined by one angle-of-attack
 
     @Attribute
     def alpha_cases(self):
-        alphas = np.linspace(0.0,5.0,20)
+        alphas = np.linspace(0.0,10.0,20)
         alpha_case = []
         for i in range(0,len(alphas)):
             alpha_case.append(Case(name='alpha%s' % i, alpha=alphas[i], velocity=1.2*self.V_s))
@@ -170,16 +170,12 @@ class Wing(GeomBase):
 
         return cl_alpha
 
-    # @Attribute
-    # def controllability_params(self):
-    #     cl_array = (sorted([[alpha, self.results[alpha]['Totals']['CLtot']]
-    #                         for alpha in self.results], key=lambda f: float(f[1])))
-    #     error = [for i in cl_array]
-    #     return cl_array
-
-
-
-
+    @Attribute
+    def controllability_params(self):
+        cm_array = (sorted([[self.results[alpha]['Totals']['Alpha'], self.results[alpha]['Totals']['Cmtot']]
+                            for alpha in self.results], key=lambda f: float(f[0])))
+        #error = [for i in cl_array]
+        return cm_array
 
   #  @Attribute
   #  #  Now we must get the data corresponding to C_L_cont derived above.

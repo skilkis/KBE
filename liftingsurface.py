@@ -190,7 +190,7 @@ class LiftingSurface(GeomBase):
                            hidden = True)
     @Part
     def mac_dummy(self):
-        #  This orients the tip airfoil over the wing twist angle input. The rotation is about the leading edge.
+        #  This orients the mac over the wing twist angle input. The rotation is about the leading edge.
         return TransformedCurve(curve_in = self.mac_notwist,
                                 from_position = self.mac_notwist.position,
                                 to_position = rotate(self.mac_notwist.position,
