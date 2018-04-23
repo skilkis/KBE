@@ -3,8 +3,6 @@
 
 from parapy.core import *
 from parapy.geom import *
-from math import *
-import numpy as np
 from liftingsurface import LiftingSurface
 from scissorplot import ScissorPlot
 
@@ -19,9 +17,6 @@ class HorizontalStabilizer(GeomBase):
     airfoil_choice_h = Input('NACA0012')    #  TODO CONNECT TO MAIN/LS
     offset_h = Input(None)                  #  TODO CONNECT TO MAIN/LS
     #  TODO CONNECT THESE INPUTS TO MAIN/WINGPOWER LOADING AND MTOW!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-
-
 
     @Attribute
     def scissor(self):

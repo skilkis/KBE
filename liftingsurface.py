@@ -31,6 +31,7 @@ class LiftingSurface(GeomBase):
     #  The STANDARD OFFSET INPUT(none) causes the TE to be unswept (offset = c_r-c_t), however,
     #  if the user inputs 0 in the GUI, then the leading edge becomes unswept (with taper ratio < 1)
 
+    cog_radius = Input(0.05)    #  This is the radius for the displayed cog.
     @Attribute
     def semispan(self):
         #  This attribute calculated the required semi-span based on the Class I area and Aspect Ratio
@@ -175,7 +176,7 @@ class LiftingSurface(GeomBase):
     @Part
     def cog_wing(self):
         # This displays a red ball at the COG location of the SOLID wing.
-        return Sphere(radius=0.05,
+        return Sphere(radius=self.cog_radius,
                       position=self.final_wing.cog, color='red')
 
     @Part
