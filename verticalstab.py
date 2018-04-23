@@ -27,7 +27,7 @@ class VerticalStabilizer(GeomBase):
     offset_v = Input(None)                  #  TODO CONNECT TO MAIN/LS
     #  TODO CONNECT THESE INPUTS TO MAIN/WINGPOWER LOADING AND MTOW!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     cog_radius = 0.01       #  This reduces the size of the COG sphere.
-
+    semispan = Input(1.9)   # This is the wing semispan TODO connect to main
     @Attribute
     def V_v(self):
         #  This is a collection of VTP volume coefficients of agricultural aircraft.
@@ -38,7 +38,7 @@ class VerticalStabilizer(GeomBase):
 
     @Attribute
     def S_v(self):
-        return (self.V_v*self.S_req*self.MAC)/self.lvc
+        return (self.V_v*self.S_req*self.semispan)/self.lvc
 
 
 
