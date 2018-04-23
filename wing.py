@@ -28,18 +28,18 @@ class Wing(GeomBase):
     V_s = Input(15.0)  # MUST GET THIS INPUT FROM CLASS I!!!!!!!!!!!!!!!!!!!!!!!!!!
     #  Above is the required stall speed from the class I estimation.
 
-    taper = Input(0.3)
+    taper = Input(0.3, validator=val.Positive())
     #  Above is the User Requested Taper Ratio.
-    dihedral = Input(5.0)
+    dihedral = Input(0.0, validator=val.Range(-20.0, 20.0))
     #  Above is the User Required Dihedral Angle.
-    twist = Input(2.0)
+    twist = Input(2.0, validator=val.Range(-10, 10.0))
     #  Above is the twist of the tip section with respect to the root section.
-    airfoil_type = Input('cambered', validator=val.OneOf(['cambered', 'reflexed', 'symmetric']))  # MAKE ERROR IF WRONG NAME INPUT!!!!!!!!!!!!!!
+    airfoil_type = Input('cambered', validator=val.OneOf(['cambered', 'reflexed', 'symmetric']))
     #  Above is the standard airfoil type.
-    airfoil_choice = Input('SA7036')  # MAKE ERROR IF WRONG NAME INPUT!!!!!!!!!!!!!!
+    airfoil_choice = Input('SA7036')
     #  Above the Standard airfoil. The Cambered Symmetric and reflexed airfoil database is in folder 'airfoils'
     offset = Input(None)
-
+#  TODO add validators for inputs
     rho = Input(1.225)
     #  Above is the density used to calculate the C_L for the controlability curve
 
@@ -128,7 +128,7 @@ class Wing(GeomBase):
 
     @Attribute
     def alpha_cases(self):
-        alphas = np.linspace(0.0,10.0,20)
+        alphas = np.linspace(0.0,10.0,25)
         alpha_case = []
         for i in range(0,len(alphas)):
             alpha_case.append(Case(name='alpha%s' % i, alpha=alphas[i], velocity=1.2*self.V_s))
@@ -167,21 +167,27 @@ class Wing(GeomBase):
 
         # Calculating the Gradient w/ a quick list comprehension (NOTE: THIS VALUE IS IN RADIANS)
         cl_alpha = np.mean([(cl[i+1] - cl[i]) / (alpha_rad[i+1] - alpha_rad[i]) for i in range(0, len(alpha_rad) - 1)])
-
         return cl_alpha
 
     @Attribute
-    def controllability_params(self):
-        cm_array = (sorted([[self.results[alpha]['Totals']['Alpha'], self.results[alpha]['Totals']['Cmtot']]
-                            for alpha in self.results], key=lambda f: float(f[0])))
-        #error = [for i in cl_array]
-        return cm_array
+    def C_L_cont_index(self):
+        #  This attribute returns the index of the AVL data corresponding to the case when C_L is closest to the
+        #  required C_L_cont required by the lift equation for the controllability curve.
+        cll_array = (sorted([[self.results[alpha]['Totals']['Alpha'], self.results[alpha]['Totals']['CLtot']]
+                            for alpha in self.results], key=lambda f: float(f[1])))
+        cll = [i[1] for i in cll_array]
+        error = [abs(cll[i] - self.C_L_cont) for i in range(0,len(cll))]
+        cl_cont_index = error.index(min(error))
+        print cll_array
+        print self.C_L_cont
+        print error
+        return cl_cont_index
 
-  #  @Attribute
-  #  #  Now we must get the data corresponding to C_L_cont derived above.
-  #  def cl_controllability(self):
-  #
-  #      return
+    @Attribute
+    #  Now we must get the C_m from avl corresponding to C_L_cont derived above.
+    def controllability_C_m(self):
+        casename = self.results['alpha%s' % self.C_L_cont_index]['Totals']['Cmtot']
+        return casename
 
 
 
