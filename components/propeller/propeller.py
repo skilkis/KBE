@@ -29,7 +29,6 @@ class Propeller(Component):
 
     # TODO make sure the propeller code is structured nicely
     # TODO Make user selection of a propeller possible
-    # TODO figure out glitch in apex detection
     # Change label to chosen propeller
 
     # A parameter for debugging, turns the visibility of miscellaneous parts ON/OFF
@@ -191,7 +190,9 @@ class Propeller(Component):
     @Part
     def propeller(self):
         return TranslatedShape(shape_in=self.propeller_builder,
-                               displacement=Vector(self.position.x + self.build_direction * (self.fairing_length * 0.1),
+                               displacement=Vector(self.position.x + self.build_direction * (self.fairing_length * (0.1
+                                                                                             if self.motor.integration
+                                                                                             == 'puller' else 0.15)),
                                                    self.position.y,
                                                    self.position.z),
                                color=MyColors.dark_grey,
@@ -226,8 +227,8 @@ class Propeller(Component):
             pts = []
             for i in f:
                 x, y = i.split(' ', 1)
-                # Orients the airfoil properly since the motor is assumed to always spins in shaft extrude direction
-                pts.append(Point(self.build_direction * float(y), self.build_direction * (float(x) - 0.5), 0))
+                # Orients the airfoil properly since the motor is assumed to always spins in flight direction
+                pts.append(Point(-float(y), -(float(x) - 0.5), 0))
         return pts
 
     @Attribute(private=True)
