@@ -161,7 +161,7 @@ class LiftingSurface(GeomBase):
     @Part
     def wing_surf(self):
         # This generates a solid wing half with the sign convention mentioned above.
-        return LoftedShell([self.root_airfoil,self.tip_airfoil],
+        return LoftedSolid([self.root_airfoil,self.tip_airfoil],
                            hidden=True)
 
     @Part
