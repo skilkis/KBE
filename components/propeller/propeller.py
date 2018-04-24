@@ -126,65 +126,6 @@ class Propeller(Component):
     #
     #     return build_database()
 
-    # --- Geometry Visualization: -------------------------------------------------------------------------------------
-
-    @Attribute
-    def propeller_geometry(self):
-        """ Defines the geometry parameters necessary to instantiate a propeller with the Attribute `airfoil_builder`
-        NOTE: Propeller geometry is only for visualization purposes. Constructing a proper propeller would
-        take too much time and would be out of the scope of our project.
-
-        :return: A dictionary containing geometry parameters ['spanwise_loc', 'chord_dist', 'twist_dist']
-        :rtype: dict
-        """
-
-        # Span-wise Location
-        radius = self.propeller_diameter / 2.0
-        unit_z_locs = [0.0, 0.1, 0.2, 0.3, 0.7, 0.8, 0.9, 1.0]
-        z_locs = [i * radius for i in unit_z_locs]
-
-        # Chord Distribution
-        root_chord = self.motor.diameter * 0.5  # Scaled off of the motor to avoid too large of a chord
-        unit_chord_lengths = [1.0, 1.5, 2.5, 2.3, 1.5, 1.3, 1.0, 0.1]  # Scaled w.r.t the root_chord
-        chords = [i * root_chord for i in unit_chord_lengths]
-
-        # Twist Distribution
-        twists = [0, 0, 7, 6, 5, 4, 3, 2]
-
-        return {'spanwise_loc': z_locs, 'chord_dist': chords, 'twist_dist': twists}
-
-    @Attribute
-    def airfoil_builder(self):
-        airfoils = []
-        geom = self.propeller_geometry
-        for i in range(0, len(geom['spanwise_loc'])):
-            scaled = ScaledCurve(curve_in=self.airfoil_unit_curve,
-                                 reference_point=XOY,
-                                 factor=geom['chord_dist'][i])
-            rotated = RotatedCurve(curve_in=scaled,
-                                   rotation_point=XOY,
-                                   vector=XOY.Vz,
-                                   angle=radians(geom['twist_dist'][i]))
-            translated = TranslatedCurve(curve_in=rotated,
-                                         displacement=Vector(0,
-                                                             0,
-                                                             geom['spanwise_loc'][i]))
-            airfoils.append(translated)
-        return airfoils
-
-    @Attribute(private=True)
-    def propeller_builder(self):
-        prop_top = LoftedSolid(profiles=self.airfoil_builder)
-        prop_bottom = MirroredShape(shape_in=prop_top, reference_point=XOY, vector1=XOY.x_, vector2=XOY.y)
-        propeller = Compound(built_from=[prop_top, prop_bottom])
-        return propeller
-
-    @Attribute
-    def text_label_position(self):
-        """ Redefines the default text_label_position to be at the tip of the propeller blade """
-        tip_airfoil_pos = self.propeller.bbox.corners[1]
-        return tip_airfoil_pos
-
     # --- Output Shapes: ----------------------------------------------------------------------------------------------
 
     @Part
@@ -211,7 +152,33 @@ class Propeller(Component):
         """ The propeller does not have an internal part, thus a place holder part is created with zero area """
         return Circle(radius=0, hidden=True)
 
-    # --- Primitives & Private Attributes: ----------------------------------------------------------------------------
+    # --- Propeller Geometry Creation: --------------------------------------------------------------------------------
+
+    @Attribute
+    def propeller_geometry(self):
+        """ Defines the geometry parameters necessary to instantiate a propeller with the Attribute `airfoil_builder`
+        NOTE: Propeller geometry is only for visualization purposes. Constructing a proper propeller would
+        take too much time and would be out of the scope of our project.
+
+        :return: A dictionary containing geometry parameters ['spanwise_loc', 'chord_dist', 'twist_dist']
+        :rtype: dict
+        """
+
+        # Span-wise Location
+        radius = self.propeller_diameter / 2.0
+        unit_z_locs = [0.0, 0.1, 0.2, 0.3, 0.7, 0.8, 0.9, 1.0]
+        z_locs = [i * radius for i in unit_z_locs]
+
+        # Chord Distribution
+        root_chord = self.motor.diameter * 0.5  # Scaled off of the motor to avoid too large of a chord
+        unit_chord_lengths = [1.0, 1.5, 2.5, 2.3, 1.5, 1.3, 1.0, 0.1]  # Scaled w.r.t the root_chord
+        chords = [i * root_chord for i in unit_chord_lengths]
+
+        # Twist Distribution
+        twists = [0, 0, 7, 6, 5, 4, 3, 2]
+
+        return {'spanwise_loc': z_locs, 'chord_dist': chords, 'twist_dist': twists}
+
 
     @Attribute(private=True)
     def airfoil_data(self):
@@ -241,6 +208,45 @@ class Propeller(Component):
         """ Scales the `FittedCurve` defined by `airfoil_unit_curve` to be the same width as the motor diameter.
         This eliminates the risk of the propeller chord being larger than the fairing diameter """
         return ScaledCurve(curve_in=self.airfoil_unit_curve, reference_point=XOY, factor=self.motor.diameter)
+
+    @Attribute(private=True)
+    def airfoil_builder(self):
+        airfoils = []
+        geom = self.propeller_geometry
+        for i in range(0, len(geom['spanwise_loc'])):
+            scaled = ScaledCurve(curve_in=self.airfoil_unit_curve,
+                                 reference_point=XOY,
+                                 factor=geom['chord_dist'][i])
+            rotated = RotatedCurve(curve_in=scaled,
+                                   rotation_point=XOY,
+                                   vector=XOY.Vz,
+                                   angle=radians(geom['twist_dist'][i]))
+            translated = TranslatedCurve(curve_in=rotated,
+                                         displacement=Vector(0,
+                                                             0,
+                                                             geom['spanwise_loc'][i]))
+            airfoils.append(translated)
+        return airfoils
+
+    @Attribute(private=True)
+    def propeller_builder(self):
+        """
+
+        :return:
+        """
+        # TODO Comment here
+        prop_top = LoftedSolid(profiles=self.airfoil_builder)
+        prop_bottom = MirroredShape(shape_in=prop_top, reference_point=XOY, vector1=XOY.x_, vector2=XOY.y)
+        propeller = Compound(built_from=[prop_top, prop_bottom])
+        return propeller
+
+    @Attribute(private=True)
+    def text_label_position(self):
+        """ Redefines the default text_label_position to be at the tip of the propeller blade """
+        tip_airfoil_pos = self.propeller.bbox.corners[1]
+        return tip_airfoil_pos
+
+    # --- Primitives & Private Attributes: ----------------------------------------------------------------------------
 
     @Attribute(private=True)
     def build_direction(self):
