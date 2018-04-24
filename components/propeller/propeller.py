@@ -97,7 +97,7 @@ class Propeller(Component):
                 raise IndexError('Selected Motor Spec File is Corrupted')
 
             # Parsing the Header for Modifiers
-            type_ok = True
+            type_ok = False
             if len(type_range) > 1:
                 if name.find(type_range[0]) != -1 or name.find(type_range[1]) != -1:
                     type_ok = True
