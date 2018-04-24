@@ -37,8 +37,8 @@ class Fuselage(GeomBase):
     sizing_parts = Input([None,
                           EOIR(position=translate(YOZ, 'z', -0.2)),
                           [Battery(position=Position(Point(0, 0, 0))), EOIR()],
-                          Wing(),
-                          Motor(position=translate(XOY, 'x', 0.5, 'z', 0.025))])
+                          Wing(position=translate(XOY, 'x', 0.1)),
+                          Motor(position=translate(XOY, 'x', 1.1, 'z', 0.025))])
 
     #: Initiates the automatic frame minimization NOTE: May lead to intersecting surfaces
     #: :type: bool

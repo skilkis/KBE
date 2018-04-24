@@ -45,7 +45,7 @@ class Wing(Component):
     #  Above is the density used to calculate the C_L for the controlability curve
     cog_radius = Input(0.05)    #  This is the radius of the sphere representing the COG.
     #  TODO Fix CH10 bug?
-    fuse_width_factor = Input(0.2)      #  This is an assumed factor relating the part of the wing covered by fuse to semispan
+    fuse_width_factor = Input(0.05)      #  This is an assumed factor relating the part of the wing covered by fuse to semispan
     Wf_wing = Input(0.2)                #  This is the mass fraction of the wing. TODO CALULATE THIS PROPERLY/ADD TO MAIN/CLASS I
 
 
@@ -91,10 +91,22 @@ class Wing(Component):
                                           'y', self.wing_cut_loc),
                      normal=Vector(0, 1, 0))
 
+    @Part
+    def left_cut_plane(self):
+        #  This makes a plane at the left wing span location where the fuselage is to end.
+        return Plane(reference=translate(self.wing_test.position,
+                                         'y', -self.wing_cut_loc),
+                     normal=Vector(0, 1, 0),
+                     hidden = True)
+
+
+
+
+
     @Attribute
-    def inner_part(self):
+    def get_fuselage_bounds(self):
         inner_part = PartitionedSolid(solid_in = self.wing_test.final_wing,
-                                tool = self.right_cut_plane).solids[0].faces[1].wires[0]
+                                      tool = self.right_cut_plane).solids[0].faces[1].wires[0]
 
         mirrored_part = MirroredShape(shape_in=inner_part, reference_point=inner_part.position,vector1=Vector(1, 0, 0),vector2=Vector(0, 0, 1))
         root = self.wing_test.root_airfoil
@@ -102,22 +114,23 @@ class Wing(Component):
         first_iter = Fused(inner_part, root)
         second_iter = Fused(first_iter, mirrored_part)
 
-        return second_iter
+        bounds = second_iter.bbox
+        position = Position(bounds.center)
+
+        return bounds
 
     @Part
     def internal_shape(self):
-        return ScaledShape(shape_in=self.inner_part, reference_point=self.wing_test.position, factor=1)
+        return Box(width=self.get_fuselage_bounds.width,
+                   height=self.get_fuselage_bounds.height,
+                   length=self.get_fuselage_bounds.length,
+                   position=Position(self.get_fuselage_bounds.center),
+                   centered=True)
 
     # @Part
     # def
 
-  #  @Part
-  #  def wingmirror(self):
-  #      return MirroredShape(shape_in = self.wing_test.final_wing,
-  #                           reference_point = self.wing_test.position,
-  #                           vector1=Vector(1, 0, 0),
-  #                           vector2 = Vector(0,0,1))
-#
+
   #  @Part
   #  def wing(self):
   #      return Fused(shape_in = self.wingmirror,
@@ -135,13 +148,6 @@ class Wing(Component):
 
 
 
-   # @Part
-   # def left_cut_plane(self):
-   #     #  This makes a plane at the left wing span location where the fuselage is to end.
-   #     return Plane(reference=translate(self.wing.position,
-   #                                      'y', -self.wing_cut_loc),
-   #                  normal=Vector(0, 1, 0),
-   #                  hidden = True)
 
    # @Part
    # def subtracted_wing(self):
