@@ -29,6 +29,7 @@ class Propeller(Component):
 
     # TODO make sure the propeller code is structured nicely
     # TODO Make user selection of a propeller possible
+    # TODO figure out glitch in apex detection
     # Change label to chosen propeller
 
     # A parameter for debugging, turns the visibility of miscellaneous parts ON/OFF

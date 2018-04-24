@@ -15,6 +15,7 @@ __all__ = ["Fuselage"]
 
 # TODO Incorporate possibility of having a boom structure
 # TODO Weight Estimation w/ Material choice
+# TODO Figure out what is wrong with apex detection (Probably wing is smaller in height than
 
 # http://www.dupont.com/content/dam/dupont/products-and-services/fabrics-fibers-and-nonwovens/fibers/documents/Kevlar_Technical_Guide.pdf
 
@@ -37,7 +38,7 @@ class Fuselage(GeomBase):
     sizing_parts = Input([None,
                           EOIR(position=translate(YOZ, 'z', -0.2)),
                           [Battery(position=Position(Point(0, 0, 0))), EOIR()],
-                          Wing(position=translate(XOY, 'x', 0.1)),
+                          Wing(position=translate(XOY, 'x', 0.4, 'z', 0.02)),
                           Motor(position=translate(XOY, 'x', 1.1, 'z', 0.025))])
 
     #: Initiates the automatic frame minimization NOTE: May lead to intersecting surfaces
@@ -126,6 +127,28 @@ class Fuselage(GeomBase):
 
                             if _width_check and _height_check is True:
                                 frames.append(self.bbox_to_frame(_bbox, build_loc))
+                            elif _width_check is False and _height_check is True:
+                                _height_increase = (_next_frame[1]['height'] - _frame[1]['height']) / 2.0
+                                _new_box = Box(width=_frame[1]['length'],
+                                               length=_frame[1]['width'],
+                                               height=_next_frame[1]['height'] + _height_increase,
+                                               position=translate(_frame[1]['position'],
+                                                                  'x', _frame[1]['length'] / 2.0,
+                                                                  'z', _frame[1]['height'] / 2.0),
+                                               centered=True)
+                                # frames.append(self.bbox_to_frame(_bbox, 'start'))
+                                frames.append(self.bbox_to_frame(_new_box.bbox, 'mid'))
+                            elif _width_check is True and _height_check is False:
+                                _width_increase = (_next_frame[1]['width'] - _frame[1]['width']) / 2.0
+                                _new_box = Box(width=_frame[1]['length'],
+                                               length=_frame[1]['width'] + _width_increase,  # Uses next width
+                                               height=_frame[1]['height'],  # But keeps current height
+                                               position=translate(_frame[1]['position'],
+                                                                  'x', _frame[1]['length'] / 2.0,
+                                                                  'z', _frame[1]['height'] / 2.0),
+                                               centered=True)
+                                # frames.append(self.bbox_to_frame(_bbox, 'start'))
+                                frames.append(self.bbox_to_frame(_new_box.bbox, 'mid'))
                             else:
                                 if not apex_reached:  # Creates a frame in-front and behind the largest bbox (apex)
                                     frames.append(self.bbox_to_frame(_bbox, build_loc))
@@ -365,7 +388,8 @@ class Fuselage(GeomBase):
         length = abs(point1.x-point0.x)
 
         # Determining frame placement
-        x = (point0.x if placement == 'start' else point0.x + length if placement == 'end' else 0)
+        x = (point0.x if placement == 'start'
+             else point0.x + length if placement == 'end' else point0.x + length / 2.0 if placement == 'mid' else 0)
         y = (width / 2.0) + point0.y
         z = point0.z
         position = Position(Point(x, y, z))
