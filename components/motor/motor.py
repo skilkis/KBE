@@ -43,14 +43,6 @@ class Motor(Component):
             selected_motor_specs = read_csv(self.motor_name, DIRS['EOIR_DATA_DIR'])
             selected_motor_specs['name'] = self.motor_name
         return selected_motor_specs
-    #
-    # @Attribute
-    # def specs(self):
-    #     if self.motor_name is None:
-    #         selected_motor_specs = [num[1] for num in self.motor_database if num[0] == self.motor_selector]
-    #         return selected_motor_specs[0]
-    #     else:
-    #         return read_csv(self.motor_name, self.database_path)
 
     @Attribute
     def motor_database(self):
@@ -92,34 +84,73 @@ class Motor(Component):
 
     @Attribute
     def weight(self):
+        """ Total mass of the motor
+
+        :return: Mass in SI kilogram
+        :rtype: float
+        """
         return self.specs['weight'] / 1000.0
 
     @Attribute
     def diameter(self):
+        """ The outer diameter of the motor body
+
+        :return: Diameter in SI meter
+        :rtype: float
+        """
         return self.specs['diameter'] / 1000.0
 
     @Attribute
     def length(self):
+        """ The length of the motor body
+
+        :rtype: Length in SI meter
+        :rtype: float
+        """
         return self.specs['length'] / 1000.0
 
     @Attribute
     def shaft_diameter(self):
+        """ The outer diameter of the motor shaft
+
+        :return: Diameter in SI meter
+        :rtype: float
+        """
         return self.specs['shaft_diameter'] / 1000.
 
     @Attribute
     def shaft_length(self):
+        """ The protruding length of the motor shaft
+
+        :return: Length in SI meter
+        :rtype: float
+        """
         return 0.3 * self.length
 
     @Attribute
     def power(self):
+        """ Pulls the corresponding `field_names` `constant_power` and `burst_power` from the dictionary `specs`.
+        This is done to minimize the amount of characters necessary to call these parameters. Index 0 of the list is
+        `constant_power` and Index 1 is `burst_power`.
+
+        :rtype: list
+        """
         return [self.specs['constant_power'], self.specs['burst_power']]
 
     @Attribute
     def efficiency(self):
+        """ Assumed motor efficiency is at the higher-end of typical values and equal to 90%
+
+        http://www.radiocontrolinfo.com/brushless-motor-efficiency/ """
         return 0.9
 
     @Attribute
     def extrude_direction(self):
+        """ Defines the extrude direction as a `vector` of the motor-body as well as the shaft. To access this dict
+        use the `field_names`: `body` and `shaft` respectively.
+
+        :rtype: dict
+        """
         if self.integration == 'pusher':
             body = self.position.Vx_
             shaft = self.position.Vx
@@ -141,13 +172,15 @@ class Motor(Component):
 
     @Part
     def internal_shape(self):
+        """ Chamfers the edges of `motor_body_import` to better resemble the shape of RimFire engines """
         return ChamferedSolid(built_from=self.motor_body_import,
                               distance=self.shaft_diameter,
-                              edge_table=self.chamfer_edges,
+                              edge_table=self.chamfer_edges,  # Flagged as an error but works fine
                               color=MyColors.gold)
 
     @Part
     def shaft(self):
+        """ Creates the motor shaft as an `ExtrudedSolid` in the direction specified in `extrude_direction` """
         return ExtrudedSolid(island=self.shaft_circle,
                              distance=self.shaft_length,
                              direction=self.extrude_direction['shaft'],
@@ -157,16 +190,19 @@ class Motor(Component):
 
     @Part(in_tree=__show_primitives)
     def motor_circle(self):
+        """ Creates the circle that is used to extrude and form the motor body """
         return Circle(position=translate(YOZ, 'x', self.position.y, 'y', self.position.z, 'z', self.position.x),
                       radius=self.diameter / 2.0)
 
     @Part(in_tree=__show_primitives)
     def shaft_circle(self):
+        """ Creates the circle that is used to extrude and form the motor shaft """
         return Circle(position=translate(YOZ, 'x', self.position.y, 'y', self.position.z, 'z', self.position.x),
                       radius=self.shaft_diameter / 2.0)
 
     @Part(in_tree=__show_primitives)
     def motor_body_import(self):
+        """ Creates the motor body as an `ExtrudedSolid` in the direction specified in `extrude_direction` """
         return ExtrudedSolid(island=self.motor_circle,
                              distance=self.length,
                              direction=self.extrude_direction['body'])
