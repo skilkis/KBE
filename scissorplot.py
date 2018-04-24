@@ -38,7 +38,7 @@ class ScissorPlot(GeomBase):
     C_mac = Input(-0.32)    #  This is the C_m of the wing from AVL IMPORT FROM WING
     Cla_w = Input(5.14)     #  This is the lift curve slope of the wing from AVL. IMPORT FROM WING
     delta_xcg = Input(0.3)  #  This is the change in the cg location due to dropping a payload. IMPORT FROM CG EST
-    Cla_h = Input(4.9)      # This is the lift curve slope of the tail. IMPORT FROM TAIL WING INSTANTIATION
+    #Cla_h = Input(4.9)      # This is the lift curve slope of the tail. IMPORT FROM TAIL WING INSTANTIATION
 
 #  TODO In main code, get cla_h from AVL using wing primitive. -> NOT POSSIBLE? BC SH DETERMINED FROM THOSE EQUATIONS BELOW!
     configuration = Input('Conventional', validator=val.OneOf(['Canard', 'Conventional']))
@@ -50,11 +50,11 @@ class ScissorPlot(GeomBase):
    #     Cla_w = self.a_0/(1+(self.a_0 / (pi * self.AR * self.e) ))
    #     return Cla_w
 
-   # @Attribute
-   # def Cla_h(self):
-   #     #  This estimates the lift slope of a low sweep, and speed 3D HT.
-   #     Cla_h = self.a_0/(1+(self.a_0 / (pi * self.AR_h * self.e_h) ))
-   #     return Cla_h
+    @Attribute
+    def Cla_h(self):
+        #  This estimates the lift slope of a low sweep, and speed 3D HT.
+        Cla_h = self.a_0/(1+(self.a_0 / (pi * self.AR_h * self.e_h) ))
+        return Cla_h
 
 
     @Attribute

@@ -17,10 +17,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from design import *
+from definitions import *
 
 
 # class Wing(GeomBase, WingPowerLoading, ClassOne):  # TODO experiment if this works, multiple inheritance
-class Wing(GeomBase):
+class Wing(Component):
 
     WS_pt = Input(100.0)  # MUST GET THIS INPUT FROM CLASS I!!!!!!!!!!!!!!!!!!!!!!!!!!
     MTOW = Input(25.0)  # MUST GET THIS INPUT FROM CLASS I!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -30,7 +31,7 @@ class Wing(GeomBase):
 
     taper = Input(0.3, validator=val.Positive())
     #  Above is the User Requested Taper Ratio.
-    dihedral = Input(0.0, validator=val.Range(-20.0, 20.0))
+    dihedral = Input(5.0, validator=val.Range(-20.0, 20.0))
     #  Above is the User Required Dihedral Angle.
     twist = Input(2.0, validator=val.Range(-10, 10.0))
     #  Above is the twist of the tip section with respect to the root section.
@@ -42,8 +43,9 @@ class Wing(GeomBase):
 #  TODO add validators for inputs
     rho = Input(1.225)
     #  Above is the density used to calculate the C_L for the controlability curve
-
+    cog_radius = Input(0.05)    #  This is the radius of the sphere representing the COG.
     #  TODO Fix CH10 bug?
+    fuse_width_factor = Input(0.2)      #  This is an assumed factor relating the part of the wing covered by fuse to semispan
 
     @Attribute
     def S_req(self):
@@ -75,16 +77,48 @@ class Wing(GeomBase):
 
 
 
+    @Part
+    def wingmirror(self):
+        return MirroredShape(shape_in = self.wing_test.final_wing,
+                             reference_point = self.wing_test.position,
+                             vector1=Vector(1, 0, 0),
+                             vector2 = Vector(0,0,1),
+                             hidden = True)
+
+    @Part
+    def wing(self):
+        return FusedShell(shape_in = self.wingmirror,
+                          tool = self.wing_test.final_wing,
+                          mesh_deflection = 1*10**(-4))
+
+
+    @Attribute
+    def center_of_gravity(self):
+        """ Location of the center of gravity w.r.t the origin
+        :return: Location Tuple in SI meter
+        :rtype: Point
+        """
+        return self.wing.cog
+
+    @Part
+    def internal_shape(self):
+        #  Width = x direction, length = y dir, height = z dir
+
+        return Box(width = self.wing_test.root_chord,
+                   length = self.wing_test.semispan*self.fuse_width_factor,
+                   height = 0.2,
+                   transparency = 0.1,
+                   color = 'Red',
+                   position = self.wing.position + Vector(0,(-self.wing_test.semispan*self.fuse_width_factor*0.5),-0.075))
+# intersected!!!!!!!!!!!!
 
 
 
-    # @Attribute
-    # def airfoil_data_conversion(self):
-    #     data = [[i.x, i.z] for i in self.wing_test.airfoil_data]
-    #     x = [i[0] for i in data]
-    #     z = [j[1] for j in data]
-    #     return x, z
 
+
+
+
+#  This next block prepares the AVL geometry and runcases.
     @Attribute
     def root_section(self):
         return Section(leading_edge_point=Point(0, 0, 0),
@@ -193,6 +227,7 @@ class Wing(GeomBase):
             f.write(json.dumps(results))
         return 'Done'
 #  TODO add get_dir to directory here above, such that the output file goes to the user folder.
+
 
 if __name__ == '__main__':
     from parapy.gui import display

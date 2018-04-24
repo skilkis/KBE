@@ -14,7 +14,7 @@ class VerticalStabilizer(GeomBase):
 
     S_req = Input(0.8)      # This is the required total wing area from the Class I estimations. TODO CONNECT TO MAIN/ WINGPWR LOADING
     MAC = Input(0.43)       #  This is the MAC of the wing. TODO CONNECT TO MAIN/LIFTING SURFACE
-    lvc = Input(3.0)        #  This is the VT tail arm. TODO CONNECT THIS WITH MAIN/GEOMETRY
+    lvc = Input(3.0)        #  This is the VT tail arm with respect to the CG. TODO CONNECT THIS WITH MAIN/GEOMETRY
 
 # BELOW ARE ALL LIFTING SUFACE INPUTS TODO CONNECT TO MAIN
 

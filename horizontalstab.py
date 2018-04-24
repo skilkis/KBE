@@ -53,7 +53,8 @@ class HorizontalStabilizer(GeomBase):
     def ht_mirror(self):
         return MirroredShape(shape_in = self.ht.final_wing,
                              reference_point = self.ht.position,
-                             vector1 = Vector(1,0,0))
+                             vector1 = Vector(1,0,0),
+                             vector2 = Vector(0,0,1))
 
 
 

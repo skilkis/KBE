@@ -63,6 +63,11 @@ class Component(GeomBase):
         return TextLabel(text="     %s" % self.label,
                          position=self.text_label_position, hidden=self.hide_labels)
 
+    @Part
+    def cog_shpere(self):
+        return Sphere(radius = 0.05,
+                      position = Position(self.center_of_gravity),
+                      color = 'Red')
 
 if __name__ == '__main__':
     from parapy.gui import display

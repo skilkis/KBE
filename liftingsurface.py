@@ -31,6 +31,8 @@ class LiftingSurface(GeomBase):
     #  The STANDARD OFFSET INPUT(none) causes the TE to be unswept (offset = c_r-c_t), however,
     #  if the user inputs 0 in the GUI, then the leading edge becomes unswept (with taper ratio < 1)
 
+    #position = XOY
+
     cog_radius = Input(0.05)    #  This is the radius for the displayed cog.
     @Attribute
     def semispan(self):
@@ -42,10 +44,10 @@ class LiftingSurface(GeomBase):
         #  This attribute calculates the required root chord, with an assumed taper ratio.
         return 2*self.S/((1+self.taper)*self.semispan)
 
-    @Attribute (in_tree = True)
-    #  This will return the Wings Center of Gravity calculated from the parapy solid.
-    def cog_wing(self):
-        return self.final_wing.cog
+   # @Attribute (in_tree = True)
+   # #  This will return the Wings Center of Gravity calculated from the parapy solid.
+   # def cog_wing(self):
+   #     return self.final_wing.cog
 
     @Attribute
     #  This will clculate the mean aerodynamic chord of the swept and tapered wing.
@@ -112,14 +114,13 @@ class LiftingSurface(GeomBase):
             pts = []
             for i in f:
                 x,y = i.split(' ',1)
-                pts.append(Point(float(x), 0, float(y)))
+                pts.append(Point(float(x) + self.position.x, self.position.y, float(y)+self.position.z))
         return pts
 
     @Part
     def airfoil(self):
         #  This creates an original Airfoil from the data from the chosen airfoil.
-        return FittedCurve(points = self.airfoil_data,
-                           hidden=True)
+        return FittedCurve(points = self.airfoil_data)
 
 
 #  Below we build the wing  with the Leading Edge at (x,y,z) = (0,0,0), x is chordwise and y is up.
@@ -127,8 +128,9 @@ class LiftingSurface(GeomBase):
     def root_airfoil(self):
         # This scales original airfoil to required root chord.
         return ScaledCurve(curve_in=self.airfoil,
-                           reference_point=self.airfoil.position,
-                           factor=self.root_chord)
+                           reference_point= self.position,
+                           factor=self.root_chord,
+                           hidden = True)
 
     @Part
     def scaled_tip(self):
@@ -162,7 +164,7 @@ class LiftingSurface(GeomBase):
     @Part
     def wing_surf(self):
         # This generates a solid wing half with the sign convention mentioned above.
-        return LoftedSolid([self.root_airfoil,self.tip_airfoil],
+        return LoftedShell([self.root_airfoil,self.tip_airfoil],
                            hidden=True)
 
     @Part
@@ -173,11 +175,13 @@ class LiftingSurface(GeomBase):
                             vector = Vector(1,0,0),
                             angle = radians(self.dihedral))
 
-    @Part
-    def cog_wing(self):
-        # This displays a red ball at the COG location of the SOLID wing.
-        return Sphere(radius=self.cog_radius,
-                      position=self.final_wing.cog, color='red')
+   # @Part
+   # def cog_wing(self):
+   #     # This displays a red ball at the COG location of the SOLID wing.
+   #     return Sphere(radius=self.cog_radius,
+   #                   position=self.final_wing.cog, color='red')
+#COG removed here from primitive, added to components!
+
 
     @Part
     def mac_notwist(self):
