@@ -26,18 +26,31 @@ class Propeller(Component):
     """
 
     # TODO make sure the propeller code is structured nicely
+    # Change label to chosen propeller
 
     # A parameter for debugging, turns the visibility of miscellaneous parts ON/OFF
     __show_primitives = False  # type: bool
 
     motor = Input(Motor(integration='puller'))
     position = Input(Position(Point(0, 0, 0)))
-    spanwise_locations_input = Input([0.0, 0.1, 0.2, 0.3, 0.7, 0.8, 0.9, 1.0])
+
+    @Input
+    def position(self):
+        """ Automatically snaps the propeller to the specified motor from the input `motor`. If a user-input is provided
+        the propeller will become detached. In this case please invalidate this slot """
+        return self.motor.position
 
 
     @Attribute
     def propeller_diameter(self):
         return 0.5
+
+    @Attribute
+    def allowed_prop_range(self):
+        props = self.motor.specs['prop_recommendation']
+        return
+
+    # --- Geometry Visualization: -------------------------------------------------------------------------------------
 
     @Attribute
     def propeller_geometry(self):
@@ -55,16 +68,16 @@ class Propeller(Component):
         z_locs = [i * radius for i in unit_z_locs]
 
         # Chord Distribution
-        root_chord = self.motor.diameter * 0.5
-        unit_chord_lengths = [1.0, 1.5, 2.0, 2.2, 2.0, 1.7, 1.2, 0.1]  # Scaled w.r.t the root_chord
+        root_chord = self.motor.diameter * 0.5  # Scaled off of the motor to avoid too large of a chord
+        unit_chord_lengths = [1.0, 1.5, 2.5, 2.3, 1.5, 1.3, 1.0, 0.1]  # Scaled w.r.t the root_chord
         chords = [i * root_chord for i in unit_chord_lengths]
 
         # Twist Distribution
-        twists = [0, 10, 7, 6, 5, 4, 3, 2]
+        twists = [0, 0, 7, 6, 5, 4, 3, 2]
 
         return {'spanwise_loc': z_locs, 'chord_dist': chords, 'twist_dist': twists}
 
-    @Attribute(private=True)
+    @Attribute
     def airfoil_builder(self):
         airfoils = []
         geom = self.propeller_geometry
@@ -85,10 +98,16 @@ class Propeller(Component):
 
     @Attribute(private=True)
     def propeller_builder(self):
-        prop_top = LoftedSolid(profiles=self.airfoil_builder, tolerance=0.1)
+        prop_top = LoftedSolid(profiles=self.airfoil_builder)
         prop_bottom = MirroredShape(shape_in=prop_top, reference_point=XOY, vector1=XOY.x_, vector2=XOY.y)
         propeller = Compound(built_from=[prop_top, prop_bottom])
         return propeller
+
+    @Attribute
+    def text_label_position(self):
+        """ Redefines the default text_label_position to be at the tip of the propeller blade """
+        tip_airfoil_pos = self.propeller.bbox.corners[1]
+        return tip_airfoil_pos
 
     # --- Output Shapes: ----------------------------------------------------------------------------------------------
 
@@ -98,7 +117,8 @@ class Propeller(Component):
                                displacement=Vector(self.position.x + self.build_direction * (self.fairing_length * 0.1),
                                                    self.position.y,
                                                    self.position.z),
-                               color=MyColors.dark_grey)
+                               color=MyColors.dark_grey,
+                               mesh_deflection=10 ** -4)  # An optimum value between a good quality render & performance
 
     @Part
     def propeller_fairing(self):
@@ -107,6 +127,11 @@ class Propeller(Component):
                                                    self.position.y,
                                                    self.position.z),
                                color=MyColors.chill_white)
+
+    @Part
+    def internal_shape(self):
+        """ The propeller does not have an internal part, thus a place holder part is created with zero area """
+        return Circle(radius=0, hidden=True)
 
     # --- Primitives & Private Attributes: ----------------------------------------------------------------------------
 
@@ -118,7 +143,7 @@ class Propeller(Component):
         """
         #  This reads and scans User chosen Airfoil Data from the database and stores it as airfoil_data.
         _type = 'cambered'
-        _name = 'SD7062.dat'
+        _name = 'SD7062.dat'  # This is only for visualization, in the future this attribute can be modified
         filepath = get_dir(os.path.join(DIRS['AIRFOIL_DIR'], _type, _name))
         with open(filepath, 'r') as f:
             pts = []
@@ -148,11 +173,6 @@ class Propeller(Component):
         """
         return 1 if self.motor.integration is 'pusher' else -1
 
-    @Part
-    def internal_shape(self):
-        """ The propeller does not have an internal part, thus a place holder part is created with zero area """
-        return Circle(radius=0, hidden=True)
-
     @Attribute
     def fairing_length(self):
         # TODO add this into the knowledge base
@@ -178,6 +198,8 @@ class Propeller(Component):
         return RotatedShape(shape_in=self.propeller_fairing_import,
                             rotation_point=XOY,
                             vector=XOY.Vy, angle=radians(self.build_direction * 90))
+
+
 
 
 if __name__ == '__main__':
