@@ -7,7 +7,7 @@ from parapy.core import *  # / Required ParaPy Modules
 # Required Class Definitions
 from definitions import Component
 from components.motor import *
-from math import radians
+from math import radians, ceil, floor
 from user import MyColors
 from directories import *
 from prop_data_parser import *
@@ -17,7 +17,7 @@ from os import listdir
 __author__ = "Şan Kılkış"
 __all__ = ["Propeller"]
 
-# Useful links for knoweldge base:
+# Useful links for knowledge base:
 # https://www.apcprop.com/technical-information/file-downloads/
 # https://www.southampton.ac.uk/~jps7/Aircraft%20Design%20Resources/Sydney%20aerodynamics%20for%20students/propeller/prop1.html
 
@@ -58,6 +58,8 @@ class Propeller(Component):
         pitch_entries = [i.split('x')[1] for i in self.prop_recommendation]
         pitch_range = []
         type_range = []
+
+        # Parsing the str in `self.prop_recommendation` to obtain pitch and type
         for entry in pitch_entries:
             _local_type = ''
             _local_pitch = ''
@@ -73,7 +75,38 @@ class Propeller(Component):
             except ValueError:
                 raise Exception('Could not convert recommended propeller pitch to a float')
 
-        prop_files = [str(i.split('.')[0]) for i in listdir(self.database_path) if i.endswith('.txt')]
+        # All propeller files in the database
+        prop_files = [i for i in listdir(self.database_path) if i.endswith('.txt')]
+
+        allowed_props = []
+        for prop in prop_files:
+            f = open(os.path.join(self.database_path, prop))
+            name = f.readline().split()[0]
+            f.close()
+
+            # Parsing the Header for Diameter
+            diameter = float(name.split('x')[0])
+            diameter_ok = False
+            if len(diameter_range) > 1:
+                if min(diameter_range) <= diameter <= max(diameter_range):
+                    diameter_ok = True
+            elif len(diameter_range) == 1:
+                if floor(diameter_range[0]) <= diameter <= ceil(diameter_range[0]):
+                    diameter_ok = True
+            else:
+                raise IndexError('Selected Motor Spec File is Corrupted')
+
+            # Parsing the Header for Modifiers
+            type_ok = True
+            if len(type_range) > 1:
+                if name.find(type_range[0]) != -1 or name.find(type_range[1]) != -1:
+                    type_ok = True
+            elif len(type_range) == 1:
+                if name.find(type_range[0]) != -1:
+                    type_ok = True
+
+            if diameter_ok and type_ok:
+                allowed_props.append({'Name': name, 'Filename': prop, 'Diameter': diameter})
 
         # all_props_parsed = [i for i in all_props ]
         # files = os.listdir(self.database_path)
@@ -86,7 +119,7 @@ class Propeller(Component):
         #
         # for datasheet in files:  # [8:10]:
         #     prop_name = str(datasheet.split('.')[0]).replace('PER3_', '')  # Removing file extension and PER3_
-        return prop_files, diameter_range, pitch_range, type_range
+        return prop_files, diameter_range, pitch_range, type_range, allowed_props
 
     # @Attribute
     # def propeller_database(self):
