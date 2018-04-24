@@ -10,6 +10,8 @@ from components.motor import *
 from math import radians
 from user import MyColors
 from directories import *
+from prop_data_parser import *
+from os import listdir
 
 
 __author__ = "Şan Kılkış"
@@ -26,6 +28,7 @@ class Propeller(Component):
     """
 
     # TODO make sure the propeller code is structured nicely
+    # TODO Make user selection of a propeller possible
     # Change label to chosen propeller
 
     # A parameter for debugging, turns the visibility of miscellaneous parts ON/OFF
@@ -33,6 +36,7 @@ class Propeller(Component):
 
     motor = Input(Motor(integration='puller'))
     position = Input(Position(Point(0, 0, 0)))
+    database_path = DIRS['PROPELLER_DATA_DIR']
 
     @Input
     def position(self):
@@ -40,15 +44,54 @@ class Propeller(Component):
         the propeller will become detached. In this case please invalidate this slot """
         return self.motor.position
 
-
     @Attribute
     def propeller_diameter(self):
         return 0.5
 
     @Attribute
-    def allowed_prop_range(self):
-        props = self.motor.specs['prop_recommendation']
-        return
+    def prop_recommendation(self):
+        return self.motor.specs['prop_recommendation']
+
+    @Attribute
+    def allowed_props(self):
+        diameter_range = [float(i.split('x')[0]) for i in self.prop_recommendation]
+        pitch_entries = [i.split('x')[1] for i in self.prop_recommendation]
+        pitch_range = []
+        type_range = []
+        for entry in pitch_entries:
+            _local_type = ''
+            _local_pitch = ''
+            for i in entry:
+                if i.isdigit() or i == '.':
+                    _local_pitch = _local_pitch + i
+                else:
+                    _local_type = _local_type + i
+
+            type_range.append(_local_type)
+            try:
+                pitch_range.append(float(_local_pitch))
+            except ValueError:
+                raise Exception('Could not convert recommended propeller pitch to a float')
+
+        prop_files = [str(i.split('.')[0]) for i in listdir(self.database_path) if i.endswith('.txt')]
+
+        # all_props_parsed = [i for i in all_props ]
+        # files = os.listdir(self.database_path)
+        # files = [i for i in files if i.endswith('.txt')]
+        #
+        #
+        # prop_database = {}
+        # new_entry = False
+        # registering = False
+        #
+        # for datasheet in files:  # [8:10]:
+        #     prop_name = str(datasheet.split('.')[0]).replace('PER3_', '')  # Removing file extension and PER3_
+        return prop_files, diameter_range, pitch_range, type_range
+
+    # @Attribute
+    # def propeller_database(self):
+    #
+    #     return build_database()
 
     # --- Geometry Visualization: -------------------------------------------------------------------------------------
 

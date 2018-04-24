@@ -7,7 +7,6 @@ from parapy.geom import *
 from math import *
 from directories import *
 
-
 class LiftingSurface(GeomBase):
     #  Required inputs for each instantiation: Wing Area, Aspect Ratio, Taper Ratio, Sweep Angle airfoil type and choice
     #  or Wing Area, Aspect Ratio, airfoil type and choice and Elliptical shape
@@ -77,8 +76,6 @@ class LiftingSurface(GeomBase):
     def LE(self):
         #  This makes a line indicating the leading edge, which will be used to calculate the sweep.
         return LineSegment(start= self.root_airfoil.position, end = self.tip_airfoil.position)
-
-
 
 
 
