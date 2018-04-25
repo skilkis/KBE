@@ -70,6 +70,11 @@ class Propeller(Component):
         return 0
 
     @Attribute
+    def efficiency(self):
+        """ Fetches the efficiency of the selected propeller at the `design_speed` """
+        return self.propeller_selector[1]
+
+    @Attribute
     def propeller_recommendation(self):
         """ Grabs the `prop_recommendation` field from the dictionary `motor.specs` for easy reference in the GUI
 
@@ -185,11 +190,13 @@ class Propeller(Component):
         the maximum efficiency at the `design_speed` is selected from this list at the end of the iteration. If no data
         can be obtained at the `design_speed` a ValueError is raised warning the user.
 
-        :returns: Filename of the selected prop, and propeller efficiency at the user-input `design_speed`
+        :returns: Filename of the selected prop [0], propeller efficiency at the user-input `design_speed` [1],
+                  Fitted linear spline of efficiency vs true airspeed [2]
         :rtype: list
         """
         _prop_names = []
         _design_etas = []
+        _eta_splines = []
 
         _data_found = False  # Switch case to determine if data-points exist for the chosen design point
         for name in self.propeller_database:
@@ -198,8 +205,9 @@ class Propeller(Component):
             velocities = max_eta['V']  # Velocity entries in the `max_eta` dict
             etas = max_eta['ETA']
 
-            # Interpolates the data with a linear spline
+            # Interpolates the data with a linear spline and appends to _eta_splines
             eta_vs_velocity = interp1d(velocities, etas, kind='slinear')
+            _eta_splines.append(eta_vs_velocity)
 
             # Returns the efficiency if data-points exist for `self.design_speed`
             if self.design_speed <= max(velocities):
@@ -212,10 +220,11 @@ class Propeller(Component):
             idx_selected = _design_etas.index(max(_design_etas))
             selected_prop = _prop_names[idx_selected]
             selected_eta = _design_etas[idx_selected]
+            selected_curve = _eta_splines[idx_selected]
         else:
             raise ValueError('No propeller data could be found for the design speed of %0.2f' % self.design_speed)
 
-        return selected_prop, selected_eta
+        return selected_prop, selected_eta, selected_curve
 
     @Attribute
     def efficiency_plotter(self):
@@ -424,8 +433,6 @@ class Propeller(Component):
         return RotatedShape(shape_in=self.propeller_fairing_import,
                             rotation_point=XOY,
                             vector=XOY.Vy, angle=radians(self.build_direction * 90))
-
-
 
 
 if __name__ == '__main__':

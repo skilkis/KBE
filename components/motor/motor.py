@@ -93,6 +93,16 @@ class Motor(Component):
         return self.specs['weight'] / 1000.0
 
     @Attribute
+    def center_of_gravity(self):
+        """ Location of the motor center of gravity w.r.t the origin (Assumed to be in the middle of the motor body)
+
+        :return: Location Tuple in SI meter
+        :rtype: Point
+        """
+        return self.internal_shape.cog
+
+
+    @Attribute
     def diameter(self):
         """ The outer diameter of the motor body
 
@@ -192,7 +202,9 @@ class Motor(Component):
     @Part(in_tree=__show_primitives)
     def motor_circle(self):
         """ Creates the circle that is used to extrude and form the motor body """
-        return Circle(position=translate(YOZ, 'x', self.position.y, 'y', self.position.z, 'z', self.position.x),
+        return Circle(position=translate(YOZ, 'x', self.position.y,
+                                         'y', self.position.z,
+                                         'z', self.position.x),
                       radius=self.diameter / 2.0)
 
     @Part(in_tree=__show_primitives)

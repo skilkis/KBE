@@ -67,6 +67,18 @@ class UAV(Base):
     def camera(self):
         return EOIR(target_weight=self.payload, position=translate(XOY, 'x', -0.3))
 
+    @Attribute
+    def weight_and_balance(self):
+        children = self.get_children()
+        weight = []
+        cg = []
+        for _child in children:
+            if hasattr(_child, 'weight') and hasattr(_child, 'center_of_gravity'):
+                weight.append(_child.getslot('weight'))
+                cg.append(_child.getslot('center_of_gravity'))
+            print weight
+        return weight, cg
+
 
 if __name__ == '__main__':
     from parapy.gui import display
