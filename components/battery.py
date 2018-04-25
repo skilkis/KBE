@@ -37,7 +37,21 @@ class Battery(Component):
 
     @Attribute
     def weight(self):
+        """ Total mass of the battery
+
+        :return: Mass in SI kilogram
+        :rtype: float
+        """
         return self.total_energy / self.constants['energy_density']
+
+    @Attribute
+    def center_of_gravity(self):
+        """ Location of the battery center of gravity w.r.t the origin
+
+        :return: Location Tuple in SI meter
+        :rtype: Point
+        """
+        return self.internal_shape.cog
 
     @Attribute
     def constants(self):
@@ -45,7 +59,6 @@ class Battery(Component):
             'energy_density': (1.8*(10**6)),    # MJ/kg From WikiPedia https://en.wikipedia.org/wiki/Energy_density
             'energy_volume': (4.32*(10**9)),    # MJ/m^3
             'minimum_volume': 0.000015          # m^3
-
         }
         return mydict
 

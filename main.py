@@ -77,7 +77,13 @@ class UAV(Base):
                 weight.append(_child.getslot('weight'))
                 cg.append(_child.getslot('center_of_gravity'))
             print weight
-        return weight, cg
+
+        total_weight = sum(weight)
+        cg_x = sum([weight[i] * cg[i].x for i in range(0, len(weight))]) / total_weight
+        cg_y = sum([weight[i] * cg[i].y for i in range(0, len(weight))]) / total_weight
+        cg_z = sum([weight[i] * cg[i].z for i in range(0, len(weight))]) / total_weight
+
+        return total_weight, Point(cg_x, cg_y, cg_z)
 
 
 if __name__ == '__main__':

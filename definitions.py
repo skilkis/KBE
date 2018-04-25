@@ -27,7 +27,7 @@ class Component(GeomBase):
         :return: Mass in SI kilogram
         :rtype: float
         """
-        return 1.0
+        return 0
 
     @Attribute
     def center_of_gravity(self):
