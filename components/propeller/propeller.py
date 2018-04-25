@@ -30,6 +30,27 @@ __all__ = ["Propeller"]
 class Propeller(Component):
     """ Always spins in motor direction
 
+    Propeller Nomenclature
+    APC propellers are (by default) assumed to be of a standard type (sport) unless modified for specific
+    characteristics or purpose. Sport propellers are intended for use with internal combustion engines.
+
+    |
+    |   `Types`:
+    |   E   = Electric
+    |   F   = Folding Blade (electric only)
+    |   MR  = Multi-Rotor (electric only)
+    |   SF  = Slow Fly (electric only)
+    |   R   = Reversible ESC (electric only)
+    |
+    |   `Modifiers`:
+    |   B4  = Bundle (2CW and 2 CCW propellers)
+    |   W   = Wide (Chord)
+    |   N   = Narrow (Chord)
+    |   NN  = Very Narrow
+    |   PN  = Pattern
+    |   P   = Pusher (and reverse rotation for electrics)
+    |   C   = Carbon
+    |   ( ) = Reserved for Special Notes
     """
 
     # TODO (TBD) Make user selection of a propeller possible in the future
