@@ -39,7 +39,7 @@ class Propeller(Component):
 
     motor = Input(Motor(integration='puller'))
     design_speed = Input(15, validator=val.Range(0, 50))
-    position = Input(Position(Point(0, 0, 0)))
+    # position = Input(Position(Point(0, 0, 0)))
     database_path = DIRS['PROPELLER_DATA_DIR']
 
     @Input
@@ -50,13 +50,15 @@ class Propeller(Component):
 
     @Attribute
     def propeller_diameter(self):
-        return 0.5
+        diameter_in = [i['Diameter'] for i in self.allowed_props if i['Filename'] == self.propeller_selector[0]][0]
+        diameter = diameter_in * 0.0254
+        return diameter
 
     @Attribute
     def propeller_recommendation(self):
         return self.motor.specs['prop_recommendation']
 
-    @Attribute
+    @Attribute(private=True)
     def allowed_props(self):
 
         # Parsing the str in `self.prop_recommendation` to obtain diameter range
@@ -115,8 +117,6 @@ class Propeller(Component):
             if diameter_ok and type_ok:
                 allowed_props.append({'Name': name, 'Filename': prop, 'Diameter': diameter})
 
-                # , prop_files, diameter_range, pitch_range, type_range
-
         return allowed_props
 
     @Attribute
@@ -141,7 +141,7 @@ class Propeller(Component):
 
         return prop_dict
 
-    @Attribute
+    @Attribute(private=True)
     def propeller_selector(self):
         _prop_names = []
         _design_etas = []
@@ -151,12 +151,11 @@ class Propeller(Component):
             max_eta = self.propeller_database[name]['max_etas']  # Grabs dict of RPM, ETA, V for the current propeller
             velocities = max_eta['V']  # Velocity entries in the `max_eta` dict
             etas = max_eta['ETA']
+
+            #Interpolates the data
             eta_vs_velocity = interp1d(velocities, etas)
 
             _design_etas.append(float(eta_vs_velocity(self.design_speed)))
-            # error = [abs(v - self.design_speed) for v in velocities]
-            # idx = error.index(min(error))
-            # _design_etas.append(max_eta['ETA'][idx])
 
         idx_selected = _design_etas.index(max(_design_etas))
         selected_prop = _prop_names[idx_selected]
@@ -164,67 +163,45 @@ class Propeller(Component):
 
         return selected_prop, selected_eta
 
-
-
-
-
     @Attribute
     def efficiency_plotter(self):
-
         fig = plt.figure('PropellerEfficiency')
-        # ax = fig.add_subplot(111)
         plt.style.use('ggplot')
         plt.title('Propeller Efficiency as a Function of True Airspeed')
-        ax = fig.gca()
 
         for i in self.propeller_database:
             max_eta = self.propeller_database[i]['max_etas']
-            plt.plot(max_eta['V'], max_eta['ETA'], label='%s' % i.split('.')[0])
+            plt.plot(max_eta['V'],  # x_data
+                     max_eta['ETA'],  # y_data
+                     label='%s' % i.split('.')[0])  # legend label
 
-        plt.axvline(self.design_speed, dashes=[6, 2], color='k', alpha=0.1,
-                    label='Design Speed = %0.2f [m/s]' % self.design_speed)
+        plt.axvline(self.design_speed,
+                    dashes=[6, 2],
+                    color='k',
+                    alpha=0.1)
 
         plt.axhline(self.propeller_selector[1], dashes=[6, 2], color='k', alpha=0.1)
 
-        plt.scatter(self.design_speed, self.propeller_selector[1], marker='o', markerfacecolor='white',
-                    markeredgecolor='black')
-
-        ax.text(self.design_speed, self.propeller_selector[1],
-                r'$\eta_{\mathrm{prop}}=%0.2f$' % self.propeller_selector[1])
+        plt.plot(self.design_speed, self.propeller_selector[1],
+                 marker='o',
+                 markerfacecolor='white',
+                 markeredgecolor='black', markeredgewidth=1,
+                 linewidth=0,
+                 label=r'Design Point : '
+                       r'$\left(V_{\mathrm{TAS}}=%0.1f'
+                       r',\eta_{\mathrm{prop}}=%0.2f\right)$' % (self.design_speed, self.propeller_selector[1]))
 
         plt.xlabel(r'$V_{\mathrm{TAS}}$ [m/s]')
         plt.ylabel(r'$\eta_{\mathrm{prop}}$ [-]')
         plt.legend(loc='lower right')
         plt.ion()
         plt.show()
+        fig.savefig(fname=os.path.join(DIRS['USER_DIR'], 'plots', '%s.pdf' % fig.get_label()), format='pdf')
         return "Plot generated and saved"
 
-
-
-
-        # PROPSELECT = [
-        #     'PER3_10x4',
-        #     'PER3_10x7',
-        #     'PER3_10x10E',
-        # ]
-        #
-        # MAXETA = {}
-        # for i in PROPSELECT:
-        #     MAXETA[i] = {
-        #         'RPM': [],
-        #         'ETA': [],
-        #         'V': [],
-        #     }
-        #     for RPM in sorted(PROP[i].iterkeys(), key=lambda x: float(x)):
-        #         idx4 = np.argmax(PROP[i][RPM]['Pe'][0])
-        #         MAXETA[i]['RPM'].extend([float(RPM)])
-        #         MAXETA[i]['ETA'].extend([PROP[i][RPM]['Pe'][0][idx4]])
-        #         MAXETA[i]['V'].extend([0.44704 * PROP[i][RPM]['V'][0][idx4]])
-        return prop_dict
-    # @Attribute
-    # def propeller_database(self):
-    #
-    #     return build_database()
+    @Attribute
+    def label(self):
+        return [i['Name'] for i in self.allowed_props if i['Filename'] == self.propeller_selector[0]][0]
 
     # --- Output Shapes: ----------------------------------------------------------------------------------------------
 
@@ -270,7 +247,7 @@ class Propeller(Component):
         z_locs = [i * radius for i in unit_z_locs]
 
         # Chord Distribution
-        root_chord = self.motor.diameter * 0.5  # Scaled off of the motor to avoid too large of a chord
+        root_chord = self.motor.diameter * 0.25  # Scaled off of the motor to avoid too large of a chord
         unit_chord_lengths = [1.0, 1.5, 2.5, 2.3, 1.5, 1.3, 1.0, 0.1]  # Scaled w.r.t the root_chord
         chords = [i * root_chord for i in unit_chord_lengths]
 
