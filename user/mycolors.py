@@ -9,4 +9,5 @@ class MyColors(object):
     dark_grey = (69, 69, 69)
     gold = (204, 155, 31)
     chill_white = (247, 247, 247)
+    cool_blue = (128, 255, 255)
 

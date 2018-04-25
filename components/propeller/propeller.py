@@ -12,6 +12,9 @@ from user import MyColors
 from directories import *
 from prop_data_parser import *
 from os import listdir
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.interpolate import interp1d
 
 
 __author__ = "Şan Kılkış"
@@ -35,6 +38,7 @@ class Propeller(Component):
     __show_primitives = False  # type: bool
 
     motor = Input(Motor(integration='puller'))
+    design_speed = Input(15, validator=val.Range(0, 50))
     position = Input(Position(Point(0, 0, 0)))
     database_path = DIRS['PROPELLER_DATA_DIR']
 
@@ -49,17 +53,19 @@ class Propeller(Component):
         return 0.5
 
     @Attribute
-    def prop_recommendation(self):
+    def propeller_recommendation(self):
         return self.motor.specs['prop_recommendation']
 
     @Attribute
     def allowed_props(self):
-        diameter_range = [float(i.split('x')[0]) for i in self.prop_recommendation]
-        pitch_entries = [i.split('x')[1] for i in self.prop_recommendation]
-        pitch_range = []
-        type_range = []
+
+        # Parsing the str in `self.prop_recommendation` to obtain diameter range
+        diameter_range = [float(i.split('x')[0]) for i in self.propeller_recommendation]
 
         # Parsing the str in `self.prop_recommendation` to obtain pitch and type
+        pitch_entries = [i.split('x')[1] for i in self.propeller_recommendation]
+        pitch_range = []
+        type_range = []
         for entry in pitch_entries:
             _local_type = ''
             _local_pitch = ''
@@ -105,22 +111,116 @@ class Propeller(Component):
                 if name.find(type_range[0]) != -1:
                     type_ok = True
 
+            # Selecting only the propellers which have the proper diameter and type
             if diameter_ok and type_ok:
                 allowed_props.append({'Name': name, 'Filename': prop, 'Diameter': diameter})
 
-        # all_props_parsed = [i for i in all_props ]
-        # files = os.listdir(self.database_path)
-        # files = [i for i in files if i.endswith('.txt')]
-        #
-        #
-        # prop_database = {}
-        # new_entry = False
-        # registering = False
-        #
-        # for datasheet in files:  # [8:10]:
-        #     prop_name = str(datasheet.split('.')[0]).replace('PER3_', '')  # Removing file extension and PER3_
-        return prop_files, diameter_range, pitch_range, type_range, allowed_props
+                # , prop_files, diameter_range, pitch_range, type_range
 
+        return allowed_props
+
+    @Attribute
+    def propeller_database(self):
+        selected_prop_files = [i['Filename'] for i in self.allowed_props]
+        prop_dict = {}
+        max_eta = {}
+        for i in selected_prop_files:
+            _name = str(i)
+            prop_dict[_name] = prop_data_parser(DIRS['PROPELLER_DATA_DIR'], i)
+            max_eta[_name] = {'RPM': [],
+                              'ETA': [],
+                              'V': []}
+
+            for RPM in sorted(prop_dict[_name].iterkeys(), key=lambda x: float(x)):  # Sorts the RPM Dictionary in order
+                idx = np.argmax((prop_dict[_name][RPM]['Pe'][0]))  # Index where maximum efficiency (eta) occurs per RPM
+                max_eta[i]['RPM'].extend([float(RPM)])  # Returns current RPM
+                max_eta[i]['ETA'].extend([prop_dict[_name][RPM]['Pe'][0][idx]])  # Returns max eta
+                max_eta[i]['V'].extend([0.44704 * prop_dict[_name][RPM]['V'][0][idx]])  # Returns velocity at max eta
+
+            prop_dict[_name]['max_etas'] = max_eta[_name]  # Appends the max eta_dict to current prop_dict entry
+
+        return prop_dict
+
+    @Attribute
+    def propeller_selector(self):
+        _prop_names = []
+        _design_etas = []
+
+        for name in self.propeller_database:
+            _prop_names.append(name)
+            max_eta = self.propeller_database[name]['max_etas']  # Grabs dict of RPM, ETA, V for the current propeller
+            velocities = max_eta['V']  # Velocity entries in the `max_eta` dict
+            etas = max_eta['ETA']
+            eta_vs_velocity = interp1d(velocities, etas)
+
+            _design_etas.append(float(eta_vs_velocity(self.design_speed)))
+            # error = [abs(v - self.design_speed) for v in velocities]
+            # idx = error.index(min(error))
+            # _design_etas.append(max_eta['ETA'][idx])
+
+        idx_selected = _design_etas.index(max(_design_etas))
+        selected_prop = _prop_names[idx_selected]
+        selected_eta = _design_etas[idx_selected]
+
+        return selected_prop, selected_eta
+
+
+
+
+
+    @Attribute
+    def efficiency_plotter(self):
+
+        fig = plt.figure('PropellerEfficiency')
+        # ax = fig.add_subplot(111)
+        plt.style.use('ggplot')
+        plt.title('Propeller Efficiency as a Function of True Airspeed')
+        ax = fig.gca()
+
+        for i in self.propeller_database:
+            max_eta = self.propeller_database[i]['max_etas']
+            plt.plot(max_eta['V'], max_eta['ETA'], label='%s' % i.split('.')[0])
+
+        plt.axvline(self.design_speed, dashes=[6, 2], color='k', alpha=0.1,
+                    label='Design Speed = %0.2f [m/s]' % self.design_speed)
+
+        plt.axhline(self.propeller_selector[1], dashes=[6, 2], color='k', alpha=0.1)
+
+        plt.scatter(self.design_speed, self.propeller_selector[1], marker='o', markerfacecolor='white',
+                    markeredgecolor='black')
+
+        ax.text(self.design_speed, self.propeller_selector[1],
+                r'$\eta_{\mathrm{prop}}=%0.2f$' % self.propeller_selector[1])
+
+        plt.xlabel(r'$V_{\mathrm{TAS}}$ [m/s]')
+        plt.ylabel(r'$\eta_{\mathrm{prop}}$ [-]')
+        plt.legend(loc='lower right')
+        plt.ion()
+        plt.show()
+        return "Plot generated and saved"
+
+
+
+
+        # PROPSELECT = [
+        #     'PER3_10x4',
+        #     'PER3_10x7',
+        #     'PER3_10x10E',
+        # ]
+        #
+        # MAXETA = {}
+        # for i in PROPSELECT:
+        #     MAXETA[i] = {
+        #         'RPM': [],
+        #         'ETA': [],
+        #         'V': [],
+        #     }
+        #     for RPM in sorted(PROP[i].iterkeys(), key=lambda x: float(x)):
+        #         idx4 = np.argmax(PROP[i][RPM]['Pe'][0])
+        #         MAXETA[i]['RPM'].extend([float(RPM)])
+        #         MAXETA[i]['ETA'].extend([PROP[i][RPM]['Pe'][0][idx4]])
+        #         MAXETA[i]['V'].extend([0.44704 * PROP[i][RPM]['V'][0][idx4]])
+        return prop_dict
     # @Attribute
     # def propeller_database(self):
     #
