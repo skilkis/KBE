@@ -66,7 +66,6 @@ class Wing(Component):
         clreq = 2*9.81*self.MTOW/(self.rho*((1.2*self.V_s)**2)*self.S_req)
         return clreq
 
-
     @Part
     #  This generates the wing. The area is halved because lifting surface generates one wing of that surface area.
     def wing(self):
