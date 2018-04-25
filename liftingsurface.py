@@ -169,14 +169,14 @@ class LiftingSurface(GeomBase):
         return RotatedShape(shape_in = self.wing_surf,
                             rotation_point=self.wing_surf.position,
                             vector = Vector(1,0,0),
-                            angle = radians(self.dihedral))
+                            angle = radians(self.dihedral),
+                            transparency = 0.7)
 
-    @Attribute(in_tree=True)
+    @Attribute (in_tree=True)
     def mac(self):
         cut_plane = Plane(reference= translate(self.final_wing.position,'y', self.mac_span_calc),normal=Vector(0, 1, 0),hidden = True)
         mac = IntersectedShapes(shape_in = self.final_wing,
                                   tool = cut_plane)
-
         return mac
 
     @Attribute

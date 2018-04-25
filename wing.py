@@ -124,13 +124,8 @@ class Wing(Component):
         return MirroredShape(shape_in = self.wing.final_wing,
                              reference_point = self.wing.position,
                              vector1 = Vector(1, 0, 0),
-                             vector2 = Vector(0, 0, 1))
-
-  #  @Part
-  #  def wing(self):
-  #      return Fused(shape_in = self.wing_mirror,
-  #                        tool = self.wing_test.final_wing,
-  #                        mesh_deflection = 1*10**(-4))
+                             vector2 = Vector(0, 0, 1),
+                             transparency = 0.7)
 
     @Attribute
     def center_of_gravity(self):
