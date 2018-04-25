@@ -69,7 +69,7 @@ class Wing(Component):
 
     @Part
     #  This generates the wing. The area is halved because lifting surface generates one wing of that surface area.
-    def wing_test(self):
+    def wing(self):
         return LiftingSurface(S=self.S_req*0.5,
                               AR=self.AR,
                               taper=self.taper,
@@ -82,12 +82,12 @@ class Wing(Component):
     @Attribute
     def wing_cut_loc(self):
         #  This calculates the spanwise distance of the cut, inside of which, the wing is inside the fuselage.
-        return self.wing_test.semispan*self.fuse_width_factor
+        return self.wing.semispan * self.fuse_width_factor
 
     @Part
     def right_cut_plane(self):
         #  This makes a plane at the right wing span location where the fuselage is to end.
-        return Plane(reference= translate(self.wing_test.position,
+        return Plane(reference= translate(self.wing.position,
                                           'y', self.wing_cut_loc),
                      normal=Vector(0, 1, 0),
                      hidden = True)
@@ -96,12 +96,12 @@ class Wing(Component):
     def get_wingfuse_bounds(self):
         #  This attribute is obtaining (the dimensions of) a bounded box at a fuselaage width factor of the semispan
         #  which will be used to size the fuselage frames. These frames drive the shape of the fuselage.
-        inner_part = PartitionedSolid(solid_in = self.wing_test.final_wing,
+        inner_part = PartitionedSolid(solid_in = self.wing.final_wing,
                                       tool = self.right_cut_plane).solids[0].faces[1].wires[0]
         #  Above obtains a cross section of the wing, at the specified fuselage width factor.
 
-        mirrored_part = MirroredShape(shape_in=inner_part, reference_point=self.wing_test.final_wing.position,vector1=Vector(1, 0, 0),vector2=Vector(0, 0, 1))
-        root = self.wing_test.root_airfoil
+        mirrored_part = MirroredShape(shape_in=inner_part, reference_point=self.wing.final_wing.position, vector1=Vector(1, 0, 0), vector2=Vector(0, 0, 1))
+        root = self.wing.root_airfoil
         #  Above mirrors the cross section about the aircraft symmetry plane.
         first_iter = Fused(inner_part, root)
         #  Fusion of the three wing corss sections (thrid = root) done in 2 parts to avoid parapy errors.
@@ -119,18 +119,18 @@ class Wing(Component):
                    position=Position(self.get_wingfuse_bounds.center),
                    centered=True)
 
-    @Attribute
-    def wing_mirror(self):
-        return MirroredShape(shape_in = self.wing_test.final_wing,
-                             reference_point = self.wing_test.position,
+    @Part
+    def left_wing(self):
+        return MirroredShape(shape_in = self.wing.final_wing,
+                             reference_point = self.wing.position,
                              vector1 = Vector(1, 0, 0),
                              vector2 = Vector(0, 0, 1))
 
-    @Part
-    def wing(self):
-        return Fused(shape_in = self.wing_mirror,
-                          tool = self.wing_test.final_wing,
-                          mesh_deflection = 1*10**(-4))
+  #  @Part
+  #  def wing(self):
+  #      return Fused(shape_in = self.wing_mirror,
+  #                        tool = self.wing_test.final_wing,
+  #                        mesh_deflection = 1*10**(-4))
 
     @Attribute
     def center_of_gravity(self):
@@ -139,7 +139,7 @@ class Wing(Component):
         :rtype: Point
         """
         y = 0
-        pos = Point(self.wing_test.final_wing.cog.x, y, self.wing_test.final_wing.cog.z)
+        pos = Point(self.wing.final_wing.cog.x, y, self.wing.final_wing.cog.z)
         return pos
 
 
@@ -147,17 +147,17 @@ class Wing(Component):
     @Attribute
     def root_section(self):
         return Section(leading_edge_point=Point(0, 0, 0),
-                       chord=self.wing_test.root_chord,
+                       chord=self.wing.root_chord,
                        airfoil=FileAirfoil(get_dir(os.path.join('airfoils', self.airfoil_type,
                                                                 '%s.dat' % self.airfoil_choice))))
 
     @Attribute
     def tip_section(self):
         #  Here we define the tip AVL section with proper location.
-        return Section(leading_edge_point=Point(self.wing_test.semispan*tan(radians(self.wing_test.LE_sweep)),
-                                                self.wing_test.semispan,
-                                                self.wing_test.semispan*tan(radians(self.dihedral))),
-                       chord=self.wing_test.root_chord*self.taper,
+        return Section(leading_edge_point=Point(self.wing.semispan * tan(radians(self.wing.LE_sweep)),
+                                                self.wing.semispan,
+                                                self.wing.semispan * tan(radians(self.dihedral))),
+                       chord=self.wing.root_chord * self.taper,
                        angle=0.0,
                        airfoil=FileAirfoil(get_dir(os.path.join('airfoils', self.airfoil_type,
                                                                 '%s.dat' % self.airfoil_choice))))
@@ -176,8 +176,8 @@ class Wing(Component):
     def wing_geom(self):
         return Geometry(name="Test wing",
                         reference_area=self.S_req,
-                        reference_chord= self.wing_test.mac,
-                        reference_span=self.wing_test.semispan*2.0,
+                        reference_chord= self.wing.mac,
+                        reference_span=self.wing.semispan * 2.0,
                         reference_point=Point(0.0, 0.0, 0.0),
                         surfaces=[self.wing_surface])
 
