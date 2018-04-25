@@ -44,15 +44,15 @@ class LiftingSurface(GeomBase):
         #  This attribute calculates the required root chord, with an assumed taper ratio.
         return 2*self.S/((1+self.taper)*self.semispan)
 
-    @Attribute
-    def mac(self):
-        #  This will clculate the mean aerodynamic chord of the swept and tapered wing.
-        mac = ((2 * self.root_chord)/3.0)*((1 + self.taper + (self.taper ** 2))/(1+self.taper))
-        return mac
+    # @Attribute
+    # def mac(self):
+    #     #  This will clculate the mean aerodynamic chord of the swept and tapered wing.
+    #     mac = ((2 * self.root_chord)/3.0)*((1 + self.taper + (self.taper ** 2))/(1+self.taper))
+    #     return mac
 
     @Attribute
     #  This will determine the x and y location of the mac
-    def mac_y(self):
+    def mac_span_calc(self):
         return ((self.semispan)/3.0)*((1+(2*self.taper))/(1+self.taper))
 
     @Attribute
@@ -116,7 +116,8 @@ class LiftingSurface(GeomBase):
     @Part
     def airfoil(self):
         #  This creates an original Airfoil from the data from the chosen airfoil.
-        return FittedCurve(points = self.airfoil_data)
+        return FittedCurve(points = self.airfoil_data,
+                           hidden = True)
 
 
 #  Below we build the wing  with the Leading Edge at (x,y,z) = (0,0,0), x is chordwise and y is up.
@@ -132,7 +133,8 @@ class LiftingSurface(GeomBase):
         #  This scales the original airfoil to the required tip chord.
         return ScaledCurve(curve_in=self.airfoil,
                            reference_point=self.root_airfoil.position,
-                           factor=(self.root_chord*self.taper))
+                           factor=(self.root_chord*self.taper),
+                           hidden = True)
 
     @Part
     def tip_airfoil_notwist(self):
@@ -151,7 +153,8 @@ class LiftingSurface(GeomBase):
         return TransformedCurve(curve_in = self.tip_airfoil_notwist,
                                 from_position = self.tip_airfoil_notwist.position,
                                 to_position = rotate(self.tip_airfoil_notwist.position,
-                                                     'y', -radians(self.phi)))
+                                                     'y', -radians(self.phi)),
+                                hidden = True)
 
 
     @Part
@@ -169,55 +172,49 @@ class LiftingSurface(GeomBase):
                             angle = radians(self.dihedral),
                             transparency = 0.7)
 
-   # @Part
-   # def cog_wing(self):
-   #     # This displays a red ball at the COG location of the SOLID wing.
-   #     return Sphere(radius=self.cog_radius,
-   #                   position=self.final_wing.cog, color='red')
-#COG removed here from primitive, added to components!
+    @Attribute(in_tree=True)
+    def mac(self):
+        cut_plane = Plane(reference= translate(self.final_wing.position,'y', self.mac_span_calc),normal=Vector(0, 1, 0),hidden = True)
+        mac = IntersectedShapes(shape_in = self.final_wing,
+                                  tool = cut_plane)
 
+        return mac
 
-    @Part
-    def mac_airfoil(self):
-        #  This will make a visual MAC on the wing.
-        return ScaledCurve(curve_in=self.airfoil,
-                           reference_point=self.airfoil.position,
-                           factor=self.mac)
-
-
-    @Part
-    def mac_notwist(self):
-        #  This orients the tip airfoil with respect to the required semispan, requested/standard offset
-        return TransformedCurve(curve_in = self.mac_airfoil,
-                                from_position = self.mac_airfoil.position,
-                                to_position = translate(self.mac_airfoil.position,
-                                                        'y', self.mac_y,
-                                                        'x', self.mac_x,
-                                                        'z', self.mac_z))
-
- #   @Part
- #   def mac(self):
- #       #  This orients the tip airfoil over the wing twist angle input. The rotation is about the leading edge.
- #       return RotatedCurve(curve_in = self.mac_notwist,
- #                           rotation_point = self.mac_notwist.position,
- #                           vector = Vector(0,1,0),
- #                           angle = -radians((self.phi/self.semispan)*self.mac_y),
- #                           color = 'red',
- #                           hidden=self.hide_mac)
-
+    @Attribute
+    def aerodynamic_center(self):
+        mac_bbox = self.mac.edges[0].bbox
+        le_mac = mac_bbox.corners[0]
+        ac_loc_x = 0.25 * mac_bbox.width + le_mac.x
+        ac_loc_y = mac_bbox.center.y
+        ac_loc_z = mac_bbox.center.z
+        return Point(ac_loc_x, ac_loc_y, ac_loc_z)
 
 
   #  @Part
-  #  def mac_dummy(self):
-  #      #  This orients the mac over the wing twist angle input. The rotation is about the leading edge.
-  #      return TransformedCurve(curve_in = self.mac_notwist,
-  #                              from_position = self.mac_notwist.position,
-  #                              to_position = rotate(self.mac_notwist.position,
-  #                                                   'y',
-  #                                                   -radians((self.phi/self.semispan)*self.mac_y)),
-  #                              color = 'red',
-  #                              hidden=self.hide_mac)
-#  TODO FIX MAC CALCULATION AND DISPLAY LOCATION.
+  #  def mac_airfoil(self):
+  #      #  This will make a visual MAC on the wing.
+  #      return ScaledCurve(curve_in=self.airfoil,
+  #                         reference_point=self.root_airfoil.position,
+  #                         factor=self.mac,
+  #                         hidden = True)
+
+
+  #  @Part
+  #  def MAC(self):
+  #      #  This orients the MAC airfoil with respect to the required location and twist angle.
+  #      return TransformedCurve(curve_in = self.mac_airfoil,
+  #                              from_position = self.mac_airfoil.position,
+  #                              to_position = rotate(translate(self.mac_airfoil.position,
+  #                                                      'y', self.mac_y,
+  #                                                      'x', self.mac_x,
+  #                                                      'z', self.mac_z),
+  #                                                   Vector(0, 1, 0),
+  #                                                   radians((-self.phi / self.semispan) * self.mac_y)),
+  #                              color = 'Red')
+
+
+
+
 
 if __name__ == '__main__':
     from parapy.gui import display
