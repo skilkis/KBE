@@ -69,12 +69,12 @@ class Component(GeomBase):
                       position = XOY,
                       color = 'Red')
 
-    @Part
-    def cog_sphere(self):
-        return TranslatedShape(shape_in=self.cog_shpere_import,
-                               displacement=Vector(self.center_of_gravity.x,
-                                                   self.center_of_gravity.y,
-                                                   self.center_of_gravity.z))
+    # @Part
+    # def cog_sphere(self):
+    #     return TranslatedShape(shape_in=self.cog_shpere_import,
+    #                            displacement=Vector(self.center_of_gravity.x,
+    #                                                self.center_of_gravity.y,
+    #                                                self.center_of_gravity.z))
 
 if __name__ == '__main__':
     from parapy.gui import display

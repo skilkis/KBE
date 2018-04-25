@@ -6,9 +6,7 @@ from parapy.core import *  # / Required ParaPy Modules
 
 from user import *
 from primitives import *
-from components import *
 from directories import *
-from wing import Wing
 
 __author__ = "Şan Kılkış"
 __all__ = ["Fuselage"]
@@ -31,15 +29,12 @@ class Fuselage(GeomBase):
 
     #: Type of containers at each station, possible entries (nose, container, motor, tail)
     #: :type: str list
-    compartment_type = Input(['nose', 'container', 'container', 'container', 'motor'])
+    # compartment_type = Input(['nose', 'container', 'container', 'container', 'motor'])
+    compartment_type = Input()
 
     #: Parts that the fuselage will be sized for, these must correspond to the entries given in `compartment_type`
     #: :type: list
-    sizing_parts = Input([None,
-                          EOIR(position=translate(YOZ, 'z', -0.2)),
-                          [Battery(position=Position(Point(0, 0, 0))), EOIR()],
-                          Wing(position=translate(XOY, 'x', 0.4, 'z', 0.02)),
-                          Motor(position=translate(XOY, 'x', 1.1, 'z', 0.025))])
+    sizing_parts = Input()
 
     #: Initiates the automatic frame minimization NOTE: May lead to intersecting surfaces
     #: :type: bool
@@ -56,10 +51,6 @@ class Fuselage(GeomBase):
     #: Sets the color of the fuselage (Overwritten from the default yellow)
     #: :type: str or Tuple
     color = Input(MyColors.light_grey)
-
-    @Part
-    def prop_test(self):
-        return Propeller(motor=self.sizing_parts[-1])
 
     @Attribute(private=True)
     def frame_builder(self):
@@ -426,6 +417,6 @@ class Fuselage(GeomBase):
 if __name__ == '__main__':
     from parapy.gui import display
 
-    obj = Fuselage()
+    obj = Fuselage(compartment_type=None, sizing_parts=None)
     display(obj)
 
