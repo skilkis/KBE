@@ -13,6 +13,7 @@ from parapy.core import *  # / Required ParaPy Modules
 # Other Modules
 from user import *
 from definitions import *
+from directories import *
 
 __all__ = ["Battery", "show_primitives"]
 
@@ -21,6 +22,9 @@ show_primitives = False  # type: bool
 
 
 class Battery(Component):
+
+    __initargs__ = ["sizing_target", "sizing_value"]
+    __icon__ = os.path.join(DIRS['ICON_DIR'], 'batteryIII.png')
 
     sizing_target = Input('capacity', validator=val.OneOf(["capacity", "weight"]))
     # TODO link this to custom validator function
@@ -120,7 +124,7 @@ class Battery(Component):
         return TranslatedShape(shape_in=self.battery_import, displacement=Vector(self.position.x,
                                                                                  self.position.y,
                                                                                  (self.height / 2.0) + self.position.z),
-                               color=MyColors.deep_green)
+                               color=MyColors.battery)
 
     # --- Primitives: -------------------------------------------------------------------------------------------------
 

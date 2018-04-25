@@ -53,7 +53,6 @@ class Wing(Component):
     def weight(self):
         return self.Wf_wing*self.MTOW
 
-
     @Attribute
     def S_req(self):
         # This calculation of the required TOTAL wing area from the design point.

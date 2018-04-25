@@ -19,6 +19,7 @@ __all__ = ["Motor"]
 class Motor(Component):
 
     __initargs__ = ["target_power", "motor_name", "position"]
+    __icon__ = os.path.join(DIRS['ICON_DIR'], 'motor.png')
 
     # A parameter for debugging, turns the visibility of miscellaneous parts ON/OFF
     __show_primitives = False  # type: bool

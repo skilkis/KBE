@@ -7,6 +7,8 @@ from parapy.core import *  # / Required ParaPy Modules
 # Required Class Definitions
 from definitions import Component
 from components.motor import *
+
+# Other Modules
 from math import radians, ceil, floor
 from user import MyColors
 from directories import *
@@ -30,12 +32,13 @@ class Propeller(Component):
 
     """
 
-    # TODO make sure the propeller code is structured nicely
-    # TODO Make user selection of a propeller possible
-    # Change label to chosen propeller
+    # TODO (TBD) Make user selection of a propeller possible in the future
+
+    __initargs__ = ["motor", "design_speed"]
+    __icon__ = os.path.join(DIRS['ICON_DIR'], 'propeller.png')
 
     # A parameter for debugging, turns the visibility of miscellaneous parts ON/OFF
-    __show_primitives = False  # type: bool
+    __show_primitives = False  # type: bool # TODO rename this parameter
 
     motor = Input(Motor(integration='puller'))
     design_speed = Input(15, validator=val.Range(0, 50))
@@ -60,6 +63,11 @@ class Propeller(Component):
         diameter_in = [i['Diameter'] for i in self.allowed_props if i['Filename'] == self.propeller_selector[0]][0]
         diameter = diameter_in * 0.0254
         return diameter
+
+    @Attribute
+    def weight(self):
+        """ No reliable source of information could be obtained for propeller weight, thus it is neglected """
+        return 0
 
     @Attribute
     def propeller_recommendation(self):
