@@ -114,12 +114,59 @@ class ClassOne(Base):
 
 
 class ClassTwo(Base):
+    """A simple Class-II component weight estimation with values :attr:`mtow`,.....
+    The propusion, battery, avionics masses and payload masses already calculated, the remaining wieght from MTOW
+    is split between the wings and the fuselage.
+"""
+    mtow = Input(2.0)
+    W_prop = Input(0.1)     #  This is the propulsion system (engine) mass.
+    W_batt = Input(0.2)     #  This is the battery mass.
+    W_pl = Input(0.1)       #  This is the payload mass.
+    W_avionics = Input(0.1) #  This is the assumed avionics mass.
+    S_h = Input(0.1)
+    S = Input(0.4)
+    S_v = Input(0.1)
 
-    PlaceHolder = Input(None)
+    @Attribute
+    def structural_weight(self):
+        #  This returns the remainder of the MTOW after the engine, battery and payload masses subtracted.
+        #  This is assumed to be evenly split between the fuselage and wing weights.
+        return self.mtow-self.W_prop-self.W_batt-self.W_pl-self.W_avionics
+
+    @Attribute
+    def wings_weight(self):
+        #  This is the assumed weight of all wings. It is assumed to be 60% of the remaining MTOW.
+        return 0.7*self.structural_weight
+    @Attribute
+    def fuse_weight(self):
+        #  This is the assumed fuselage weight. It is assumed to be 60% of the remaining MTOW.
+        return 0.3*self.structural_weight
+
+    @Attribute
+    def wings_weight_per_area(self):
+        #  This gives a factor to split the wings weight over the HT, VT and wing based on their area.
+        return self.wings_weight/(self.S+self.S_h+self.S_v)
+
+    @Attribute
+    def wing_weight(self):
+        #  The wing weight is assumed to be half of the total wings weight.
+        return self.wings_weight_per_area*self.S
+
+    @Attribute
+    def ht_weight(self):
+        return self.wings_weight_per_area*self.S_h
+
+    @Attribute
+    def vt_weight(self):
+        return self.wings_weight_per_area*self.S_v
+
+
+
+
 
 
 if __name__ == '__main__':
     from parapy.gui import display
 
-    obj = ClassOne()
+    obj = ClassTwo()
     display(obj)
