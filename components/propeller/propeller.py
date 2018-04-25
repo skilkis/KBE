@@ -146,20 +146,29 @@ class Propeller(Component):
         _prop_names = []
         _design_etas = []
 
+        _data_found = False  # Switch case to determine if data-points exist for the chosen design point
         for name in self.propeller_database:
             _prop_names.append(name)
             max_eta = self.propeller_database[name]['max_etas']  # Grabs dict of RPM, ETA, V for the current propeller
             velocities = max_eta['V']  # Velocity entries in the `max_eta` dict
             etas = max_eta['ETA']
 
-            #Interpolates the data
-            eta_vs_velocity = interp1d(velocities, etas)
+            # Interpolates the data with a linear spline
+            eta_vs_velocity = interp1d(velocities, etas, kind='slinear')
 
-            _design_etas.append(float(eta_vs_velocity(self.design_speed)))
+            # Returns the efficiency if data-points exist for `self.design_speed`
+            if self.design_speed <= max(velocities):
+                _design_etas.append(float(eta_vs_velocity(self.design_speed)))
+                _data_found = True
+            else:
+                _design_etas.append(0)
 
-        idx_selected = _design_etas.index(max(_design_etas))
-        selected_prop = _prop_names[idx_selected]
-        selected_eta = _design_etas[idx_selected]
+        if _data_found:
+            idx_selected = _design_etas.index(max(_design_etas))
+            selected_prop = _prop_names[idx_selected]
+            selected_eta = _design_etas[idx_selected]
+        else:
+            raise ValueError('No propeller data could be found for the design velocity of %0.2f' % self.design_speed)
 
         return selected_prop, selected_eta
 

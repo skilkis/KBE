@@ -14,6 +14,7 @@ __all__ = ["Fuselage"]
 # TODO Incorporate possibility of having a boom structure
 # TODO Weight Estimation w/ Material choice
 # TODO Figure out what is wrong with apex detection (Probably wing is smaller in height than
+# TODO Add Fill-Factor safety margin for frames
 
 # http://www.dupont.com/content/dam/dupont/products-and-services/fabrics-fibers-and-nonwovens/fibers/documents/Kevlar_Technical_Guide.pdf
 
