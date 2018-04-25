@@ -189,28 +189,6 @@ class LiftingSurface(GeomBase):
         return Point(ac_loc_x, ac_loc_y, ac_loc_z)
 
 
-  #  @Part
-  #  def mac_airfoil(self):
-  #      #  This will make a visual MAC on the wing.
-  #      return ScaledCurve(curve_in=self.airfoil,
-  #                         reference_point=self.root_airfoil.position,
-  #                         factor=self.mac,
-  #                         hidden = True)
-
-
-  #  @Part
-  #  def MAC(self):
-  #      #  This orients the MAC airfoil with respect to the required location and twist angle.
-  #      return TransformedCurve(curve_in = self.mac_airfoil,
-  #                              from_position = self.mac_airfoil.position,
-  #                              to_position = rotate(translate(self.mac_airfoil.position,
-  #                                                      'y', self.mac_y,
-  #                                                      'x', self.mac_x,
-  #                                                      'z', self.mac_z),
-  #                                                   Vector(0, 1, 0),
-  #                                                   radians((-self.phi / self.semispan) * self.mac_y)),
-  #                              color = 'Red')
-
 
 
 
