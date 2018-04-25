@@ -33,6 +33,7 @@ class Propeller(Component):
     """
 
     # TODO (TBD) Make user selection of a propeller possible in the future
+    # TODO (TBD) Import propeller weight from data-files (currently it is negligible and neglected)
 
     __initargs__ = ["motor", "design_speed"]
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'propeller.png')
