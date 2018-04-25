@@ -2,9 +2,6 @@
 from design import *
 from parapy.core import *
 from parapy.geom import *
-from directories import *
-# from components import Battery, EOIR
-from primitives import *
 from wing import *
 from components import *
 
@@ -17,7 +14,10 @@ class UAV(Base):
 
     sizing_target = Input('weight')
     sizing_value = Input(1.25)
-    show_labels = Input(True)
+
+    @Attribute
+    def wing_loading(self):
+        return self.params.wingpowerloading.designpoint['wing_loading']
 
     @Part
     def params(self):
@@ -25,16 +25,16 @@ class UAV(Base):
 
     @Part
     def wing(self):
-        return Wing(MTOW=self.mtow)
+        return Wing(MTOW=self.mtow, WS_pt=self.wing_loading)
 
     @Part
     def fuselage(self):
-        return Fuselage(compartment_type=['nose', 'container', 'container', 'container', 'motor'],
-                        sizing_parts=[None, self.camera, self.battery, self.wing, self.motor])
+        return Fuselage(compartment_type=['motor', 'container', 'container', 'container', 'tail'],
+                        sizing_parts=[self.motor, self.camera, self.battery, self.wing, None])
 
     @Part
     def motor(self):
-        return Motor(position=translate(XOY, 'x', 0.5))
+        return Motor(integration='puller', position=translate(XOY, 'x', -0.2))
 
     @Part
     def propeller(self):
@@ -63,24 +63,9 @@ class UAV(Base):
         return Battery(position=translate(XOY, 'x', -0.1))
 
 
-    # @Attribute
-    # def position_camera(self):
-    #     camera_pos = self.camera.position
-    #     camera_length = self.camera.box_length
-    #     self.camera.position = Point(camera_pos.x - camera_length, 0, 0)
-    #     return self.camera.position
-
-    @Attribute
-    def camera_selection(self):
-        selected_camera = EOIR(target_weight=self.payload)
-        camera_name = selected_camera.camera_selector
-        camera_length = selected_camera.box_length
-        return [camera_name, camera_length]
-
-
     @Part
     def camera(self):
-        return EOIR(camera_name=self.camera_selection[0], position=translate(XOY, 'x', -0.3))
+        return EOIR(target_weight=self.payload, position=translate(XOY, 'x', -0.3))
 
 
 if __name__ == '__main__':
