@@ -31,33 +31,30 @@ class LiftingSurface(GeomBase):
     #  if the user inputs 0 in the GUI, then the leading edge becomes unswept (with taper ratio < 1)
     #position = XOY
     cog_radius = Input(0.05)    #  This is the radius for the displayed cog.
-    hide_mac = Input(True)      #  This allows the MAC to be shown on the wing (without dihedral).
+    hide_mac = Input(False)      #  This allows the MAC to be shown on the wing (without dihedral).
     hide_LE = Input(True)       #  This allows the leading edge line to be shown (without dihedral).
 
     @Attribute
     def semispan(self):
         #  This attribute calculated the required semi-span based on the Class I area and Aspect Ratio
-        return sqrt(self.AR*self.S*0.5)
+        return sqrt(2*self.AR*self.S)*0.5
 
     @Attribute
     def root_chord(self):
         #  This attribute calculates the required root chord, with an assumed taper ratio.
         return 2*self.S/((1+self.taper)*self.semispan)
 
-   # @Attribute (in_tree = True)
-   # #  This will return the Wings Center of Gravity calculated from the parapy solid.
-   # def cog_wing(self):
-   #     return self.final_wing.cog
-
     @Attribute
-    #  This will clculate the mean aerodynamic chord of the swept and tapered wing.
     def mac(self):
-        mac = (2*self.root_chord*(1 + self.taper + (self.taper ** 2)))/(3*(1+self.taper))
+        #  This will clculate the mean aerodynamic chord of the swept and tapered wing.
+        mac = ((2 * self.root_chord)/3.0)*((1 + self.taper + (self.taper ** 2))/(1+self.taper))
         return mac
+
     @Attribute
     #  This will determine the x and y location of the mac
     def mac_y(self):
-        return ((self.semispan*2)/6.0)*((1+2*self.taper)/(1+self.taper))
+        return ((self.semispan)/3.0)*((1+(2*self.taper))/(1+self.taper))
+
     @Attribute
     #  This will determine the x location of the MAC
     def mac_x(self):
@@ -119,8 +116,7 @@ class LiftingSurface(GeomBase):
     @Part
     def airfoil(self):
         #  This creates an original Airfoil from the data from the chosen airfoil.
-        return FittedCurve(points = self.airfoil_data,
-                           hidden = True)
+        return FittedCurve(points = self.airfoil_data)
 
 
 #  Below we build the wing  with the Leading Edge at (x,y,z) = (0,0,0), x is chordwise and y is up.
@@ -170,7 +166,8 @@ class LiftingSurface(GeomBase):
         return RotatedShape(shape_in = self.wing_surf,
                             rotation_point=self.wing_surf.position,
                             vector = Vector(1,0,0),
-                            angle = radians(self.dihedral))
+                            angle = radians(self.dihedral),
+                            transparency = 0.7)
 
    # @Part
    # def cog_wing(self):
@@ -181,24 +178,45 @@ class LiftingSurface(GeomBase):
 
 
     @Part
-    def mac_notwist(self):
+    def mac_airfoil(self):
         #  This will make a visual MAC on the wing.
         return ScaledCurve(curve_in=self.airfoil,
-                           reference_point=Point(self.root_airfoil.position.x + self.mac_x,
-                                                 self.root_airfoil.position.y + self.mac_y,
-                                                 self.root_airfoil.position.z + self.mac_z),
-                           factor=self.mac,
-                           hidden = True)
+                           reference_point=self.airfoil.position,
+                           factor=self.mac)
+
+
     @Part
-    def mac_dummy(self):
-        #  This orients the mac over the wing twist angle input. The rotation is about the leading edge.
-        return TransformedCurve(curve_in = self.mac_notwist,
-                                from_position = self.mac_notwist.position,
-                                to_position = rotate(self.mac_notwist.position,
-                                                     'y',
-                                                     -radians((self.phi/self.semispan)*self.mac_y)),
-                                color = 'red',
-                                hidden=self.hide_mac)
+    def mac_notwist(self):
+        #  This orients the tip airfoil with respect to the required semispan, requested/standard offset
+        return TransformedCurve(curve_in = self.mac_airfoil,
+                                from_position = self.mac_airfoil.position,
+                                to_position = translate(self.mac_airfoil.position,
+                                                        'y', self.mac_y,
+                                                        'x', self.mac_x,
+                                                        'z', self.mac_z))
+
+ #   @Part
+ #   def mac(self):
+ #       #  This orients the tip airfoil over the wing twist angle input. The rotation is about the leading edge.
+ #       return RotatedCurve(curve_in = self.mac_notwist,
+ #                           rotation_point = self.mac_notwist.position,
+ #                           vector = Vector(0,1,0),
+ #                           angle = -radians((self.phi/self.semispan)*self.mac_y),
+ #                           color = 'red',
+ #                           hidden=self.hide_mac)
+
+
+
+  #  @Part
+  #  def mac_dummy(self):
+  #      #  This orients the mac over the wing twist angle input. The rotation is about the leading edge.
+  #      return TransformedCurve(curve_in = self.mac_notwist,
+  #                              from_position = self.mac_notwist.position,
+  #                              to_position = rotate(self.mac_notwist.position,
+  #                                                   'y',
+  #                                                   -radians((self.phi/self.semispan)*self.mac_y)),
+  #                              color = 'red',
+  #                              hidden=self.hide_mac)
 #  TODO FIX MAC CALCULATION AND DISPLAY LOCATION.
 
 if __name__ == '__main__':
