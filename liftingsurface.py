@@ -29,10 +29,11 @@ class LiftingSurface(GeomBase):
     offset = Input(None)
     #  The STANDARD OFFSET INPUT(none) causes the TE to be unswept (offset = c_r-c_t), however,
     #  if the user inputs 0 in the GUI, then the leading edge becomes unswept (with taper ratio < 1)
-
     #position = XOY
-
     cog_radius = Input(0.05)    #  This is the radius for the displayed cog.
+    hide_mac = Input(True)      #  This allows the MAC to be shown on the wing (without dihedral).
+    hide_LE = Input(True)       #  This allows the leading edge line to be shown (without dihedral).
+
     @Attribute
     def semispan(self):
         #  This attribute calculated the required semi-span based on the Class I area and Aspect Ratio
@@ -51,7 +52,7 @@ class LiftingSurface(GeomBase):
     @Attribute
     #  This will clculate the mean aerodynamic chord of the swept and tapered wing.
     def mac(self):
-        mac = (2*self.root_chord*(1 + self.taper + self.taper ** 2))/(3*(1+self.taper))
+        mac = (2*self.root_chord*(1 + self.taper + (self.taper ** 2)))/(3*(1+self.taper))
         return mac
     @Attribute
     #  This will determine the x and y location of the mac
@@ -75,7 +76,8 @@ class LiftingSurface(GeomBase):
     @Part
     def LE(self):
         #  This makes a line indicating the leading edge, which will be used to calculate the sweep.
-        return LineSegment(start= self.root_airfoil.position, end = self.tip_airfoil.position)
+        return LineSegment(start= self.root_airfoil.position, end = self.tip_airfoil.position,
+                           hidden=self.hide_LE)
 
 
 
@@ -117,7 +119,8 @@ class LiftingSurface(GeomBase):
     @Part
     def airfoil(self):
         #  This creates an original Airfoil from the data from the chosen airfoil.
-        return FittedCurve(points = self.airfoil_data)
+        return FittedCurve(points = self.airfoil_data,
+                           hidden = True)
 
 
 #  Below we build the wing  with the Leading Edge at (x,y,z) = (0,0,0), x is chordwise and y is up.
@@ -126,16 +129,14 @@ class LiftingSurface(GeomBase):
         # This scales original airfoil to required root chord.
         return ScaledCurve(curve_in=self.airfoil,
                            reference_point= self.position,
-                           factor=self.root_chord,
-                           hidden = True)
+                           factor=self.root_chord)
 
     @Part
     def scaled_tip(self):
         #  This scales the original airfoil to the required tip chord.
         return ScaledCurve(curve_in=self.airfoil,
-                           reference_point=self.airfoil.position,
-                           factor=(self.root_chord*self.taper),
-                           hidden=True)
+                           reference_point=self.root_airfoil.position,
+                           factor=(self.root_chord*self.taper))
 
     @Part
     def tip_airfoil_notwist(self):
@@ -154,21 +155,20 @@ class LiftingSurface(GeomBase):
         return TransformedCurve(curve_in = self.tip_airfoil_notwist,
                                 from_position = self.tip_airfoil_notwist.position,
                                 to_position = rotate(self.tip_airfoil_notwist.position,
-                                                     'y',
-                                                     -radians(self.phi)))
+                                                     'y', -radians(self.phi)))
 
 
     @Part
     def wing_surf(self):
         # This generates a solid wing half with the sign convention mentioned above.
         return LoftedSolid([self.root_airfoil,self.tip_airfoil],
-                           hidden=True)
+                           hidden = True)
 
     @Part
     def final_wing(self):
         #  This rotates the entire solid wing over a dihedral angle.
         return RotatedShape(shape_in = self.wing_surf,
-                            rotation_point=Point(0, 0, 0),
+                            rotation_point=self.wing_surf.position,
                             vector = Vector(1,0,0),
                             angle = radians(self.dihedral))
 
@@ -184,9 +184,9 @@ class LiftingSurface(GeomBase):
     def mac_notwist(self):
         #  This will make a visual MAC on the wing.
         return ScaledCurve(curve_in=self.airfoil,
-                           reference_point=Point(self.mac_x,
-                                                 self.mac_y,
-                                                 self.mac_z),
+                           reference_point=Point(self.root_airfoil.position.x + self.mac_x,
+                                                 self.root_airfoil.position.y + self.mac_y,
+                                                 self.root_airfoil.position.z + self.mac_z),
                            factor=self.mac,
                            hidden = True)
     @Part
@@ -197,7 +197,9 @@ class LiftingSurface(GeomBase):
                                 to_position = rotate(self.mac_notwist.position,
                                                      'y',
                                                      -radians((self.phi/self.semispan)*self.mac_y)),
-                                color = 'red')
+                                color = 'red',
+                                hidden=self.hide_mac)
+#  TODO FIX MAC CALCULATION AND DISPLAY LOCATION.
 
 if __name__ == '__main__':
     from parapy.gui import display

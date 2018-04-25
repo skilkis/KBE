@@ -63,11 +63,18 @@ class Component(GeomBase):
         return TextLabel(text="     %s" % self.label,
                          position=self.text_label_position, hidden=self.hide_labels)
 
-    @Part
-    def cog_shpere(self):
+    @Attribute(private=True)
+    def cog_shpere_import(self):
         return Sphere(radius = 0.05,
-                      position = Position(self.center_of_gravity),
+                      position = XOY,
                       color = 'Red')
+
+    @Part
+    def cog_sphere(self):
+        return TranslatedShape(shape_in=self.cog_shpere_import,
+                               displacement=Vector(self.center_of_gravity.x,
+                                                   self.center_of_gravity.y,
+                                                   self.center_of_gravity.z))
 
 if __name__ == '__main__':
     from parapy.gui import display

@@ -89,87 +89,58 @@ class Wing(Component):
         #  This makes a plane at the right wing span location where the fuselage is to end.
         return Plane(reference= translate(self.wing_test.position,
                                           'y', self.wing_cut_loc),
-                     normal=Vector(0, 1, 0))
-
-    @Part
-    def left_cut_plane(self):
-        #  This makes a plane at the left wing span location where the fuselage is to end.
-        return Plane(reference=translate(self.wing_test.position,
-                                         'y', -self.wing_cut_loc),
                      normal=Vector(0, 1, 0),
                      hidden = True)
 
-
-
-
-
     @Attribute
-    def get_fuselage_bounds(self):
+    def get_wingfuse_bounds(self):
+        #  This attribute is obtaining (the dimensions of) a bounded box at a fuselaage width factor of the semispan
+        #  which will be used to size the fuselage frames. These frames drive the shape of the fuselage.
         inner_part = PartitionedSolid(solid_in = self.wing_test.final_wing,
                                       tool = self.right_cut_plane).solids[0].faces[1].wires[0]
+        #  Above obtains a cross section of the wing, at the specified fuselage width factor.
 
-        mirrored_part = MirroredShape(shape_in=inner_part, reference_point=inner_part.position,vector1=Vector(1, 0, 0),vector2=Vector(0, 0, 1))
+        mirrored_part = MirroredShape(shape_in=inner_part, reference_point=self.wing_test.final_wing.position,vector1=Vector(1, 0, 0),vector2=Vector(0, 0, 1))
         root = self.wing_test.root_airfoil
-
+        #  Above mirrors the cross section about the aircraft symmetry plane.
         first_iter = Fused(inner_part, root)
+        #  Fusion of the three wing corss sections (thrid = root) done in 2 parts to avoid parapy errors.
         second_iter = Fused(first_iter, mirrored_part)
 
         bounds = second_iter.bbox
-        position = Position(bounds.center)
-
+        #  Above gets the bounds of the wing fuselage bounding box for return.
         return bounds
 
     @Part
     def internal_shape(self):
-        return Box(width=self.get_fuselage_bounds.width,
-                   height=self.get_fuselage_bounds.height,
-                   length=self.get_fuselage_bounds.length,
-                   position=Position(self.get_fuselage_bounds.center),
+        return Box(width=self.get_wingfuse_bounds.width,
+                   height=self.get_wingfuse_bounds.height,
+                   length=self.get_wingfuse_bounds.length,
+                   position=Position(self.get_wingfuse_bounds.center),
                    centered=True)
 
-    # @Part
-    # def
+    @Attribute
+    def wing_mirror(self):
+        return MirroredShape(shape_in = self.wing_test.final_wing,
+                             reference_point = self.wing_test.position,
+                             vector1 = Vector(1, 0, 0),
+                             vector2 = Vector(0, 0, 1))
 
+    @Part
+    def wing(self):
+        return Fused(shape_in = self.wing_mirror,
+                          tool = self.wing_test.final_wing,
+                          mesh_deflection = 1*10**(-4))
 
-  #  @Part
-  #  def wing(self):
-  #      return Fused(shape_in = self.wingmirror,
-  #                        tool = self.wing_test.final_wing,
-  #                        mesh_deflection = 1*10**(-4))
-
-  #  @Attribute
-  #  def center_of_gravity(self):
-  #      """ Location of the center of gravity w.r.t the origin
-  #      :return: Location Tuple in SI meter
-  #      :rtype: Point
-  #      """
-  #      return self.wing_test.cog
-
-
-
-
-
-   # @Part
-   # def subtracted_wing(self):
-   #     return Subtracted(shape_in = self.wing,
-   #                       tool = [self.left_cut_plane, self.right_cut_plane],
-   #                       hidden = True)
-
-  #  @Attribute
-  #  def internal_shape_right(self):
-  #      return self.subtracted_wing.faces[2]
-  #  @Attribute
-  #  def internal_shape_left(self):
-  #      return self.subtracted_wing.faces[0]
-  #  @Part
-  #  def internal_shape(self):
-  #      return FusedShell(shape_in=self.internal_shape_right,
-  #                        tool=self.internal_shape_left,
-  #                        mesh_deflection=1 * 10 ** (-5))
-
-
-
-
+    @Attribute
+    def center_of_gravity(self):
+        """ Location of the center of gravity w.r.t the origin
+        :return: Location Tuple in SI meter
+        :rtype: Point
+        """
+        y = 0
+        pos = Point(self.wing_test.final_wing.cog.x, y, self.wing_test.final_wing.cog.z)
+        return pos
 
 
     #  This next block prepares the AVL geometry and runcases. It runs and stores the data.
