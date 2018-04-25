@@ -12,6 +12,8 @@ class LiftingSurface(GeomBase):
     #  or Wing Area, Aspect Ratio, airfoil type and choice and Elliptical shape
     #  Below we build the wing  with the Leading Edge at (x,y,z) = (0,0,0), x is chordwise and y is up.
 
+    __icon__ = os.path.join(DIRS['ICON_DIR'], 'liftingsurface.png')
+
     S = Input(0.8)
     #  Above is the Required TOTAL Wing Area for this SINGLE lifting surface.
     AR = Input(9.0)

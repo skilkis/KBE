@@ -18,6 +18,7 @@ import matplotlib.pyplot as plt
 
 from design import *
 from definitions import *
+from user import MyColors
 
 
 # class Wing(GeomBase, WingPowerLoading, ClassOne):  # TODO experiment if this works, multiple inheritance
@@ -47,6 +48,7 @@ class Wing(Component):
     #  TODO Fix CH10 bug?
     fuse_width_factor = Input(0.05)      #  This is an assumed factor relating the part of the wing covered by fuse to semispan
     Wf_wing = Input(0.2)                #  This is the mass fraction of the wing. TODO CALULATE THIS PROPERLY/ADD TO MAIN/CLASS I
+    hide_bbox = Input(True)
 
 
     @Attribute
@@ -75,7 +77,8 @@ class Wing(Component):
                               phi=self.twist,
                               airfoil_type=self.airfoil_type,
                               airfoil_choice=self.airfoil_choice,
-                              offset=self.offset)
+                              offset=self.offset,
+                              color=MyColors.skin_color)
 
     @Attribute
     def wing_cut_loc(self):
@@ -85,10 +88,9 @@ class Wing(Component):
     @Part
     def right_cut_plane(self):
         #  This makes a plane at the right wing span location where the fuselage is to end.
-        return Plane(reference= translate(self.wing.position,
-                                          'y', self.wing_cut_loc),
+        return Plane(reference=translate(self.wing.position, 'y', self.wing_cut_loc),
                      normal=Vector(0, 1, 0),
-                     hidden = True)
+                     hidden=True)
 
     @Attribute
     def get_wingfuse_bounds(self):
@@ -115,15 +117,18 @@ class Wing(Component):
                    height=self.get_wingfuse_bounds.height,
                    length=self.get_wingfuse_bounds.length,
                    position=Position(self.get_wingfuse_bounds.center),
-                   centered=True)
+                   centered=True,
+                   color=MyColors.cool_blue,
+                   transparency=0.5,
+                   hidden=self.hide_bbox)
 
     @Part
     def left_wing(self):
-        return MirroredShape(shape_in = self.wing.final_wing,
-                             reference_point = self.wing.position,
-                             vector1 = Vector(1, 0, 0),
-                             vector2 = Vector(0, 0, 1),
-                             transparency = 0.7)
+        return MirroredShape(shape_in=self.wing.final_wing,
+                             reference_point=self.wing.position,
+                             vector1=Vector(1, 0, 0),
+                             vector2=Vector(0, 0, 1),
+                             color=MyColors.skin_color)
 
     @Attribute
     def center_of_gravity(self):
@@ -169,7 +174,7 @@ class Wing(Component):
     def wing_geom(self):
         return Geometry(name="Test wing",
                         reference_area=self.S_req,
-                        reference_chord= self.wing.mac,
+                        reference_chord=self.wing.mac,
                         reference_span=self.wing.semispan * 2.0,
                         reference_point=Point(0.0, 0.0, 0.0),
                         surfaces=[self.wing_surface])
@@ -241,7 +246,7 @@ class Wing(Component):
     @Attribute
     def write_results(self):
         results = self.avl_session.get_results()
-        with open('out.json', 'w') as f:
+        with open(os.path.join(DIRS['USER_DIR'], 'results', 'avl_wing_out.json'), 'w') as f:
             f.write(json.dumps(results))
         return 'Done'
 #  TODO add get_dir to directory here above, such that the output file goes to the user folder.

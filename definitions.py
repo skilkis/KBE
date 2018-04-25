@@ -76,6 +76,7 @@ class Component(GeomBase):
     #                                                self.center_of_gravity.y,
     #                                                self.center_of_gravity.z))
 
+
 if __name__ == '__main__':
     from parapy.gui import display
 
