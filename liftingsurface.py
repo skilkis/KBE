@@ -35,6 +35,8 @@ class LiftingSurface(GeomBase):
     cog_radius = Input(0.05)    #  This is the radius for the displayed cog.
     hide_mac = Input(False)      #  This allows the MAC to be shown on the wing (without dihedral).
     hide_LE = Input(True)       #  This allows the leading edge line to be shown (without dihedral).
+    transparency = Input(0.5)
+    mesh_deflection = Input(0.0001)  # The default value is an optimum between a good quality render and performance
 
     @Attribute
     def semispan(self):
@@ -168,11 +170,12 @@ class LiftingSurface(GeomBase):
     @Part
     def final_wing(self):
         #  This rotates the entire solid wing over a dihedral angle.
-        return RotatedShape(shape_in = self.wing_surf,
+        return RotatedShape(shape_in=self.wing_surf,
                             rotation_point=self.wing_surf.position,
-                            vector = Vector(1,0,0),
-                            angle = radians(self.dihedral),
-                            transparency = 0.7)
+                            vector=Vector(1,0,0),
+                            angle=radians(self.dihedral),
+                            transparency=self.transparency,
+                            mesh_deflection=self.mesh_deflection)
 
     @Attribute (in_tree=True)
     def mac(self):

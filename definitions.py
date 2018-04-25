@@ -65,9 +65,9 @@ class Component(GeomBase):
 
     @Attribute(private=True)
     def cog_shpere_import(self):
-        return Sphere(radius = 0.05,
-                      position = XOY,
-                      color = 'Red')
+        return Sphere(radius=0.05,
+                      position=XOY,
+                      color='Red')
 
     # @Part
     # def cog_sphere(self):

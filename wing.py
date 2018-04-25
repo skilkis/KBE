@@ -20,6 +20,8 @@ from design import *
 from definitions import *
 from user import MyColors
 
+__all__ = ["Wing"]
+
 
 # class Wing(GeomBase, WingPowerLoading, ClassOne):  # TODO experiment if this works, multiple inheritance
 class Wing(Component):
@@ -49,6 +51,7 @@ class Wing(Component):
     fuse_width_factor = Input(0.05)      #  This is an assumed factor relating the part of the wing covered by fuse to semispan
     Wf_wing = Input(0.2)                #  This is the mass fraction of the wing. TODO CALULATE THIS PROPERLY/ADD TO MAIN/CLASS I
     hide_bbox = Input(True)
+    mesh_deflection = Input(0.0001)  # Default value is an optimum point between a good quality render and performance
 
 
     @Attribute
@@ -78,7 +81,8 @@ class Wing(Component):
                               airfoil_type=self.airfoil_type,
                               airfoil_choice=self.airfoil_choice,
                               offset=self.offset,
-                              color=MyColors.skin_color)
+                              color=MyColors.skin_color,
+                              transparency=None, pass_down="mesh_deflection")
 
     @Attribute
     def wing_cut_loc(self):

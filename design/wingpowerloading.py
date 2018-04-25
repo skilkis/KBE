@@ -34,7 +34,7 @@ class WingPowerLoading(Base):
     rho_cr = 0.9091             #  ISA 3km Density for climb rate power loading equation.
                                 #  Below are the assumed stall speeds for the Stall Speed Wing Loading Eq.
     V_s_hand = 8.0              #  This is the assumed throwing speed of a hand launched UAV
-    V_s_nonhand = 20.0          #  This is the assumed launch speed at the end of a catapult or runway.
+    V_s_nonhand = 12            #  This is the assumed launch speed at the end of a catapult or runway.
 
     C_D0 = 0.02                 #  Assumed Value of Zero-Lift Drag Coefficient.
     RC = 1.524                  #  Assumption for Required Climb Rate, Same as Sparta UAV 1.1.2.
@@ -105,11 +105,12 @@ class WingPowerLoading(Base):
                      self.powerloading['climb_gradient'][i], '-.',
                      label='CG, C_Lmax = %.2f' % self.C_Lmax[i])
 
-        plt.scatter(self.designpoint['wing_loading'],
-                    self.designpoint['power_loading'],
-                    label="Design Point",
-                    marker='^',
-                    s=50)
+        plt.plot(self.designpoint['wing_loading'], self.designpoint['power_loading'],
+                 marker='o',
+                 markerfacecolor='white',
+                 markeredgecolor='black', markeredgewidth=1,
+                 linewidth=0,
+                 label="Design Point")
 
         plt.ylabel('W/P [N*W^-1]')
         plt.xlabel('W/S [N*m^-2]')
@@ -145,7 +146,7 @@ class WingPowerLoading(Base):
 
         #: WS is the chosen Wing Loading based on idx1
         #: :type: float
-        WS=self.wingloading['values'][idx1]
+        WS = self.wingloading['values'][idx1]
 
         #: Evaluation of the distance (error) between the chosen wing-loading and all values in WS_range
         # :type: float array
