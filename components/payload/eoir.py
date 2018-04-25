@@ -131,7 +131,8 @@ class EOIR(Component):
                                                       'x', -self.position.y,
                                                       'y', self.position.x,
                                                       'z', self.position.z),
-                                color=MyColors.deep_red)
+                                color=MyColors.deep_red,
+                                transparency=0.7)
 
 
     @Part
