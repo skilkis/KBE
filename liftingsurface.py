@@ -169,8 +169,7 @@ class LiftingSurface(GeomBase):
         return RotatedShape(shape_in = self.wing_surf,
                             rotation_point=self.wing_surf.position,
                             vector = Vector(1,0,0),
-                            angle = radians(self.dihedral),
-                            transparency = 0.7)
+                            angle = radians(self.dihedral))
 
     @Attribute(in_tree=True)
     def mac(self):
