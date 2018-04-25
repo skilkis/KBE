@@ -50,16 +50,37 @@ class Propeller(Component):
 
     @Attribute
     def propeller_diameter(self):
+        """ Fetches the string value of the selected propeller from `propeller_selector` and cross-references it
+        with the 'Filename" field of each entry in the attribute `allowed_props` to obtain the proper diameter. This is
+        done to not have to parse the propeller name multiple times.
+
+        :return: Diameter of the propeller blades in SI meter
+        :rtype: float
+        """
         diameter_in = [i['Diameter'] for i in self.allowed_props if i['Filename'] == self.propeller_selector[0]][0]
         diameter = diameter_in * 0.0254
         return diameter
 
     @Attribute
     def propeller_recommendation(self):
+        """ Grabs the `prop_recommendation` field from the dictionary `motor.specs` for easy reference in the GUI
+
+        :rtype: str
+        """
         return self.motor.specs['prop_recommendation']
 
     @Attribute(private=True)
     def allowed_props(self):
+        """ An attribute which parses the string array provided by the attribute `propeller_recommendation` and uses
+        this information to create a list containing all propellers that fit this recommendation. Typically, the string
+        list provided by `propeller_recommendation` specifies a minimum and maximum value of diameter. However, there
+        are some cases where the motor only provides a single value. The selection algorithm can cope with both of these
+        cases. Furthermore, to preserve lazy-evaluation as much as possible and increase performance, only the header of
+        each propeller data file is read to verify if the propeller is compliant in diameter and type.
+
+        :return: List of allowed propeller dictionaries with their corresponding `Name`, `Filename`, and `Diameter`
+        :rtype: List
+        """
 
         # Parsing the str in `self.prop_recommendation` to obtain diameter range
         diameter_range = [float(i.split('x')[0]) for i in self.propeller_recommendation]
@@ -121,6 +142,12 @@ class Propeller(Component):
 
     @Attribute
     def propeller_database(self):
+        """ Gathers all relevant data for the propellers listed in the attribute `allowed_props` and builds a dict to
+        neatly store the data.
+
+        :return: Dictionary containing the arrays `RPM`, `ETA`, `V` for each propeller in the attribute `allowed_props`
+        :rtype: Dict
+        """
         selected_prop_files = [i['Filename'] for i in self.allowed_props]
         prop_dict = {}
         max_eta = {}
@@ -143,6 +170,16 @@ class Propeller(Component):
 
     @Attribute(private=True)
     def propeller_selector(self):
+        """ The main selection algorithm which iterates through all propellers in the attribute `propeller_database`.
+        For each propeller the algorithm logs the maximum propulsive efficiency at each RPM as well as the true-airspeed
+        (TAS) of this local maxima. A linear-spline is fitted through the data and the efficiency at the input
+        `design_speed` is evaluated. These values are appended to the private list `_design_etas` and the propeller with
+        the maximum efficiency at the `design_speed` is selected from this list at the end of the iteration. If no data
+        can be obtained at the `design_speed` a ValueError is raised warning the user.
+
+        :returns: Filename of the selected prop, and propeller efficiency at the user-input `design_speed`
+        :rtype: list
+        """
         _prop_names = []
         _design_etas = []
 
@@ -168,12 +205,19 @@ class Propeller(Component):
             selected_prop = _prop_names[idx_selected]
             selected_eta = _design_etas[idx_selected]
         else:
-            raise ValueError('No propeller data could be found for the design velocity of %0.2f' % self.design_speed)
+            raise ValueError('No propeller data could be found for the design speed of %0.2f' % self.design_speed)
 
         return selected_prop, selected_eta
 
     @Attribute
     def efficiency_plotter(self):
+        """ Plots all efficiencies of the gathered propeller data as a function of true airspeed for the user to be able
+        to visualize how the efficiency changes. This allows for more logical choices when it comes to changing the
+        design if necessary.
+
+        :return: Plot of Propeller Efficiency as a function of True Airspeed
+        :rtype: str
+        """
         fig = plt.figure('PropellerEfficiency')
         plt.style.use('ggplot')
         plt.title('Propeller Efficiency as a Function of True Airspeed')
@@ -216,6 +260,7 @@ class Propeller(Component):
 
     @Part
     def propeller(self):
+        """ The propeller geometry which is visible in the GUI. The attributes used to construct it are below """
         return TranslatedShape(shape_in=self.propeller_builder,
                                displacement=Vector(self.position.x + self.build_direction * (self.fairing_length * (0.1
                                                                                              if self.motor.integration
@@ -227,6 +272,7 @@ class Propeller(Component):
 
     @Part
     def propeller_fairing(self):
+        """ The propeller fairing which is visible in the GUI. The attributes used to construct it are below """
         return TranslatedShape(shape_in=self.propeller_fairing_thrust_aligned,
                                displacement=Vector(self.position.x,
                                                    self.position.y,
@@ -297,6 +343,7 @@ class Propeller(Component):
 
     @Attribute(private=True)
     def airfoil_builder(self):
+        """ Instantiates the airfoils used to create the LoftedSolid in attribute `propeller_builder' """
         airfoils = []
         geom = self.propeller_geometry
         for i in range(0, len(geom['spanwise_loc'])):
@@ -316,9 +363,10 @@ class Propeller(Component):
 
     @Attribute(private=True)
     def propeller_builder(self):
-        """
+        """ The un-translated version of the main part `propeller` constructed from a Compound between a LoftedSolid
+        and its MirroredShape
 
-        :return:
+        :return: A scale representation of the propeller geometry at the origin
         """
         # TODO Comment here
         prop_top = LoftedSolid(profiles=self.airfoil_builder)
