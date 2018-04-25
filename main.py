@@ -25,7 +25,7 @@ class UAV(Base):
 
     @Part
     def wing(self):
-        return Wing(MTOW=self.mtow, WS_pt=self.wing_loading)
+        return Wing(MTOW=self.mtow, WS_pt=self.wing_loading, position=translate(XOY, 'x', self.cg.x))
 
     @Part
     def fuselage(self):
@@ -62,28 +62,48 @@ class UAV(Base):
     def battery(self):
         return Battery(position=translate(XOY, 'x', -0.1))
 
+    # @Part
+    # def battery_test(self):
+    #     return Battery(position=Position(self.cg))
 
     @Part
     def camera(self):
         return EOIR(target_weight=self.payload, position=translate(XOY, 'x', -0.3))
 
     @Attribute
+    def cg(self):
+        return self.weight_and_balance()['CG']
+
     def weight_and_balance(self):
+        """ Retrieves all relevant parameters from children with `weight` and `center_of_gravity` attributes and then
+        calculates the center of gravity w.r.t the origin Point(0, 0, 0)
+
+        :return: A dictionary of component weights as well as the center of gravity fieldnames = `WEIGHTS`, `CG`
+        :rtype: dict
+        """
+
         children = self.get_children()
         weight = []
         cg = []
+        weight_dict = {'WEIGHTS': {},
+                       'CG': Point(0, 0, 0)}
         for _child in children:
             if hasattr(_child, 'weight') and hasattr(_child, 'center_of_gravity'):
+                weight_dict['WEIGHTS'][_child.label] = _child.getslot('weight')
                 weight.append(_child.getslot('weight'))
                 cg.append(_child.getslot('center_of_gravity'))
-            print weight
 
         total_weight = sum(weight)
+        weight_dict['WEIGHTS']['MTOW'] = total_weight
+
+        # CG calculation through a weighted average utilizing list comprehension
         cg_x = sum([weight[i] * cg[i].x for i in range(0, len(weight))]) / total_weight
         cg_y = sum([weight[i] * cg[i].y for i in range(0, len(weight))]) / total_weight
         cg_z = sum([weight[i] * cg[i].z for i in range(0, len(weight))]) / total_weight
 
-        return total_weight, Point(cg_x, cg_y, cg_z)
+        weight_dict['CG'] = Point(cg_x, cg_y, cg_z)
+
+        return weight_dict
 
 
 if __name__ == '__main__':

@@ -137,7 +137,8 @@ class Battery(Component):
         return TranslatedShape(shape_in=self.battery_import, displacement=Vector(self.position.x,
                                                                                  self.position.y,
                                                                                  (self.height / 2.0) + self.position.z),
-                               color=MyColors.battery)
+                               color=MyColors.battery,
+                               transparency=0.7)
 
     # --- Primitives: -------------------------------------------------------------------------------------------------
 
