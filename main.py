@@ -1,9 +1,19 @@
+# -*- coding: utf-8 -*-
 # from components import Battery
+""" Explanation of Main File Here
+
+
+@author: Şan Kılkış & Nelson Johnson
+@version: 1.0
+"""
+
+# TODO Add explanation of main file here
+
 from design import *
 from parapy.core import *
 from parapy.geom import *
-from wing import *
 from components import *
+from directories import *
 
 
 # TODO Make sure that excel read and things are top level program features (not buried within the tree)
@@ -21,24 +31,33 @@ class UAV(Base):
 
     @Part
     def params(self):
-        return ParameterGenerator(initialize_estimations=True, label="Design Parameters")
+        return ParameterGenerator(label="Design Parameters")
 
     @Part
     def wing(self):
-        return Wing(WS_pt=self.wing_loading, position=translate(XOY, 'x', self.cg.x))
+        return Wing(WS_pt=self.wing_loading, position=translate(XOY, 'x', self.cg.x + 0.1))
+
+    @Part
+    def stabilizer(self):
+        return VerticalStabilizer(position=translate(self.wing.position, 'x', 0.2))
+
+    @Part
+    def stabilizer_h(self):
+        return HorizontalStabilizer(position=translate(self.wing.position, 'x', -0.4))
 
     @Part
     def fuselage(self):
         return Fuselage(compartment_type=['motor', 'container', 'container', 'container', 'tail'],
-                        sizing_parts=[self.motor, self.camera, self.battery, self.wing, None])
+                        sizing_parts=[self.motor, [self.stabilizer_h, self.camera], self.battery, [self.wing, self.stabilizer], None])
 
     @Part
     def motor(self):
-        return Motor(integration='puller', position=translate(XOY, 'x', -0.2))
+        return Motor(integration='puller', position=translate(XOY, 'x', -0.3))
 
     @Part
     def propeller(self):
-        return Propeller(motor=self.motor)
+        return Propeller(self.motor)
+
 
 
     @Attribute
@@ -53,7 +72,7 @@ class UAV(Base):
 
     @Attribute
     def payload(self):
-        return self.params.weightestimator.payload
+        return self.params.weightestimator.weight_payload
 
     @Attribute
     def battery_capacity(self):
@@ -113,18 +132,17 @@ class UAV(Base):
 
         return weight_dict
 
-    def motor_location(self):
+    def validate_geometry(self):
         children = self.get_children()
         x_loc_max = 0
         x_loc_min = 0
         for _child in children:
-            if hasattr(_child, 'internal_shape') and not hasattr(_child, 'motor_database'):  # Identification of a Motor
+            if hasattr(_child, 'internal_shape') and getslot(_child, 'component_type') != 'motor':  # Identification of a Motor
                 current_corners = _child.internal_shape.bbox.corners
                 if current_corners[1].x > x_loc_max:
                     x_loc_max = current_corners[1].x
                 elif current_corners[0].x < x_loc_min:
                     x_loc_min = current_corners[0].x
-            # elif hasattr(_child, 'motor_database')
         return x_loc_min, x_loc_max
 
 

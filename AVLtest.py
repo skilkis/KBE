@@ -4,7 +4,7 @@ from parapy.core import *
 from parapy.geom import *
 import parapy.lib.avl as avl
 
-from liftingsurface import LiftingSurface
+from old.liftingsurface import LiftingSurface
 
 class AVLtest(GeomBase):
 
