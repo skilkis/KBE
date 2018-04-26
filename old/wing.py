@@ -27,15 +27,20 @@ __all__ = ["Wing"]
 class Wing(Component):
 
     WS_pt = Input(100.0)  # MUST GET THIS INPUT FROM CLASS I!!!!!!!!!!!!!!!!!!!!!!!!!!
-    MTOW = Input(25.0)  # MUST GET THIS INPUT FROM CLASS I!!!!!!!!!!!!!!!!!!!!!!!!!!
+    # MTOW = Input(25.0)  # MUST GET THIS INPUT FROM CLASS I!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     # @Input
     # def MTOW(self):
     #
 
-    @Input
-    def MTOW(self):
+    @Attribute
+    def weight_mtow(self):
         return 25 if self.is_root else self.get_ancestor_value('mtow')
+
+    @Attribute
+    def wing_loading(self):
+        return 25 if self.is_root else self.get_ancestor_value('wing_loading')
+
     #
 
     # @Attribute
@@ -75,18 +80,18 @@ class Wing(Component):
 
     @Attribute
     def weight(self):
-        return self.Wf_wing*self.MTOW
+        return self.Wf_wing*self.weight_mtow
 
     @Attribute
     def S_req(self):
         # This calculation of the required TOTAL wing area from the design point.
-        return ((self.MTOW * 9.81)/self.WS_pt) # TODO wing loading is in N/m^2 thus we have to have a global variable for g
+        return ((self.weight_mtow * 9.81) / self.WS_pt) # TODO wing loading is in N/m^2 thus we have to have a global variable for g
 
 
     @Attribute
     def C_L_cont(self):
         #  This is the Required C_L from the lift equation at 1.2*V_s @ MTOW for the controllability curve of scissor plot.
-        clreq = 2*9.81*self.MTOW/(self.rho*((1.2*self.V_s)**2)*self.S_req)
+        clreq = 2 * 9.81 * self.weight_mtow / (self.rho * ((1.2 * self.V_s) ** 2) * self.S_req)
         return clreq
 
     @Part

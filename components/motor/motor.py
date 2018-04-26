@@ -13,6 +13,7 @@ from directories import *
 from os import listdir
 from user import MyColors
 
+__author__ = ["Şan Kılkış"]
 __all__ = ["Motor"]
 
 
@@ -34,6 +35,10 @@ class Motor(Component):
     def label(self):
         """Overwrites the inherited slot `label' with the chosen motor_name"""
         return self.specs['name']
+
+    @Attribute
+    def component_type(self):
+        return 'motor'
 
     @Attribute
     def specs(self):

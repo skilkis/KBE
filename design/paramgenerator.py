@@ -58,9 +58,7 @@ class ParameterGenerator(Base):
     configuration = Input('conventional', validator=val.OneOf(['conventional', 'canard', 'flyingwing']))
     handlaunch = Input(True)
     portable = Input(True)
-    initialize_estimations = Input(False)
     user_input_file = Input([filename, sheetname])
-
 
     @Attribute
     def get_userinput(self):
@@ -79,31 +77,38 @@ class ParameterGenerator(Base):
         # Extracts relevant inputs from user excel-file in which the variable order does not matter
         # if correct variable names are not present no inputs will be replaced in the GUI
 
-        # TODO change to self.set_slot_value('attr', value)
-        self.set_slot_value('performance_goal', [str(i[1]) for i in ws._cell_values if i[0] == 'performance_goal'][0])
-        # self.performance_goal = [str(i[1]) for i in ws._cell_values if i[0] == 'performance_goal'][0]
-        # self.goal_value = [i[1] for i in ws._cell_values if i[0] == 'goal_value'][0]
-        # self.weight_target = [str(i[1]) for i in ws._cell_values if i[0] == 'weight_target'][0]
-        # self.target_value = [i[1] for i in ws._cell_values if i[0] == 'target_value'][0]
-        # self.payload_type = [str(i[1]) for i in ws._cell_values if i[0] == 'payload_type'][0]
-        # self.configuration = [str(i[1]) for i in ws._cell_values if i[0] == 'configuration'][0]
-        # self.handlaunch = [True if str(i[1]) == 'True' else False for i in ws._cell_values if i[0] == 'handlaunch'][
-        #     0]
-        # self.portable = [True if str(i[1]) == 'True' else False for i in ws._cell_values if i[0] == 'portable'][0]
+        self.performance_goal = [str(i[1]) for i in ws._cell_values if i[0] == 'performance_goal'][0]
+        self.goal_value = [i[1] for i in ws._cell_values if i[0] == 'goal_value'][0]
+        self.weight_target = [str(i[1]) for i in ws._cell_values if i[0] == 'weight_target'][0]
+        self.target_value = [i[1] for i in ws._cell_values if i[0] == 'target_value'][0]
+        self.payload_type = [str(i[1]) for i in ws._cell_values if i[0] == 'payload_type'][0]
+        self.configuration = [str(i[1]) for i in ws._cell_values if i[0] == 'configuration'][0]
+        self.handlaunch = [True if str(i[1]) == 'True' else False for i in ws._cell_values if i[0] == 'handlaunch'][0]
+        self.portable = [True if str(i[1]) == 'True' else False for i in ws._cell_values if i[0] == 'portable'][0]
 
-        return 'Inputs have been updated'
+        return 'Inputs have been overwritten from the supplied Excel File'
 
-        # TODO A nice to have would be a listener while loop that looks for file-size to detect changes
+    @Part
+    def wingpowerloading(self):
+        return WingPowerLoading(pass_down="handlaunch", label="Wing & Thrust Loading")
 
-    # TODO Remove this input to prevent breaking the code
-    if initialize_estimations:
-        @Part
-        def wingpowerloading(self):
-            return WingPowerLoading(pass_down="handlaunch", label="Wing & Thrust Loading")
+    @Part
+    def weightestimator(self):
+        return ClassOne(pass_down="weight_target, target_value", label="Weight Estimation")
 
-        @Part
-        def weightestimator(self):
-            return ClassOne(pass_down="weight_target, target_value", label="Weight Estimation")
+    # @Attribute
+    # def parameter_dict(self):
+    #     dict = {'INPUTS': {},
+    #             'OUTPUTS': {}}
+    #
+    #     dict['INPUTS']['performance_goal'] = self.performance_goal
+    #     dict['INPUTS']['goal_value'] = self.performance_goal
+    #     dict['INPUTS']['weight_target'] = self.performance_goal
+    #     dict['INPUTS']['target_value'] = self.performance_goal
+    #     dict['INPUTS']['payload_type'] = self.performance_goal
+    #     dict['INPUTS']['payload_type'] = self.performance_goal
+    #     dict['INPUTS']['payload_type'] = self.performance_goal
+    #     return dict
 
 
 if __name__ == '__main__':
