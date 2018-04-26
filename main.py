@@ -72,9 +72,17 @@ class UAV(Base):
     def camera(self):
         return EOIR(target_weight=self.payload, position=translate(XOY, 'x', -0.3))
 
+    @Part
+    def camera2(self):
+        return EOIR(target_weight=self.payload, position=translate(XOY, 'x', 1))
+
     @Attribute
     def cg(self):
         return self.weight_and_balance()['CG']
+
+    @Attribute
+    def weights(self):
+        return self.weight_and_balance()['WEIGHTS']
 
     def weight_and_balance(self):
         """ Retrieves all relevant parameters from children with `weight` and `center_of_gravity` attributes and then

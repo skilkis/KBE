@@ -1,0 +1,38 @@
+#  This code will do make a very simple estimation of the required electronic speed controllers (ESC)
+#  mass and dimensions, based on the motor's ESC reccomendation in Amps.
+
+from parapy.core import *
+from parapy.geom import *
+from definitions import *
+import matplotlib.pyplot as plt
+
+
+class SpeedController(Component):
+
+
+    motor_recc = Input(40)      #  This is the reccomended ESC amperage from the chosen motor.
+    #  TODO connect this input to the current motor choice and corresponding amp draw.
+
+    amp_range =          [6,      20,    30,     40,    60,   100,   120]
+    #  These are amp rating for ESCs found on hobbyking, covering our spectrum of motor options in the database.
+    weight_range =  [0.006, 0.017, 0.021, 0.036, 0.063, 0.081, 0.164]
+    #  These are the corresponding weights of the ESC's found on hobbyking
+
+
+
+    @Attribute
+    def esc_weight(self):
+        plt.plot(self.amp_range, self.weight_range, 'b', label='ESC Weight')
+        plt.ylabel('Weight')
+        plt.xlabel('Amperage')
+        plt.legend(loc=0)
+        plt.title('ESC Weight vs. Continuous Amperage')
+        plt.show()
+        return 'Plot Made, See PyCharm'
+
+
+
+if __name__ == '__main__':
+    from parapy.gui import display
+    obj = SpeedController()
+    display(obj)

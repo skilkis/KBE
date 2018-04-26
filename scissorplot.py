@@ -139,7 +139,7 @@ class ScissorPlot(GeomBase):
         axes.set_ylim([-max(self.shs_stability), max(self.shs_stability)])
         axes.set_xlim([min(self.xcg_range), max(self.xcg_range)])
         plt.show()
-        return 'Plot Made, See ParaPy'
+        return 'Plot Made, See PyCharm'
 
 
 
