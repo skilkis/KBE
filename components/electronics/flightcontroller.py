@@ -14,7 +14,7 @@ class FlightController(Component):
 
 
     #  Navio 2 Flight computer dimensions
-    l_navio = 0.065     #  65mm Length
+    l_navio = 0.065     #  65mm Length. This longest dimesion is to be oriented parallell with the x axis.
     w_navio = 0.025     #  55mm Width
     h_navio = 0.017     #  17mm height assumed.
 
