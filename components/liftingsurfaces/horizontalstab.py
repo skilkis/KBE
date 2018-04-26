@@ -3,9 +3,10 @@
 
 from parapy.core import *
 from parapy.geom import *
-from old.liftingsurface import LiftingSurface
+from primitives import LiftingSurface
 from scissorplot import ScissorPlot
 from definitions import *
+
 
 class HorizontalStabilizer(Component):
 

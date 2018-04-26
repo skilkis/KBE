@@ -73,7 +73,7 @@ class Wing(Component):
 
     @Attribute
     def weight(self):
-        return self.Wf_wing*self.MTOW
+        return 0.2*self.MTOW
 
     @Attribute
     def S_req(self):

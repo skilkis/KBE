@@ -39,12 +39,16 @@ class UAV(Base):
 
     @Part
     def stabilizer(self):
-        return VerticalStabilizer()
+        return VerticalStabilizer(position=translate(self.wing.position, 'x', 0.2))
+
+    @Part
+    def stabilizer_h(self):
+        return HorizontalStabilizer(position=translate(self.wing.position, 'x', -0.4))
 
     @Part
     def fuselage(self):
-        return Fuselage(compartment_type=['motor', 'container', 'container', 'tail'],
-                        sizing_parts=[self.motor, self.camera, [self.battery, self.wing], None])
+        return Fuselage(compartment_type=['motor', 'container', 'container', 'container', 'tail'],
+                        sizing_parts=[self.motor, [self.stabilizer_h, self.camera], self.battery, [self.wing, self.stabilizer], None])
 
     @Part
     def motor(self):

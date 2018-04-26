@@ -4,7 +4,7 @@
 from parapy.core import *
 from parapy.geom import *
 from math import *
-from old.liftingsurface import LiftingSurface
+from primitives import LiftingSurface
 from definitions import *
 
 
