@@ -48,7 +48,9 @@ class UAV(Base):
 
     @Attribute
     def mtow(self):
-        return self.params.weightestimator.mtow
+        return self.weight_and_balance()['WEIGHTS']['MTOW']
+
+    # @Attribute
 
     @Attribute
     def payload(self):
