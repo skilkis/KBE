@@ -95,6 +95,7 @@ def get_dir(folder_name=None):
 DIRS = {'ICON_DIR': get_dir('icons'),
         'AIRFOIL_DIR': get_dir('airfoils'),
         'USER_DIR': get_dir('user'),
+        'COMPONENTS_DIR': get_dir('components'),
         'EOIR_DATA_DIR': get_dir(os.path.join('components', 'payload', 'database', 'eoir')),
         'MOTOR_DATA_DIR': get_dir(os.path.join('components', 'motor', 'database')),
         'PROPELLER_DATA_DIR': get_dir(os.path.join('components', 'propeller', 'database'))}

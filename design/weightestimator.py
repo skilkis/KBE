@@ -11,12 +11,13 @@ __all__ = ["ClassOne", "ClassTwo"]
 
 
 class ClassOne(Base):
-    """A simple Class-I weight estimation with values :attr:`mtow`, :attr:`payload`. This class allows for two
-    use-cases. These use cases answer either one of two customer questions: how heavy will the UAV need to be to
-    carry a certain payload or how much payload can a UAV with a certain maximum take-off weight carry?
-    This is accomplished by specifying with :type:`string` input what the target weight, or in other words, the known
-    weight parameter, into the field :attr:`weight_target`. The field :attr:`target_value` is then the corresponding
-    value for this target weight which needs to be a :type:`float` in kilograms.
+    """A simple Class-I weight estimation with values :attr:`mtow`, :attr:`payload`. This class sets the global weight
+    of the aircraft in stone. A higher payload or maximum take-off weight from the one defined here will be flagged
+    to the user. The following two use cases are possible which answer either one of two customer questions:
+    [1] How heavy will the UAV need to be to carry a certain payload or [2] How much payload can a UAV with a certain
+    maximum take-off weight carry? This is accomplished by specifying with :type:`string` input what the target weight,
+    or in other words, the know weight parameter, into the field :attr:`weight_target`. The field :attr:`target_value`
+    is then the corresponding value for this target weight which needs to be a :type:`float` in SI kilogram.
 
     :param weight_target: Defines if the input `target_value` is a payload weight or maximum take-off weight
     :type weight_target: str
@@ -27,7 +28,7 @@ class ClassOne(Base):
     :rtype: float
 
     |
-    |   Usage:
+    |   [1] Payload Weight to Required Maximum Take-Off Weight:
     >>> from design import ClassOne
     >>> weight = ClassOne('payload',0.25)  # keywords: ClassOne (weight_target='payload', target_value=0.25)
     >>> weight.weight_payload
@@ -36,7 +37,7 @@ class ClassOne(Base):
     1.788395
 
     |
-    |   Alternative Usage:
+    |   [2] Maximum Take-Off Weight to Allowable Payload Weight:
     >>> from design import ClassOne
     >>> weight = ClassOne ('mtow',1.788395) # keywords: ClassOne (weight_target='mtow', target_value=1.788395)
     >>> weight.weight_mtow

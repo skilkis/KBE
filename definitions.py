@@ -21,6 +21,23 @@ class Component(GeomBase):
     # TODO Make a method that automatically finds the proper faces on the YOZ axis
 
     @Attribute
+    def component_type(self):
+        """ An identifier to be able to lump masses together.\n
+        |
+        Possible entries:
+
+        |   'wing'
+        |   'vt'
+        |   'ht'
+        |   'payload'
+        |   'motor'
+        |   'prop'
+        |   'battery'
+        |   ]"""
+
+        return 'Not Classified'
+
+    @Attribute
     def weight(self):
         """ Total mass of the component
 
