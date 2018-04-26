@@ -25,7 +25,7 @@ class UAV(Base):
 
     @Part
     def wing(self):
-        return Wing(MTOW=self.mtow, WS_pt=self.wing_loading, position=translate(XOY, 'x', self.cg.x))
+        return Wing(WS_pt=self.wing_loading, position=translate(XOY, 'x', self.cg.x))
 
     @Part
     def fuselage(self):
@@ -39,7 +39,6 @@ class UAV(Base):
     @Part
     def propeller(self):
         return Propeller(motor=self.motor)
-
 
 
     @Attribute
@@ -72,17 +71,16 @@ class UAV(Base):
     def camera(self):
         return EOIR(target_weight=self.payload, position=translate(XOY, 'x', -0.3))
 
-    @Part
-    def camera2(self):
-        return EOIR(target_weight=self.payload, position=translate(XOY, 'x', 1))
+    # TODO Add a nice bar-graph that shows performance, power consumption, drag, etc in the GUI with boxes!
 
     @Attribute
     def cg(self):
         return self.weight_and_balance()['CG']
 
-    @Attribute
-    def weights(self):
-        return self.weight_and_balance()['WEIGHTS']
+    # @Attribute
+    # def motor_loc(self):
+    #     if self.motor
+    #     return self.motor_location()
 
     def weight_and_balance(self):
         """ Retrieves all relevant parameters from children with `weight` and `center_of_gravity` attributes and then
@@ -114,6 +112,20 @@ class UAV(Base):
         weight_dict['CG'] = Point(cg_x, cg_y, cg_z)
 
         return weight_dict
+
+    def motor_location(self):
+        children = self.get_children()
+        x_loc_max = 0
+        x_loc_min = 0
+        for _child in children:
+            if hasattr(_child, 'internal_shape') and not hasattr(_child, 'motor_database'):  # Identification of a Motor
+                current_corners = _child.internal_shape.bbox.corners
+                if current_corners[1].x > x_loc_max:
+                    x_loc_max = current_corners[1].x
+                elif current_corners[0].x < x_loc_min:
+                    x_loc_min = current_corners[0].x
+            # elif hasattr(_child, 'motor_database')
+        return x_loc_min, x_loc_max
 
 
 if __name__ == '__main__':

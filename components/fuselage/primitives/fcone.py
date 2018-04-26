@@ -8,9 +8,9 @@ from parapy.core import *
 # Required Modules
 from fframe import *
 from directories import *
-from user import MyColors
 from math import sqrt
 
+__author__ = ["Şan Kılkış"]
 __all__ = ["FCone"]
 
 

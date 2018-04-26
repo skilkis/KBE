@@ -7,7 +7,7 @@ from parapy.core import *
 
 from directories import *
 
-__author = "Şan Kılkış"
+__author__ = "Şan Kılkış"
 __all__ = ["FFrame"]
 
 

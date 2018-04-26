@@ -7,6 +7,7 @@ from parapy.core import *
 
 #TODO Allow this to work with any input position
 
+__author__ = ["Şan Kılkış"]
 __all__ = ["MFrame"]
 
 

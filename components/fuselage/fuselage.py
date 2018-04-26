@@ -5,7 +5,7 @@ from parapy.geom import *  # \
 from parapy.core import *  # / Required ParaPy Modules
 
 from user import *
-from primitives import *
+from components.fuselage.primitives import *
 from directories import *
 
 __author__ = "Şan Kılkış"

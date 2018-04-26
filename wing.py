@@ -28,6 +28,24 @@ class Wing(Component):
 
     WS_pt = Input(100.0)  # MUST GET THIS INPUT FROM CLASS I!!!!!!!!!!!!!!!!!!!!!!!!!!
     MTOW = Input(25.0)  # MUST GET THIS INPUT FROM CLASS I!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    # @Input
+    # def MTOW(self):
+    #
+
+    @Input
+    def MTOW(self):
+        return 25 if self.is_root else self.get_ancestor_value('mtow')
+    #
+
+    # @Attribute
+    # def is_root(self):
+    #     if self.tree_level == 0:
+    #         return True
+    #     else:
+    #         return False
+
+
     AR = Input(12)  # MUST GET THIS FROM CLASS i!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     V_s = Input(15.0)  # MUST GET THIS INPUT FROM CLASS I!!!!!!!!!!!!!!!!!!!!!!!!!!
     #  Above is the required stall speed from the class I estimation.
@@ -49,10 +67,11 @@ class Wing(Component):
     cog_radius = Input(0.05)    #  This is the radius of the sphere representing the COG.
     #  TODO Fix CH10 bug?
     fuse_width_factor = Input(0.05)      #  This is an assumed factor relating the part of the wing covered by fuse to semispan
-    Wf_wing = Input(0.2)                #  This is the mass fraction of the wing. TODO CALULATE THIS PROPERLY/ADD TO MAIN/CLASS I
+    # Wf_wing = Input(0.2)                #  This is the mass fraction of the wing. TODO CALULATE THIS PROPERLY/ADD TO MAIN/CLASS I
     hide_bbox = Input(True)
     mesh_deflection = Input(0.0001)  # Default value is an optimum point between a good quality render and performance
 
+    # TODO Add a wing weight estimator based on density
 
     @Attribute
     def weight(self):

@@ -6,20 +6,10 @@ Variable Naming Syntax:
 
 ParentObject_ChildObject_Clarification
 
-a : aircraft
-f : fuselage
-w : wing
-t : tail
-p : propulsion
-pl : payload
-b : battery
+How to write a weight variable
 
-Examples:
+weight_'VARNAME'
 
-a_mtow (Aircraft Maximum Take-Off Weight)
-w_airfoil (Wing Airfoil)
-
-Modules:
 
 Whenever there is a * it describes a module, modules are like the ParaPy packages and can be called from just a simple
 string reference, no need to describe where the file itself is located. However, to pinpoint what each module refers to
