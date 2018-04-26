@@ -178,11 +178,14 @@ class LiftingSurface(GeomBase):
                             mesh_deflection=self.mesh_deflection)
 
     @Attribute (in_tree=True)
-    def mac(self):
+    def mac_airfoil(self):
         cut_plane = Plane(reference= translate(self.final_wing.position,'y', self.mac_span_calc),normal=Vector(0, 1, 0),hidden = True)
         mac = IntersectedShapes(shape_in = self.final_wing,
                                   tool = cut_plane)
         return mac
+    @Attribute
+    def mac_length(self):
+        return self.mac_airfoil.edges[0].bbox.width
 
     @Attribute
     def aerodynamic_center(self):

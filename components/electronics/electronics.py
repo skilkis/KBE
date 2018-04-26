@@ -9,7 +9,7 @@ from speedcontroller import SpeedController
 from components import Motor
 
 #  This code will make a couple Flight controllers
-__author__ = ["Nelson Johnson"]
+__author__ = "Nelson Johnson"
 __all__ = ["Electronics"]
 
 
