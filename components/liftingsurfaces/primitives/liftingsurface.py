@@ -55,7 +55,7 @@ class LiftingSurface(GeomBase):
     #     return mac
 
     @Attribute
-    #  This will determine the x and y location of the mac
+    #  This will determine the y location of the mac
     def mac_span_calc(self):
         return ((self.semispan)/3.0)*((1+(2*self.taper))/(1+self.taper))
 

@@ -14,7 +14,7 @@ class ScissorPlot(GeomBase):
 
     #  Sh/S inputs
     x_cg = Input(0.0)   #  NEED THIIS INPUT FROM CG SCRIPT FOR CURRENT AIRCRAFT!!!!!!!!!!!!!!!!!!!!!!!!!!
-    x_ac = Input(0.1)   #  NEED THIS INPUT FROM LIFTING SURFACE SCRIPT! FOR COMPLETE WING OF CURRENT AIRCR!!!!!!!
+    x_ac = Input(0.0)   #  NEED THIS INPUT FROM LIFTING SURFACE SCRIPT! FOR COMPLETE WING OF CURRENT AIRCR!!!!!!!
 #  TODO CONNECT ALL OF THIS TO MAIN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     AR = Input(12.0)     #  NEED THIS INPUT FROM CLASS II FOR CURRENT AIRCRAFT!!!!!!!!1
     e = Input(0.8)      #  NEED THIS INPUT FROM CLASS I FOR CURRENT A/C!!!!!!!!!
@@ -33,7 +33,7 @@ class ScissorPlot(GeomBase):
 
 
 
-    Cl_w = Input(0.5)       #  This is the maximum lift coeficcent of the wing at 1.2*V_s IMPORT FROM WING.
+    Cl_w = Input(0.5)       #  This is the maximum lift coeficcent of the wing at 1.2*V_s IMPORT CALCULATION FROM WING.
                             #  There is a correction for the main wing if canard is chosen.
     C_mac = Input(-0.32)    #  This is the C_m of the wing from AVL IMPORT FROM WING
     Cla_w = Input(5.14)     #  This is the lift curve slope of the wing from AVL. IMPORT FROM WING
