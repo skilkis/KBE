@@ -24,84 +24,123 @@ wing twist and airfoil DAT file. Possible airfoils are in the folder 'airfoils',
 
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'liftingsurface.png')
 
+    #: Below is the Required Wing Area for this SINGLE surface!
+    #: :type: float
     S = Input(0.8)
-    #  Above is the Required Wing Area for this SINGLE surface!!!!!!
 
+    #: Below is the required Aspect Ratio of the Surface.
+    #: :type: float
     AR = Input(9.0)
-    #  Above is the required Aspect Ratio of the Surface.
 
+    #: Below is the Taper Ratio, which is chosen by the user.
+    #: :type: float
     taper = Input(0.6)
-    #  Above is the Taper Ratio, which is chosen by the user.
 
+    #: Below is the User chosen Dihedral Angle.
+    #: :type: float
     dihedral = Input(5.0)
-    #  Above is the User chosen Dihedral Angle.
 
+    #: Below is the twist of the tip section with respect to the root section.
+    #: :type: float
     phi = Input(1.0)
-    #  Above is the twist of the tip section with respect to the root section.
 
+    #: Below is the name of the folder within the 'airfoils' folder. There are three options: 'cambered', 'reflexed' and
+    #: 'symmetric'.
+    #: :type: str
     airfoil_type = Input('cambered')
-    #  Above is the name of the folder within the 'airfoils' folder. There are three options: 'cambered', 'reflexed' and
-    #  'symmetric'.
 
+    #: Below is the default airfoil. Please see the three folders to find the correct filename, if you wish to change
+    #: the airfoil.
+    #: :type: str
     airfoil_choice = Input('SD7062')
-    #  Above the default airfoil. Please see the three folders to find the correct filename, if you wish to change
-    # the airfoil.
 
+    #: Below is the offset in the flow direction of the tip W.R.T. the root Leading Edge. The default input (None)
+    #: causes the TE to be unswept (offset = c_r-c_t), however, if the user inputs 0 in the GUI, then the leading
+    #: edge becomes unswept. In this case, with taper ratio < 1, the TE becomes forward swept.
+    #: :type: NoneType or float
     offset = Input(None)
-    #  This is the offset in the flow direction of the tip W.R.T. the root Leading Edge. The default input (None)
-    #  causes the TE to be unswept (offset = c_r-c_t), however, if the user inputs 0 in the GUI, then the leading
-    #  edge becomes unswept. In this case, with taper ratio < 1, the TE becomes forward swept.
 
+    #: Boolean below allows the MAC curve to be shown on the wing when changed in the GUI to False.
+    #: :type: bool
     hide_mac = Input(True)
-    #  This allows the MAC curve to be shown on the wing when changed in the GUI to false.
 
+    #: Boolean below allows the leading edge line to be shown (without dihedral).
+    #: :type: bool
     hide_LE = Input(True)
-    #  This allows the leading edge line to be shown (without dihedral).
 
-    mesh_deflection = Input(0.0001)  # The default value is an optimum between a good quality render and performance
+    #: The default value is an optimum between a good quality render and performance
+    #: :type: float
+    mesh_deflection = Input(0.0001)
 
+
+#  This block of Attributes calculates the planform parameters.
     @Attribute
     def semispan(self):
-        #  This attribute calculated the required semi-span based on the Class I area and Aspect Ratio
+        """ This attribute calculates the required semi-span based on the wing area and Aspect Ratio. REMEMBER: The
+        wing area input for this primitive is the wing area for ONE WING!
+
+        :return: Wing Semispan
+        :rtype: float
+        """
         return sqrt(2*self.AR*self.S)*0.5
 
     @Attribute
     def root_chord(self):
-        #  This attribute calculates the required root chord, with an assumed taper ratio.
+        """ This attribute calculates the required root chord, with an assumed taper ratio.
+        :return: Wing Root Chord
+        :rtype: float
+        """
         return 2*self.S/((1+self.taper)*self.semispan)
 
-    #@Attribute
-    #def mac(self):
-    #    #  This will calculate the mean aerodynamic chord of the swept and tapered wing.
-    #    #  This was commented out as we are using ParaPy's IntersectedShapes class at the spanwise position
-    #       to find this.
-    #    mac = ((2 * self.root_chord)/3.0)*((1 + self.taper + (self.taper ** 2))/(1+self.taper))
-    #    return mac
+    """
+    @Attribute
+    def macc(self):
+        #  This will calculate the mean aerodynamic chord of the swept and tapered wing.
+        #  This was commented out as we are using ParaPy's IntersectedShapes class at the spanwise position
+        #  to find this.
+        macc = ((2 * self.root_chord)/3.0)*((1 + self.taper + (self.taper ** 2))/(1+self.taper))
+        return macc
+    """
 
     @Attribute
-    #  This will determine the spanwise location of the mac
     def mac_span_calc(self):
-        return ((self.semispan)/3.0)*((1+(2*self.taper))/(1+self.taper))
+        """ This will determine the spanwise location (y) of the Mean Aerodynamic Chord with respect to the root airfoil.
+        :return: Wing Spanwise MAC position
+        :rtype: float
+        """
+        return (self.semispan/3.0)*((1+(2*self.taper))/(1+self.taper))
 
     @Attribute
-    #  This will determine the x location of the MAC.
     def mac_x(self):
-        return (self.mac_y*tan(radians(self.LE_sweep)))
+        """ This will determine the x location of the MAC.
+        :return: Wing Flow direction MAC position
+        :rtype: float
+        """
+        return self.mac_y*tan(radians(self.le_sweep))
 
     @Attribute
-    #  This will determine the z location of the MAC.
     def mac_z(self):
+        """ This will determine the z location of the MAC.
+        :return: Wing z direction MAC position
+        :rtype: float
+        """
         return (self.mac_y*tan(radians(self.dihedral)))
 
     @Attribute
-    #  This will calculate the leading edge sweep of the wing. (before dihedral applied)
-    def LE_sweep(self):
+    def le_sweep(self):
+        """ This will calculate the leading edge sweep of the wing.
+        :return: Wing LE sweep
+        :rtype: float
+        """
         le_sweep = degrees(atan((self.tip_airfoil.position.x-self.root_airfoil.position.x)/self.semispan))
         return le_sweep
 
     @Part
-    def LE(self):
-        #  This makes a line indicating the leading edge (for the wing without dehedral.).
+    def leading_edge(self):
+        """ This makes a line indicating the leading edge (for a wing without dihedral).
+        :return: Wing leading edge
+        :rtype: ParaPy Geometry
+        """
         return LineSegment(start= self.root_airfoil.position, end = self.tip_airfoil.position,
                            hidden=self.hide_LE)
 
