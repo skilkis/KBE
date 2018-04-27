@@ -21,9 +21,9 @@ class LiftingSurface(GeomBase):
 wing twist and airfoil DAT file. Possible airfoils are in the folder 'airfoils', then within another folder, either
 'cambered', 'reflexed', or 'symmetric'. Feel free to add new airfoils. Also note, this primitive is instantiated in
 'wing.py', where you can perform an AVL analysis. """
-
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'liftingsurface.png')
 
+#  This block of code contains the inputs. ########---------------------------------------------------------------------
     #: Below is the Required Wing Area for this SINGLE surface!
     #: :type: float
     S = Input(0.8)
@@ -73,7 +73,7 @@ wing twist and airfoil DAT file. Possible airfoils are in the folder 'airfoils',
     mesh_deflection = Input(0.0001)
 
 
-#  This block of Attributes calculates the planform parameters.
+#  This block of Attributes calculates the planform parameters. ########------------------------------------------------
     @Attribute
     def semispan(self):
         """ This attribute calculates the required semi-span based on the wing area and Aspect Ratio. REMEMBER: The
@@ -112,19 +112,21 @@ wing twist and airfoil DAT file. Possible airfoils are in the folder 'airfoils',
 
     @Attribute
     def mac_x(self):
-        """ This will determine the x location of the MAC.
+        """ This will determine the x relative position of the MAC WRT the wing root. Thus, it must be added to the
+        position of the wing root.
         :return: Wing Flow direction MAC position
         :rtype: float
         """
-        return self.mac_y*tan(radians(self.le_sweep))
+        return self.mac_span_calc*tan(radians(self.le_sweep))
 
     @Attribute
     def mac_z(self):
-        """ This will determine the z location of the MAC.
+        """ This will determine the z relative position of the MAC WRT the wing root. Thus, it must be added to the
+        position of the wing root.
         :return: Wing z direction MAC position
         :rtype: float
         """
-        return (self.mac_y*tan(radians(self.dihedral)))
+        return self.mac_span_calc*tan(radians(self.dihedral))
 
     @Attribute
     def le_sweep(self):
@@ -141,27 +143,18 @@ wing twist and airfoil DAT file. Possible airfoils are in the folder 'airfoils',
         :return: Wing leading edge
         :rtype: ParaPy Geometry
         """
-        return LineSegment(start= self.root_airfoil.position, end = self.tip_airfoil.position,
+        return LineSegment(start=self.root_airfoil.position,
+                           end=self.tip_airfoil.position,
                            hidden=self.hide_LE)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
     @Attribute
-    def tipp_offsett(self):
-        #  This attribute determines the spanwise offset of the root and tip leading edges.
-        #  The STANDARD OFFSET INPUT(none) causes the TE to be unswept (offset = c_r-c_t), however,
-        #  if the user inputs 0 in the GUI, then the leading edge becomes unswept (with taper ratio < 1)
+    def tip_offset(self):
+        """  Below is the offset in the flow direction of the tip W.R.T. the root Leading Edge. The default input (None)
+        causes the TE to be unswept (offset = c_r-c_t), however, if the user inputs 0 in the GUI, then the leading
+        edge becomes unswept. In this case, with taper ratio < 1, the TE becomes forward swept.
+        :return: Offset between tip and root leading edges
+        :rtype: float
+        """
         if self.offset is not None:
             tip_offset = self.offset
         else:
@@ -169,23 +162,29 @@ wing twist and airfoil DAT file. Possible airfoils are in the folder 'airfoils',
         return tip_offset
 
 
-
+# This block of code builds the wing by importing, scaling positioning and lofting airfoils ##--------------------------
     @Attribute
     def airfoil_data(self):
-        #  This reads and scans User chosen Airfoil Data from the database and stores it as airfoil_data.
-        filepath = get_dir(os.path.join('airfoils', self.airfoil_type,'%s.dat' %self.airfoil_choice))
+        """ This reads and scans the user chosen Airfoil DAT file from the database and stores it as airfoil_data.
+        :return: Airfoil Data Points (Tuple List of Points)
+        :rtype: List
+        """
+        filepath = get_dir(os.path.join('airfoils', self.airfoil_type, '%s.dat' % self.airfoil_choice))
         with open(filepath, 'r') as f:
             pts = []
             for i in f:
-                x,y = i.split(' ',1)
+                x, y = i.split(' ', 1)
                 pts.append(Point(float(x) + self.position.x, self.position.y, float(y)+self.position.z))
         return pts
 
     @Part
     def airfoil(self):
-        #  This creates an original Airfoil from the data from the chosen airfoil.
-        return FittedCurve(points = self.airfoil_data,
-                           hidden = True)
+        """ This creates an Airfoil from the DAT file.
+        :return: Airfoil
+        :rtype: ParaPy Geometry (FittedCurve)
+        """
+        return FittedCurve(points=self.airfoil_data,
+                           hidden=True)
 
 
 #  Below we build the wing  with the Leading Edge at (x,y,z) = (0,0,0), x is chordwise and y is up.
@@ -212,7 +211,7 @@ wing twist and airfoil DAT file. Possible airfoils are in the folder 'airfoils',
                                 from_position = self.scaled_tip.position,
                                 to_position = translate(self.scaled_tip.position,
                                                         'y', self.semispan,
-                                                        'x', self.tipp_offsett),
+                                                        'x', self.tip_offset),
                                 hidden=True)
 
 
@@ -244,7 +243,10 @@ wing twist and airfoil DAT file. Possible airfoils are in the folder 'airfoils',
 
     @Attribute (in_tree=True)
     def mac_airfoil(self):
-        cut_plane = Plane(reference= translate(self.final_wing.position,'y', self.mac_span_calc),normal=Vector(0, 1, 0),hidden = True)
+        #cut_plane = Plane(reference= translate(self.final_wing.position,'y', self.mac_span_calc),normal=Vector(0, 1, 0),hidden = True)
+        #  The code below causes the MAC to rotate with the dihedral angle!
+        cut_plane = Plane(reference=translate(self.final_wing.position, 'y', self.mac_span_calc),normal=self.final_wing.orientation.Vy, hidden=True)
+
         mac = IntersectedShapes(shape_in = self.final_wing,
                                 tool = cut_plane,
                                 hidden = self.hide_mac)
