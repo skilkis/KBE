@@ -20,7 +20,9 @@ class LiftingSurface(GeomBase):
     """ The required inputs for each instantiation are Wing Area, Aspect Ratio, Taper Ratio, TE offset , dihedral angle,
 wing twist and airfoil DAT file. Possible airfoils are in the folder 'airfoils', then within another folder, either
 'cambered', 'reflexed', or 'symmetric'. Feel free to add new airfoils. Also note, this primitive is instantiated in
-'wing.py', where you can perform an AVL analysis. """
+'wing.py', where you can perform an AVL analysis.
+The sign convention is +x pointing with direction of chord, +y pointing toward right wingtip, +z up.
+"""
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'liftingsurface.png')
 
 #  This block of code contains the inputs. ########---------------------------------------------------------------------
@@ -40,9 +42,10 @@ wing twist and airfoil DAT file. Possible airfoils are in the folder 'airfoils',
     #: :type: float
     dihedral = Input(5.0)
 
-    #: Below is the twist of the tip section with respect to the root section.
+    #: Below is the twist of the tip section with respect to the root section. Positive phi is tip twisted up
+    #: with respect to the root.
     #: :type: float
-    phi = Input(1.0)
+    phi = Input(-5.0)
 
     #: Below is the name of the folder within the 'airfoils' folder. There are three options: 'cambered', 'reflexed' and
     #: 'symmetric'.
@@ -71,8 +74,6 @@ wing twist and airfoil DAT file. Possible airfoils are in the folder 'airfoils',
     #: The default value is an optimum between a good quality render and performance
     #: :type: float
     mesh_deflection = Input(0.0001)
-    cog_radius = Input(0.05)
-
 
 #  This block of Attributes calculates the planform parameters. ########------------------------------------------------
     @Attribute
@@ -141,8 +142,8 @@ wing twist and airfoil DAT file. Possible airfoils are in the folder 'airfoils',
     @Part
     def leading_edge(self):
         """ This makes a line indicating the leading edge (for a wing without dihedral).
-        :return: Wing leading edge
-        :rtype: ParaPy Geometry
+        :return: Wing leading edge ParaPy Geometry
+        :rtype: LineSegment
         """
         return LineSegment(start=self.root_airfoil.position,
                            end=self.tip_airfoil.position,
@@ -181,60 +182,73 @@ wing twist and airfoil DAT file. Possible airfoils are in the folder 'airfoils',
     @Part
     def airfoil(self):
         """ This creates an Airfoil from the DAT file.
-        :return: Airfoil
-        :rtype: ParaPy Geometry (FittedCurve)
+        :return: Airfoil fitted curve ParaPy Geometry
+        :rtype: FittedCurve
         """
         return FittedCurve(points=self.airfoil_data,
                            hidden=True)
 
-
-#  Below we build the wing  with the Leading Edge at (x,y,z) = (0,0,0), x is chordwise and y is up.
     @Part
     def root_airfoil(self):
-        # This scales original airfoil to required root chord.
+        """ This scales the original airfoil to required root chord.
+        :return: Root Airfoil scaled curve ParaPy Geometry
+        :rtype: ScaledCurve
+        """
         return ScaledCurve(curve_in=self.airfoil,
-                           reference_point= self.position,
-                           factor=self.root_chord,
-                           hidden = True)
+                           reference_point=self.position,
+                           factor=self.root_chord)
 
     @Part
     def scaled_tip(self):
-        #  This scales the original airfoil to the required tip chord.
+        """  This scales the original airfoil to the required tip chord.
+        :return: Tip Airfoil scaled curve ParaPy Geometry
+        :rtype: ScaledCurve
+        """
         return ScaledCurve(curve_in=self.airfoil,
                            reference_point=self.root_airfoil.position,
                            factor=(self.root_chord*self.taper),
-                           hidden = True)
+                           hidden=True)
 
     @Part
     def tip_airfoil_notwist(self):
-        #  This orients the tip airfoil with respect to the required semispan, requested/standard offset
-        return TransformedCurve(curve_in = self.scaled_tip,
-                                from_position = self.scaled_tip.position,
-                                to_position = translate(self.scaled_tip.position,
+        """ This positions another tip airfoil with respect to the required semispan & requested/standard offset.
+        It does not yet incorporate twist.
+        :return: Tip Airfoil in position without twist ParaPy Geometry
+        :rtype: TransformedCurve
+        """
+        return TransformedCurve(curve_in=self.scaled_tip,
+                                from_position=self.scaled_tip.position,
+                                to_position=translate(self.scaled_tip.position,
                                                         'y', self.semispan,
                                                         'x', self.tip_offset),
                                 hidden=True)
 
-
     @Part
     def tip_airfoil(self):
-        #  This orients the tip airfoil over the wing twist angle input. The rotation is about the leading edge.
-        return TransformedCurve(curve_in = self.tip_airfoil_notwist,
-                                from_position = self.tip_airfoil_notwist.position,
-                                to_position = rotate(self.tip_airfoil_notwist.position,
-                                                     'y', -radians(self.phi)),
-                                hidden = True)
-
+        """ This rotates the tip airfoil over the wing twist angle input. The rotation is about the leading edge.
+        :return: Tip Airfoil in position without twist ParaPy Geometry
+        :rtype: TransformedCurve
+        """
+        return TransformedCurve(curve_in=self.tip_airfoil_notwist,
+                                from_position=self.tip_airfoil_notwist.position,
+                                to_position=rotate(self.tip_airfoil_notwist.position, 'y', radians(self.phi)),
+                                hidden=True)
 
     @Part
     def wing_surf(self):
-        # This generates a solid wing half with the sign convention mentioned above.
-        return LoftedSolid([self.root_airfoil,self.tip_airfoil],
+        """ This generates a solid wing half with the sign convention mentioned above.
+        :return: ParaPy lofted solid wing geometry.
+        :rtype: LoftedSolid
+        """
+        return LoftedSolid([self.root_airfoil, self.tip_airfoil],
                            hidden = True)
 
     @Part
     def final_wing(self):
-        #  This rotates the entire solid wing over a dihedral angle.
+        """ This rotates the entire solid wing half over the dihedral angle.
+        :return: ParaPy rotated lofted solid wing geometry.
+        :rtype: RotatedShape
+        """
         return RotatedShape(shape_in=self.wing_surf,
                             rotation_point=self.wing_surf.position,
                             vector=Vector(1,0,0),
@@ -242,23 +256,36 @@ wing twist and airfoil DAT file. Possible airfoils are in the folder 'airfoils',
                             transparency=0.5,
                             mesh_deflection=self.mesh_deflection)
 
-    @Attribute (in_tree=True)
+    @Attribute(in_tree=True)
     def mac_airfoil(self):
-        #cut_plane = Plane(reference= translate(self.final_wing.position,'y', self.mac_span_calc),normal=Vector(0, 1, 0),hidden = True)
-        #  The code below causes the MAC to rotate with the dihedral angle!
-        cut_plane = Plane(reference=translate(self.final_wing.position, 'y', self.mac_span_calc),normal=self.final_wing.orientation.Vy, hidden=True)
+        """ This finds the mean aerodynamic chord wing section by using a plane intersecting the rotated wing half.
+        The location of this cut is found above. (Note: to see this on the wing, you must change hide_mac to True)
+        :return: ParaPy MAC airfoil.
+        :rtype: IntersectedShapes
+        """
+        cut_plane = Plane(reference=translate(self.final_wing.position, 'y', self.mac_span_calc),
+                          normal=self.final_wing.orientation.Vy, hidden=True)
 
-        mac = IntersectedShapes(shape_in = self.final_wing,
-                                tool = cut_plane,
-                                hidden = self.hide_mac)
+        mac = IntersectedShapes(shape_in=self.final_wing,
+                                tool=cut_plane,
+                                hidden=self.hide_mac)
         return mac
 
     @Attribute
     def mac_length(self):
+        """ This attribute finds the length of the MAC using the bbox of the intersected shape. This is used instead
+        of the normal equation for the equation
+        :return: MAC length
+        :rtype: float
+        """
         return self.mac_airfoil.edges[0].bbox.width
 
     @Attribute
     def aerodynamic_center(self):
+        """ This attribute finds the aerodynamic center assuming it lies at 0.25*MAC.
+        :return: Aerodynamic Center Position of wing component. ParaPy Point
+        :rtype: Point
+        """
         mac_bbox = self.mac_airfoil.edges[0].bbox
         le_mac = mac_bbox.corners[0]
         ac_loc_x = 0.25 * mac_bbox.width + le_mac.x
@@ -267,15 +294,8 @@ wing twist and airfoil DAT file. Possible airfoils are in the folder 'airfoils',
         return Point(ac_loc_x, ac_loc_y, ac_loc_z)
 
 
-
-
-
-
 if __name__ == '__main__':
     from parapy.gui import display
 
     obj = LiftingSurface()
     display(obj)
-
-
-

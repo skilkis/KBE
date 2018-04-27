@@ -26,7 +26,6 @@ class VerticalStabilizer(Component):
     airfoil_choice_v = Input('NACA0012')    #  TODO CONNECT TO MAIN/LS
     offset_v = Input(None)                  #  TODO CONNECT TO MAIN/LS
     #  TODO CONNECT THESE INPUTS TO MAIN/WINGPOWER LOADING AND MTOW!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    cog_radius = 0.01       #  This reduces the size of the COG sphere.
     semispan = Input(1.9)   # This is the wing semispan TODO connect to main
     vtfuse_width_factor = Input(0.1)  # This is an assumed factor relating the part of the HT covered by fuse to semispan
     WF_VT = Input(0.1)  # This is the weight fraction of the HT.
@@ -61,8 +60,8 @@ class VerticalStabilizer(Component):
                               airfoil_type = self.airfoil_type_v,
                               airfoil_choice = self.airfoil_choice_v,
                               offset = self.offset_v,
-                              cog_radius = self.cog_radius,
                               hidden = True)
+
     @Part
     def vt(self):
         #  This rotates the VT over a right angle to the correct orientation WRT the aircraft reference system.
