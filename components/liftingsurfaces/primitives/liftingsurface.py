@@ -71,6 +71,7 @@ wing twist and airfoil DAT file. Possible airfoils are in the folder 'airfoils',
     #: The default value is an optimum between a good quality render and performance
     #: :type: float
     mesh_deflection = Input(0.0001)
+    cog_radius = Input(0.05)
 
 
 #  This block of Attributes calculates the planform parameters. ########------------------------------------------------
