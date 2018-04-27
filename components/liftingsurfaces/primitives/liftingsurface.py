@@ -1,41 +1,63 @@
-#  This script will generate a lifting surface for the KBE Drone app.
-#  The three types of Wing Types that can be generated are Straight / Tapered / Swept and Elliptical wings.
-#  In the future, we would like to add functionalities for multi-component wings
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
-from parapy.core import *
-from parapy.geom import *
-from math import *
-from directories import *
+"""
+  This script will generate a lifting surface primitive for the KBE app.
+  The surface type can be straight, tapered and swept swept wing.
+  In the future, we would like to add functionality for elliptical wings.
+"""
+
+from parapy.core import *       # / Required ParaPy Module
+from parapy.geom import *       # / Required ParaPy Module
+from math import *              # / Python math operations.
+from directories import *       # / Project Directory
+
+__author__ = "Nelson Johnson"
+__all__ = ["LiftingSurface"]
+
 
 class LiftingSurface(GeomBase):
-    #  Required inputs for each instantiation: Wing Area, Aspect Ratio, Taper Ratio, Sweep Angle airfoil type and choice
-    #  or Wing Area, Aspect Ratio, airfoil type and choice and Elliptical shape
-    #  Below we build the wing  with the Leading Edge at (x,y,z) = (0,0,0), x is chordwise and y is up.
+    """ The required inputs for each instantiation are Wing Area, Aspect Ratio, Taper Ratio, TE offset , dihedral angle,
+wing twist and airfoil DAT file. Possible airfoils are in the folder 'airfoils', then within another folder, either
+'cambered', 'reflexed', or 'symmetric'. Feel free to add new airfoils. Also note, this primitive is instantiated in
+'wing.py', where you can perform an AVL analysis. """
 
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'liftingsurface.png')
 
     S = Input(0.8)
-    #  Above is the Required TOTAL Wing Area for this SINGLE lifting surface.
+    #  Above is the Required Wing Area for this SINGLE surface!!!!!!
+
     AR = Input(9.0)
-    #  Above is the requested
+    #  Above is the required Aspect Ratio of the Surface.
+
     taper = Input(0.6)
-    #  Above is the User Requested Taper Ratio.
+    #  Above is the Taper Ratio, which is chosen by the user.
+
     dihedral = Input(5.0)
-    #  Above is the User Required Dihedral Angle.
+    #  Above is the User chosen Dihedral Angle.
+
     phi = Input(1.0)
     #  Above is the twist of the tip section with respect to the root section.
-    airfoil_type = Input('cambered')  #MAKE ERROR IF WRONG NAME INPUT!!!!!!!!!!!!!!
-    #  Above is the standard airfoil type.
-    airfoil_choice = Input('SD7062')  #MAKE ERROR IF WRONG NAME INPUT!!!!!!!!!!!!!!
-    #  Above the Standard airfoil. The Cambered Symmetric and reflexed airfoil database is in folder 'airfoils'
+
+    airfoil_type = Input('cambered')
+    #  Above is the name of the folder within the 'airfoils' folder. There are three options: 'cambered', 'reflexed' and
+    #  'symmetric'.
+
+    airfoil_choice = Input('SD7062')
+    #  Above the default airfoil. Please see the three folders to find the correct filename, if you wish to change
+    # the airfoil.
+
     offset = Input(None)
-    #  The STANDARD OFFSET INPUT(none) causes the TE to be unswept (offset = c_r-c_t), however,
-    #  if the user inputs 0 in the GUI, then the leading edge becomes unswept (with taper ratio < 1)
-    #position = XOY
-    cog_radius = Input(0.05)    #  This is the radius for the displayed cog.
-    hide_mac = Input(False)      #  This allows the MAC to be shown on the wing (without dihedral).
-    hide_LE = Input(True)       #  This allows the leading edge line to be shown (without dihedral).
-    transparency = Input(0.5)
+    #  This is the offset in the flow direction of the tip W.R.T. the root Leading Edge. The default input (None)
+    #  causes the TE to be unswept (offset = c_r-c_t), however, if the user inputs 0 in the GUI, then the leading
+    #  edge becomes unswept. In this case, with taper ratio < 1, the TE becomes forward swept.
+
+    hide_mac = Input(True)
+    #  This allows the MAC curve to be shown on the wing when changed in the GUI to false.
+
+    hide_LE = Input(True)
+    #  This allows the leading edge line to be shown (without dihedral).
+
     mesh_deflection = Input(0.0001)  # The default value is an optimum between a good quality render and performance
 
     @Attribute
@@ -48,35 +70,38 @@ class LiftingSurface(GeomBase):
         #  This attribute calculates the required root chord, with an assumed taper ratio.
         return 2*self.S/((1+self.taper)*self.semispan)
 
-    # @Attribute
-    # def mac(self):
-    #     #  This will clculate the mean aerodynamic chord of the swept and tapered wing.
-    #     mac = ((2 * self.root_chord)/3.0)*((1 + self.taper + (self.taper ** 2))/(1+self.taper))
-    #     return mac
+    #@Attribute
+    #def mac(self):
+    #    #  This will calculate the mean aerodynamic chord of the swept and tapered wing.
+    #    #  This was commented out as we are using ParaPy's IntersectedShapes class at the spanwise position
+    #       to find this.
+    #    mac = ((2 * self.root_chord)/3.0)*((1 + self.taper + (self.taper ** 2))/(1+self.taper))
+    #    return mac
 
     @Attribute
-    #  This will determine the y location of the mac
+    #  This will determine the spanwise location of the mac
     def mac_span_calc(self):
         return ((self.semispan)/3.0)*((1+(2*self.taper))/(1+self.taper))
 
     @Attribute
-    #  This will determine the x location of the MAC
+    #  This will determine the x location of the MAC.
     def mac_x(self):
         return (self.mac_y*tan(radians(self.LE_sweep)))
 
     @Attribute
+    #  This will determine the z location of the MAC.
     def mac_z(self):
         return (self.mac_y*tan(radians(self.dihedral)))
 
     @Attribute
+    #  This will calculate the leading edge sweep of the wing. (before dihedral applied)
     def LE_sweep(self):
-        #  This will calculate the leading edge sweep of the wing. (before dihedral applied)
-        le_sweep = degrees(atan(self.tip_airfoil.position.x/self.semispan))
+        le_sweep = degrees(atan((self.tip_airfoil.position.x-self.root_airfoil.position.x)/self.semispan))
         return le_sweep
 
     @Part
     def LE(self):
-        #  This makes a line indicating the leading edge, which will be used to calculate the sweep.
+        #  This makes a line indicating the leading edge (for the wing without dehedral.).
         return LineSegment(start= self.root_airfoil.position, end = self.tip_airfoil.position,
                            hidden=self.hide_LE)
 
@@ -130,7 +155,8 @@ class LiftingSurface(GeomBase):
         # This scales original airfoil to required root chord.
         return ScaledCurve(curve_in=self.airfoil,
                            reference_point= self.position,
-                           factor=self.root_chord)
+                           factor=self.root_chord,
+                           hidden = True)
 
     @Part
     def scaled_tip(self):
@@ -174,22 +200,24 @@ class LiftingSurface(GeomBase):
                             rotation_point=self.wing_surf.position,
                             vector=Vector(1,0,0),
                             angle=radians(self.dihedral),
-                            transparency=self.transparency,
+                            transparency=0.5,
                             mesh_deflection=self.mesh_deflection)
 
     @Attribute (in_tree=True)
     def mac_airfoil(self):
         cut_plane = Plane(reference= translate(self.final_wing.position,'y', self.mac_span_calc),normal=Vector(0, 1, 0),hidden = True)
         mac = IntersectedShapes(shape_in = self.final_wing,
-                                  tool = cut_plane)
+                                tool = cut_plane,
+                                hidden = self.hide_mac)
         return mac
+
     @Attribute
     def mac_length(self):
         return self.mac_airfoil.edges[0].bbox.width
 
     @Attribute
     def aerodynamic_center(self):
-        mac_bbox = self.mac.edges[0].bbox
+        mac_bbox = self.mac_airfoil.edges[0].bbox
         le_mac = mac_bbox.corners[0]
         ac_loc_x = 0.25 * mac_bbox.width + le_mac.x
         ac_loc_y = mac_bbox.center.y
