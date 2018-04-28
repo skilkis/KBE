@@ -135,12 +135,12 @@ class ExternalBody(Component):
         :rtype: float
         """
         area = 0
-        if hasattr(self.external_shape, 'solids'):
-            for i in self.external_shape.solids:
+        if hasattr(self.external_shape, 'shells'):
+            for i in self.external_shape.shells:
                 area = area + i.area
         else:
-            raise Exception('%s has no solids to find wetted_area from, please create a fused operation to resolve'
-                            % self.external_shape)
+            raise Exception('%s has no solids/shells to find wetted_area from, please create a fused operation '
+                            'to resolve' % self.external_shape)
         return area
 
     @Attribute

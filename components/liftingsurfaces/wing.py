@@ -21,7 +21,7 @@ __all__ = ["Wing"]
 
 
 # class Wing(GeomBase, WingPowerLoading, ClassOne):  # TODO experiment if this works, multiple inheritance
-class Wing(Component):
+class Wing(ExternalBody):
     """ This class will create the wing geometry based on the required:
     Wing Area (class I output), Aspect Ratio (class I input), taper ratio (assumed),
     dihedral angle (assumed), wing twist angle (assumed) and airfoil selection.
@@ -129,6 +129,11 @@ class Wing(Component):
         # TODO wing loading is in N/m^2 thus we have to have a global variable for g
 
     @Attribute
+    def planform_area(self):
+        """ Instantiating the required variable name for the class `ExternalBody`"""
+        return self.s_req
+
+    @Attribute
     def lift_coef_control(self):
         """ This is the Required C_L from the lift equation at 1.2*V_s @ MTOW for the controllability curve of the
          scissor plot.
@@ -221,6 +226,10 @@ class Wing(Component):
                    color=MyColors.cool_blue,
                    transparency=0.5,
                    hidden=self.hide_bbox)
+
+    @Part
+    def external_shape(self):
+        return Fused(self.wing.final_wing, self.left_wing)
 
 
 # --- AVL Geometry & Analysis: -----------------------------------------------------------------------------------------
@@ -320,13 +329,14 @@ class Wing(Component):
     @Attribute
     def lift_coef_vs_alpha(self):
         # TODO Make this lazy by seperating into a different attribute
-        """"  Here, the cl vs alpha plot is created and the constant C_L vs alpha value is found.
-         :return: Plot and float
-         :rtype: float
-         """
+        # TODO Compare CL_max with assumed as well as plot with LLT
+        """  Here, the cl vs alpha plot is created and the constant C_L vs alpha value is found.
+        :return: Plot and float
+        :rtype: float
+        """
         cl_alpha_array = (sorted([[self.results[alpha]['Totals']['Alpha'], self.results[alpha]['Totals']['CLtot']]
                                   for alpha in self.results], key=lambda f: float(f[0])))
-    #  Above we extract the c_l and angle of attack values.
+        #  Above we extract the c_l and angle of attack values.
         alpha_deg = [i[0] for i in cl_alpha_array]
         alpha_rad = [radians(i[0]) for i in cl_alpha_array]
         #  Conversion to radians.

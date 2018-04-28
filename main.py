@@ -129,6 +129,10 @@ class UAV(Base):
     def weights(self):
         return self.weight_and_balance()['WEIGHTS']
 
+    @Attribute
+    def areas(self):
+        return self.wetted_areas()
+
     # @Attribute
     # def motor_loc(self):
     #     if self.motor
@@ -214,7 +218,40 @@ class UAV(Base):
         """
         children = self.get_children()
 
-        return 1
+        areas = []
+        area_dict = {'wing': 0,
+                     'fuselage': 0,
+                     'vt': 0,
+                     'ht': 0,
+                     'misc': 0,
+                     'total': 0}
+
+        for _child in children:
+            if hasattr(_child, 'wetted_area'):
+                areas.append(_child.wetted_area)
+
+                if _child.getslot('surface_type') == 'wing':
+                    area_dict['wing'] = area_dict['wing'] + _child.wetted_area
+
+                elif _child.getslot('surface_type') == 'fuselage':
+                    area_dict['fuselage'] = area_dict['fuselage'] + _child.wetted_area
+
+                elif _child.getslot('surface_type') == 'vt':
+                    area_dict['vt'] = area_dict['vt'] + _child.wetted_area
+
+                elif _child.getslot('surface_type') == 'vt':
+                    area_dict['vt'] = area_dict['vt'] + _child.wetted_area
+
+                elif _child.getslot('surface_type') == 'ht':
+                    area_dict['ht'] = area_dict['ht'] + _child.wetted_area
+
+                else:
+                    area_dict['misc'] = area_dict['misc'] + _child.wetted_area
+                    print Warning("%s does not have an Attribute 'surface_type'"
+                                  "it was thus added to the 'misc' category in the area_dictionary" % _child)
+        area_dict['total'] = sum(areas)
+
+        return area_dict
 
     def validate_geometry(self):
         children = self.get_children()

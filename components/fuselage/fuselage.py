@@ -329,9 +329,25 @@ class Fuselage(ExternalBody):
             shape_out = Circle(radius=0.0, hidden=True)
         return shape_out
 
-    @Part
+    @Attribute(private=True)
+    def internal_shape(self):
+        """ This overwrites the Part defined in the class `Component` an internal_shape w/ a Dummy Value"""
+        return None
+
+    @Attribute(in_tree=True)
     def external_shape(self):
-        return SewnShell([self.center_section, self.nose])
+        """ Overwrites the Part defined in class `ExternalBody` with a merge of the constructed fuselage with the
+        created nose/tail cone(s)"""
+        if self.build_tail and self.build_nose:
+            first_iter = Fused(self.center_section, self.tail.cone)
+            shape_out = Fused(first_iter, self.nose.cone, hidden=True)
+        elif self.build_tail:
+            shape_out = Fused(self.center_section, self.tail.cone, hidden=True)
+        elif self.build_nose:
+            shape_out = Fused(self.center_section, self.nose.cone, hidden=True)
+        else:
+            raise Exception('%s Fuselage construction failed' % self)
+        return shape_out
 
     # --- Private Attributes: -----------------------------------------------------------------------------------------
 
