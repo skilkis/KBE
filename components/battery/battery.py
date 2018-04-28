@@ -36,6 +36,9 @@ class Battery(Component):
     # position = Input(Position(Point(0, 0, 0)))
     label = Input('LiPo Battery')
 
+    @Attribute
+    def component_type(self):
+        return 'battery'
 
     @Attribute
     def weight(self):

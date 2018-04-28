@@ -22,7 +22,7 @@ class Component(GeomBase):
 
     @Attribute
     def component_type(self):
-        """ An identifier to be able to lump masses together.\n
+        """ An identifier to be able to lump masses together.
         |
         Possible entries:
 

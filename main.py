@@ -69,15 +69,19 @@ class UAV(Base):
     def propeller(self):
         return Propeller(self.motor)
 
-
-
     @Attribute
     def configuration(self):
         return self.params.configuration
 
     @Attribute
     def mtow(self):
-        return self.weight_and_balance()['WEIGHTS']['MTOW']
+        return self.weight_and_balance()['WEIGHTS']['mtow']
+
+    @Attribute(private=True)
+    # TODO finish this validator attribute (make it private)
+    def mtow_validator(self):
+        return 1
+
 
     # @Attribute
 
