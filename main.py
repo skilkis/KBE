@@ -130,8 +130,25 @@ class UAV(Base):
         return self.weight_and_balance()['WEIGHTS']
 
     @Attribute
+    def parasite_drag(self):
+        """ Utilizes Raymer's Equivalent skin-friction drag method to compute Zero-Lift Drag. The utilized value used
+        for the skin_friction_coef is taken from subsonic, light propeller aircraft
+
+        http://www.fzt.haw-hamburg.de/pers/Scholz/HOOU/AircraftDesign_13_Drag.pdf
+
+        :return: Zero-Lift Drag Coefficient
+        :rtype: Float
+        """
+        skin_friction_coef = 0.0055
+        area_dict = self.sum_area()
+        reference_area = area_dict['REFERENCE']
+        wetted_area = area_dict['WETTED']['total']
+        parasite_drag = skin_friction_coef * (wetted_area / reference_area)
+        return parasite_drag
+
+    @Attribute
     def areas(self):
-        return self.wetted_areas()
+        return self.sum_area()
 
     # @Attribute
     # def motor_loc(self):
@@ -142,7 +159,7 @@ class UAV(Base):
         """ Retrieves all relevant parameters from children with `weight` and `center_of_gravity` attributes and then
         calculates the center of gravity w.r.t the origin Point(0, 0, 0)
 
-        :return: A dictionary of component weights as well as the center of gravity fieldnames = `WEIGHTS`, `CG`
+        :return: A dictionary of component weights as well as the center of gravity fieldnames = 'WEIGHTS', 'CG'
         :rtype: dict
         """
 
@@ -211,10 +228,11 @@ class UAV(Base):
 
         return weight_dict
 
-    def wetted_areas(self):
-        """ Retrieves all wetted surface areas of instantiated children with
+    def sum_area(self):
+        """ Retrieves all wetted surface areas of instantiated children that have the attributes `wetted_area` and
+        `planform_area` which are defined by the class `ExternalBody`. This class
 
-        :return: A dictionary of wetted surface areas with fieldnames = `wing`, `fuselage`, `vt`, `ht`
+        :return: A dictionary of wetted surface and reference area with the fieldnames: 'WETTED' and 'REFERENCE'
         """
         children = self.get_children()
 
@@ -228,7 +246,7 @@ class UAV(Base):
                      'REFERENCE': 0}
 
         for _child in children:
-            if hasattr(_child, 'wetted_area') and hasattr(_child, 'planform_area') :
+            if hasattr(_child, 'wetted_area') and hasattr(_child, 'planform_area'):
                 areas.append(_child.wetted_area)
 
                 if _child.getslot('surface_type') == 'wing':

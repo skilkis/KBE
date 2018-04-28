@@ -38,11 +38,11 @@ class Fuselage(ExternalBody):
     #: :type: list
     sizing_parts = Input()
 
-    #: Initiates the automatic frame minimization NOTE: May lead to intersecting surfaces
+    #: Initiates the automatic frame minimization WARNING: May lead to intersecting surfaces
     #: :type: bool
     minimize_frames = Input(False)
 
-    #: Linearly joins the frames of the center fuselage NOTE: May lead to errors at the tail cone
+    #: Linearly joins the frames of the center fuselage WARNING: May lead to errors at the tail cone
     #: :type: bool
     ruled = Input(False)
 

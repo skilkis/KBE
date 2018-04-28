@@ -7,6 +7,7 @@ from parapy.geom import *
 from math import *
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy.interpolate import interp1d
 from directories import *
 
 __author__ = "Nelson Johnson"
@@ -103,7 +104,7 @@ class ScissorPlot(GeomBase):
 
     #: Below is a switch to determine the configuration.
     #: :type: str
-    configuration = Input('canard', validator=val.OneOf(['canard', 'conventional']))
+    configuration = Input('conventional', validator=val.OneOf(['canard', 'conventional']))
 
     @Attribute
     def x_cg_vs_mac(self):
@@ -154,7 +155,7 @@ class ScissorPlot(GeomBase):
         :return: Canard wing lift slope
         :rtype: float
         """
-        return self.Cla_w*(1 - ((2 * self.cla_h * self.shs_req) / (pi * self.AR * self.k_factor)))
+        return self.Cla_w*(1 - ((2 * self.cla_h * self.shs_sm) / (pi * self.AR * self.k_factor)))
 
     @Attribute
     def xcg_range(self):
@@ -210,22 +211,59 @@ class ScissorPlot(GeomBase):
         return shs_c
 
     @Attribute
-    def shs_req(self):
+    def shs_sm(self):
         #  TODO add error if there's a negative Sh/S output. Solution is to increase Cl_h or tail arm or reduce Cl_w
         """ This attribute will calculate the required Sh/S based on the required cg shift.
         :return: Required Sh/S.
         :rtype: list
         """
         if self.configuration is 'conventional':
-            shs_req = (self.delta_xcg + self.SM - (self.C_mac / self.Cl_w)) / \
+            shs_req_sm = (self.delta_xcg + self.SM - (self.C_mac / self.Cl_w)) / \
                       ((((self.cla_h / self.Cla_w) * (1 - self.downwash_a)) - (self.cl_h / self.Cl_w)) *
                        (self.VhV_conv ** 2) * self.lhc)
         else:
-            shs_req = (self.delta_xcg + self.SM - (self.C_mac / self.Cl_w)) / \
+            shs_req_sm = (self.delta_xcg + self.SM - (self.C_mac / self.Cl_w)) / \
                       (((self.cla_h / self.Cla_w) - (self.cl_h / self.Cl_w)) * (self.VhV_canard ** 2) *
                        self.lhc_canard)
-        # print 'Required Sh/S = ', shs_req
+
+        return shs_req_sm
+
+    @Attribute
+    def shs_req(self):
+
+        shs_req = self.shs_sm
+        xcg_vs_shs_control = interp1d(self.shs_control, self.xcg_range, kind='linear')
+        xcg_vs_shs_stability = interp1d(self.shs_stability, self.xcg_range, kind='linear')
+
+        shs_range = np.linspace(0, 1, 100)
+        stability_criteria = []
+        for i in shs_range:
+            _stab_pnt = float(xcg_vs_shs_stability(i))
+            _cont_pnt = float(xcg_vs_shs_control(i))
+            if _cont_pnt <= self.x_cg_vs_mac <= _stab_pnt:
+                _current_margin = _stab_pnt - _cont_pnt
+                midpoint = _current_margin / 2.0 + _cont_pnt
+                error = abs(self.x_cg_vs_mac - midpoint)
+                stability_criteria.append([i, _cont_pnt, _stab_pnt, _current_margin, error])
+
+        if len(stability_criteria) != 0:
+            stability_criteria = sorted(stability_criteria, key=lambda x: x[4])
+            shs_cg = stability_criteria[0][0]
+            if shs_cg >= self.shs_sm:
+                shs_req = shs_cg
+        else:
+            print Warning('The current aircraft design is not stable w/ reference tail arm ratios')
+
         return shs_req
+        # shs_control = float(shs_control_vs_xcg(self.x_cg_vs_mac + 0.05))  # Adding a SF to allow forward shift
+        # neutral_point = float(xcg_vs_shs_stability(shs_control))
+        # stability_margin = neutral_point - self.x_cg_vs_mac
+        # if stability_margin > 0:
+        #     stable = True
+        # else:
+        #     raise Warning('The current design is unstable')
+        # return stability_margin, shs_control
+        # #
 
     @Attribute
     def scissorplot(self):
@@ -239,13 +277,12 @@ class ScissorPlot(GeomBase):
         plt.plot(self.xcg_range, self.shs_stability, 'b', label='Stability')
         plt.plot(self.xcg_range, self.shs_control, 'g', label='Controllablility')
         plt.axhline(y=self.shs_req, color='r', linestyle='-.', label='Required Sh/S')
-        plt.scatter(x=self.x_cg_vs_mac, y=1, label='CG Location')
-#        plt.axvline(x=self.x_ac-self.SM, color='r', linestyle='-.')
+        # plt.axhline(y=self.test[1])
+        plt.scatter(x=self.x_cg_vs_mac, y=self.shs_req, label='CG Location')
         plt.ylabel(r'$\frac{S_{h}}{S}$')
-        plt.xlabel(r'$\frac{Xcg-Xac}{c}$')
+        plt.xlabel(r'$\frac{X_{cg}-X_{ac}}{c}$')
         plt.axis([-2, 2, 0, 2])
         plt.legend(loc=0)
-#        plt.ion()
         fig.savefig(fname=os.path.join(DIRS['USER_DIR'], 'plots', '%s.pdf' % fig.get_label()), format='pdf')
         plt.show()
         return 'Plot Made, See PyCharm'

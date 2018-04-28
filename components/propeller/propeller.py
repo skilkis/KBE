@@ -96,6 +96,10 @@ class Propeller(Component):
         return 0
 
     @Attribute
+    def center_of_gravity(self):
+        return self.propeller.bbox.center
+
+    @Attribute
     def efficiency(self):
         """ Fetches the efficiency of the selected propeller at the `design_speed` """
         return self.propeller_selector[1]

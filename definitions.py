@@ -36,6 +36,7 @@ class Component(GeomBase):
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'gear.png')
 
     position = Input(Position(Point(0, 0, 0)))  # Locks Orientation to that defined inside the component
+    inside_fuselage = Input(True)  # Defaults to treating the component as a `sizing_part` used in fuselage construction
     hide_labels = Input(True)
 
     # TODO Make a method that automatically finds the proper faces on the YOZ axis
