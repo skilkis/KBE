@@ -39,31 +39,31 @@ class ScissorPlot(GeomBase):
 
     #: Below is the wing aspect ratio.
     #: :type: float
-    AR = Input(12.0)
+    AR = Input(12.0, validator=val.Positive())
 
     #: Below is the wing span efficiency factor
     #: :type: float
-    e = Input(0.8)
+    e = Input(0.8, validator=val.Positive())
 
     #: Below is the assumed zero lift drag coefficient
     #: :type: float
-    CD0 = Input(0.02)
+    CD0 = Input(0.02, validator=val.Positive())
 
     #: Below is the k factor to correct the canard main wing C_Lalpha due to canard downwash.
     #: :type: float
-    k_factor = Input(1.0)
+    k_factor = Input(1.0, validator=val.Positive())
 
     #: Below is the assumed Safety Margin.
     #: :type: float
-    SM = Input(0.05)
+    SM = Input(0.05, validator=val.Positive())
 
     #: Below is the HT aspect ratio.
     #: :type: float
-    AR_h = Input(5.0)
+    AR_h = Input(5.0, validator=val.Positive())
 
     #: Below is the assumed HT span efficiency factor.
     #: :type: float
-    e_h = Input(0.8)
+    e_h = Input(0.8, validator=val.Positive())
 
     #: Below is the tail arm for a conventional tail aircraft.
     #: :type: float
@@ -87,7 +87,7 @@ class ScissorPlot(GeomBase):
 
     #: Below is the controllability lift coefficient of the wing at 1.2*V_s imported from wing.
     #: :type: float
-    Cl_w = Input(0.5)
+    Cl_w = Input(0.5, validator=val.Positive())
 
     #: Below is the pitching moment about the aerodynamic center of the wing. This is calculated with AVL in 'wing.py'.
     #: :type: float
@@ -95,11 +95,11 @@ class ScissorPlot(GeomBase):
 
     #: Below is the lift curve slope of the wing. This is calculated with AVL in 'wing.py'.
     #: :type: float
-    Cla_w = Input(5.14)
+    Cla_w = Input(5.14, validator=val.Positive())
 
     #: Below is the assumed change in the cg location.
     #: :type: float
-    delta_xcg = Input(0.3)
+    delta_xcg = Input(0.3, validator=val.Positive())
 
     #: Below is a switch to determine the configuration.
     #: :type: str
@@ -107,7 +107,7 @@ class ScissorPlot(GeomBase):
 
     @Attribute
     def x_cg_vs_mac(self):
-        #  This returns the non dimensional distance bewtn the COG and the wing AC.
+        #  This returns the non dimensional distance between the COG and the wing AC.
         print self.x_cg - self.x_ac / self.mac
         return (self.x_cg - self.x_ac) / self.mac
 

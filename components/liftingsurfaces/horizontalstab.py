@@ -1,30 +1,61 @@
-#  This script will generate the horizontal stabilizer using lifting surface with the required Sh
-#  from the 'scissorplot.py' script.
+# -*- coding: utf-8 -*-
 
 from parapy.core import *
 from parapy.geom import *
 from primitives import LiftingSurface
+from scissorplot import ScissorPlot
 from definitions import *
 
+# TODO CONNECT WEIGHT TO MAIN!!!!!!!!!!
 
 class HorizontalStabilizer(ExternalBody):
+    """  This script will generate the horizontal stabilizer using the lifting surface primitive with the required Sh
+    from the 'scissorplot.py' script.
+    """
 
-    S_req = Input(0.8)      #  This is the required total wing area from the Class I estimations. TODO CONNECT TO MAIN/ WINGPWR LOADING
-    AR_h = Input(5.0)       #  This is the HT aspect ratio. TODO CONNECT TO MAIN/LS
-    taper_h = Input(0.5)    #  This is the assumed HT Taper Ratio. TODO CONNECT TO MAIN/LS
-    dihedral_h = Input(0.0) #  This is the dihedral angle of the HT. TODO CONNECT TO MAIN/LS
-    phi_h = Input(0.0)      #  This is the wing twist for the HT. TODO CONNECT TO MAIN/LS
-    airfoil_type_h = Input('symmetric')     #  TODO CONNECT TO MAIN/LS
-    airfoil_choice_h = Input('NACA0012')    #  TODO CONNECT TO MAIN/LS
-    offset_h = Input(None)                  #  TODO CONNECT TO MAIN/LS
-    #  TODO CONNECT THESE INPUTS TO MAIN/WINGPOWER LOADING AND MTOW!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    htfuse_width_factor = Input(0.025)  # This is an assumed factor relating the part of the HT covered by fuse to semispan
-    WF_HT = Input(0.1)      #  This is the weight fraction of the HT.
-    weight_mtow = Input(25.0)  # MUST GET THIS INPUT FROM CLASS I!!!!!!!!!!!!!!!!!!!!!!!!!!
+    #: Below is the required tail surface area from the scissor plot.
+    #: :type: float
+    S_req = Input(0.8, validator=val.Positive())
 
+    #: Below is the required tail aspect ratio.
+    #: :type: float
+    AR_h = Input(5.0, validator=val.Positive())
+
+    #: Below is the required tail taper ratio.
+    #: :type: float
+    taper_h = Input(0.5, validator=val.Positive())
+
+    #: Below is the tail dihedral angle.
+    #: :type: float
+    dihedral_h = Input(0.0)
+
+    #: Below is the tail wing twist angle.
+    #: :type: float
+    phi_h = Input(-0.0)
+
+    #: Below is the tail airfoil type. The input must correspond to an existing folder.
+    #: :type: str
+    airfoil_type_h = Input('symmetric', validator=val.OneOf(['cambered', 'reflexed', 'symmetric']))
+
+    #: Below is the tail airfoil DAT file. The input must correspond to an existing filename.
+    #: :type: str
+    airfoil_choice_h = Input('NACA0012')
+
+    #: Below is the chosen trailing edge offset.
+    #: :type: NoneType or float
+    offset_h = Input(None)
+
+    #: Below is the assumed factor relating the part of the HT covered by fuse to semispan
+    #: :type: float
+    htfuse_width_factor = Input(0.025)
+
+    #: Below is the MTOW from the Class I weight Estimation.
+    #: :type: float
+    weight_mtow = Input(25.0)
 
     @Attribute
     def component_type(self):
+        #  This names the component 'ht' for horizontal stabilizer.
         return 'ht'
 
     @Attribute
