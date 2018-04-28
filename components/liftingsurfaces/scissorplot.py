@@ -1,6 +1,3 @@
-#  This script will generate a scissor plot to size the horizontal tail (HT).
-#  The required inputs are: the center of gravity and aerodynamic center position of the current aircraft,
-#  the tail arm to chord length ratio, the the HT aspect ratio, the tail to main wing speed ratio...
 
 
 from parapy.core import *
@@ -11,46 +8,90 @@ import matplotlib.pyplot as plt
 
 
 class ScissorPlot(GeomBase):
+    """  This script will generate a scissor plot to size the horizontal tail (HT). The required inputs are: the
+    aerodynamic center position of the current aircraft, the tail arm, the the HT aspect ratio, HT span efficiency,
+    the tail to main wing speed ratio, the wing pitching moment abo the aerodynamic center, thw wing lift slope,
+    the c_l for controllability (derived in wing), and the allowable shift in center of gravity.
+    """
 
-    #  Sh/S inputs
-    x_cg = Input(0.3)   #  NEED THIIS INPUT FROM CG SCRIPT FOR CURRENT AIRCRAFT!!!!!!!!!!!!!!!!!!!!!!!!!!
-    x_ac = Input(0.1)
-    x_lemac = Input(0)  #  NEED THIS INPUT FROM LIFTING SURFACE SCRIPT! FOR COMPLETE WING OF CURRENT AIRCR!!!!!!!
-    mac = Input(1)
+#  This block of code contains the inputs. ########---------------------------------------------------------------------
 #  TODO CONNECT ALL OF THIS TO MAIN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    AR = Input(12.0)     #  NEED THIS INPUT FROM CLASS II FOR CURRENT AIRCRAFT!!!!!!!!1
+    #: Below is the current COG position
+    #: :type: float
+    x_cg = Input(0.3)
+
+    #: Below is the current Aerodynamic Center position
+    #: :type: float
+    x_ac = Input(0.1)  #  NEED THIS INPUT FROM CLASS II FOR CURRENT AIRCRAFT!!!!!!!!
+
+    #: Below is the current leading edge of the MAC position
+    #: :type: float
+    x_lemac = Input(0)  #  NEED THIS INPUT FROM CLASS II FOR CURRENT AIRCRAFT!!!!!!!!
+
+    #: Below is the MAC length
+    #: :type: float
+    mac = Input(1.0)  #  NEED THIS INPUT FROM CLASS II FOR CURRENT AIRCRAFT!!!!!!!!
+
+    #: Below is the wing aspect ratio.
+    #: :type: float
+    AR = Input(12.0)     #  NEED THIS INPUT FROM CLASS II FOR CURRENT AIRCRAFT!!!!!!!!
+
+    #: Below is the wing span efficiency factor
+    #: :type: float
     e = Input(0.8)      #  NEED THIS INPUT FROM CLASS I FOR CURRENT A/C!!!!!!!!!
+
+    #: Below is the assumed zero lift drag coefficient
+    #: :type: float
     CD0 = Input(0.02)   #  NEED THIS FROM CLASS I!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    k_factor = Input(1) #  This is the k factor to correct the canard main wing C_Lalpha due to canard downwash.
-    SM = Input(0.05)    #  This is the input Safety Margin
-    AR_h = Input(5.0)   #  This is the assumed HT Aspect ratio.
-    e_h = Input(0.8)    #  This is the assumed span Efficieny Factor of the Tail.
-    lhc = Input(3.0)    #  This is the assumed tail arm to chord length ratio.
+
+    #: Below is the k factor to correct the canard main wing C_Lalpha due to canard downwash.
+    #: :type: float
+    k_factor = Input(1.0)
+
+    #: Below is the assumed Safety Margin.
+    #: :type: float
+    SM = Input(0.05)
+
+    #: Below is the HT aspect ratio.
+    #: :type: float
+    AR_h = Input(5.0)
+
+    #: Below is the assumed HT span efficiency factor.
+    #: :type: float
+    e_h = Input(0.8)
+
+    #: Below is the tail arm for a conventional tail aircraft.
+    #: :type: float
+    lhc = Input(3.0)
+
+    #: Below is the tail arm for a canard aircraft.
+    #: :type: float
     lhc_canard = Input(-3.0)
-    VhV_conv = 0.85     #  This is the speed ratio for a conventional tail aircraft.
-    VhV_canard = 1.0    #  This is the speed ratio for a canard aircraft.
 
+    #: Below is the speed ratio for a conventional tail aircraft.
+    #: :type: float
+    VhV_conv = 0.85
 
-    a_0 = 2*pi          # This is the assumed (thin) airfoil lift slope.
+    #: Below is the speed ratio for a canard aircraft.
+    #: :type: float
+    VhV_canard = 1.0
 
+    #: Below is the lift slope for a thin airfoil.
+    #: :type: float
+    a_0 = 2*pi
 
+    #: Below is the controllability lift coefficient of the wing at 1.2*V_s imported from wing. It is corrected in the
+    #: case of a canard aircraft below.
+    #: :type: float
+    Cl_w = Input(0.5) #  TODO CONNECT THIS TO WING AVL CALCULATION
 
-    Cl_w = Input(0.5)       #  This is the maximum lift coeficcent of the wing at 1.2*V_s IMPORT FROM WING.
-                            #  There is a correction for the main wing if canard is chosen.
     C_mac = Input(-0.32)    #  This is the C_m of the wing from AVL IMPORT FROM WING
     Cla_w = Input(5.14)     #  This is the lift curve slope of the wing from AVL. IMPORT FROM WING
     delta_xcg = Input(0.3)  #  This is the change in the cg location due to dropping a payload. IMPORT FROM CG EST
-    #Cla_h = Input(4.9)      # This is the lift curve slope of the tail. IMPORT FROM TAIL WING INSTANTIATION
 
-#  TODO In main code, get cla_h from AVL using wing primitive. -> NOT POSSIBLE? BC SH DETERMINED FROM THOSE EQUATIONS BELOW!
     configuration = Input('conventional', validator=val.OneOf(['canard', 'conventional']))
 
-   # @Attribute
-   # def Cla_w(self):
-   # #  This was the old method to estimate lift curve slope.
-   #     #  This estimates the lift slope of a low sweep, and speed 3D wing. THIS IS FOUND WITH AVL IN WING!!!!!!!!!
-   #     Cla_w = self.a_0/(1+(self.a_0 / (pi * self.AR * self.e) ))
-   #     return Cla_w
+
 
     @Attribute
     def x_cg_vs_mac(self):

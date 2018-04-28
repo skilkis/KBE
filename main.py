@@ -49,13 +49,25 @@ class UAV(Base):
 
     @Part
     def stability(self):
-        return ScissorPlot(x_cg=self.cg.x, x_ac=self.wing.wing.aerodynamic_center.x,
+        return ScissorPlot(x_cg=self.cg.x,
+                           x_ac=self.wing.wing.aerodynamic_center.x,
                            x_lemac=self.wing.wing.lemac.x,
-                           mac=self.wing.wing.mac_length)
+                           mac=self.wing.wing.mac_length,
+                           AR=12,
+                           e=0.8,
+                           AR_h=5.0,
+                           e_h=0.8,
+                           lhc=3.0,
+                           lhc_canard=-3.0,
+                           Cl_w = self.wing.lift_coef_control,
+                           C_mac = self.wing.controllability_c_m,
+                           Cla_w = self.wing.lift_coef_vs_alpha,
+                           delta_xcg = 0.3)
+#  TODO make relation for AR_h, and add dynamic validator.
 
     @Part
     def stabilizer_h(self):
-        return HorizontalStabilizer(position=translate(self.wing.position, 'x', self.stability.lhc_canard*self.wing.wing.mac_length), S_req=self.wing.S_req * self.stability.shs_req)
+        return HorizontalStabilizer(position=translate(self.wing.position, 'x', self.stability.lhc_canard*self.wing.wing.mac_length), S_req=self.wing.s_req * self.stability.shs_req)
 
     @Part
     def fuselage(self):

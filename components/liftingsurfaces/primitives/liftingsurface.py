@@ -18,11 +18,11 @@ __all__ = ["LiftingSurface"]
 
 class LiftingSurface(GeomBase):
     """ The required inputs for each instantiation are Wing Area, Aspect Ratio, Taper Ratio, TE offset , dihedral angle,
-wing twist and airfoil DAT file. Possible airfoils are in the folder 'airfoils', then within another folder, either
-'cambered', 'reflexed', or 'symmetric'. Feel free to add new airfoils. Also note, this primitive is instantiated in
-'wing.py', where you can perform an AVL analysis.
-The sign convention is +x pointing with direction of chord, +y pointing toward right wingtip, +z up.
-"""
+    wing twist and airfoil DAT file. Possible airfoils are in the folder 'airfoils', then within another folder, either
+    'cambered', 'reflexed', or 'symmetric'. Feel free to add new airfoils. Also note, this primitive is instantiated in
+    'wing.py', where you can perform an AVL analysis. The sign convention is +x pointing with direction of chord,
+    +y pointing toward right wingtip, +z up.
+    """
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'liftingsurface.png')
 
 #  This block of code contains the inputs. ########---------------------------------------------------------------------
