@@ -1,22 +1,20 @@
-#!C:\Python27
-#  This class will create the wing geometry based on the required:
-#  Wing Area (class I output), Aspect Ratio (class I in/output), taper ratio (assumed),
-#  dihedral angle (assumed/given), wing twist angle (assumed/given) and airfoil.
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
-
+#  Import ParaPy math, numpy and matplotlib Modules.
 from parapy.core import *
 from parapy.geom import *
 from math import *
-
-from primitives import LiftingSurface
-from avl import Geometry, Surface, Section, Point, Spacing, Session, Case, FileAirfoil
-import json
-from directories import *
 import numpy as np
 import matplotlib.pyplot as plt
+import json
 
+from primitives import LiftingSurface
+from directories import *
 from definitions import *
 from user import MyColors
+#  Import AVL wrapper written by Reno El Mendorp. https://github.com/renoelmendorp/AVLWrapper
+from avl import Geometry, Surface, Section, Point, Spacing, Session, Case, FileAirfoil
 
 __author__ = "Nelson Johnson"
 __all__ = ["Wing"]
@@ -24,47 +22,69 @@ __all__ = ["Wing"]
 
 # class Wing(GeomBase, WingPowerLoading, ClassOne):  # TODO experiment if this works, multiple inheritance
 class Wing(Component):
+    """ This class will create the wing geometry based on the required:
+    Wing Area (class I output), Aspect Ratio (class I input), taper ratio (assumed),
+    dihedral angle (assumed), wing twist angle (assumed) and airfoil selection.
+    It also can perform an avl analysis on the wing to obtain the linear value of C_L vs alpha.
+    """
 
-    WS_pt = Input(100.0)  # MUST GET THIS INPUT FROM CLASS I!!!!!!!!!!!!!!!!!!!!!!!!!!
-    MTOW = Input(25.0)  # MUST GET THIS INPUT FROM CLASS I!!!!!!!!!!!!!!!!!!!!!!!!!!
+#  This block of code contains the inputs. ########---------------------------------------------------------------------
+    #: Below is the required wing loading from the class I weight estimation.
+    #: :type: float
+    WS_pt = Input(100.0, validator=val.Positive())
 
-    # @Input
-    # def MTOW(self):
-    #
+    #: Below is the required MTOW from the class I weight estimation.
+    #: :type: float
+    mtow = Input(25.0, validator=val.Positive())
 
     @Input
-    def MTOW(self):
+    def mtow(self):
+        #  When wing is instantiated in main without a supplied mtow, this attribute pulls the value from the ancestor.
         return 25 if self.is_root else self.get_ancestor_value('mtow')
-    #
 
-    # @Attribute
-    # def is_root(self):
-    #     if self.tree_level == 0:
-    #         return True
-    #     else:
-    #         return False
+    #: Below is the corresponding aspect ratio from the wing and power loading.
+    #: :type: int
+    AR = Input(12, validator=val.Positive())
 
+    #: Below is the corresponding stall speed from the wing and power loading.
+    #: :type: float
+    V_s = Input(15.0, validator=val.Positive())
 
-    AR = Input(12)  # MUST GET THIS FROM CLASS i!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    V_s = Input(15.0)  # MUST GET THIS INPUT FROM CLASS I!!!!!!!!!!!!!!!!!!!!!!!!!!
-    #  Above is the required stall speed from the class I estimation.
-
+    #: Below is the chosen taper ratio.
+    #: :type: float
     taper = Input(0.3, validator=val.Positive())
-    #  Above is the User Requested Taper Ratio.
+
+    #: Below is the chosen dihedral angle.
+    #: :type: float
     dihedral = Input(5.0, validator=val.Range(-20.0, 20.0))
-    #  Above is the User Required Dihedral Angle.
-    twist = Input(2.0, validator=val.Range(-10, 10.0))
-    #  Above is the twist of the tip section with respect to the root section.
+
+    #: Below is the chosen twist angle.
+    #: :type: float
+    twist = Input(-2.0, validator=val.Range(-10, 10.0))
+
+    #: Below is the folder for the selected airfoil.
+    #: :type: str
     airfoil_type = Input('cambered', validator=val.OneOf(['cambered', 'reflexed', 'symmetric']))
-    #  Above is the standard airfoil type.
+
+    #: Below is the file name (without extention) of the selected airfoil.
+    #: :type: str
     airfoil_choice = Input('SA7036')
-    #  Above the Standard airfoil. The Cambered Symmetric and reflexed airfoil database is in folder 'airfoils'
+
+    #: Below is the chosen trailing edge offset.
+    #: :type: NoneType or float
     offset = Input(None)
-#  TODO add validators for inputs
+
+    #: Below is the ISA STD sea level density.
+    #: :type: float
     rho = Input(1.225)
-    #  Above is the density used to calculate the C_L for the controlability curve
+
+    #: Below is the radius for a sphere showing the COG.
+    #: :type: float
     cog_radius = Input(0.05)    #  This is the radius of the sphere representing the COG.
     #  TODO Fix CH10 bug?
+
+    #: Below is the assumed factor of the semispan in which the fuselage extends over the wing.
+    #: :type: float
     fuse_width_factor = Input(0.05)      #  This is an assumed factor relating the part of the wing covered by fuse to semispan
     # Wf_wing = Input(0.2)                #  This is the mass fraction of the wing. TODO CALULATE THIS PROPERLY/ADD TO MAIN/CLASS I
     hide_bbox = Input(True)
@@ -78,7 +98,7 @@ class Wing(Component):
 
     @Attribute
     def weight(self):
-        return 0.2*self.MTOW
+        return 0.2*self.mtow
 
     @Attribute
     def center_of_gravity(self):
@@ -93,12 +113,12 @@ class Wing(Component):
     @Attribute
     def S_req(self):
         # This calculation of the required TOTAL wing area from the design point.
-        return ((self.MTOW * 9.81)/self.WS_pt) # TODO wing loading is in N/m^2 thus we have to have a global variable for g
+        return ((self.mtow * 9.81) / self.WS_pt) # TODO wing loading is in N/m^2 thus we have to have a global variable for g
 
     @Attribute
     def C_L_cont(self):
         #  This is the Required C_L from the lift equation at 1.2*V_s @ MTOW for the controllability curve of scissor plot.
-        clreq = 2*9.81*self.MTOW/(self.rho*((1.2*self.V_s)**2)*self.S_req)
+        clreq = 2 * 9.81 * self.mtow / (self.rho * ((1.2 * self.V_s) ** 2) * self.S_req)
         return clreq
 
     @Part
@@ -175,7 +195,7 @@ class Wing(Component):
     @Attribute
     def tip_section(self):
         #  Here we define the tip AVL section with proper location.
-        return Section(leading_edge_point=Point(self.wing.semispan * tan(radians(self.wing.LE_sweep)),
+        return Section(leading_edge_point=Point(self.wing.semispan * tan(radians(self.wing.le_sweep)),
                                                 self.wing.semispan,
                                                 self.wing.semispan * tan(radians(self.dihedral))),
                        chord=self.wing.root_chord * self.taper,
@@ -197,7 +217,7 @@ class Wing(Component):
     def wing_geom(self):
         return Geometry(name="Test wing",
                         reference_area=self.S_req,
-                        reference_chord=self.wing.mac,
+                        reference_chord=self.wing.mac_length,
                         reference_span=self.wing.semispan * 2.0,
                         reference_point=Point(0.0, 0.0, 0.0),
                         surfaces=[self.wing_surface])

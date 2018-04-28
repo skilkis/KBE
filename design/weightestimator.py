@@ -7,7 +7,7 @@ from parapy.core import *
 # Other Modules
 from directories import *
 
-__author__ = "Nelson Johnson"
+__author__ = ["Nelson Johnson", "Şan Kılkış"]
 __all__ = ["ClassOne", "ClassTwo"]
 
 
