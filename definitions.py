@@ -22,7 +22,8 @@ class Component(GeomBase):
 
     @Attribute
     def component_type(self):
-        """ An identifier to be able to lump masses together.\n
+        """ An identifier to be able to lump masses together.
+
         |
         Possible entries:
 
@@ -34,9 +35,9 @@ class Component(GeomBase):
         |   'prop'
         |   'battery'
         |   'electronics'
-        |   """
+        """
 
-        return 'Not Classified'
+        return None
 
     @Attribute
     def weight(self):
@@ -82,17 +83,43 @@ class Component(GeomBase):
                          position=self.text_label_position, hidden=self.hide_labels)
 
     @Attribute(private=True)
-    def cog_shpere_import(self):
+    def cog_sphere_import(self):
         return Sphere(radius=0.05,
                       position=XOY,
                       color='Red')
 
-    # @Part
-    # def cog_sphere(self):
-    #     return TranslatedShape(shape_in=self.cog_shpere_import,
-    #                            displacement=Vector(self.center_of_gravity.x,
-    #                                                self.center_of_gravity.y,
-    #                                                self.center_of_gravity.z))
+
+class ExternalSurface(GeomBase):
+
+    @Attribute
+    def surface_type(self):
+        """ An identifier to be able to lump areas together.
+
+        |
+        Possible entries:
+
+        |   'wing'
+        |   'fuselage'
+        |   'vt'
+        |   'ht'
+        |
+        """
+
+        return 'wing'
+
+    @Attribute
+    def wetted_area(self):
+        """ Returns the total wetted area of the external_part to be able to perform drag and weight estimations
+
+        :return: Total wetted area of the external_part in SI sq. meter
+        :rtype: float
+        """
+        return 0
+
+    @Part
+    def external_part(self):
+        """  The final shape of a ExternalSurface class which is to be exported """
+        return Box(0, 0, 0)
 
 
 if __name__ == '__main__':

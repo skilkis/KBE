@@ -18,6 +18,7 @@ from directories import *
 __all__ = ["Battery", "show_primitives"]
 
 # TODO change show_primitives to be inside class definition and protected variable
+# TODO remove error message since it is already handled by a validator
 
 # A parameter for debugging, turns the visibility of miscellaneous parts ON/OFF
 show_primitives = False  # type: bool
@@ -36,6 +37,9 @@ class Battery(Component):
     # position = Input(Position(Point(0, 0, 0)))
     label = Input('LiPo Battery')
 
+    @Attribute
+    def component_type(self):
+        return 'battery'
 
     @Attribute
     def weight(self):
