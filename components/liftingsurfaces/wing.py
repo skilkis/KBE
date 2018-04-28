@@ -80,29 +80,35 @@ class Wing(Component):
 
     #: Below is the radius for a sphere showing the COG.
     #: :type: float
-    cog_radius = Input(0.05)    #  This is the radius of the sphere representing the COG.
+    cog_radius = Input(0.05)
     #  TODO Fix CH10 bug?
 
-    #: Below is the assumed factor of the semispan in which the fuselage extends over the wing.
+    #: Below is the assumed factor of the semispan which the fuselage extends over the wing.
     #: :type: float
-    fuse_width_factor = Input(0.05)      #  This is an assumed factor relating the part of the wing covered by fuse to semispan
-    # Wf_wing = Input(0.2)                #  This is the mass fraction of the wing. TODO CALULATE THIS PROPERLY/ADD TO MAIN/CLASS I
+    fuse_width_factor = Input(0.05)
+
+    #: Below is the a switch to hide/show the bbox of the wing section within the fuselage.
+    #: :type: boolean
     hide_bbox = Input(True)
-    mesh_deflection = Input(0.0001)  # Default value is an optimum point between a good quality render and performance
 
-    # TODO Add a wing weight estimator based on density
+    #: Below is the chosen mesh deflection. It's is an optimum point between a good quality render and performance
+    #: :type: float
+    mesh_deflection = Input(0.0001)
 
+#  This block of Attributes calculates the planform parameters. ########------------------------------------------------
     @Attribute
     def component_type(self):
+        #  This names the wing 'wing' as its component type.
         return 'wing'
 
     @Attribute
     def weight(self):
+        #  TODO connect this with main!!!!!!!!!!
         return 0.2*self.mtow
 
     @Attribute
     def center_of_gravity(self):
-        """ Location of the center of gravity w.r.t the origin
+        """ Location of the center of gravity w.r.t the origin (root airfoil leading edge).
         :return: Location Tuple in SI meter
         :rtype: Point
         """
@@ -111,20 +117,23 @@ class Wing(Component):
         return pos
 
     @Attribute
-    def S_req(self):
-        # This calculation of the required TOTAL wing area from the design point.
-        return ((self.mtow * 9.81) / self.WS_pt) # TODO wing loading is in N/m^2 thus we have to have a global variable for g
+    def s_req(self):
+        # This is the calculation of the required TOTAL wing area from the design point.
+        return (self.mtow * 9.81) / self.WS_pt
+        # TODO wing loading is in N/m^2 thus we have to have a global variable for g
 
     @Attribute
-    def C_L_cont(self):
-        #  This is the Required C_L from the lift equation at 1.2*V_s @ MTOW for the controllability curve of scissor plot.
-        clreq = 2 * 9.81 * self.mtow / (self.rho * ((1.2 * self.V_s) ** 2) * self.S_req)
+    def lift_coef_control(self):
+        #  This is the Required C_L from the lift equation at 1.2*V_s @ MTOW for the controllability curve of
+        # the scissor plot.
+        clreq = 2 * 9.81 * self.mtow / (self.rho * ((1.2 * self.V_s) ** 2) * self.s_req)
         return clreq
 
     @Part
     def wing(self):
-        """ Instantiates a primitive LiftingSurface with the inputs given on the right-hand side of the wing """
-        return LiftingSurface(S=self.S_req * 0.5,  # Area is halved because lifting surface generates one wing
+        """ This part instantiates a primitive (LiftingSurface) with the inputs given to make the right-hand side of the
+        wing. The input area is halved because lifting surface generates one wing with given area """
+        return LiftingSurface(S=self.s_req * 0.5,
                               AR=self.AR,
                               taper=self.taper,
                               dihedral=self.dihedral,
@@ -136,6 +145,7 @@ class Wing(Component):
 
     @Part
     def left_wing(self):
+        #  This part mirrors the right wing across the X-Z plane to make the left wing.
         return MirroredShape(shape_in=self.wing.final_wing,
                              reference_point=self.wing.position,
                              vector1=Vector(1, 0, 0),
@@ -156,17 +166,17 @@ class Wing(Component):
 
     @Attribute(private=True)
     def get_wingfuse_bounds(self):
-        #  This attribute is obtaining (the dimensions of) a bounded box at a fuselaage width factor of the semispan
-        #  which will be used to size the fuselage frames. These frames drive the shape of the fuselage.
-        inner_part = PartitionedSolid(solid_in = self.wing.final_wing,
-                                      tool = self.right_cut_plane).solids[0].faces[1].wires[0]
+        #  This attribute is obtaining (the dimensions of) a bounded box at a fuselage width factor of the semispan
+        #  which will be used to size the local fuselage frames which drive the shape of the fuselage.
+        inner_part = PartitionedSolid(solid_in=self.wing.final_wing,
+                                      tool=self.right_cut_plane).solids[0].faces[1].wires[0]
         #  Above obtains a cross section of the wing, at the specified fuselage width factor.
 
         mirrored_part = MirroredShape(shape_in=inner_part, reference_point=self.wing.final_wing.position, vector1=Vector(1, 0, 0), vector2=Vector(0, 0, 1))
-        root = self.wing.root_airfoil
         #  Above mirrors the cross section about the aircraft symmetry plane.
+        root = self.wing.root_airfoil
         first_iter = Fused(inner_part, root)
-        #  Fusion of the three wing corss sections (thrid = root) done in 2 parts to avoid parapy errors.
+        #  Fusion of the three wing cross sections done in 2 Fused operations to avoid ParaPy errors.
         second_iter = Fused(first_iter, mirrored_part)
 
         bounds = second_iter.bbox
@@ -175,6 +185,7 @@ class Wing(Component):
 
     @Part
     def internal_shape(self):
+        #  This attribute creates the bounding box for the part of the wing within the fuselage.
         return Box(width=self.get_wingfuse_bounds.width,
                    height=self.get_wingfuse_bounds.height,
                    length=self.get_wingfuse_bounds.length,
@@ -184,9 +195,12 @@ class Wing(Component):
                    transparency=0.5,
                    hidden=self.hide_bbox)
 
-    # --- AVL Geometry & Analysis: ------------------------------------------------------------------------------------
+
+# --- AVL Geometry & Analysis: -----------------------------------------------------------------------------------------
+#  In this block, the AVL analysis is setup, run and C_Lalpha is extracted.
     @Attribute
     def root_section(self):
+        #  This defines the root section with the chosen airfoil.
         return Section(leading_edge_point=Point(0, 0, 0),
                        chord=self.wing.root_chord,
                        airfoil=FileAirfoil(get_dir(os.path.join('airfoils', self.airfoil_type,
@@ -194,7 +208,7 @@ class Wing(Component):
 
     @Attribute
     def tip_section(self):
-        #  Here we define the tip AVL section with proper location.
+        #  Here we define the tip AVL section with proper location and airfoil.
         return Section(leading_edge_point=Point(self.wing.semispan * tan(radians(self.wing.le_sweep)),
                                                 self.wing.semispan,
                                                 self.wing.semispan * tan(radians(self.dihedral))),
@@ -205,6 +219,8 @@ class Wing(Component):
 
     @Attribute
     def wing_surface(self):
+        #  Here we define the wing surface using a symmetry plane at y=0. Here the number of vortecies and their
+        # chordwise and spanwise spacing is also set.
         return Surface(name="Wing",
                        n_chordwise=12,
                        chord_spacing=Spacing.cosine,
@@ -215,8 +231,9 @@ class Wing(Component):
 
     @Attribute
     def wing_geom(self):
+        #  Here we define the AVL geometry.
         return Geometry(name="Test wing",
-                        reference_area=self.S_req,
+                        reference_area=self.s_req,
                         reference_chord=self.wing.mac_length,
                         reference_span=self.wing.semispan * 2.0,
                         reference_point=Point(0.0, 0.0, 0.0),
@@ -224,6 +241,8 @@ class Wing(Component):
 
     @Attribute
     def alpha_cases(self):
+        #  Here we define the run cases for AVL. We are running input cases alpha from 0 to 10 with 25 data points, at
+        #  the speed required for the controllability curve (1.2*v_s).
         alphas = np.linspace(0.0, 10.0, 25)
         alpha_case = []
         for i in range(0, len(alphas)):
@@ -232,24 +251,30 @@ class Wing(Component):
 
     @Attribute
     def avl_session(self):
+        #  Here we define the AVL session with the cases above.
         return Session(geometry=self.wing_geom, cases=self.alpha_cases)
 
     @Attribute
     def show_avlgeom(self):
+        #  Here we show the AVL geometry. NOTE: THERE IS A BUG HERE, IF DOUBLE CLICKED IN GUI, IT SHOWS BUT CAUSES
+        #  PYTHON TO FREEZE. THE CODE MUST BE STOPPED AND RESTARTED IF THE GEOMETRY IS SHOWN. TODO FIX THIS IF POSSIBLE
         self.avl_session.show_geometry()
         return 'Done'
 
     @Attribute
     def results(self):
+        #  Here, the results are extracted.
         return self.avl_session.get_results()
 
     @Attribute
-    def cl_vs_alpha(self):
+    def lift_coef_vs_alpha(self):
+        #  Here, the cl vs alpha plot is created and the contant C_L vs alpha value is found.
         cl_alpha_array = (sorted([[self.results[alpha]['Totals']['Alpha'], self.results[alpha]['Totals']['CLtot']]
-                            for alpha in self.results], key=lambda f: float(f[0])))
-
+                                  for alpha in self.results], key=lambda f: float(f[0])))
+    #  Above we extract the c_l and angle of attack values.
         alpha_deg = [i[0] for i in cl_alpha_array]
         alpha_rad = [radians(i[0]) for i in cl_alpha_array]
+        #  Conversion to radians.
         cl = [i[1] for i in cl_alpha_array]
 
         # Plotting
@@ -261,34 +286,35 @@ class Wing(Component):
         plt.ylabel('Lift Coefficient [-]')
         plt.show()
 
-        # Calculating the Gradient w/ a quick list comprehension (NOTE: THIS VALUE IS IN RADIANS)
+        # Below we calculate the Gradient with list comprehension (NOTE: THIS VALUE IS IN RADIANS)
         cl_alpha = np.mean([(cl[i+1] - cl[i]) / (alpha_rad[i+1] - alpha_rad[i]) for i in range(0, len(alpha_rad) - 1)])
         return cl_alpha
 
     @Attribute
-    def C_L_cont_index(self):
+    def lift_coef_control_index(self):
         #  This attribute returns the index of the AVL data corresponding to the case when C_L is closest to the
         #  required C_L_cont required by the lift equation for the controllability curve.
         cll_array = (sorted([[self.results[alpha]['Totals']['Alpha'], self.results[alpha]['Totals']['CLtot']]
                             for alpha in self.results], key=lambda f: float(f[1])))
         cll = [i[1] for i in cll_array]
-        error = [abs(cll[i] - self.C_L_cont) for i in range(0, len(cll))]
+        error = [abs(cll[i] - self.lift_coef_control) for i in range(0, len(cll))]
         cl_cont_index = error.index(min(error))
         return cl_cont_index
 
     @Attribute
-    #  Now we must get the C_m from avl corresponding to C_L_cont derived above.
-    def controllability_C_m(self):
-        casename = self.results['alpha%s' % self.C_L_cont_index]['Totals']['Cmtot']
-        return casename
+    #  Now we must get the pitching moment of the wing about its aerodynamic center from avl corresponding to
+    # lift_coef_cont derived above.
+    def controllability_c_m(self):
+        case_name = self.results['alpha%s' % self.lift_coef_control_index]['Totals']['Cmtot']
+        return case_name
 
     @Attribute
     def write_results(self):
+        #  Here the results are written into a .json file.
         results = self.avl_session.get_results()
         with open(os.path.join(DIRS['USER_DIR'], 'results', 'avl_wing_out.json'), 'w') as f:
             f.write(json.dumps(results))
         return 'Done'
-#  TODO add get_dir to directory here above, such that the output file goes to the user folder.
 
 
 if __name__ == '__main__':
