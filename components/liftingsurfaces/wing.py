@@ -229,7 +229,7 @@ class Wing(ExternalBody):
 
     @Part
     def external_shape(self):
-        return Fused(self.wing.final_wing, self.left_wing)
+        return Fused(self.wing.final_wing, self.left_wing, hidden=True)
 
 
 # --- AVL Geometry & Analysis: -----------------------------------------------------------------------------------------
