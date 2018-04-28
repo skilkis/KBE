@@ -38,7 +38,7 @@ class Motor(Component):
 
     @Attribute
     def component_type(self):
-        return 'motor'
+        return 'prop'
 
     @Attribute
     def specs(self):

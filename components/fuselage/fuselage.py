@@ -6,6 +6,7 @@ from parapy.core import *  # / Required ParaPy Modules
 
 from user import *
 from components.fuselage.primitives import *
+from definitions import *
 from directories import *
 
 __author__ = "Şan Kılkış"
@@ -21,7 +22,7 @@ __all__ = ["Fuselage"]
 # ^ Potential knowledge base for materials
 
 
-class Fuselage(GeomBase):
+class Fuselage(Component):
 
     # TODO Class description and use cases
 
@@ -52,6 +53,10 @@ class Fuselage(GeomBase):
     #: Sets the color of the fuselage (Overwritten from the default yellow)
     #: :type: str or Tuple
     color = Input(MyColors.light_grey)
+
+    @Attribute
+    def component_type(self):
+        return 'fuselage'
 
     @Attribute(private=True)
     def frame_builder(self):

@@ -31,6 +31,9 @@ class VerticalStabilizer(Component):
     WF_VT = Input(0.1)  # This is the weight fraction of the HT.
     MTOW = Input(25.0)  # MUST GET THIS INPUT FROM CLASS I!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+    @Attribute
+    def component_type(self):
+        return 'vt'
 
     @Attribute
     def weight(self):

@@ -125,12 +125,23 @@ class UAV(Base):
         """
 
         children = self.get_children()
+
+        # Creating dummy lists to store all weights and respective c.g. locations
         weight = []
         cg = []
-        weight_dict = {'WEIGHTS': {'wing': 0,
-                                   'payload': [],
-                                   'prop': []},
+
+        # Defining the structure of the weight_dictionary
+        weight_dict = {'WEIGHTS': {'wing': 0.0,
+                                   'fuselage': 0.0,
+                                   'vt': 0.0,
+                                   'ht': 0.0,
+                                   'payload': 0.0,
+                                   'prop': 0.0,
+                                   'battery': 0.0,
+                                   'electronics': 0.0,
+                                   'misc': 0.0},
                        'CG': Point(0, 0, 0)}
+
         for _child in children:
             if hasattr(_child, 'weight') and hasattr(_child, 'center_of_gravity'):
                 weight.append(_child.getslot('weight'))
@@ -138,8 +149,33 @@ class UAV(Base):
 
                 if _child.getslot('component_type') == 'wing':
                     weight_dict['WEIGHTS']['wing'] = weight_dict['WEIGHTS']['wing'] + (_child.getslot('weight'))
+
+                elif _child.getslot('component_type') == 'fuselage':
+                    weight_dict['WEIGHTS']['fuselage'] = weight_dict['WEIGHTS']['fuselage'] + (_child.getslot('weight'))
+
+                elif _child.getslot('component_type') == 'vt':
+                    weight_dict['WEIGHTS']['vt'] = weight_dict['WEIGHTS']['vt'] + (_child.getslot('weight'))
+
+                elif _child.getslot('component_type') == 'ht':
+                    weight_dict['WEIGHTS']['ht'] = weight_dict['WEIGHTS']['ht'] + (_child.getslot('weight'))
+
+                elif _child.getslot('component_type') == 'payload':
+                    weight_dict['WEIGHTS']['payload'] = weight_dict['WEIGHTS']['payload'] + (_child.getslot('weight'))
+
+                elif _child.getslot('component_type') == 'prop':
+                    weight_dict['WEIGHTS']['prop'] = weight_dict['WEIGHTS']['prop'] + (_child.getslot('weight'))
+
+                elif _child.getslot('component_type') == 'battery':
+                    weight_dict['WEIGHTS']['battery'] = weight_dict['WEIGHTS']['battery'] + (_child.getslot('weight'))
+
+                elif _child.getslot('component_type') == 'electronics':
+                    weight_dict['WEIGHTS']['electronics'] = weight_dict['WEIGHTS']['electronics'] + \
+                                                            (_child.getslot('weight'))
+
                 else:
-                    weight_dict['WEIGHTS'][_child.label] = _child.getslot('weight')
+                    weight_dict['WEIGHTS']['misc'] = weight_dict['WEIGHTS']['misc'] + _child.getslot('weight')
+                    print Warning("%s does not have an Attribute 'component_type'"
+                                  "it was thus added to the 'misc' category in the weight_dictionary" % _child)
 
         total_weight = sum(weight)
         weight_dict['WEIGHTS']['MTOW'] = total_weight
@@ -152,6 +188,13 @@ class UAV(Base):
         weight_dict['CG'] = Point(cg_x, cg_y, cg_z)
 
         return weight_dict
+
+    def wetted_areas(self):
+        """ Retrieves all wetted surface areas of instantiated children with
+
+        :return:
+        """
+        return 1
 
     def validate_geometry(self):
         children = self.get_children()

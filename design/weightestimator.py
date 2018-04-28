@@ -82,7 +82,7 @@ class ClassTwo(Base):
 
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'piechart.png')
 
-    #: Below is the MTOW of the UAV.
+    #: Below is the maximum take-off weight of the UAV.
     #: :type: float
     weight_mtow = Input(2.0)
 
@@ -135,7 +135,7 @@ class ClassTwo(Base):
         return self.weight_structural + self.weight_structural
 
     @Attribute
-    def weight_wings(self):
+    def weight_wing(self):
         #  The wing weight is found by multiplying its area with the weight to area factor.
         return self.structural_weight_per_area*self.S
 

@@ -36,6 +36,10 @@ class FlightController(Component):
                                color = 'Green')
 
     @Attribute
+    def component_type(self):
+        return 'electronics'
+
+    @Attribute
     def center_of_gravity(self):
         return self.flightcontroller.cog
     @Attribute

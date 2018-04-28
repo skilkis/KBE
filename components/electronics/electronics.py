@@ -19,6 +19,10 @@ class Electronics(Component):
     motor_in = Input((Motor(), Motor()))    #  The following input will work if tuple list or set.
 
     @Attribute
+    def component_type(self):
+        return 'electronics'
+
+    @Attribute
     def amp_req(self):
         #  This is the required amperage for both engines.
         amp_req = 0

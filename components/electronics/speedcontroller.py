@@ -34,6 +34,10 @@ class SpeedController(Component):
     h_navio = 0.017     #  17mm height assumed.
     #  For box function: Width is x direction, length is y direction, height is z direction.
 
+    @Attribute
+    def component_type(self):
+        return 'electronics'
+
 
     @Attribute
     def esc_weight_plot(self):

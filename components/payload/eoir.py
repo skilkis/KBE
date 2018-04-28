@@ -77,6 +77,10 @@ class EOIR(Component):
         return selected_camera
 
     @Attribute
+    def component_type(self):
+        return 'payload'
+
+    @Attribute
     def weight(self):
         return self.specs['weight']
 

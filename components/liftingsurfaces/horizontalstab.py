@@ -24,7 +24,9 @@ class HorizontalStabilizer(Component):
     MTOW = Input(25.0)  # MUST GET THIS INPUT FROM CLASS I!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
-
+    @Attribute
+    def component_type(self):
+        return 'ht'
 
     @Attribute
     def weight(self):

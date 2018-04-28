@@ -27,13 +27,13 @@ class Component(GeomBase):
         Possible entries:
 
         |   'wing'
+        |   'fuselage'
         |   'vt'
         |   'ht'
         |   'payload'
         |   'prop'
         |   'battery'
         |   'electronics'
-        |   ''
         |   """
 
         return 'Not Classified'

@@ -87,6 +87,10 @@ class Propeller(Component):
         return diameter
 
     @Attribute
+    def component_type(self):
+        return 'payload'
+
+    @Attribute
     def weight(self):
         """ No reliable source of information could be obtained for propeller weight, thus it is neglected """
         return 0
