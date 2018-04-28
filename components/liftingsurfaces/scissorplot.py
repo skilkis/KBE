@@ -66,14 +66,6 @@ class ScissorPlot(GeomBase):
     #: :type: float
     e_h = Input(0.8, validator=val.Positive())
 
-    #: Below is the tail arm for a conventional tail aircraft.
-    #: :type: float
-    lhc = Input(3.0)
-
-    #: Below is the tail arm for a canard aircraft.
-    #: :type: float
-    lhc_canard = Input(-3.0)
-
     #: Below is the speed ratio for a conventional tail aircraft.
     #: :type: float
     VhV_conv = sqrt(0.85)
@@ -105,6 +97,15 @@ class ScissorPlot(GeomBase):
     #: Below is a switch to determine the configuration.
     #: :type: str
     configuration = Input('conventional', validator=val.OneOf(['canard', 'conventional']))
+
+    @Input
+    def lhc(self):
+        """ Derived input of the non-dimensionalized tail arm based on configuration choice
+
+        :return: Non-dimensional tail arm
+        :rtype: float
+        """
+        return -3.0 if self.configuration is 'canard' else 3.0
 
     @Attribute
     def x_cg_vs_mac(self):
@@ -163,7 +164,7 @@ class ScissorPlot(GeomBase):
         :return: List of values of X_cg
         :rtype: list
         """
-        values = np.linspace(-5, 5, 20)
+        values = np.linspace(-5, 5, 100)
         return values
 
     @Attribute
@@ -181,9 +182,9 @@ class ScissorPlot(GeomBase):
                                                      (self.VhV_conv ** 2)))
                 shs_stab.append(shs_conv)
             else:
-                shs_canard = (self.xcg_range[i] / ((self.cla_h / self.cla_w_canard) * self.lhc_canard *
+                shs_canard = (self.xcg_range[i] / ((self.cla_h / self.cla_w_canard) * self.lhc *
                                                    self.VhV_canard ** 2)) - \
-                             ((self.x_ac - self.SM) / ((self.cla_h / self.cla_w_canard) * self.lhc_canard *
+                             ((self.x_ac - self.SM) / ((self.cla_h / self.cla_w_canard) * self.lhc *
                                                        (self.VhV_canard ** 2)))
                 shs_stab.append(shs_canard)
 
@@ -203,8 +204,8 @@ class ScissorPlot(GeomBase):
                                                                     (self.VhV_conv ** 2)))
                 shs_c.append(shs_conv)
             else:
-                shs_canard = (self.xcg_range[i] / ((self.cl_h / self.Cl_w) * self.lhc_canard * self.VhV_canard ** 2))\
-                             + (((self.C_mac / self.Cl_w) - self.x_ac) / ((self.cl_h / self.Cl_w) * self.lhc_canard *
+                shs_canard = (self.xcg_range[i] / ((self.cl_h / self.Cl_w) * self.lhc * self.VhV_canard ** 2))\
+                             + (((self.C_mac / self.Cl_w) - self.x_ac) / ((self.cl_h / self.Cl_w) * self.lhc *
                                                                           (self.VhV_canard ** 2)))
                 shs_c.append(shs_canard)
 
@@ -215,7 +216,7 @@ class ScissorPlot(GeomBase):
         #  TODO add error if there's a negative Sh/S output. Solution is to increase Cl_h or tail arm or reduce Cl_w
         """ This attribute will calculate the required Sh/S based on the required cg shift.
         :return: Required Sh/S.
-        :rtype: list
+        :rtype: float
         """
         if self.configuration is 'conventional':
             shs_req_sm = (self.delta_xcg + self.SM - (self.C_mac / self.Cl_w)) / \
@@ -224,7 +225,7 @@ class ScissorPlot(GeomBase):
         else:
             shs_req_sm = (self.delta_xcg + self.SM - (self.C_mac / self.Cl_w)) / \
                       (((self.cla_h / self.Cla_w) - (self.cl_h / self.Cl_w)) * (self.VhV_canard ** 2) *
-                       self.lhc_canard)
+                       self.lhc)
 
         return shs_req_sm
 
@@ -235,16 +236,17 @@ class ScissorPlot(GeomBase):
         xcg_vs_shs_control = interp1d(self.shs_control, self.xcg_range, kind='linear')
         xcg_vs_shs_stability = interp1d(self.shs_stability, self.xcg_range, kind='linear')
 
-        shs_range = np.linspace(0, 1, 100)
+        shs_range = np.linspace(0, max(self.shs_control), 100)
         stability_criteria = []
         for i in shs_range:
-            _stab_pnt = float(xcg_vs_shs_stability(i))
-            _cont_pnt = float(xcg_vs_shs_control(i))
-            if _cont_pnt <= self.x_cg_vs_mac <= _stab_pnt:
-                _current_margin = _stab_pnt - _cont_pnt
-                midpoint = _current_margin / 2.0 + _cont_pnt
-                error = abs(self.x_cg_vs_mac - midpoint)
-                stability_criteria.append([i, _cont_pnt, _stab_pnt, _current_margin, error])
+            if self.xcg_range[0] <= self.x_cg_vs_mac <= self.xcg_range[-1]:
+                _stab_pnt = float(xcg_vs_shs_stability(i))
+                _cont_pnt = float(xcg_vs_shs_control(i))
+                if _cont_pnt <= self.x_cg_vs_mac <= _stab_pnt:
+                    _current_margin = _stab_pnt - _cont_pnt
+                    midpoint = _current_margin / 2.0 + _cont_pnt
+                    error = abs(self.x_cg_vs_mac - midpoint)
+                    stability_criteria.append([i, _cont_pnt, _stab_pnt, _current_margin, error])
 
         if len(stability_criteria) != 0:
             stability_criteria = sorted(stability_criteria, key=lambda x: x[3])

@@ -53,17 +53,18 @@ class UAV(Base):
                            e=0.8,
                            AR_h=5.0,
                            e_h=0.8,
-                           lhc=3.0,
-                           lhc_canard=-3.0,
                            Cl_w=self.wing.lift_coef_control,
                            C_mac=self.wing.controllability_c_m,
                            Cla_w=self.wing.lift_coef_vs_alpha,
-                           delta_xcg=0.3)
+                           delta_xcg=0.3,
+                           configuration='canard')
 #  TODO make relation for AR_h, and add dynamic validator.
 
     @Part
     def stabilizer_h(self):
-        return HorizontalStabilizer(position=translate(self.wing.position, 'x', self.stability.lhc_canard*self.wing.wing.mac_length), S_req=self.wing.s_req * self.stability.shs_req)
+        return HorizontalStabilizer(position=translate(self.wing.position,
+                                                       'x', self.stability.lhc * self.wing.wing.mac_length),
+                                    S_req=self.wing.s_req * self.stability.shs_req)
 
     @Part
     def fuselage(self):
@@ -149,11 +150,6 @@ class UAV(Base):
     @Attribute
     def areas(self):
         return self.sum_area()
-
-    # @Attribute
-    # def motor_loc(self):
-    #     if self.motor
-    #     return self.motor_location()
 
     def weight_and_balance(self):
         """ Retrieves all relevant parameters from children with `weight` and `center_of_gravity` attributes and then
