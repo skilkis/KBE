@@ -7,6 +7,7 @@ from parapy.core import *
 # Other Modules
 from directories import *
 
+__author__ = "Nelson Johnson"
 __all__ = ["ClassOne", "ClassTwo"]
 
 
@@ -67,7 +68,7 @@ class ClassOne(Base):
     def weight_payload(self):
         if self.weight_target == 'mtow':
             m_pl_derived = 0.2103 * self.target_value - 0.1261
-            #  Estimation of m_pl from MTOW with reveresed Eq.
+            #  Estimation of m_pl from MTOW with reversed Eq.
             return m_pl_derived
         elif self.weight_target == 'payload':
             return self.target_value
@@ -75,28 +76,49 @@ class ClassOne(Base):
 
 class ClassTwo(Base):
     """A simple Class-II component weight estimation with values :attr:`mtow`,.....
-    The propusion, battery, avionics masses and payload masses already calculated, the remaining wieght from MTOW
+    The propulsion, battery, electronics and payload masses are already calculated, the remaining weight from MTOW
     is split between the wings and the fuselage.
     """
 
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'piechart.png')
 
+    #: Below is the MTOW of the UAV.
+    #: :type: float
     weight_mtow = Input(2.0)
-    weight_payload = Input(0.1)        #  This is the payload mass.
-    weight_prop = Input(0.1)           #  This is the propulsion system (engine) mass.
-    weight_batt = Input(0.2)           #  This is the battery mass.
-    weight_avionics = Input(0.1)       #  This is the assumed avionics mass.
 
+    #: Below is the payload mass of the UAV.
+    #: :type: float
+    weight_payload = Input(0.1)
 
+    #: Below is the motor mass of the UAV.
+    #: :type: float
+    weight_prop = Input(0.1)
+
+    #: Below is the battery mass of the UAV.
+    #: :type: float
+    weight_batt = Input(0.2)
+
+    #: Below is the electronics mass of the UAV.
+    #: :type: float
+    weight_electronics = Input(0.1)
+
+    #: Below is the horizontal stabilizer area of the UAV.
+    #: :type: float
     S_h = Input(0.1)
+
+    #: Below is the total wing area of the UAV.
+    #: :type: float
     S = Input(0.4)
+
+    #: Below is the vertical stabilizer area of the UAV.
+    #: :type: float
     S_v = Input(0.1)
 
     @Attribute
     def weight_structural(self):
         #  This returns the remainder of the MTOW after the engine, battery and payload masses subtracted.
         #  This is assumed to be evenly split between the fuselage and wing weights.
-        return self.weight_mtow - self.weight_prop - self.weight_batt - self.weight_payload - self.weight_avionics
+        return self.weight_mtow - self.weight_prop - self.weight_batt - self.weight_payload - self.weight_electronics
 
     @Attribute
     def weight_lifting_surfaces(self):
@@ -115,15 +137,17 @@ class ClassTwo(Base):
 
     @Attribute
     def weight_wings(self):
-        #  The wing weight is assumed to be half of the total wings weight.
+        #  The wing weight is found by multiplying its area with the weight to area factor.
         return self.wings_weight_per_area*self.S
 
     @Attribute
     def weight_ht(self):
+        #  The HT weight is found by multiplying its area with the weight to area factor.
         return self.wings_weight_per_area*self.S_h
 
     @Attribute
     def weight_vt(self):
+        #  The VT weight is found by multiplying its area with the weight to area factor.
         return self.wings_weight_per_area*self.S_v
 
 

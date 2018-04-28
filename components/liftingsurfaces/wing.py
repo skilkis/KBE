@@ -18,6 +18,7 @@ import matplotlib.pyplot as plt
 from definitions import *
 from user import MyColors
 
+__author__ = "Nelson Johnson"
 __all__ = ["Wing"]
 
 
