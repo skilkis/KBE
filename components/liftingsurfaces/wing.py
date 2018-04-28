@@ -326,13 +326,12 @@ class Wing(ExternalBody):
          """
         return self.avl_session.get_results()
 
-    @Attribute
-    def lift_coef_vs_alpha(self):
-        # TODO Make this lazy by seperating into a different attribute
+    @Attribute(private=True)
+    def liftcoef_alpha_grabber(self):
         # TODO Compare CL_max with assumed as well as plot with LLT
         """  Here, the cl vs alpha plot is created and the constant C_L vs alpha value is found.
         :return: Plot and float
-        :rtype: float
+        :rtype: dict
         """
         cl_alpha_array = (sorted([[self.results[alpha]['Totals']['Alpha'], self.results[alpha]['Totals']['CLtot']]
                                   for alpha in self.results], key=lambda f: float(f[0])))
@@ -342,18 +341,26 @@ class Wing(ExternalBody):
         #  Conversion to radians.
         cl = [i[1] for i in cl_alpha_array]
 
+        return {'lift_coefs': cl, 'alpha_degrees': alpha_deg, 'alpha_radians': alpha_rad}
+
+    @Attribute
+    def lift_coef_vs_alpha(self):
+        cl = self.liftcoef_alpha_grabber['lift_coefs']
+        alpha_rad = self.liftcoef_alpha_grabber['alpha_radians']
+        cl_alpha = np.mean([(cl[i+1] - cl[i]) / (alpha_rad[i+1] - alpha_rad[i]) for i in range(0, len(alpha_rad) - 1)])
+        return cl_alpha
+
+    @Attribute
+    def plot_liftgradient(self):
         # Plotting
         plt.style.use('ggplot')
         plt.figure('LiftCoefficientGradient')
-        plt.plot(alpha_deg, cl, marker='o')
+        plt.plot(self.liftcoef_alpha_grabber['lift_coefs'], self.liftcoef_alpha_grabber['alpha_degrees'], marker='o')
         plt.title('Lift Coefficient Gradient')
         plt.xlabel('Angle of Attack [deg]')
         plt.ylabel('Lift Coefficient [-]')
         plt.show()
-
-        # Below we calculate the Gradient with list comprehension (NOTE: THIS VALUE IS IN RADIANS)
-        cl_alpha = np.mean([(cl[i+1] - cl[i]) / (alpha_rad[i+1] - alpha_rad[i]) for i in range(0, len(alpha_rad) - 1)])
-        return cl_alpha
+        return 'Plot Made, See PyCharm'
 
     @Attribute
     def lift_coef_control_index(self):

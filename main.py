@@ -67,8 +67,8 @@ class UAV(Base):
 
     @Part
     def fuselage(self):
-        return Fuselage(compartment_type=['motor', 'container', 'container', 'container', 'tail'],
-                        sizing_parts=[self.motor, [self.stabilizer_h, self.camera], self.battery, [self.wing, self.stabilizer], None])
+        return Fuselage(compartment_type=['motor', 'container', 'container', 'tail'],
+                        sizing_parts=[self.motor, [self.stabilizer_h, self.camera], [self.battery, self.wing, self.stabilizer], None])
 
     @Part
     def motor(self):

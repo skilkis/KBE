@@ -247,7 +247,7 @@ class ScissorPlot(GeomBase):
                 stability_criteria.append([i, _cont_pnt, _stab_pnt, _current_margin, error])
 
         if len(stability_criteria) != 0:
-            stability_criteria = sorted(stability_criteria, key=lambda x: x[4])
+            stability_criteria = sorted(stability_criteria, key=lambda x: x[3])
             shs_cg = stability_criteria[0][0]
             if shs_cg >= self.shs_sm:
                 shs_req = shs_cg
