@@ -95,6 +95,20 @@ class Component(GeomBase):
     #                                                self.center_of_gravity.z))
 
 
+class ExternalSurface(GeomBase):
+
+    @Attribute
+    def surface_type(self):
+        return 'wing'
+
+    @Attribute
+    def wetted_area(self):
+        return 0
+
+    @Part
+    def external_part(self):
+        return Box(0, 0, 0)
+
 if __name__ == '__main__':
     from parapy.gui import display
 

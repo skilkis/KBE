@@ -178,7 +178,7 @@ class UAV(Base):
                                   "it was thus added to the 'misc' category in the weight_dictionary" % _child)
 
         total_weight = sum(weight)
-        weight_dict['WEIGHTS']['MTOW'] = total_weight
+        weight_dict['WEIGHTS']['mtow'] = total_weight
 
         # CG calculation through a weighted average utilizing list comprehension
         cg_x = sum([weight[i] * cg[i].x for i in range(0, len(weight))]) / total_weight
@@ -192,8 +192,10 @@ class UAV(Base):
     def wetted_areas(self):
         """ Retrieves all wetted surface areas of instantiated children with
 
-        :return:
+        :return: A dictionary of wetted surface areas with fieldnames = `wing`, `fuselage`, `vt`, `ht`
         """
+        children = self.get_children()
+
         return 1
 
     def validate_geometry(self):
