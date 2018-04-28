@@ -268,6 +268,7 @@ class Wing(Component):
 
     @Attribute
     def lift_coef_vs_alpha(self):
+        # TODO Make this lazy by seperating into a different attribute
         #  Here, the cl vs alpha plot is created and the contant C_L vs alpha value is found.
         cl_alpha_array = (sorted([[self.results[alpha]['Totals']['Alpha'], self.results[alpha]['Totals']['CLtot']]
                                   for alpha in self.results], key=lambda f: float(f[0])))

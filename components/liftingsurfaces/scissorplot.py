@@ -6,6 +6,9 @@ from math import *
 import numpy as np
 import matplotlib.pyplot as plt
 
+__author__ = "Nelson Johnson"
+__all__ = ["ScissorPlot"]
+
 
 class ScissorPlot(GeomBase):
     """  This script will generate a scissor plot to size the horizontal tail (HT). The required inputs are: the
@@ -22,27 +25,27 @@ class ScissorPlot(GeomBase):
 
     #: Below is the current Aerodynamic Center position
     #: :type: float
-    x_ac = Input(0.1)  #  NEED THIS INPUT FROM CLASS II FOR CURRENT AIRCRAFT!!!!!!!!
+    x_ac = Input(0.1)
 
     #: Below is the current leading edge of the MAC position
     #: :type: float
-    x_lemac = Input(0)  #  NEED THIS INPUT FROM CLASS II FOR CURRENT AIRCRAFT!!!!!!!!
+    x_lemac = Input(0.0)
 
     #: Below is the MAC length
     #: :type: float
-    mac = Input(1.0)  #  NEED THIS INPUT FROM CLASS II FOR CURRENT AIRCRAFT!!!!!!!!
+    mac = Input(1.0)
 
     #: Below is the wing aspect ratio.
     #: :type: float
-    AR = Input(12.0)     #  NEED THIS INPUT FROM CLASS II FOR CURRENT AIRCRAFT!!!!!!!!
+    AR = Input(12.0)
 
     #: Below is the wing span efficiency factor
     #: :type: float
-    e = Input(0.8)      #  NEED THIS INPUT FROM CLASS I FOR CURRENT A/C!!!!!!!!!
+    e = Input(0.8)
 
     #: Below is the assumed zero lift drag coefficient
     #: :type: float
-    CD0 = Input(0.02)   #  NEED THIS FROM CLASS I!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    CD0 = Input(0.02)
 
     #: Below is the k factor to correct the canard main wing C_Lalpha due to canard downwash.
     #: :type: float
@@ -70,7 +73,7 @@ class ScissorPlot(GeomBase):
 
     #: Below is the speed ratio for a conventional tail aircraft.
     #: :type: float
-    VhV_conv = 0.85
+    VhV_conv = sqrt(0.85)
 
     #: Below is the speed ratio for a canard aircraft.
     #: :type: float
@@ -80,26 +83,35 @@ class ScissorPlot(GeomBase):
     #: :type: float
     a_0 = 2*pi
 
-    #: Below is the controllability lift coefficient of the wing at 1.2*V_s imported from wing. It is corrected in the
-    #: case of a canard aircraft below.
+    #: Below is the controllability lift coefficient of the wing at 1.2*V_s imported from wing.
     #: :type: float
-    Cl_w = Input(0.5) #  TODO CONNECT THIS TO WING AVL CALCULATION
+    Cl_w = Input(0.5)
 
-    C_mac = Input(-0.32)    #  This is the C_m of the wing from AVL IMPORT FROM WING
-    Cla_w = Input(5.14)     #  This is the lift curve slope of the wing from AVL. IMPORT FROM WING
-    delta_xcg = Input(0.3)  #  This is the change in the cg location due to dropping a payload. IMPORT FROM CG EST
+    #: Below is the pitching moment about the aerodynamic center of the wing. This is calculated with AVL in 'wing.py'.
+    #: :type: float
+    C_mac = Input(-0.32)
 
+    #: Below is the lift curve slope of the wing. This is calculated with AVL in 'wing.py'.
+    #: :type: float
+    Cla_w = Input(5.14)
+
+    #: Below is the assumed change in the cg location.
+    #: :type: float
+    delta_xcg = Input(0.3)
+
+    #: Below is a switch to determine the configuration.
+    #: :type: str
     configuration = Input('conventional', validator=val.OneOf(['canard', 'conventional']))
-
-
 
     @Attribute
     def x_cg_vs_mac(self):
-        return ((self.x_cg - self.x_lemac) - (self.x_ac - self.x_lemac)) / self.mac
+        #  This returns the non dimensional distance bewtn the COG and the wing AC.
+        print self.x_cg - self.x_ac / self.mac
+        return (self.x_cg - self.x_ac) / self.mac
 
     @Attribute
     def Cla_h(self):
-        #  This estimates the lift slope of a low sweep, and speed 3D HT.
+        #  This estimates the lift slope of a low sweep, low speed 3D HT.
         Cla_h = self.a_0/(1+(self.a_0 / (pi * self.AR_h * self.e_h) ))
         return Cla_h
 
@@ -166,23 +178,25 @@ class ScissorPlot(GeomBase):
             shs_req = (self.delta_xcg + self.SM - (self.C_mac / self.Cl_w)) / ((((self.Cla_h/self.Cla_w)*(1-self.downwash_a))-(self.Cl_h/self.Cl_w))*(self.VhV_conv**2)*self.lhc)
         else:
             shs_req = (self.delta_xcg + self.SM - (self.C_mac / self.Cl_w)) / ((((self.Cla_h / self.Cla_w)) - (self.Cl_h / self.Cl_w)) * (self.VhV_canard ** 2) * self.lhc_canard)
-        print 'Required Sh/S = ', shs_req
+        # print 'Required Sh/S = ', shs_req
         return shs_req
 
     @Attribute
     def scissorplot(self):
+        # TODO Adhere to plot standard make it saved
         plt.plot(self.xcg_range,self.shs_stability,'b',label='Stability')
         plt.plot(self.xcg_range,self.shs_control, 'g',label='Controllablility')
         plt.axhline(y=self.shs_req, color='r', linestyle='-.',label='Required Sh/S')
         plt.scatter(x=self.x_cg_vs_mac, y=1, label='CG Location')
         #plt.axvline(x=self.x_ac-self.SM, color='r', linestyle='-.')
-        plt.ylabel('Sh/S')
+        plt.ylabel(r'$\frac{S_{h}}{S}$')
         plt.xlabel('Xcg/c')
+        plt.axis([-2, 2, 0, 2])
         plt.legend(loc=0)
         plt.title('Scissor Plot')
-        axes = plt.gca()
-        axes.set_ylim([-max(self.shs_stability), max(self.shs_stability)])
-        axes.set_xlim([min(self.xcg_range), max(self.xcg_range)])
+        # axes = plt.gca()
+        # axes.set_ylim([-max(self.shs_stability), max(self.shs_stability)])
+        # axes.set_xlim([min(self.xcg_range), max(self.xcg_range)])
         plt.show()
         return 'Plot Made, See PyCharm'
 

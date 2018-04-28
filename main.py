@@ -40,10 +40,6 @@ class UAV(Base):
         return Wing(WS_pt=self.wing_loading, position=translate(XOY, 'x', 0.1))
 
     @Part
-    def wing2(self):
-        return Wing(WS_pt=self.wing_loading, position=translate(XOY, 'x', 0.1, 'z', 1))
-
-    @Part
     def stabilizer(self):
         return VerticalStabilizer(position=translate(self.wing.position, 'x', 0.2))
 
@@ -126,6 +122,7 @@ class UAV(Base):
 
     @Attribute
     def cg(self):
+        print self.weight_and_balance()['CG']
         return self.weight_and_balance()['CG']
 
     @Attribute

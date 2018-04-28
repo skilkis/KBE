@@ -31,30 +31,30 @@ class HorizontalStabilizer(Component):
     @Attribute
     def weight(self):
         return self.WF_HT*self.MTOW
-
-    @Attribute
-    def scissor(self):
-        #  Instantiation of scissor plot to obtain required tail to wing area ratio.
-        #  TODO CONNECT THIS TO MAIN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        return ScissorPlot()
-
-    @Attribute
-    def shsreq(self):
-        # This obtains the required tail to wing area ratio.
-        print 'Required Sh/S is ', self.scissor.shs_req
-        return self.scissor.shs_req
-
-    @Attribute
-    def sh(self):
-        #  This calculates the required HT wing area from the scissor plots.
-        return self.shsreq*self.S_req
+    #
+    # @Attribute
+    # def scissor(self):
+    #     #  Instantiation of scissor plot to obtain required tail to wing area ratio.
+    #     #  TODO CONNECT THIS TO MAIN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    #     return ScissorPlot()
+    #
+    # @Attribute
+    # def shsreq(self):
+    #     # This obtains the required tail to wing area ratio.
+    #     print 'Required Sh/S is ', self.scissor.shs_req
+    #     return self.scissor.shs_req
+    #
+    # @Attribute
+    # def sh(self):
+    #     #  This calculates the required HT wing area from the scissor plots.
+    #     return self.shsreq*self.S_req
 
 
     @Part
     def ht(self):
         #  This is an instantiation of the lifting surface for ONE HT.
         #  Remember, LiftingSurface takes as input the wing area for ONE WING!!
-        return LiftingSurface(S = self.sh*0.5,
+        return LiftingSurface(S = self.S_req*0.5,
                               AR = self.AR_h,
                               taper = self.taper_h,
                               dihedral = self.dihedral_h,
