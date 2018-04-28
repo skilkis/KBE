@@ -6,6 +6,8 @@ from math import *
 import numpy as np
 import matplotlib.pyplot as plt
 
+from directories import *
+
 __author__ = "Nelson Johnson"
 __all__ = ["ScissorPlot"]
 
@@ -18,7 +20,6 @@ class ScissorPlot(GeomBase):
     """
 
 #  This block of code contains the inputs. ########---------------------------------------------------------------------
-#  TODO CONNECT ALL OF THIS TO MAIN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     #: Below is the current COG position
     #: :type: float
     x_cg = Input(0.3)
@@ -101,7 +102,7 @@ class ScissorPlot(GeomBase):
 
     #: Below is a switch to determine the configuration.
     #: :type: str
-    configuration = Input('conventional', validator=val.OneOf(['canard', 'conventional']))
+    configuration = Input('canard', validator=val.OneOf(['canard', 'conventional']))
 
     @Attribute
     def x_cg_vs_mac(self):
@@ -110,11 +111,10 @@ class ScissorPlot(GeomBase):
         return (self.x_cg - self.x_ac) / self.mac
 
     @Attribute
-    def Cla_h(self):
+    def cla_h(self):
         #  This estimates the lift slope of a low sweep, low speed 3D HT.
-        Cla_h = self.a_0/(1+(self.a_0 / (pi * self.AR_h * self.e_h) ))
-        return Cla_h
-
+        cla_h = self.a_0/(1+(self.a_0 / (pi * self.AR_h * self.e_h)))
+        return cla_h
 
     @Attribute
     def downwash_a(self):
@@ -123,83 +123,99 @@ class ScissorPlot(GeomBase):
         return deda
 
     @Attribute
-    def Cl_h(self):
-        #  This returns the maximum lift coefficient of the tail
-        if self.configuration is 'Conventional':
-            Cl_h = -0.35*(self.AR_h**(1.0/3.0))
+    def cl_h(self):
+        #  This returns the maximum lift coefficient of the tail for the controllability case.
+        if self.configuration is 'conventional':
+            cl_h = -0.35*(self.AR_h**(1.0/3.0))
         else:
-            Cl_h = 1
+            cl_h = 1
             # = 0.35 * (self.AR_h ** (1.0 / 3.0))
             #  Canard assumed to be full moving with Cl max = 1 in slow speed case.
-            #  This assumption allows the scissor plot to return the correct value.
-        return Cl_h
+            #  This assumption allows the scissor plot lines to intersect and create a design space.
+        return cl_h
 
     @Attribute
-    def Cla_w_canard(self):
-        return self.Cla_w*(1-((2*self.Cla_h*self.shs_req)/(pi*self.AR*self.k_factor)))
+    def cla_w_canard(self):
+        #  This reduces the wing lift slope for the canard case. It is reducing the C_lalpha from AVL.
+        return self.Cla_w*(1 - ((2 * self.cla_h * self.shs_req) / (pi * self.AR * self.k_factor)))
 
     @Attribute
     def xcg_range(self):
-        #  This is a dummy list for plotting Sh/S.
+        #  This is a dummy list of x_cg used for plotting Sh/S.
         values = np.linspace(-5, 5, 20)
         return values
 
     @Attribute
     def shs_stability(self):
-        #  This calculates the required Sh/S for stability requirement.
+        #  This calculates the required Sh/S for the stability requirement.
         shs_stab = []
-        for i in range(0,len(self.xcg_range)):
-            if self.configuration is 'Conventional':
-                shs_conv = (self.xcg_range[i]/((self.Cla_h/self.Cla_w)*(1-self.downwash_a)*(self.lhc)*((self.VhV_conv)**2))) - ((self.x_ac -self.SM )/ ((self.Cla_h/self.Cla_w)*(1-self.downwash_a)*(self.lhc)*((self.VhV_conv)**2)))
+        for i in range(0, len(self.xcg_range)):
+            if self.configuration is 'conventional':
+                shs_conv = (self.xcg_range[i] / ((self.cla_h / self.Cla_w) * (1 - self.downwash_a) * self.lhc *
+                                                 (self.VhV_conv ** 2))) - \
+                           ((self.x_ac - self.SM) / ((self.cla_h / self.Cla_w) * (1 - self.downwash_a) * self.lhc *
+                                                     (self.VhV_conv ** 2)))
                 shs_stab.append(shs_conv)
             else:
-                shs_canard = (self.xcg_range[i] / ((self.Cla_h / self.Cla_w_canard) * (self.lhc_canard) * ((self.VhV_canard) ** 2))) - ((self.x_ac - self.SM) / ((self.Cla_h / self.Cla_w_canard) * (self.lhc_canard) * ((self.VhV_canard) ** 2)))
+                shs_canard = (self.xcg_range[i] / ((self.cla_h / self.cla_w_canard) * self.lhc_canard *
+                                                   self.VhV_canard ** 2)) - \
+                             ((self.x_ac - self.SM) / ((self.cla_h / self.cla_w_canard) * self.lhc_canard *
+                                                       (self.VhV_canard ** 2)))
                 shs_stab.append(shs_canard)
+
         return shs_stab
 
     @Attribute
     def shs_control(self):
-        #  This calculates the required Sh/S for controllability.
+        #  This calculates the required Sh/S for the controllability requirement.
         shs_c = []
         for i in range(0, len(self.xcg_range)):
-            if self.configuration is 'Conventional':
-                shs_conv = (self.xcg_range[i]/((self.Cl_h/self.Cl_w)*(self.lhc)*((self.VhV_conv)**2))) + (((self.C_mac/self.Cl_w) - self.x_ac) / ((self.Cl_h/self.Cl_w) *(self.lhc) * ((self.VhV_conv) ** 2)))
+            if self.configuration is 'conventional':
+                shs_conv = (self.xcg_range[i] / ((self.cl_h / self.Cl_w) * self.lhc * self.VhV_conv ** 2)) + \
+                           (((self.C_mac/self.Cl_w) - self.x_ac) / ((self.cl_h / self.Cl_w) * self.lhc *
+                                                                    (self.VhV_conv ** 2)))
                 shs_c.append(shs_conv)
             else:
-                shs_canard = (self.xcg_range[i] / ((self.Cl_h / self.Cl_w) * (self.lhc_canard) * ((self.VhV_canard) ** 2))) + (((self.C_mac / self.Cl_w) - self.x_ac) / ((self.Cl_h / self.Cl_w) * (self.lhc_canard) * ((self.VhV_canard) ** 2)))
+                shs_canard = (self.xcg_range[i] / ((self.cl_h / self.Cl_w) * self.lhc_canard * self.VhV_canard ** 2))\
+                             + (((self.C_mac / self.Cl_w) - self.x_ac) / ((self.cl_h / self.Cl_w) * self.lhc_canard *
+                                                                          (self.VhV_canard ** 2)))
                 shs_c.append(shs_canard)
+
         return shs_c
-#  TODO add error if there's a negative Sh/S output. Solution is to increase Cl_h or tail arm or reduce Cl_w
 
     @Attribute
     def shs_req(self):
-        #  This attribute will calculate the required Sh/S based on the change in the cg due to flying with/without payload.
-        if self.configuration is 'Conventional':
-            shs_req = (self.delta_xcg + self.SM - (self.C_mac / self.Cl_w)) / ((((self.Cla_h/self.Cla_w)*(1-self.downwash_a))-(self.Cl_h/self.Cl_w))*(self.VhV_conv**2)*self.lhc)
+        #  This attribute will calculate the required Sh/S based on the required cg shift.
+        #  TODO add error if there's a negative Sh/S output. Solution is to increase Cl_h or tail arm or reduce Cl_w
+        if self.configuration is 'conventional':
+            shs_req = (self.delta_xcg + self.SM - (self.C_mac / self.Cl_w)) / \
+                      ((((self.cla_h / self.Cla_w) * (1 - self.downwash_a)) - (self.cl_h / self.Cl_w)) *
+                       (self.VhV_conv ** 2) * self.lhc)
         else:
-            shs_req = (self.delta_xcg + self.SM - (self.C_mac / self.Cl_w)) / ((((self.Cla_h / self.Cla_w)) - (self.Cl_h / self.Cl_w)) * (self.VhV_canard ** 2) * self.lhc_canard)
+            shs_req = (self.delta_xcg + self.SM - (self.C_mac / self.Cl_w)) / \
+                      (((self.cla_h / self.Cla_w) - (self.cl_h / self.Cl_w)) * (self.VhV_canard ** 2) *
+                       self.lhc_canard)
         # print 'Required Sh/S = ', shs_req
         return shs_req
 
     @Attribute
     def scissorplot(self):
-        # TODO Adhere to plot standard make it saved
-        plt.plot(self.xcg_range,self.shs_stability,'b',label='Stability')
-        plt.plot(self.xcg_range,self.shs_control, 'g',label='Controllablility')
-        plt.axhline(y=self.shs_req, color='r', linestyle='-.',label='Required Sh/S')
+        fig = plt.figure('ScissorPlot')
+        plt.style.use('ggplot')
+        plt.title('Scissor Plot')
+        plt.plot(self.xcg_range, self.shs_stability, 'b', label='Stability')
+        plt.plot(self.xcg_range, self.shs_control, 'g', label='Controllablility')
+        plt.axhline(y=self.shs_req, color='r', linestyle='-.', label='Required Sh/S')
         plt.scatter(x=self.x_cg_vs_mac, y=1, label='CG Location')
-        #plt.axvline(x=self.x_ac-self.SM, color='r', linestyle='-.')
+#        plt.axvline(x=self.x_ac-self.SM, color='r', linestyle='-.')
         plt.ylabel(r'$\frac{S_{h}}{S}$')
-        plt.xlabel('Xcg/c')
+        plt.xlabel(r'$\frac{Xcg-Xac}{c}$')
         plt.axis([-2, 2, 0, 2])
         plt.legend(loc=0)
-        plt.title('Scissor Plot')
-        # axes = plt.gca()
-        # axes.set_ylim([-max(self.shs_stability), max(self.shs_stability)])
-        # axes.set_xlim([min(self.xcg_range), max(self.xcg_range)])
+#        plt.ion()
+        fig.savefig(fname=os.path.join(DIRS['USER_DIR'], 'plots', '%s.pdf' % fig.get_label()), format='pdf')
         plt.show()
         return 'Plot Made, See PyCharm'
-
 
 
 if __name__ == '__main__':

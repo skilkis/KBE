@@ -223,7 +223,8 @@ class UAV(Base):
         index_first = 0
         index_last = 0
         for _child in children:
-            if hasattr(_child, 'internal_shape') and getslot(_child, 'component_type') != 'motor':  # Identification of a Motor
+            if hasattr(_child, 'internal_shape') and getslot(_child, 'component_type') != 'motor':
+                # Above is the identification of a Motor
                 current_corners = _child.internal_shape.bbox.corners
                 if current_corners[1].x > x_loc_max:
                     x_loc_max = current_corners[1].x
