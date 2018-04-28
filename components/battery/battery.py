@@ -18,6 +18,7 @@ from directories import *
 __all__ = ["Battery", "show_primitives"]
 
 # TODO change show_primitives to be inside class definition and protected variable
+# TODO remove error message since it is already handled by a validator
 
 # A parameter for debugging, turns the visibility of miscellaneous parts ON/OFF
 show_primitives = False  # type: bool
