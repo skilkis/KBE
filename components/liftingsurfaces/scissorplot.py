@@ -1,11 +1,12 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
-
+#  Required Modules
 from parapy.core import *
 from parapy.geom import *
 from math import *
 import numpy as np
 import matplotlib.pyplot as plt
-
 from directories import *
 
 __author__ = "Nelson Johnson"
