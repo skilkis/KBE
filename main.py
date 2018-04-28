@@ -14,6 +14,7 @@ from parapy.core import *
 from parapy.geom import *
 from components import *
 from directories import *
+from definitions import *
 
 
 # TODO Make sure that excel read and things are top level program features (not buried within the tree)
@@ -64,6 +65,10 @@ class UAV(Base):
     @Part
     def motor(self):
         return Motor(integration='puller', position=translate(self.camera.position, 'x', -0.1, 'z', self.cg.z / 2.0))
+
+    @Part
+    def center_of_gravity(self):
+        return VisualCG(self.cg, self.weights['mtow'])
 
     @Part
     def propeller(self):

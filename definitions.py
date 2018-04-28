@@ -8,7 +8,27 @@ from directories import *
 
 
 __author__ = "Şan Kılkış"
-__all__ = ["Component"]
+__all__ = ["Component", "ExternalSurface", "VisualCG"]
+
+
+class VisualCG(GeomBase):
+
+    # TODO add header here and create a nice looking visual CG
+
+    __icon__ = os.path.join(DIRS['ICON_DIR'], 'battery.png')
+    __initargs__ = ["vis_cog", "vis_weight"]
+    # TODO Find a proper icon here
+    vis_cog = Input()
+    vis_weight = Input()
+
+    @Attribute
+    def position(self):
+        cog = self.vis_cog
+        return translate(XOY, 'x', cog.x, 'y', cog.y, 'z', cog.z)
+
+    @Part
+    def visual_cg_location(self):
+        return Sphere(radius=0.01, position=self.position, color='yellow', hidden=self.hidden)
 
 
 class Component(GeomBase):
@@ -16,7 +36,7 @@ class Component(GeomBase):
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'gear.png')
 
     position = Input(Position(Point(0, 0, 0)))  # Locks Orientation to that defined inside the component
-    hide_labels = Input(False)
+    hide_labels = Input(True)
 
     # TODO Make a method that automatically finds the proper faces on the YOZ axis
 
@@ -87,6 +107,10 @@ class Component(GeomBase):
         return Sphere(radius=0.05,
                       position=XOY,
                       color='Red')
+
+    @Part
+    def cog_sphere(self):
+        return VisualCG(self.center_of_gravity, self.weight)
 
 
 class ExternalSurface(GeomBase):
