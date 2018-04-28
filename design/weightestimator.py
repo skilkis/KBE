@@ -114,6 +114,10 @@ class ClassTwo(Base):
     #: :type: float
     S_v = Input(0.1)
 
+    #: Below is the wetted fuselage area of the UAV.
+    #: :type: float
+    S_f = Input(0.1)
+
     @Attribute
     def weight_structural(self):
         #  This returns the remainder of the MTOW after the engine, battery and payload masses subtracted.
@@ -121,34 +125,29 @@ class ClassTwo(Base):
         return self.weight_mtow - self.weight_prop - self.weight_batt - self.weight_payload - self.weight_electronics
 
     @Attribute
-    def weight_lifting_surfaces(self):
-        #  This is the assumed weight of all wings. It is assumed to be 60% of the remaining MTOW.
-        return 0.7*self.weight_structural
+    def structural_weight_per_area(self):
+        ratio = self.weight_structural / (self.S + self.S_v + self.S_h + self.S_f)
+        return ratio
 
     @Attribute
     def weight_fuselage(self):
         #  This is the assumed fuselage weight. It is assumed to be 60% of the remaining MTOW.
-        return 0.3*self.weight_structural
-
-    @Attribute
-    def wings_weight_per_area(self):
-        #  This gives a factor to split the wings weight over the HT, VT and wing based on their area.
-        return self.weight_lifting_surfaces/(self.S+self.S_h+self.S_v)
+        return self.weight_structural + self.weight_structural
 
     @Attribute
     def weight_wings(self):
         #  The wing weight is found by multiplying its area with the weight to area factor.
-        return self.wings_weight_per_area*self.S
+        return self.structural_weight_per_area*self.S
 
     @Attribute
     def weight_ht(self):
         #  The HT weight is found by multiplying its area with the weight to area factor.
-        return self.wings_weight_per_area*self.S_h
+        return self.structural_weight_per_area*self.S_h
 
     @Attribute
     def weight_vt(self):
         #  The VT weight is found by multiplying its area with the weight to area factor.
-        return self.wings_weight_per_area*self.S_v
+        return self.structural_weight_per_area*self.S_v
 
 
 if __name__ == '__main__':
