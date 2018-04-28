@@ -8,7 +8,7 @@ from parapy.core import *
 from parapy.geom import *
 from math import *
 
-from old.liftingsurface import LiftingSurface
+from primitives import LiftingSurface
 from avl import Geometry, Surface, Section, Point, Spacing, Session, Case, FileAirfoil
 import json
 from directories import *
@@ -73,14 +73,27 @@ class Wing(Component):
     # TODO Add a wing weight estimator based on density
 
     @Attribute
+    def component_type(self):
+        return 'wing'
+
+    @Attribute
     def weight(self):
         return 0.2*self.MTOW
+
+    @Attribute
+    def center_of_gravity(self):
+        """ Location of the center of gravity w.r.t the origin
+        :return: Location Tuple in SI meter
+        :rtype: Point
+        """
+        y = 0
+        pos = Point(self.wing.final_wing.cog.x, y, self.wing.final_wing.cog.z)
+        return pos
 
     @Attribute
     def S_req(self):
         # This calculation of the required TOTAL wing area from the design point.
         return ((self.MTOW * 9.81)/self.WS_pt) # TODO wing loading is in N/m^2 thus we have to have a global variable for g
-
 
     @Attribute
     def C_L_cont(self):
@@ -89,9 +102,9 @@ class Wing(Component):
         return clreq
 
     @Part
-    #  This generates the wing. The area is halved because lifting surface generates one wing of that surface area.
     def wing(self):
-        return LiftingSurface(S=self.S_req*0.5,
+        """ Instantiates a primitive LiftingSurface with the inputs given on the right-hand side of the wing """
+        return LiftingSurface(S=self.S_req * 0.5,  # Area is halved because lifting surface generates one wing
                               AR=self.AR,
                               taper=self.taper,
                               dihedral=self.dihedral,
@@ -99,22 +112,29 @@ class Wing(Component):
                               airfoil_type=self.airfoil_type,
                               airfoil_choice=self.airfoil_choice,
                               offset=self.offset,
-                              color=MyColors.skin_color,
-                              transparency=None, pass_down="mesh_deflection")
+                              color=MyColors.skin_color, pass_down="mesh_deflection")
 
-    @Attribute
+    @Part
+    def left_wing(self):
+        return MirroredShape(shape_in=self.wing.final_wing,
+                             reference_point=self.wing.position,
+                             vector1=Vector(1, 0, 0),
+                             vector2=Vector(0, 0, 1),
+                             color=MyColors.skin_color)
+
+    @Attribute(private=True)
     def wing_cut_loc(self):
         #  This calculates the spanwise distance of the cut, inside of which, the wing is inside the fuselage.
         return self.wing.semispan * self.fuse_width_factor
 
-    @Part
+    @Part(private=True)
     def right_cut_plane(self):
         #  This makes a plane at the right wing span location where the fuselage is to end.
         return Plane(reference=translate(self.wing.position, 'y', self.wing_cut_loc),
                      normal=Vector(0, 1, 0),
                      hidden=True)
 
-    @Attribute
+    @Attribute(private=True)
     def get_wingfuse_bounds(self):
         #  This attribute is obtaining (the dimensions of) a bounded box at a fuselaage width factor of the semispan
         #  which will be used to size the fuselage frames. These frames drive the shape of the fuselage.
@@ -144,26 +164,7 @@ class Wing(Component):
                    transparency=0.5,
                    hidden=self.hide_bbox)
 
-    @Part
-    def left_wing(self):
-        return MirroredShape(shape_in=self.wing.final_wing,
-                             reference_point=self.wing.position,
-                             vector1=Vector(1, 0, 0),
-                             vector2=Vector(0, 0, 1),
-                             color=MyColors.skin_color)
-
-    @Attribute
-    def center_of_gravity(self):
-        """ Location of the center of gravity w.r.t the origin
-        :return: Location Tuple in SI meter
-        :rtype: Point
-        """
-        y = 0
-        pos = Point(self.wing.final_wing.cog.x, y, self.wing.final_wing.cog.z)
-        return pos
-
-
-    #  This next block prepares the AVL geometry and runcases. It runs and stores the data.
+    # --- AVL Geometry & Analysis: ------------------------------------------------------------------------------------
     @Attribute
     def root_section(self):
         return Section(leading_edge_point=Point(0, 0, 0),
@@ -201,15 +202,11 @@ class Wing(Component):
                         reference_point=Point(0.0, 0.0, 0.0),
                         surfaces=[self.wing_surface])
 
-  #  @Attribute
-  #  def cruise_case(self):
-  #      return Case(name='Cruise', alpha=2.75, velocity=1.2*self.V_s)  # One Case defined by one angle-of-attack
-
     @Attribute
     def alpha_cases(self):
-        alphas = np.linspace(0.0,10.0,25)
+        alphas = np.linspace(0.0, 10.0, 25)
         alpha_case = []
-        for i in range(0,len(alphas)):
+        for i in range(0, len(alphas)):
             alpha_case.append(Case(name='alpha%s' % i, alpha=alphas[i], velocity=1.2*self.V_s))
         return alpha_case
 
@@ -255,7 +252,7 @@ class Wing(Component):
         cll_array = (sorted([[self.results[alpha]['Totals']['Alpha'], self.results[alpha]['Totals']['CLtot']]
                             for alpha in self.results], key=lambda f: float(f[1])))
         cll = [i[1] for i in cll_array]
-        error = [abs(cll[i] - self.C_L_cont) for i in range(0,len(cll))]
+        error = [abs(cll[i] - self.C_L_cont) for i in range(0, len(cll))]
         cl_cont_index = error.index(min(error))
         return cl_cont_index
 

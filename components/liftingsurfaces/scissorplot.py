@@ -13,8 +13,10 @@ import matplotlib.pyplot as plt
 class ScissorPlot(GeomBase):
 
     #  Sh/S inputs
-    x_cg = Input(0.0)   #  NEED THIIS INPUT FROM CG SCRIPT FOR CURRENT AIRCRAFT!!!!!!!!!!!!!!!!!!!!!!!!!!
-    x_ac = Input(0.0)   #  NEED THIS INPUT FROM LIFTING SURFACE SCRIPT! FOR COMPLETE WING OF CURRENT AIRCR!!!!!!!
+    x_cg = Input(0.3)   #  NEED THIIS INPUT FROM CG SCRIPT FOR CURRENT AIRCRAFT!!!!!!!!!!!!!!!!!!!!!!!!!!
+    x_ac = Input(0.1)
+    x_lemac = Input(0)  #  NEED THIS INPUT FROM LIFTING SURFACE SCRIPT! FOR COMPLETE WING OF CURRENT AIRCR!!!!!!!
+    mac = Input(1)
 #  TODO CONNECT ALL OF THIS TO MAIN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     AR = Input(12.0)     #  NEED THIS INPUT FROM CLASS II FOR CURRENT AIRCRAFT!!!!!!!!1
     e = Input(0.8)      #  NEED THIS INPUT FROM CLASS I FOR CURRENT A/C!!!!!!!!!
@@ -33,7 +35,7 @@ class ScissorPlot(GeomBase):
 
 
 
-    Cl_w = Input(0.5)       #  This is the maximum lift coeficcent of the wing at 1.2*V_s IMPORT CALCULATION FROM WING.
+    Cl_w = Input(0.5)       #  This is the maximum lift coeficcent of the wing at 1.2*V_s IMPORT FROM WING.
                             #  There is a correction for the main wing if canard is chosen.
     C_mac = Input(-0.32)    #  This is the C_m of the wing from AVL IMPORT FROM WING
     Cla_w = Input(5.14)     #  This is the lift curve slope of the wing from AVL. IMPORT FROM WING
@@ -41,7 +43,7 @@ class ScissorPlot(GeomBase):
     #Cla_h = Input(4.9)      # This is the lift curve slope of the tail. IMPORT FROM TAIL WING INSTANTIATION
 
 #  TODO In main code, get cla_h from AVL using wing primitive. -> NOT POSSIBLE? BC SH DETERMINED FROM THOSE EQUATIONS BELOW!
-    configuration = Input('Conventional', validator=val.OneOf(['Canard', 'Conventional']))
+    configuration = Input('conventional', validator=val.OneOf(['canard', 'conventional']))
 
    # @Attribute
    # def Cla_w(self):
@@ -49,6 +51,10 @@ class ScissorPlot(GeomBase):
    #     #  This estimates the lift slope of a low sweep, and speed 3D wing. THIS IS FOUND WITH AVL IN WING!!!!!!!!!
    #     Cla_w = self.a_0/(1+(self.a_0 / (pi * self.AR * self.e) ))
    #     return Cla_w
+
+    @Attribute
+    def x_cg_vs_mac(self):
+        return ((self.x_cg - self.x_lemac) - (self.x_ac - self.x_lemac)) / self.mac
 
     @Attribute
     def Cla_h(self):
@@ -82,7 +88,7 @@ class ScissorPlot(GeomBase):
     @Attribute
     def xcg_range(self):
         #  This is a dummy list for plotting Sh/S.
-        values = np.linspace(-5,5,20)
+        values = np.linspace(-5, 5, 20)
         return values
 
     @Attribute
@@ -91,7 +97,7 @@ class ScissorPlot(GeomBase):
         shs_stab = []
         for i in range(0,len(self.xcg_range)):
             if self.configuration is 'Conventional':
-                shs_conv =  (self.xcg_range[i]/((self.Cla_h/self.Cla_w)*(1-self.downwash_a)*(self.lhc)*((self.VhV_conv)**2))) - ((self.x_ac -self.SM )/ ((self.Cla_h/self.Cla_w)*(1-self.downwash_a)*(self.lhc)*((self.VhV_conv)**2)))
+                shs_conv = (self.xcg_range[i]/((self.Cla_h/self.Cla_w)*(1-self.downwash_a)*(self.lhc)*((self.VhV_conv)**2))) - ((self.x_ac -self.SM )/ ((self.Cla_h/self.Cla_w)*(1-self.downwash_a)*(self.lhc)*((self.VhV_conv)**2)))
                 shs_stab.append(shs_conv)
             else:
                 shs_canard = (self.xcg_range[i] / ((self.Cla_h / self.Cla_w_canard) * (self.lhc_canard) * ((self.VhV_canard) ** 2))) - ((self.x_ac - self.SM) / ((self.Cla_h / self.Cla_w_canard) * (self.lhc_canard) * ((self.VhV_canard) ** 2)))
@@ -109,8 +115,6 @@ class ScissorPlot(GeomBase):
             else:
                 shs_canard = (self.xcg_range[i] / ((self.Cl_h / self.Cl_w) * (self.lhc_canard) * ((self.VhV_canard) ** 2))) + (((self.C_mac / self.Cl_w) - self.x_ac) / ((self.Cl_h / self.Cl_w) * (self.lhc_canard) * ((self.VhV_canard) ** 2)))
                 shs_c.append(shs_canard)
-
-
         return shs_c
 #  TODO add error if there's a negative Sh/S output. Solution is to increase Cl_h or tail arm or reduce Cl_w
 
@@ -124,16 +128,16 @@ class ScissorPlot(GeomBase):
         print 'Required Sh/S = ', shs_req
         return shs_req
 
-
     @Attribute
     def scissorplot(self):
         plt.plot(self.xcg_range,self.shs_stability,'b',label='Stability')
         plt.plot(self.xcg_range,self.shs_control, 'g',label='Controllablility')
         plt.axhline(y=self.shs_req, color='r', linestyle='-.',label='Required Sh/S')
+        plt.scatter(x=self.x_cg_vs_mac, y=1, label='CG Location')
         #plt.axvline(x=self.x_ac-self.SM, color='r', linestyle='-.')
         plt.ylabel('Sh/S')
         plt.xlabel('Xcg/c')
-        plt.legend(loc = 0)
+        plt.legend(loc=0)
         plt.title('Scissor Plot')
         axes = plt.gca()
         axes.set_ylim([-max(self.shs_stability), max(self.shs_stability)])

@@ -126,7 +126,7 @@ class ClassTwo(Base):
         return 0.7*self.weight_structural
 
     @Attribute
-    def fuse_weight(self):
+    def weight_fuselage(self):
         #  This is the assumed fuselage weight. It is assumed to be 60% of the remaining MTOW.
         return 0.3*self.weight_structural
 

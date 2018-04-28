@@ -35,15 +35,25 @@ class UAV(Base):
 
     @Part
     def wing(self):
-        return Wing(WS_pt=self.wing_loading, position=translate(XOY, 'x', self.cg.x + 0.1))
+        return Wing(WS_pt=self.wing_loading, position=translate(XOY, 'x', 0.1))
+
+    @Part
+    def wing2(self):
+        return Wing(WS_pt=self.wing_loading, position=translate(XOY, 'x', 0.1, 'z', 1))
 
     @Part
     def stabilizer(self):
         return VerticalStabilizer(position=translate(self.wing.position, 'x', 0.2))
 
     @Part
+    def stability(self):
+        return ScissorPlot(x_cg=self.cg.x, x_ac=self.wing.wing.aerodynamic_center.x,
+                           x_lemac=self.wing.wing.lemac.x,
+                           mac=self.wing.wing.mac_length)
+
+    @Part
     def stabilizer_h(self):
-        return HorizontalStabilizer(position=translate(self.wing.position, 'x', -0.4))
+        return HorizontalStabilizer(position=translate(self.wing.position, 'x', self.stability.lhc_canard*self.wing.wing.mac_length), S_req=self.wing.S_req * self.stability.shs_req)
 
     @Part
     def fuselage(self):
@@ -52,7 +62,7 @@ class UAV(Base):
 
     @Part
     def motor(self):
-        return Motor(integration='puller', position=translate(XOY, 'x', -0.3))
+        return Motor(integration='puller', position=translate(self.camera.position, 'x', -0.1, 'z', self.cg.z / 2.0))
 
     @Part
     def propeller(self):
@@ -96,6 +106,10 @@ class UAV(Base):
     def cg(self):
         return self.weight_and_balance()['CG']
 
+    @Attribute
+    def weights(self):
+        return self.weight_and_balance()['WEIGHTS']
+
     # @Attribute
     # def motor_loc(self):
     #     if self.motor
@@ -112,13 +126,19 @@ class UAV(Base):
         children = self.get_children()
         weight = []
         cg = []
-        weight_dict = {'WEIGHTS': {},
+        weight_dict = {'WEIGHTS': {'wing': 0,
+                                   'payload': [],
+                                   'prop': []},
                        'CG': Point(0, 0, 0)}
         for _child in children:
             if hasattr(_child, 'weight') and hasattr(_child, 'center_of_gravity'):
-                weight_dict['WEIGHTS'][_child.label] = _child.getslot('weight')
                 weight.append(_child.getslot('weight'))
                 cg.append(_child.getslot('center_of_gravity'))
+
+                if _child.getslot('component_type') == 'wing':
+                    weight_dict['WEIGHTS']['wing'] = weight_dict['WEIGHTS']['wing'] + (_child.getslot('weight'))
+                else:
+                    weight_dict['WEIGHTS'][_child.label] = _child.getslot('weight')
 
         total_weight = sum(weight)
         weight_dict['WEIGHTS']['MTOW'] = total_weight
@@ -136,6 +156,8 @@ class UAV(Base):
         children = self.get_children()
         x_loc_max = 0
         x_loc_min = 0
+        index_first = 0
+        index_last = 0
         for _child in children:
             if hasattr(_child, 'internal_shape') and getslot(_child, 'component_type') != 'motor':  # Identification of a Motor
                 current_corners = _child.internal_shape.bbox.corners

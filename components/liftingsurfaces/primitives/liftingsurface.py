@@ -131,6 +131,18 @@ The sign convention is +x pointing with direction of chord, +y pointing toward r
         return self.mac_span_calc*tan(radians(self.dihedral))
 
     @Attribute
+    def lemac(self):
+        """ Quickly calculates the Leading Edge Mean Aerodynamic Chord by sorting through all `sample_points` of the
+        part `mac_airfoil` and selects the one with the minimum x (thus closest to the flight direction which is x_)
+
+        :return: Location of the Leading Edge Mean Aerodynamic Chord in SI meter
+        :rtype: Tuple
+        """
+        sample_points = self.mac_airfoil.edges[0].sample_points
+        lemac = sorted(sample_points, key=lambda point: point.x)[0]
+        return lemac
+
+    @Attribute
     def le_sweep(self):
         """ This will calculate the leading edge sweep of the wing.
         :return: Wing LE sweep
@@ -139,15 +151,22 @@ The sign convention is +x pointing with direction of chord, +y pointing toward r
         le_sweep = degrees(atan((self.tip_airfoil.position.x-self.root_airfoil.position.x)/self.semispan))
         return le_sweep
 
-    @Part
+    @Attribute(in_tree=True)
     def leading_edge(self):
         """ This makes a line indicating the leading edge (for a wing without dihedral).
         :return: Wing leading edge ParaPy Geometry
         :rtype: LineSegment
         """
-        return LineSegment(start=self.root_airfoil.position,
-                           end=self.tip_airfoil.position,
-                           hidden=self.hide_LE)
+
+        # Sorts the faces based on minimum distance of their Attribute `cog` relative to the position
+        faces = sorted(self.final_wing.faces, key=lambda x: x.cog.distance(self.position))
+        root_le = sorted(faces[0].edges[0].sample_points, key=lambda point: point.x)[0]
+        tip_le = sorted(faces[-1].edges[0].sample_points, key=lambda point: point.x)[0]
+
+        return LineSegment(start=root_le,
+                           end=tip_le,
+                           hidden=self.hide_LE,
+                           color='yellow')
 
     @Attribute
     def tip_offset(self):

@@ -30,10 +30,11 @@ class Component(GeomBase):
         |   'vt'
         |   'ht'
         |   'payload'
-        |   'motor'
         |   'prop'
         |   'battery'
-        |   ]"""
+        |   'electronics'
+        |   ''
+        |   """
 
         return 'Not Classified'
 

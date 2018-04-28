@@ -45,8 +45,8 @@ class Electronics(Component):
     @Part
     def speed_controller(self):
         #  Speed controller takes inputs continuous amp draw and number of engines.
-        return SpeedController(amp_recc = self.amp_req,
-                               num_engines = self.number_engines)
+        return SpeedController(amp_recc=self.amp_req,
+                               num_engines=self.number_engines)
 
 if __name__ == '__main__':
     from parapy.gui import display
