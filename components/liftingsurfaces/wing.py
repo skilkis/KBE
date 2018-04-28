@@ -98,7 +98,10 @@ class Wing(Component):
 #  This block of Attributes calculates the planform parameters. ########------------------------------------------------
     @Attribute
     def component_type(self):
-        #  This names the wing 'wing' as its component type.
+        """ This attribute names the component 'wing'.
+        :return: str
+        :rtype: str
+        """
         return 'wing'
 
     @Attribute
@@ -118,21 +121,30 @@ class Wing(Component):
 
     @Attribute
     def s_req(self):
-        # This is the calculation of the required TOTAL wing area from the design point.
+        """ This attribute contains the calculation of the required TOTAL wing area from the design point.
+        :return: float
+        :rtype: float
+        """
         return (self.mtow * 9.81) / self.WS_pt
         # TODO wing loading is in N/m^2 thus we have to have a global variable for g
 
     @Attribute
     def lift_coef_control(self):
-        #  This is the Required C_L from the lift equation at 1.2*V_s @ MTOW for the controllability curve of
-        # the scissor plot.
+        """ This is the Required C_L from the lift equation at 1.2*V_s @ MTOW for the controllability curve of the
+         scissor plot.
+         :return: float
+         :rtype: float
+         """
         clreq = 2 * 9.81 * self.mtow / (self.rho * ((1.2 * self.V_s) ** 2) * self.s_req)
         return clreq
 
     @Part
     def wing(self):
-        """ This part instantiates a primitive (LiftingSurface) with the inputs given to make the right-hand side of the
-        wing. The input area is halved because lifting surface generates one wing with given area """
+        """" This part instantiates a primitive (LiftingSurface) with the inputs given to make the right-hand side of
+        the wing. The input area is halved because lifting surface generates one wing with given area
+         :return: ParaPy Geometry
+         :rtype: RotatedShape
+         """
         return LiftingSurface(S=self.s_req * 0.5,
                               AR=self.AR,
                               taper=self.taper,
@@ -145,7 +157,10 @@ class Wing(Component):
 
     @Part
     def left_wing(self):
-        #  This part mirrors the right wing across the X-Z plane to make the left wing.
+        """" This part mirrors the right wing across the X-Z plane to make the left wing.
+         :return: ParaPy Geometry
+         :rtype: MirroredShape
+         """
         return MirroredShape(shape_in=self.wing.final_wing,
                              reference_point=self.wing.position,
                              vector1=Vector(1, 0, 0),
@@ -154,20 +169,29 @@ class Wing(Component):
 
     @Attribute(private=True)
     def wing_cut_loc(self):
-        #  This calculates the spanwise distance of the cut, inside of which, the wing is inside the fuselage.
+        """" This calculates the spanwise distance of the cut, inside of which, the wing is inside the fuselage.
+         :return: Spanwise distance from root chord to cut location
+         :rtype: float
+         """
         return self.wing.semispan * self.fuse_width_factor
 
     @Part(private=True)
     def right_cut_plane(self):
-        #  This makes a plane at the right wing span location where the fuselage is to end.
+        """" This makes a plane at the right wing spanwise location where the fuselage is to end.
+         :return: Plane at spanwise distance from root chord to cut location.
+         :rtype: Plane
+         """
         return Plane(reference=translate(self.wing.position, 'y', self.wing_cut_loc),
                      normal=Vector(0, 1, 0),
                      hidden=True)
 
     @Attribute(private=True)
     def get_wingfuse_bounds(self):
-        #  This attribute is obtaining (the dimensions of) a bounded box at a fuselage width factor of the semispan
-        #  which will be used to size the local fuselage frames which drive the shape of the fuselage.
+        """" This attribute is obtaining (the dimensions of) a bounded box at a fuselage width factor of the semispan
+         which will be used to size the local fuselage frames which drive the shape of the fuselage.
+         :return: HT center section bounding box
+         :rtype: bbox
+         """
         inner_part = PartitionedSolid(solid_in=self.wing.final_wing,
                                       tool=self.right_cut_plane).solids[0].faces[1].wires[0]
         #  Above obtains a cross section of the wing, at the specified fuselage width factor.
@@ -185,7 +209,10 @@ class Wing(Component):
 
     @Part
     def internal_shape(self):
-        #  This attribute creates the bounding box for the part of the wing within the fuselage.
+        """"  This part creates the bounding box for the part of the wing within the fuselage.
+         :return: HT center section bounding box
+         :rtype: Box
+         """
         return Box(width=self.get_wingfuse_bounds.width,
                    height=self.get_wingfuse_bounds.height,
                    length=self.get_wingfuse_bounds.length,
@@ -200,7 +227,10 @@ class Wing(Component):
 #  In this block, the AVL analysis is setup, run and C_Lalpha is extracted.
     @Attribute
     def root_section(self):
-        #  This defines the root section with the chosen airfoil.
+        """"  This defines the root section with the chosen airfoil.
+         :return: AVL Section
+         :rtype: Section
+         """
         return Section(leading_edge_point=Point(0, 0, 0),
                        chord=self.wing.root_chord,
                        airfoil=FileAirfoil(get_dir(os.path.join('airfoils', self.airfoil_type,
@@ -208,7 +238,10 @@ class Wing(Component):
 
     @Attribute
     def tip_section(self):
-        #  Here we define the tip AVL section with proper location and airfoil.
+        """"  Here we define the tip AVL section with proper location and airfoil.
+         :return: AVL Section
+         :rtype: Section
+         """
         return Section(leading_edge_point=Point(self.wing.semispan * tan(radians(self.wing.le_sweep)),
                                                 self.wing.semispan,
                                                 self.wing.semispan * tan(radians(self.dihedral))),
@@ -219,8 +252,11 @@ class Wing(Component):
 
     @Attribute
     def wing_surface(self):
-        #  Here we define the wing surface using a symmetry plane at y=0. Here the number of vortecies and their
-        # chordwise and spanwise spacing is also set.
+        """" Here we define the wing surface using a symmetry plane at y=0. Here the number of vortecies and their
+         chordwise and spanwise spacing is also set.
+         :return: AVL Surface
+         :rtype: Surface
+         """
         return Surface(name="Wing",
                        n_chordwise=12,
                        chord_spacing=Spacing.cosine,
@@ -231,7 +267,10 @@ class Wing(Component):
 
     @Attribute
     def wing_geom(self):
-        #  Here we define the AVL geometry.
+        """"  Here we define the AVL geometry.
+         :return: AVL Geometry
+         :rtype: Geometry
+         """
         return Geometry(name="Test wing",
                         reference_area=self.s_req,
                         reference_chord=self.wing.mac_length,
@@ -241,8 +280,11 @@ class Wing(Component):
 
     @Attribute
     def alpha_cases(self):
-        #  Here we define the run cases for AVL. We are running input cases alpha from 0 to 10 with 25 data points, at
-        #  the speed required for the controllability curve (1.2*v_s).
+        """"  Here we define the run cases for AVL. We are running input cases alpha from 0 to 10 with 25 data points, at
+         the speed required for the controllability curve (1.2*v_s).
+         :return: AVL List of RunCases
+         :rtype: Case
+         """
         alphas = np.linspace(0.0, 10.0, 25)
         alpha_case = []
         for i in range(0, len(alphas)):
@@ -251,25 +293,37 @@ class Wing(Component):
 
     @Attribute
     def avl_session(self):
-        #  Here we define the AVL session with the cases above.
+        """"  Here we define the AVL session with the cases above.
+         :return: AVL Session
+         :rtype: Session
+         """
         return Session(geometry=self.wing_geom, cases=self.alpha_cases)
 
     @Attribute
     def show_avlgeom(self):
-        #  Here we show the AVL geometry. NOTE: THERE IS A BUG HERE, IF DOUBLE CLICKED IN GUI, IT SHOWS BUT CAUSES
-        #  PYTHON TO FREEZE. THE CODE MUST BE STOPPED AND RESTARTED IF THE GEOMETRY IS SHOWN. TODO FIX THIS IF POSSIBLE
+        """"  Here we show the AVL geometry. NOTE: THERE IS A BUG HERE, IF DOUBLE CLICKED IN GUI, IT SHOWS BUT CAUSES
+         PYTHON TO FREEZE. THE CODE MUST BE STOPPED AND RESTARTED IF THE GEOMETRY IS SHOWN. TODO FIX THIS IF POSSIBLE
+         :return: AVL Geometry
+         :rtype: AVL PltLib Viewer
+         """
         self.avl_session.show_geometry()
         return 'Done'
 
     @Attribute
     def results(self):
-        #  Here, the results are extracted.
+        """"  Here, the results are extracted and stored in the memory of ParaPy.
+         :return:
+         :rtype:
+         """
         return self.avl_session.get_results()
 
     @Attribute
     def lift_coef_vs_alpha(self):
         # TODO Make this lazy by seperating into a different attribute
-        #  Here, the cl vs alpha plot is created and the contant C_L vs alpha value is found.
+        """"  Here, the cl vs alpha plot is created and the constant C_L vs alpha value is found.
+         :return: Plot and float
+         :rtype: float
+         """
         cl_alpha_array = (sorted([[self.results[alpha]['Totals']['Alpha'], self.results[alpha]['Totals']['CLtot']]
                                   for alpha in self.results], key=lambda f: float(f[0])))
     #  Above we extract the c_l and angle of attack values.
@@ -293,8 +347,11 @@ class Wing(Component):
 
     @Attribute
     def lift_coef_control_index(self):
-        #  This attribute returns the index of the AVL data corresponding to the case when C_L is closest to the
-        #  required C_L_cont required by the lift equation for the controllability curve.
+        """"  This attribute returns the index of the AVL data corresponding to the case when C_L is closest to the
+         required lift_coef_control required by the lift equation for the controllability curve.
+         :return: index
+         :rtype: int
+         """
         cll_array = (sorted([[self.results[alpha]['Totals']['Alpha'], self.results[alpha]['Totals']['CLtot']]
                             for alpha in self.results], key=lambda f: float(f[1])))
         cll = [i[1] for i in cll_array]
@@ -303,15 +360,21 @@ class Wing(Component):
         return cl_cont_index
 
     @Attribute
-    #  Now we must get the pitching moment of the wing about its aerodynamic center from avl corresponding to
-    # lift_coef_cont derived above.
     def controllability_c_m(self):
+        """"  This attribute gets the pitching moment of the wing about its aerodynamic center from avl corresponding to
+         lift_coef_cont derived above.
+         :return: C_mac
+         :rtype: float
+         """
         case_name = self.results['alpha%s' % self.lift_coef_control_index]['Totals']['Cmtot']
         return case_name
 
     @Attribute
     def write_results(self):
-        #  Here the results are written into a .json file.
+        """"  Here the results are written into a .json file
+         :return: AVL data file
+         :rtype: .json file
+         """
         results = self.avl_session.get_results()
         with open(os.path.join(DIRS['USER_DIR'], 'results', 'avl_wing_out.json'), 'w') as f:
             f.write(json.dumps(results))
