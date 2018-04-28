@@ -1,49 +1,88 @@
-
-# TODO Update Header
-#This class will perform the Class I weight estimation for the fixed wing electric drone
-#based on the input MTOW.
-#There are assumed values for: C_lmax, Stall speed, propellor efficiency,
-#zero-lift drag coefficient, Aspect Ratio and Oswald Efficiency Factor.
-#Also, the climb rate and climb gradient must be assumed.
-#All Values are in SI Units unless stated.
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 # Importing required local packages
 from parapy.core import *
 from math import *
 import matplotlib.pyplot as plt
+from directories import *
 
+__author__ = ["Nelson Johnson", "Şan Kılkış"]
 __all__ = ["WingPowerLoading"]
 
 
 class WingPowerLoading(Base):
+    """ This class will construct the wing and power loading plot for the fixed wing UAV based on the input MTOW. The
+        requirements are the climb rate and climb gradient. There are assumed values for:  C_lmax, Stall speed,
+        propeller efficiency, zero-lift drag coefficient, Aspect Ratio and Oswald Efficiency Factor. All Values are in
+        SI Units unless stated.
+    :returns: Weight values for maximum take-off weight ('weight_mtow') and payload weight ('weight_payload')
+    :rtype: float
+    """
+
+#: This block of code contains the inputs. ########---------------------------------------------------------------------
 
     #: Boolean operator to determine if the user requires the UAV to be hand launched
     #: This parameter changes the stall-speed used for the Wing Loading
     #: :type: Boolean
     handlaunch = Input(True)
 
-    C_Lmax = Input([1.0, 1.25, 1.5])  # These are 3 assumed values for C_Lmax
+    #: This is a list of three C_lmax's that the wing is assumed to generate. This creates multiple lines on the plots.
+    #: :type: List
+    C_Lmax = Input([1.0, 1.25, 1.5])
+
+    #: This is a list of three Aspect Ratios that the wing is assumed to generate. This creates multiple lines on
+    #: the plots.
+    #: :type: List
     AR = Input([6, 9, 12])  # These are the 3 assumed Aspect Ratios
 
-    n_p = Input(0.7)  # Assumption for the propellor efficiency.
-    e_factor = Input(0.8)  # Assumed Oswald Efficiency Factor.
+    #: This is the assumed propeller efficiency.
+    #: :type: float
+    n_p = Input(0.7)
 
+    #: This is the assumed Oswald Efficiency Factor.
+    #: :type: float
+    e_factor = Input(0.8)
 
     # TODO make these constants into an attribute for lazy evaluation
-    rho = 1.225                 #  STD ISA sea level density
-    rho_cr = 0.9091             #  ISA 3km Density for climb rate power loading equation.
-                                #  Below are the assumed stall speeds for the Stall Speed Wing Loading Eq.
-    V_s_hand = 8.0              #  This is the assumed throwing speed of a hand launched UAV
-    V_s_nonhand = 12            #  This is the assumed launch speed at the end of a catapult or runway.
+    #: Below is the STD ISA sea level density
+    #: :type: float
+    rho = 1.225
 
-    C_D0 = 0.02                 #  Assumed Value of Zero-Lift Drag Coefficient.
-    RC = 1.524                  #  Assumption for Required Climb Rate, Same as Sparta UAV 1.1.2.
-    G = 0.507                   #  Assumed Climb Gradient to clear 10m object 17m away.
+    #: Below is the ISA Density at 3km height for the climb rate power loading equation.
+    #: :type: float
+    rho_cr = 0.9091
 
+    #: Below is the assumed throwing speed of a hand launched UAV
+    #: :type: float
+    V_s_hand = 8.0
+
+    #: Below is assumed launch speed at the end of a catapult or runway.
+    #: :type: float
+    V_s_nonhand = 12
+
+    #: Below is the assumed Value of Zero-Lift Drag Coefficient.
+    #: :type: float
+    C_D0 = 0.02
+
+    #: Below is the assumption for Required Climb Rate, Same as Sparta UAV 1.1.2.
+    #: :type: float
+    RC = 1.524
+
+    #: Below is the assumed Climb Gradient to clear 10m object 17m away.
+    #: :type: float
+    G = 0.507
+
+#  This block of Attributes calculates the wing and thrust loading parameters. ########---------------------------------
 
     @Attribute
     def wingloading(self):
-        # TODO REMEMBER TO ADD ATTRIBUTE HEADER COMMENT HERE
+        """ This attribute calculates the 3 required wing loadings from the lift equation, using the stall speed
+        and the three assumed C_lmax's. If the UAV is to be hand launched, a lower stall speed is used. At this moment,
+        this is the only requirement on the wing loading.
+        :return: Required wing loading for 3 different C_lmax's
+        :rtype: dict
+        """
         if self.handlaunch:
             V_s = self.V_s_hand
             ws_string = '_hand'
@@ -58,7 +97,6 @@ class WingPowerLoading(Base):
     @Attribute
     def powerloading(self):
         """ Lazy-evaluation of Power Loading due to a Climb Rate Requirement at 3000m for various Aspect Ratios
-
         :return: Stacked-Array where first dimension corresponds to Aspect Ratio, and sub-dimension contains
         an array of floats in order of smallest Wing Loading to Largest. This range is set w/ parameter 'WS_range'
         """
@@ -69,10 +107,7 @@ class WingPowerLoading(Base):
                                                                 ((self.AR[i] * e) ** (3.0 / 2.0))))))
                          for num in self.WS_range])
             # evaluating all values of WS_range w/ list comprehension
-
-            ## Calculate Required Power for Climb Gradient Requirement 10m high object 10m away.
-
-        #Picks the first aspect ratio and proceeds since the climb-gradient requirement is not influenced heavily by AR
+        # Picks the first aspect ratio and proceeds since the climb-gradient requirement is not influenced heavily by AR
         wp_cg = []
         for i in range(len(self.C_Lmax)):
             wp_cg.append([self.n_p / (sqrt(num * (2.0 / self.rho) * (1 / self.climbcoefs['lift'][i])) *
@@ -83,11 +118,12 @@ class WingPowerLoading(Base):
                 'climb_gradient': wp_cg}
 
     @Attribute
-    # TODO Make this a pretty graph with pretty colloooorrss please
     # TODO Make this plot appear ontop of GUI & Be Eager (This can be accomplished by making it a part)
     def loadingdiagram(self):
-
-        plt.figure('LoadingDiagram')
+        """ This attribute creates the loading diagram
+         :return: Plot
+         """
+        fig = plt.figure('LoadingDiagram')
         plt.style.use('ggplot')
 
         for i in range(len(self.C_Lmax)):
@@ -117,13 +153,13 @@ class WingPowerLoading(Base):
         plt.axis([min(self.WS_range), max(self.WS_range), 0, 1.0])
         plt.legend()
         plt.title('Wing and Power Loading (Handlaunch = %s)' % self.handlaunch)
-        plt.ion()
+        #plt.ion()
         plt.show()
+        fig.savefig(fname=os.path.join(DIRS['USER_DIR'], 'plots', '%s.pdf' % fig.get_label()), format='pdf')
         return "Plot generated and closed"
 
     @Attribute
     def designpoint(self):
-        #TODO This header for design point
         """ An attribute which adds a safety factor to the lift coefficient in order to not stall out
         during climb-out. Modifying the lift coefficient changes drag coefficients as well due to induced drag
         the latter part of this code computes the new drag coefficients.
