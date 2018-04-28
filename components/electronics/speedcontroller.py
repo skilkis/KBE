@@ -62,7 +62,6 @@ class SpeedController(Component):
         plt.ylabel(r'Volume [$\mathrm{m}^3$]')
         plt.xlabel(r'Amperage [$\mathrm{A}$]')
         plt.legend(loc=0)
-        #plt.ion()      #
         plt.show()
         fig.savefig(fname=os.path.join(DIRS['USER_DIR'], 'plots', '%s.pdf' % fig.get_label()), format='pdf')
         return 'Plot Made, See PyCharm'

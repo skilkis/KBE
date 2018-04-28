@@ -22,7 +22,7 @@ __all__ = ["Fuselage"]
 # ^ Potential knowledge base for materials
 
 
-class Fuselage(Component):
+class Fuselage(ExternalBody):
 
     # TODO Class description and use cases
 
@@ -328,6 +328,10 @@ class Fuselage(Component):
         else:
             shape_out = Circle(radius=0.0, hidden=True)
         return shape_out
+
+    @Part
+    def external_shape(self):
+        return SewnShell([self.center_section, self.nose])
 
     # --- Private Attributes: -----------------------------------------------------------------------------------------
 

@@ -8,7 +8,7 @@ from directories import *
 
 
 __author__ = "Şan Kılkış"
-__all__ = ["Component", "ExternalSurface", "VisualCG"]
+__all__ = ["Component", "ExternalBody", "VisualCG"]
 
 
 class VisualCG(GeomBase):
@@ -77,7 +77,7 @@ class Component(GeomBase):
         """
         return Point(0, 0, 0)
 
-    @Attribute
+    @Attribute(private=True)
     def text_label_position(self):
         """ Sets the default position of the text_label to be on the front-left corner of the internal_shape
         :rtype: Point
@@ -102,18 +102,14 @@ class Component(GeomBase):
         return TextLabel(text="     %s" % self.label,
                          position=self.text_label_position, hidden=self.hide_labels)
 
-    @Attribute(private=True)
-    def cog_sphere_import(self):
-        return Sphere(radius=0.05,
-                      position=XOY,
-                      color='Red')
-
     @Part
     def cog_sphere(self):
         return VisualCG(self.center_of_gravity, self.weight)
 
 
-class ExternalSurface(GeomBase):
+class ExternalBody(Component):
+
+    __icon__ = os.path.join(DIRS['ICON_DIR'], 'air.png')
 
     @Attribute
     def surface_type(self):
@@ -129,7 +125,7 @@ class ExternalSurface(GeomBase):
         |
         """
 
-        return 'wing'
+        return self.component_type
 
     @Attribute
     def wetted_area(self):
@@ -138,12 +134,28 @@ class ExternalSurface(GeomBase):
         :return: Total wetted area of the external_part in SI sq. meter
         :rtype: float
         """
+        area = 0
+        if hasattr(self.external_shape, 'solids'):
+            for i in self.external_shape.solids:
+                area = area + i.area
+        else:
+            raise Exception('%s has no solids to find wetted_area from, please create a fused operation to resolve'
+                            % self.external_shape)
+        return area
+
+    @Attribute
+    def planform_area(self):
+        """ The projected area of an `external_shape` when looking at the XY plane in the nadir direction ('z_')
+
+        :return: Projected Area on the XY plane in SI sq. meter
+        :rtype: float
+        """
         return 0
 
     @Part
-    def external_part(self):
-        """  The final shape of a ExternalSurface class which is to be exported """
-        return Box(0, 0, 0)
+    def external_shape(self):
+        """  The final shape of a ExternalSurface class which is to be exported THIS PART MUST BE OVERWRITTEN!!! """
+        return Box(0.5, 0.5, 0.5, transparency=0.8, centered=True, position=self.position)
 
 
 if __name__ == '__main__':

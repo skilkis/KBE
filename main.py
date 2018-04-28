@@ -55,10 +55,10 @@ class UAV(Base):
                            e_h=0.8,
                            lhc=3.0,
                            lhc_canard=-3.0,
-                           Cl_w = self.wing.lift_coef_control,
-                           C_mac = self.wing.controllability_c_m,
-                           Cla_w = self.wing.lift_coef_vs_alpha,
-                           delta_xcg = 0.3)
+                           Cl_w=self.wing.lift_coef_control,
+                           C_mac=self.wing.controllability_c_m,
+                           Cla_w=self.wing.lift_coef_vs_alpha,
+                           delta_xcg=0.3)
 #  TODO make relation for AR_h, and add dynamic validator.
 
     @Part
@@ -72,7 +72,7 @@ class UAV(Base):
 
     @Part
     def motor(self):
-        return Motor(integration='puller', position=translate(self.camera.position, 'x', -0.1, 'z', self.cg.z / 2.0))
+        return Motor(integration='puller', position=translate(self.camera.position, 'x', -1, 'z', self.cg.z / 2.0))
 
     @Part
     def center_of_gravity(self):

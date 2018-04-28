@@ -4,11 +4,10 @@
 from parapy.core import *
 from parapy.geom import *
 from primitives import LiftingSurface
-from scissorplot import ScissorPlot
 from definitions import *
 
 
-class HorizontalStabilizer(Component):
+class HorizontalStabilizer(ExternalBody):
 
     S_req = Input(0.8)      #  This is the required total wing area from the Class I estimations. TODO CONNECT TO MAIN/ WINGPWR LOADING
     AR_h = Input(5.0)       #  This is the HT aspect ratio. TODO CONNECT TO MAIN/LS
@@ -21,7 +20,7 @@ class HorizontalStabilizer(Component):
     #  TODO CONNECT THESE INPUTS TO MAIN/WINGPOWER LOADING AND MTOW!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     htfuse_width_factor = Input(0.025)  # This is an assumed factor relating the part of the HT covered by fuse to semispan
     WF_HT = Input(0.1)      #  This is the weight fraction of the HT.
-    MTOW = Input(25.0)  # MUST GET THIS INPUT FROM CLASS I!!!!!!!!!!!!!!!!!!!!!!!!!!
+    weight_mtow = Input(25.0)  # MUST GET THIS INPUT FROM CLASS I!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
     @Attribute
@@ -30,25 +29,19 @@ class HorizontalStabilizer(Component):
 
     @Attribute
     def weight(self):
-        return self.WF_HT*self.MTOW
-    #
-    # @Attribute
-    # def scissor(self):
-    #     #  Instantiation of scissor plot to obtain required tail to wing area ratio.
-    #     #  TODO CONNECT THIS TO MAIN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    #     return ScissorPlot()
-    #
-    # @Attribute
-    # def shsreq(self):
-    #     # This obtains the required tail to wing area ratio.
-    #     print 'Required Sh/S is ', self.scissor.shs_req
-    #     return self.scissor.shs_req
-    #
-    # @Attribute
-    # def sh(self):
-    #     #  This calculates the required HT wing area from the scissor plots.
-    #     return self.shsreq*self.S_req
+        return self.WF_HT*self.weight_mtow
 
+    @Attribute
+    def center_of_gravity(self):
+        #  This shows the COG.
+        #  It was found from one wing and translated to origin because the fused shape does not exhibit a C.G..
+        y = 0
+        pos = Point(self.ht.final_wing.cog.x, y, self.ht.final_wing.cog.z)
+        return pos
+
+    @Attribute
+    def planform_area(self):
+        return self.S_req
 
     @Part
     def ht(self):
@@ -65,29 +58,30 @@ class HorizontalStabilizer(Component):
 
     @Part
     def ht_mirror(self):
-        return MirroredShape(shape_in = self.ht.final_wing,
-                             reference_point = self.ht.position,
-                             vector1 = Vector(1,0,0),
-                             vector2 = Vector(0,0,1))
+        return MirroredShape(shape_in=self.ht.final_wing,
+                             reference_point=self.ht.position,
+                             vector1=Vector(1,0,0),
+                             vector2=Vector(0,0,1))
 
-    @Attribute
+    @Attribute(private=True)
     def htwing_cut_loc(self):
         #  This calculates the spanwise distance of the cut, inside of which, the wing is inside the fuselage.
         return self.ht.semispan*self.htfuse_width_factor
 
-    @Part
+    @Attribute(private=True)
     def htright_cut_plane(self):
         #  This makes a plane at the right wing span location where the fuselage is to end.
         return Plane(reference= translate(self.ht.position,
                                           'y', self.htwing_cut_loc),
                      normal=Vector(0, 1, 0),
-                     hidden = True)
-    @Attribute
+                     hidden=True)
+
+    @Attribute(private=True)
     def get_htfuse_bounds(self):
         #  This attribute is obtaining (the dimensions of) a bounded box at a fuselaage width factor of the semispan
         #  which will be used to size the fuselage frames. These frames drive the shape of the fuselage.
         inner_part = PartitionedSolid(solid_in = self.ht.final_wing,
-                                      tool = self.htright_cut_plane).solids[0].faces[1].wires[0]
+                                      tool=self.htright_cut_plane).solids[0].faces[1].wires[0]
         #  Above obtains a cross section of the wing, at the specified fuselage width factor.
 
         mirrored_part = MirroredShape(shape_in=inner_part, reference_point=self.ht.final_wing.position,vector1=Vector(1, 0, 0),vector2=Vector(0, 0, 1))
@@ -109,13 +103,11 @@ class HorizontalStabilizer(Component):
                    position=Position(self.get_htfuse_bounds.center),
                    centered=True)
 
-    @Attribute
-    def center_of_gravity(self):
-        #  This shows the COG.
-        #  It was found from one wing and translated to origin because the fused shape does not exhibit a C.G..
-        y = 0
-        pos = Point(self.ht.final_wing.cog.x, y, self.ht.final_wing.cog.z)
-        return pos
+    @Part
+    def external_shape(self):
+        return Fused(self.ht.final_wing, self.ht_mirror)
+
+
 
 
 
