@@ -107,25 +107,38 @@ class ScissorPlot(GeomBase):
 
     @Attribute
     def x_cg_vs_mac(self):
-        #  This returns the non dimensional distance between the COG and the wing AC.
+        """ This attribute returns the non dimensional distance between the COG and the wing AC.
+        :return: x_cg
+        :rtype: float
+        """
         print self.x_cg - self.x_ac / self.mac
         return (self.x_cg - self.x_ac) / self.mac
 
     @Attribute
     def cla_h(self):
-        #  This estimates the lift slope of a low sweep, low speed 3D HT.
+        """ This attribute estimates the lift slope of a low sweep, low speed 3D HT.
+        :return: HT lift curve slope
+        :rtype: float
+        """
         cla_h = self.a_0/(1+(self.a_0 / (pi * self.AR_h * self.e_h)))
         return cla_h
 
     @Attribute
     def downwash_a(self):
-        #  This estimates the wings change in down wash with angle of attack.
+        """ This attribute estimates the wings change in downwash with angle of attack.
+        :return: Downwash gradient
+        :rtype: float
+        """
         deda = 4/(self.AR + 2)
         return deda
 
     @Attribute
     def cl_h(self):
-        #  This returns the maximum lift coefficient of the tail for the controllability case.
+        """ This attribute returns the lift coefficient of the tail for the controllability case. The
+        canard is assumed to be all moving.
+        :return: HT lift coefficient
+        :rtype: float
+        """
         if self.configuration is 'conventional':
             cl_h = -0.35*(self.AR_h**(1.0/3.0))
         else:
@@ -137,18 +150,27 @@ class ScissorPlot(GeomBase):
 
     @Attribute
     def cla_w_canard(self):
-        #  This reduces the wing lift slope for the canard case. It is reducing the C_lalpha from AVL.
+        """ This attribute reduces the wing lift slope for the canard case. It is reducing the C_lalpha from AVL.
+        :return: Canard wing lift slope
+        :rtype: float
+        """
         return self.Cla_w*(1 - ((2 * self.cla_h * self.shs_req) / (pi * self.AR * self.k_factor)))
 
     @Attribute
     def xcg_range(self):
-        #  This is a dummy list of x_cg used for plotting Sh/S.
+        """ This attribute is a dummy list of x_cg used for plotting Sh/S.
+        :return: List of values of X_cg
+        :rtype: list
+        """
         values = np.linspace(-5, 5, 20)
         return values
 
     @Attribute
     def shs_stability(self):
-        #  This calculates the required Sh/S for the stability requirement.
+        """ This attribute calculates the required Sh/S for the stability requirement.
+        :return: Required Sh/S for stability
+        :rtype: list
+        """
         shs_stab = []
         for i in range(0, len(self.xcg_range)):
             if self.configuration is 'conventional':
@@ -168,7 +190,10 @@ class ScissorPlot(GeomBase):
 
     @Attribute
     def shs_control(self):
-        #  This calculates the required Sh/S for the controllability requirement.
+        """ This attribute calculates the required Sh/S for the controllability requirement
+        :return: Required Sh/S for controllability.
+        :rtype: list
+        """
         shs_c = []
         for i in range(0, len(self.xcg_range)):
             if self.configuration is 'conventional':
@@ -186,8 +211,11 @@ class ScissorPlot(GeomBase):
 
     @Attribute
     def shs_req(self):
-        #  This attribute will calculate the required Sh/S based on the required cg shift.
         #  TODO add error if there's a negative Sh/S output. Solution is to increase Cl_h or tail arm or reduce Cl_w
+        """ This attribute will calculate the required Sh/S based on the required cg shift.
+        :return: Required Sh/S.
+        :rtype: list
+        """
         if self.configuration is 'conventional':
             shs_req = (self.delta_xcg + self.SM - (self.C_mac / self.Cl_w)) / \
                       ((((self.cla_h / self.Cla_w) * (1 - self.downwash_a)) - (self.cl_h / self.Cl_w)) *
@@ -201,6 +229,10 @@ class ScissorPlot(GeomBase):
 
     @Attribute
     def scissorplot(self):
+        """ This attribute will plot the scissor plot.
+        :return: Scissor Plot.
+        :rtype: Plot
+        """
         fig = plt.figure('ScissorPlot')
         plt.style.use('ggplot')
         plt.title('Scissor Plot')

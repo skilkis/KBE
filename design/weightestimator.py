@@ -56,6 +56,11 @@ class ClassOne(Base):
 
     @Attribute
     def weight_mtow(self):
+        """ This attribute estimates the Aircraft's MTOW from the payload mass requirement. This relation is from
+        statistical UAV data. If the requirement is on MTOW, this is also dealt with.
+        :return: MTOW
+        :rtype: float
+        """
         if self.weight_target == 'payload':
             mtow = 4.7551 * self.target_value + 0.59962
             #  Estimation of MTOW from payload mass from DSE Midterm Report.
@@ -66,6 +71,11 @@ class ClassOne(Base):
 
     @Attribute
     def weight_payload(self):
+        """ This attribute estimates the Aircraft's payload mass from the MTOW requirement. This relation is from
+        statistical UAV data. If the requirement is on payload mass, this is also dealt with.
+        :return: payload mass
+        :rtype: float
+        """
         if self.weight_target == 'mtow':
             m_pl_derived = 0.2103 * self.target_value - 0.1261
             #  Estimation of m_pl from MTOW with reversed Eq.
@@ -120,33 +130,52 @@ class ClassTwo(Base):
 
     @Attribute
     def weight_structural(self):
-        #  This returns the remainder of the MTOW after the engine, battery and payload masses subtracted.
-        #  This is assumed to be evenly split between the fuselage and wing weights.
+        """ This attribute returns the remainder of the MTOW after the engine, battery and payload masses subtracted.
+        This is assumed to be evenly split between the fuselage and wing weights.
+        :return: Structural Weight
+        :rtype: float
+        """
         return self.weight_mtow - self.weight_prop - self.weight_batt - self.weight_payload - self.weight_electronics
 
     @Attribute
     def structural_weight_per_area(self):
+        """ This attribute calculates the mass per unit area, used to split the mass between the wings.
+        :return: Structural Weight Per Area
+        :rtype: float
+        """
         ratio = self.weight_structural / (self.S + self.S_v + self.S_h + self.S_f)
         return ratio
 
     @Attribute
     def weight_fuselage(self):
-        #  This is the assumed fuselage weight. It is assumed to be 60% of the remaining MTOW.
-        return self.weight_structural + self.weight_structural
+        """ This attribute calculates the mass of the fuselage using the weight per unit area and its surface area.
+        :return: Fuselage Weight
+        :rtype: float
+        """
+        return self.structural_weight_per_area*self.S_f
 
     @Attribute
     def weight_wing(self):
-        #  The wing weight is found by multiplying its area with the weight to area factor.
+        """ This attribute calculates the mass of the wing using the weight per unit area and its surface area.
+        :return: Wing Weight
+        :rtype: float
+        """
         return self.structural_weight_per_area*self.S
 
     @Attribute
     def weight_ht(self):
-        #  The HT weight is found by multiplying its area with the weight to area factor.
+        """ This attribute calculates the mass of the HT using the weight per unit area and its surface area.
+        :return: HT Weight
+        :rtype: float
+        """
         return self.structural_weight_per_area*self.S_h
 
     @Attribute
     def weight_vt(self):
-        #  The VT weight is found by multiplying its area with the weight to area factor.
+        """ This attribute calculates the mass of the VT using the weight per unit area and its surface area.
+        :return: VT Weight
+        :rtype: float
+        """
         return self.structural_weight_per_area*self.S_v
 
 

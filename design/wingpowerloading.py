@@ -238,10 +238,13 @@ class WingPowerLoading(Base):
 
     @Attribute
     def ws_range(self):
+        """ This is a dummy list of wing loadings for iterating in the Power Loading Equations.
+        :return: List of wing loadings
+        :rtype: List
+        """
         ws_limit = max(self.wingloading['values'])
         values = [float(i) for i in range(1, int(ceil(ws_limit / 100.0)) * 100)]
         return values
-    #  Above is a dummy list of wing loadings for iterating in the Power Loading Equations.
 
 
 if __name__ == '__main__':
