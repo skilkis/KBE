@@ -158,6 +158,8 @@ class ExternalBody(Component):
         """  The final shape of a ExternalSurface class which is to be exported THIS PART MUST BE OVERWRITTEN!!! """
         return Box(0.5, 0.5, 0.5, transparency=0.8, centered=True, position=self.position)
 
+        # TODO Not make this a fused part, be abld to extract area w/o fused operation
+
 
 if __name__ == '__main__':
     from parapy.gui import display

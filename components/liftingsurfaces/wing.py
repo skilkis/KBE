@@ -21,7 +21,7 @@ __all__ = ["Wing"]
 
 
 # class Wing(GeomBase, WingPowerLoading, ClassOne):  # TODO experiment if this works, multiple inheritance
-class Wing(ExternalBody):
+class Wing(ExternalBody, LiftingSurface):
     """ This class will create the wing geometry based on the required:
     Wing Area (class I output), Aspect Ratio (class I input), taper ratio (assumed),
     dihedral angle (assumed), wing twist angle (assumed) and airfoil selection.
@@ -31,59 +31,26 @@ class Wing(ExternalBody):
 #  This block of code contains the inputs. ########---------------------------------------------------------------------
     #: Below is the required wing loading from the class I weight estimation.
     #: :type: float
-    WS_pt = Input(100.0, validator=val.Positive())
+    wing_loading = Input(100.0, validator=val.Positive())
 
     #: Below is the required MTOW from the class I weight estimation.
     #: :type: float
-    mtow = Input(25.0, validator=val.Positive())
-
-    @Input
-    def mtow(self):
-        #  When wing is instantiated in main without a supplied mtow, this attribute pulls the value from the ancestor.
-        return 25 if self.is_root else self.get_ancestor_value('mtow')
-
-    #: Below is the corresponding aspect ratio from the wing and power loading.
-    #: :type: int
-    AR = Input(12, validator=val.Positive())
-
-    #: Below is the corresponding stall speed from the wing and power loading.
+    weight_mtow = Input(25.0, validator=val.Positive())
+    
+    #: The stall speed of the wing
     #: :type: float
-    V_s = Input(15.0, validator=val.Positive())
+    stall_speed = Input(8.0)
 
-    #: Below is the chosen taper ratio.
-    #: :type: float
-    taper = Input(0.3, validator=val.Positive())
-
-    #: Below is the chosen dihedral angle.
-    #: :type: float
-    dihedral = Input(5.0, validator=val.Range(-20.0, 20.0))
-
-    #: Below is the chosen twist angle.
-    #: :type: float
-    twist = Input(-2.0, validator=val.Range(-10, 10.0))
-
-    #: Below is the folder for the selected airfoil.
-    #: :type: str
-    airfoil_type = Input('cambered', validator=val.OneOf(['cambered', 'reflexed', 'symmetric']))
-
-    #: Below is the file name (without extention) of the selected airfoil.
-    #: :type: str
-    airfoil_choice = Input('SA7036')
-
-    #: Below is the chosen trailing edge offset.
-    #: :type: NoneType or float
-    offset = Input(None)
+    # @Input
+    # def weight_mtow(self):
+    #     #  When wing is instantiated in main without a supplied weight_mtow, this attribute pulls the value from the ancestor.
+    #     return 25 if self.is_root else self.get_ancestor_value('weight_mtow')
 
     #: Below is the ISA STD sea level density.
     #: :type: float
     rho = Input(1.225)
 
-    #: Below is the radius for a sphere showing the COG.
-    #: :type: float
-    cog_radius = Input(0.05)
-    #  TODO Fix CH10 bug?
-
-    #: Below is the assumed factor of the semispan which the fuselage extends over the wing.
+    #: Below is the assumed factor of the semi_span which the fuselage extends over the wing.
     #: :type: float
     fuse_width_factor = Input(0.07)
 
@@ -91,9 +58,16 @@ class Wing(ExternalBody):
     #: :type: boolean
     hide_bbox = Input(True)
 
+    #: Overwrites input from LiftingSurface to hide the Mean Aerodynamic Chord part
+    hide_mac = Input(True)
+
     #: Below is the chosen mesh deflection. It's is an optimum point between a good quality render and performance
     #: :type: float
     mesh_deflection = Input(0.0001)
+
+    #: Changes the color of the wing skin to the one defined in MyColors
+    #: :type: tuple
+    color = Input(MyColors.skin_color)
 
 #  This block of Attributes calculates the planform parameters. ########------------------------------------------------
     @Attribute
@@ -107,7 +81,7 @@ class Wing(ExternalBody):
     @Attribute
     def weight(self):
         #  TODO connect this with main!!!!!!!!!!
-        return 0.2*self.mtow
+        return 0.2*self.weight_mtow
 
     @Attribute
     def center_of_gravity(self):
@@ -116,7 +90,7 @@ class Wing(ExternalBody):
         :rtype: Point
         """
         y = 0
-        pos = Point(self.wing.final_wing.cog.x, y, self.wing.final_wing.cog.z)
+        pos = Point(self.solid.cog.x, y, self.solid.cog.z)
         return pos
 
     @Attribute
@@ -125,7 +99,7 @@ class Wing(ExternalBody):
         :return: float
         :rtype: float
         """
-        return (self.mtow * 9.81) / self.WS_pt
+        return (self.weight_mtow * 9.81) / self.wing_loading
         # TODO wing loading is in N/m^2 thus we have to have a global variable for g
 
     @Attribute
@@ -135,30 +109,13 @@ class Wing(ExternalBody):
 
     @Attribute
     def lift_coef_control(self):
-        """ This is the Required C_L from the lift equation at 1.2*V_s @ MTOW for the controllability curve of the
+        """ This is the Required C_L from the lift equation at 1.2*stall_speed @ MTOW for the controllability curve of the
          scissor plot.
          :return: float
          :rtype: float
          """
-        clreq = 2 * 9.81 * self.mtow / (self.rho * ((1.2 * self.V_s) ** 2) * self.s_req)
+        clreq = 2 * 9.81 * self.weight_mtow / (self.rho * ((1.2 * self.stall_speed) ** 2) * self.s_req)
         return clreq
-
-    @Part
-    def wing(self):
-        """" This part instantiates a primitive (LiftingSurface) with the inputs given to make the right-hand side of
-        the wing. The input area is halved because lifting surface generates one wing with given area
-         :return: ParaPy Geometry
-         :rtype: RotatedShape
-         """
-        return LiftingSurface(S=self.s_req * 0.5,
-                              AR=self.AR,
-                              taper=self.taper,
-                              dihedral=self.dihedral,
-                              phi=self.twist,
-                              airfoil_type=self.airfoil_type,
-                              airfoil_choice=self.airfoil_choice,
-                              offset=self.offset,
-                              color=MyColors.skin_color, pass_down="mesh_deflection")
 
     @Part
     def left_wing(self):
@@ -166,11 +123,10 @@ class Wing(ExternalBody):
          :return: ParaPy Geometry
          :rtype: MirroredShape
          """
-        return MirroredShape(shape_in=self.wing.final_wing,
-                             reference_point=self.wing.position,
+        return MirroredShape(shape_in=self.solid,
+                             reference_point=self.solid.position,
                              vector1=Vector(1, 0, 0),
-                             vector2=Vector(0, 0, 1),
-                             color=MyColors.skin_color)
+                             vector2=Vector(0, 0, 1))
 
     @Attribute(private=True)
     def wing_cut_loc(self):
@@ -178,7 +134,7 @@ class Wing(ExternalBody):
          :return: Spanwise distance from root chord to cut location
          :rtype: float
          """
-        return self.wing.semispan * self.fuse_width_factor
+        return self.semi_span * self.fuse_width_factor
 
     @Part(private=True)
     def right_cut_plane(self):
@@ -186,7 +142,7 @@ class Wing(ExternalBody):
          :return: Plane at spanwise distance from root chord to cut location.
          :rtype: Plane
          """
-        return Plane(reference=translate(self.wing.position, 'y', self.wing_cut_loc),
+        return Plane(reference=translate(self.position, 'y', self.wing_cut_loc),
                      normal=Vector(0, 1, 0),
                      hidden=True)
 
@@ -197,13 +153,16 @@ class Wing(ExternalBody):
          :return: HT center section bounding box
          :rtype: bbox
          """
-        inner_part = PartitionedSolid(solid_in=self.wing.final_wing,
+        inner_part = PartitionedSolid(solid_in=self.solid,
                                       tool=self.right_cut_plane).solids[0].faces[1].wires[0]
         #  Above obtains a cross section of the wing, at the specified fuselage width factor.
 
-        mirrored_part = MirroredShape(shape_in=inner_part, reference_point=self.wing.final_wing.position, vector1=Vector(1, 0, 0), vector2=Vector(0, 0, 1))
+        mirrored_part = MirroredShape(shape_in=inner_part,
+                                      reference_point=self.solid.position,
+                                      vector1=Vector(1, 0, 0),
+                                      vector2=Vector(0, 0, 1))
         #  Above mirrors the cross section about the aircraft symmetry plane.
-        root = self.wing.root_airfoil
+        root = self.root_airfoil
         first_iter = Fused(inner_part, root)
         #  Fusion of the three wing cross sections done in 2 Fused operations to avoid ParaPy errors.
         second_iter = Fused(first_iter, mirrored_part)
@@ -229,7 +188,7 @@ class Wing(ExternalBody):
 
     @Part
     def external_shape(self):
-        return Fused(self.wing.final_wing, self.left_wing, hidden=True)
+        return Fused(self.solid, self.left_wing, hidden=True)`
 
 
 # --- AVL Geometry & Analysis: -----------------------------------------------------------------------------------------
@@ -241,7 +200,7 @@ class Wing(ExternalBody):
          :rtype: Section
          """
         return Section(leading_edge_point=Point(0, 0, 0),
-                       chord=self.wing.root_chord,
+                       chord=self.root_chord,
                        airfoil=FileAirfoil(get_dir(os.path.join('airfoils', self.airfoil_type,
                                                                 '%s.dat' % self.airfoil_choice))))
 
@@ -251,10 +210,10 @@ class Wing(ExternalBody):
          :return: AVL Section
          :rtype: Section
          """
-        return Section(leading_edge_point=Point(self.wing.semispan * tan(radians(self.wing.le_sweep)),
-                                                self.wing.semispan,
-                                                self.wing.semispan * tan(radians(self.dihedral))),
-                       chord=self.wing.root_chord * self.taper,
+        return Section(leading_edge_point=Point(self.semi_span * tan(radians(self.le_sweep)),
+                                                self.semi_span,
+                                                self.semi_span * tan(radians(self.dihedral))),
+                       chord=self.root_chord * self.taper,
                        angle=0.0,
                        airfoil=FileAirfoil(get_dir(os.path.join('airfoils', self.airfoil_type,
                                                                 '%s.dat' % self.airfoil_choice))))
@@ -282,8 +241,8 @@ class Wing(ExternalBody):
          """
         return Geometry(name="Test wing",
                         reference_area=self.s_req,
-                        reference_chord=self.wing.mac_length,
-                        reference_span=self.wing.semispan * 2.0,
+                        reference_chord=self.mac_length,
+                        reference_span=self.semi_span * 2.0,
                         reference_point=Point(0.0, 0.0, 0.0),
                         surfaces=[self.wing_surface])
 
@@ -297,7 +256,7 @@ class Wing(ExternalBody):
         alphas = np.linspace(0.0, 10.0, 25)
         alpha_case = []
         for i in range(0, len(alphas)):
-            alpha_case.append(Case(name='alpha%s' % i, alpha=alphas[i], velocity=1.2*self.V_s))
+            alpha_case.append(Case(name='alpha%s' % i, alpha=alphas[i], velocity=1.2*self.stall_speed))
         return alpha_case
 
     @Attribute

@@ -251,7 +251,7 @@ class UAV(DesignInput):
 
                 if _child.getslot('surface_type') == 'wing':
                     area_dict['WETTED']['wing'] = area_dict['WETTED']['wing'] + _child.wetted_area
-                    area_dict['REFERENCE'] =  area_dict['REFERENCE'] + _child.planform_area
+                    area_dict['REFERENCE'] = area_dict['REFERENCE'] + _child.planform_area
 
                 elif _child.getslot('surface_type') == 'fuselage':
                     area_dict['WETTED']['fuselage'] = area_dict['WETTED']['fuselage'] + _child.wetted_area

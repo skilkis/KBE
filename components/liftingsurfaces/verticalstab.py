@@ -1,5 +1,5 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
+#  This script will estimate the required VT size and planform from statistical data.
+#  In the future, this will become more detailed!
 
 #  Required Modules
 from parapy.core import *
