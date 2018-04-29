@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+#  Required Modules
 from parapy.core import *
 from parapy.geom import *
 from math import *
@@ -12,21 +13,41 @@ __all__ = ["VerticalStabilizer"]
 
 
 class VerticalStabilizer(ExternalBody):
-    """ This class will size and construct the VT according to statistical VT volume coefficients.
+    """ This class will size the VT according to statistical VT volume coefficients and generate it using the
+    LiftingSurface primitive. Also, the bounding box is made for the section of the VTP within the fuselage, which is
+    used to size the fuselage frames.
     :returns: ParaPy Geometry of the VT
     """
 
-    S_req = Input(0.8)      # This is the required total wing area from the Class I estimations. TODO CONNECT TO MAIN/ WINGPWR LOADING
-    MAC = Input(0.43)       #  This is the MAC of the wing. TODO CONNECT TO MAIN/LIFTING SURFACE
-    semispan = Input(1.9)   # This is the wing semispan TODO connect to main
-    MTOW = Input(25.0)  # MUST GET THIS INPUT FROM CLASS I!!!!!!!!!!!!!!!!!!!!!!!!!!
-    lvc = Input(3.0)        #  This is the VT tail arm with respect to the CG. TODO CONNECT THIS WITH MAIN/GEOMETRY
-    lvc_canard = Input(-0.5)
+    #: Below is the required TOTAL wing area of the main wings.
+    #: :type: float
+    S_req = Input(0.8)
+
+    #: Below is the MAC length of the wing
+    #: :type: float
+    MAC = Input(0.43)
+
+    #: Below is the semispan of the wing
+    #: :type: float
+    semispan = Input(1.9)
+
+    #: Below is non-dimensionalized vertical tail arm for the conventional plane.
+    #: :type: float
+    lvc = Input(3.0)
+
+    #: Below is non-dimensionalized vertical tail arm for the canard plane. Note for the canard the VTP is is much
+    # closer to the main wing!
+    #: :type: float
+    lvc_canard = Input(0.5)
 
     #: Below is a switch to determine the configuration.
     #: :type: str
     configuration = Input('conventional', validator=val.OneOf(['canard', 'conventional']))
 
+    #: Below is the plane mtow
+    #: :type: float
+    MTOW = Input(25.0)  # TODO REMOVE THIS!! THIS IS USED FOR THE OLD WEIGHT ESTIMATION!!!!!!!!!!!
+#  ---------------------------------------------------------------------------------------------------------------------
     #: Below is the assumed VT aspect ratio.
     #: :type: float
     AR_v = Input(1.4)
@@ -191,7 +212,7 @@ class VerticalStabilizer(ExternalBody):
 
     @Part
     def internal_shape(self):
-        """ This is creating the bounded box at a fuselaage width factor of the semispan which will be used to size the
+        """ This is creating the bounded box at a fuselage width factor of the semispan which will be used to size the
         fuselage frames. These frames drive the shape of the fuselage.
         :return: VTP fuselage section bounding box
         :rtype: Box

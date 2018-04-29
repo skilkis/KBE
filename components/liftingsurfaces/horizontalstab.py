@@ -14,7 +14,8 @@ __all__ = ["HorizontalStabilizer"]
 
 class HorizontalStabilizer(ExternalBody):
     """  This script will generate the horizontal stabilizer using the lifting surface primitive with the required Sh
-    from the 'scissorplot.py' script.
+    from the 'scissorplot.py' script. Also, the bounding box is made for the section of the HTP within the fuselage,
+    which is used to size the fuselage frames.
     """
 
     #: Below is the required tail surface area from the scissor plot.
