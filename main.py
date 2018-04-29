@@ -20,107 +20,105 @@ from definitions import *
 # TODO Make sure that excel read and things are top level program features (not buried within the tree)
 # TODO add a method that gets wetted area
 
-class UAV(Base):
+class UAV(DesignInput):
 
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'plane.png')
 
-    sizing_target = Input('weight')
-    sizing_value = Input(1.25)
 
-    @Attribute
-    def wing_loading(self):
-        return self.params.wingpowerloading.designpoint['wing_loading']
-
-    @Part
-    def params(self):
-        return ParameterGenerator(label="Design Parameters")
-
-    @Part
-    def wing(self):
-        return Wing(WS_pt=self.wing_loading, position=translate(XOY, 'x', 0.1))
-
-    @Part
-    def stabilizer(self):
-        return VerticalStabilizer(position=translate(self.wing.position, 'x', 0.2))
-
-    @Part
-    def stability(self):
-        return ScissorPlot(x_cg=self.cg.x,
-                           x_ac=self.wing.wing.aerodynamic_center.x,
-                           x_lemac=self.wing.wing.lemac.x,
-                           mac=self.wing.wing.mac_length,
-                           AR=12,
-                           e=0.8,
-                           AR_h=5.0, # TODO Make this a derived input based on wing AR
-                           e_h=0.8,
-                           Cl_w=self.wing.lift_coef_control,
-                           C_mac=self.wing.controllability_c_m,
-                           Cla_w=self.wing.lift_coef_vs_alpha,
-                           delta_xcg=0.3,
-                           configuration='canard')
-#  TODO make relation for AR_h, and add dynamic validator.
-
-    #TODO make this from MAC to MAC
-    @Part
-    def stabilizer_h(self):
-        return HorizontalStabilizer(position=translate(self.wing.position,
-                                                       'x', self.stability.lhc * self.wing.wing.mac_length),
-                                    S_req=self.wing.s_req * self.stability.shs_req)
-
-    @Part
-    def fuselage(self):
-        return Fuselage(compartment_type=['motor', 'container', 'container', 'tail'],
-                        sizing_parts=[self.motor, [self.stabilizer_h, self.camera], [self.battery, self.wing, self.stabilizer], None])
-
-    @Part
-    def motor(self):
-        return Motor(integration='puller', position=translate(self.camera.position, 'x', -1, 'z', self.cg.z / 2.0))
-
-    @Part
-    def center_of_gravity(self):
-        return VisualCG(self.cg, self.weights['mtow'])
-
-    @Part
-    def propeller(self):
-        return Propeller(self.motor)
-
-    @Attribute
-    def configuration(self):
-        return self.params.configuration
-
-    @Attribute
-    def mtow(self):
-        return self.weight_and_balance()['WEIGHTS']['mtow']
-
-    @Attribute(private=True)
-    # TODO finish this validator attribute (make it private)
-    def mtow_validator(self):
-        return 1
-
-
-    # @Attribute
-
-    @Attribute
-    def payload(self):
-        return self.params.weightestimator.weight_payload
-
-    @Attribute
-    def battery_capacity(self):
-        return self.sizing_value
-
-    @Part
-    def battery(self):
-        return Battery(position=translate(XOY, 'x', -0.1))
-
-    # @Part
-    # def battery_test(self):
-    #     return Battery(position=Position(self.cg))
-
-    @Part
-    def camera(self):
-        return EOIR(target_weight=self.payload, position=translate(XOY, 'x', -0.3))
-
-    # TODO Add a nice bar-graph that shows performance, power consumption, drag, etc in the GUI with boxes!
+#     @Attribute
+#     def wing_loading(self):
+#         return self.params.wingpowerloading.designpoint['wing_loading']
+#
+#     @Part
+#     def params(self):
+#         return ParameterGenerator(label="Design Parameters")
+#
+#     @Part
+#     def wing(self):
+#         return Wing(WS_pt=self.wing_loading, position=translate(XOY, 'x', 0.1))
+#
+#     @Part
+#     def stabilizer(self):
+#         return VerticalStabilizer(position=translate(self.wing.position, 'x', 0.2))
+#
+#     @Part
+#     def stability(self):
+#         return ScissorPlot(x_cg=self.cg.x,
+#                            x_ac=self.wing.wing.aerodynamic_center.x,
+#                            x_lemac=self.wing.wing.lemac.x,
+#                            mac=self.wing.wing.mac_length,
+#                            AR=12,
+#                            e=0.8,
+#                            AR_h=5.0, # TODO Make this a derived input based on wing AR
+#                            e_h=0.8,
+#                            Cl_w=self.wing.lift_coef_control,
+#                            C_mac=self.wing.controllability_c_m,
+#                            Cla_w=self.wing.lift_coef_vs_alpha,
+#                            delta_xcg=0.3,
+#                            configuration='canard')
+# #  TODO make relation for AR_h, and add dynamic validator.
+#
+#     #TODO make this from MAC to MAC
+#     @Part
+#     def stabilizer_h(self):
+#         return HorizontalStabilizer(position=translate(self.wing.position,
+#                                                        'x', self.stability.lhc * self.wing.wing.mac_length),
+#                                     S_req=self.wing.s_req * self.stability.shs_req)
+#
+#     @Part
+#     def fuselage(self):
+#         return Fuselage(compartment_type=['motor', 'container', 'container', 'tail'],
+#                         sizing_parts=[self.motor, [self.stabilizer_h, self.camera], [self.battery, self.wing, self.stabilizer], None])
+#
+#     @Part
+#     def motor(self):
+#         return Motor(integration='puller', position=translate(self.camera.position, 'x', -1, 'z', self.cg.z / 2.0))
+#
+#     @Part
+#     def center_of_gravity(self):
+#         return VisualCG(self.cg, self.weights['mtow'])
+#
+#     @Part
+#     def propeller(self):
+#         return Propeller(self.motor)
+#
+#     @Attribute
+#     def configuration(self):
+#         return self.params.configuration
+#
+#     @Attribute
+#     def mtow(self):
+#         return self.weight_and_balance()['WEIGHTS']['mtow']
+#
+#     @Attribute(private=True)
+#     # TODO finish this validator attribute (make it private)
+#     def mtow_validator(self):
+#         return 1
+#
+#
+#     # @Attribute
+#
+#     @Attribute
+#     def payload(self):
+#         return self.params.weightestimator.weight_payload
+#
+#     @Attribute
+#     def battery_capacity(self):
+#         return self.sizing_value
+#
+#     @Part
+#     def battery(self):
+#         return Battery(position=translate(XOY, 'x', -0.1))
+#
+#     # @Part
+#     # def battery_test(self):
+#     #     return Battery(position=Position(self.cg))
+#
+#     @Part
+#     def camera(self):
+#         return EOIR(target_weight=self.payload, position=translate(XOY, 'x', -0.3))
+#
+#     # TODO Add a nice bar-graph that shows performance, power consumption, drag, etc in the GUI with boxes!
 
     @Attribute
     def cg(self):
@@ -146,7 +144,10 @@ class UAV(Base):
         area_dict = self.sum_area()
         reference_area = area_dict['REFERENCE']
         wetted_area = area_dict['WETTED']['total']
-        parasite_drag = skin_friction_coef * (wetted_area / reference_area)
+        if wetted_area and reference_area is not 0:
+            parasite_drag = skin_friction_coef * (wetted_area / reference_area)
+        else:
+            parasite_drag = None
         return parasite_drag
 
     @Attribute
@@ -218,11 +219,12 @@ class UAV(Base):
         weight_dict['WEIGHTS']['mtow'] = total_weight
 
         # CG calculation through a weighted average utilizing list comprehension
-        cg_x = sum([weight[i] * cg[i].x for i in range(0, len(weight))]) / total_weight
-        cg_y = sum([weight[i] * cg[i].y for i in range(0, len(weight))]) / total_weight
-        cg_z = sum([weight[i] * cg[i].z for i in range(0, len(weight))]) / total_weight
+        if len(weight) and len(cg) is not 0:
+            cg_x = sum([weight[i] * cg[i].x for i in range(0, len(weight))]) / total_weight
+            cg_y = sum([weight[i] * cg[i].y for i in range(0, len(weight))]) / total_weight
+            cg_z = sum([weight[i] * cg[i].z for i in range(0, len(weight))]) / total_weight
 
-        weight_dict['CG'] = Point(cg_x, cg_y, cg_z)
+            weight_dict['CG'] = Point(cg_x, cg_y, cg_z)
 
         return weight_dict
 
@@ -271,21 +273,21 @@ class UAV(Base):
 
         return area_dict
 
-    def validate_geometry(self):
-        children = self.get_children()
-        x_loc_max = 0
-        x_loc_min = 0
-        index_first = 0
-        index_last = 0
-        for _child in children:
-            if hasattr(_child, 'internal_shape') and getslot(_child, 'component_type') != 'motor':
-                # Above is the identification of a Motor
-                current_corners = _child.internal_shape.bbox.corners
-                if current_corners[1].x > x_loc_max:
-                    x_loc_max = current_corners[1].x
-                elif current_corners[0].x < x_loc_min:
-                    x_loc_min = current_corners[0].x
-        return x_loc_min, x_loc_max
+    # def validate_geometry(self):
+    #     children = self.get_children()
+    #     x_loc_max = 0
+    #     x_loc_min = 0
+    #     index_first = 0
+    #     index_last = 0
+    #     for _child in children:
+    #         if hasattr(_child, 'internal_shape') and getslot(_child, 'component_type') != 'motor':
+    #             # Above is the identification of a Motor
+    #             current_corners = _child.internal_shape.bbox.corners
+    #             if current_corners[1].x > x_loc_max:
+    #                 x_loc_max = current_corners[1].x
+    #             elif current_corners[0].x < x_loc_min:
+    #                 x_loc_min = current_corners[0].x
+    #     return x_loc_min, x_loc_max
 
 
 if __name__ == '__main__':

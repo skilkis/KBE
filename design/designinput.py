@@ -15,7 +15,7 @@ from weightestimator import *
 from directories import *
 
 __author__ = ["Şan Kılkış"]
-__all__ = ["ParameterGenerator"]
+__all__ = ["DesignInput"]
 
 # These variables determine the default filename/sheetname(s)
 filename = "userinput.xlsx"
@@ -32,8 +32,8 @@ def valid_payloads():
     return [str(i.split('.')[0]) for i in payloads if i.endswith('.py') and i != '__init__.py']
 
 
-class ParameterGenerator(Base):
-    """ paramgenerator.py aims to instantiate all primitive classes of a parametric UAV based on user-input of configuration type
+class DesignInput(Base):
+    """ designinput.py aims to instantiate all primitive classes of a parametric UAV based on user-input of configuration type
         Other user-inputs cover global aircraft attributes and allow changes either through the use of the ParaPy GUI or
         through the use of the userinput.xlsx file.
     """
@@ -88,13 +88,15 @@ class ParameterGenerator(Base):
 
         return 'Inputs have been overwritten from the supplied Excel File'
 
-    @Part
-    def wingpowerloading(self):
-        return WingPowerLoading(pass_down="handlaunch", label="Wing & Thrust Loading")
 
-    @Part
-    def weightestimator(self):
-        return ClassOne(pass_down="weight_target, target_value", label="Weight Estimation")
+
+    # @Part
+    # def wingpowerloading(self):
+    #     return WingPowerLoading(pass_down="handlaunch", label="Wing & Thrust Loading")
+    #
+    # @Part
+    # def weightestimator(self):
+    #     return ClassOne(pass_down="weight_target, target_value", label="Weight Estimation")
 
     # @Attribute
     # def parameter_dict(self):
@@ -114,5 +116,5 @@ class ParameterGenerator(Base):
 if __name__ == '__main__':
     from parapy.gui import display
 
-    obj = ParameterGenerator(label="Design Parameters")
+    obj = DesignInput(label="Design Parameters")
     display(obj)
