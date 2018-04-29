@@ -327,7 +327,7 @@ class Wing(ExternalBody):
         return self.avl_session.get_results()
 
     @Attribute(private=True)
-    def liftcoef_alpha_grabber(self):
+    def avl_lift_grabber(self):
         # TODO Compare CL_max with assumed as well as plot with LLT
         """  Here, the cl vs alpha plot is created and the constant C_L vs alpha value is found.
         :return: Plot and float
@@ -345,8 +345,12 @@ class Wing(ExternalBody):
 
     @Attribute
     def lift_coef_vs_alpha(self):
-        cl = self.liftcoef_alpha_grabber['lift_coefs']
-        alpha_rad = self.liftcoef_alpha_grabber['alpha_radians']
+        """
+
+        :return: Lift Coefficient Gradient [1/rad]
+        """
+        cl = self.avl_lift_grabber['lift_coefs']
+        alpha_rad = self.avl_lift_grabber['alpha_radians']
         cl_alpha = np.mean([(cl[i+1] - cl[i]) / (alpha_rad[i+1] - alpha_rad[i]) for i in range(0, len(alpha_rad) - 1)])
         return cl_alpha
 
@@ -355,7 +359,7 @@ class Wing(ExternalBody):
         # Plotting
         plt.style.use('ggplot')
         plt.figure('LiftCoefficientGradient')
-        plt.plot(self.liftcoef_alpha_grabber['lift_coefs'], self.liftcoef_alpha_grabber['alpha_degrees'], marker='o')
+        plt.plot(self.avl_lift_grabber['alpha_degrees'], self.avl_lift_grabber['lift_coefs'], marker='o')
         plt.title('Lift Coefficient Gradient')
         plt.xlabel('Angle of Attack [deg]')
         plt.ylabel('Lift Coefficient [-]')

@@ -153,7 +153,6 @@ class WingPowerLoading(Base):
         plt.axis([min(self.ws_range), max(self.ws_range), 0, 1.0])
         plt.legend()
         plt.title('Wing and Power Loading (Handlaunch = %s)' % self.handlaunch)
-#        plt.ion()
         plt.show()
         fig.savefig(fname=os.path.join(DIRS['USER_DIR'], 'plots', '%s.pdf' % fig.get_label()), format='pdf')
         return "Plot generated and closed"
@@ -192,6 +191,7 @@ class WingPowerLoading(Base):
         idx2 = error.index(min(error))
 
         #  TODO Add knowledge base assumption for best aspect ratio
+        # TODO Find a better way to select optimum aspect ratio
         optimal_ars = [7, 10]
         if self.handlaunch:
             optimal_ar = optimal_ars[0]

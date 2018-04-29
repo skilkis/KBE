@@ -51,7 +51,7 @@ class UAV(Base):
                            mac=self.wing.wing.mac_length,
                            AR=12,
                            e=0.8,
-                           AR_h=5.0,
+                           AR_h=5.0, # TODO Make this a derived input based on wing AR
                            e_h=0.8,
                            Cl_w=self.wing.lift_coef_control,
                            C_mac=self.wing.controllability_c_m,
@@ -60,6 +60,7 @@ class UAV(Base):
                            configuration='canard')
 #  TODO make relation for AR_h, and add dynamic validator.
 
+    #TODO make this from MAC to MAC
     @Part
     def stabilizer_h(self):
         return HorizontalStabilizer(position=translate(self.wing.position,
@@ -140,6 +141,7 @@ class UAV(Base):
         :return: Zero-Lift Drag Coefficient
         :rtype: Float
         """
+        # TODO Incorporate drag estimation into the knowledge base
         skin_friction_coef = 0.0055
         area_dict = self.sum_area()
         reference_area = area_dict['REFERENCE']

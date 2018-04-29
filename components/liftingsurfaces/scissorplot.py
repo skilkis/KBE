@@ -113,7 +113,6 @@ class ScissorPlot(GeomBase):
         :return: x_cg
         :rtype: float
         """
-        print self.x_cg - self.x_ac / self.mac
         return (self.x_cg - self.x_ac) / self.mac
 
     @Attribute
