@@ -62,8 +62,8 @@ class Battery(Component):
     @Attribute
     def constants(self):
         mydict = {
-            'energy_density': (1.8*(10**6)),    # MJ/kg From WikiPedia https://en.wikipedia.org/wiki/Energy_density
-            'energy_volume': (4.32*(10**9)),    # MJ/m^3
+            'energy_density': (0.95*(10**6)),    # MJ/kg From WikiPedia https://en.wikipedia.org/wiki/Energy_density
+            'energy_volume': (4.32*(10**9)),    # MJ/m^3 #TODO check this value
             'minimum_volume': 0.000015          # m^3
         }
         return mydict

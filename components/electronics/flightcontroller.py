@@ -36,6 +36,15 @@ class FlightController(Component):
                                color = 'Green')
 
     @Attribute
+    def flight_controller_power(self):
+        """ This attribute estimates the Navio2 flight computer power. It is found by multiplying the average voltage
+        (5V), by the average current (150mA). Source: https://emlid.com/navio/
+        :return: Flight Computer Power
+        :rtype: float
+        """
+        return 0.15*5
+
+    @Attribute
     def component_type(self):
         return 'electronics'
 
