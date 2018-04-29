@@ -1,0 +1,245 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>definitions &#8212; KBE 1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for definitions</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="kn">from</span> <span class="nn">parapy.geom</span> <span class="k">import</span> <span class="o">*</span>  <span class="c1"># \</span>
+<span class="kn">from</span> <span class="nn">parapy.core</span> <span class="k">import</span> <span class="o">*</span>  <span class="c1"># / Required ParaPy Modules</span>
+
+<span class="kn">from</span> <span class="nn">directories</span> <span class="k">import</span> <span class="o">*</span>
+
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Şan Kılkış&quot;</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Component&quot;</span><span class="p">,</span> <span class="s2">&quot;ExternalBody&quot;</span><span class="p">,</span> <span class="s2">&quot;VisualCG&quot;</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="VisualCG"><a class="viewcode-back" href="../index.html#definitions.VisualCG">[docs]</a><span class="k">class</span> <span class="nc">VisualCG</span><span class="p">(</span><span class="n">GeomBase</span><span class="p">):</span>
+
+    <span class="c1"># TODO add header here and create a nice looking visual CG</span>
+
+    <span class="n">__icon__</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;ICON_DIR&#39;</span><span class="p">],</span> <span class="s1">&#39;battery.png&#39;</span><span class="p">)</span>
+    <span class="n">__initargs__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;vis_cog&quot;</span><span class="p">,</span> <span class="s2">&quot;vis_weight&quot;</span><span class="p">]</span>
+    <span class="c1"># TODO Find a proper icon here</span>
+    <span class="n">vis_cog</span> <span class="o">=</span> <span class="n">Input</span><span class="p">()</span>
+    <span class="n">vis_weight</span> <span class="o">=</span> <span class="n">Input</span><span class="p">()</span>
+
+    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">position</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">cog</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vis_cog</span>
+        <span class="k">return</span> <span class="n">translate</span><span class="p">(</span><span class="n">XOY</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">cog</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">cog</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">cog</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+
+    <span class="nd">@Part</span>
+    <span class="k">def</span> <span class="nf">visual_cg_location</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Sphere</span><span class="p">(</span><span class="n">radius</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;yellow&#39;</span><span class="p">,</span> <span class="n">hidden</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">hidden</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Component"><a class="viewcode-back" href="../index.html#definitions.Component">[docs]</a><span class="k">class</span> <span class="nc">Component</span><span class="p">(</span><span class="n">GeomBase</span><span class="p">):</span>
+
+    <span class="n">__icon__</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;ICON_DIR&#39;</span><span class="p">],</span> <span class="s1">&#39;gear.png&#39;</span><span class="p">)</span>
+
+    <span class="n">position</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">Position</span><span class="p">(</span><span class="n">Point</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)))</span>  <span class="c1"># Locks Orientation to that defined inside the component</span>
+    <span class="n">inside_fuselage</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># Defaults to treating the component as a `sizing_part` used in fuselage construction</span>
+    <span class="n">hide_labels</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># TODO Make a method that automatically finds the proper faces on the YOZ axis</span>
+
+<div class="viewcode-block" id="Component.component_type"><a class="viewcode-back" href="../index.html#definitions.Component.component_type">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">component_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; An identifier to be able to lump masses together.</span>
+
+<span class="sd">        |</span>
+<span class="sd">        Possible entries:</span>
+
+<span class="sd">        |   &#39;wing&#39;</span>
+<span class="sd">        |   &#39;fuselage&#39;</span>
+<span class="sd">        |   &#39;vt&#39;</span>
+<span class="sd">        |   &#39;ht&#39;</span>
+<span class="sd">        |   &#39;payload&#39;</span>
+<span class="sd">        |   &#39;prop&#39;</span>
+<span class="sd">        |   &#39;battery&#39;</span>
+<span class="sd">        |   &#39;electronics&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="Component.weight"><a class="viewcode-back" href="../index.html#definitions.Component.weight">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">weight</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Total mass of the component</span>
+
+<span class="sd">        :return: Mass in SI kilogram</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mi">0</span></div>
+
+<div class="viewcode-block" id="Component.center_of_gravity"><a class="viewcode-back" href="../index.html#definitions.Component.center_of_gravity">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">center_of_gravity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Location of the center of gravity w.r.t the origin</span>
+
+<span class="sd">        :return: Location Tuple in SI meter</span>
+<span class="sd">        :rtype: Point</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Point</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Component.text_label_position"><a class="viewcode-back" href="../index.html#definitions.Component.text_label_position">[docs]</a>    <span class="nd">@Attribute</span><span class="p">(</span><span class="n">private</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">text_label_position</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Sets the default position of the text_label to be on the front-left corner of the internal_shape</span>
+<span class="sd">        :rtype: Point</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">internal_shape</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">corners</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Component.internal_shape"><a class="viewcode-back" href="../index.html#definitions.Component.internal_shape">[docs]</a>    <span class="nd">@Part</span>
+    <span class="k">def</span> <span class="nf">internal_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; The geometry of the component that will be placed inside a structure, (i.e in a wing or fuselage)</span>
+
+<span class="sd">        :rtype: parapy.geom</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Box</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">transparency</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Component.text_label"><a class="viewcode-back" href="../index.html#definitions.Component.text_label">[docs]</a>    <span class="nd">@Part</span>
+    <span class="k">def</span> <span class="nf">text_label</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Automatically creates a text label that inherits whatever object is labelled as. This can be hidden</span>
+<span class="sd">        through use of the Input parameter `hide_labels`</span>
+
+<span class="sd">        :rtype: TextLabel</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">TextLabel</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;     </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">,</span>
+                         <span class="n">position</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">text_label_position</span><span class="p">,</span> <span class="n">hidden</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">hide_labels</span><span class="p">)</span></div>
+
+    <span class="nd">@Part</span>
+    <span class="k">def</span> <span class="nf">cog_sphere</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">VisualCG</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_of_gravity</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ExternalBody"><a class="viewcode-back" href="../index.html#definitions.ExternalBody">[docs]</a><span class="k">class</span> <span class="nc">ExternalBody</span><span class="p">(</span><span class="n">Component</span><span class="p">):</span>
+
+    <span class="n">__icon__</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;ICON_DIR&#39;</span><span class="p">],</span> <span class="s1">&#39;air.png&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ExternalBody.surface_type"><a class="viewcode-back" href="../index.html#definitions.ExternalBody.surface_type">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">surface_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; An identifier to be able to lump areas together.</span>
+
+<span class="sd">        |</span>
+<span class="sd">        Possible entries:</span>
+
+<span class="sd">        |   &#39;wing&#39;</span>
+<span class="sd">        |   &#39;fuselage&#39;</span>
+<span class="sd">        |   &#39;vt&#39;</span>
+<span class="sd">        |   &#39;ht&#39;</span>
+<span class="sd">        |</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">component_type</span></div>
+
+<div class="viewcode-block" id="ExternalBody.wetted_area"><a class="viewcode-back" href="../index.html#definitions.ExternalBody.wetted_area">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">wetted_area</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns the total wetted area of the external_part to be able to perform drag and weight estimations</span>
+
+<span class="sd">        :return: Total wetted area of the external_part in SI sq. meter</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">area</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">external_shape</span><span class="p">,</span> <span class="s1">&#39;shells&#39;</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">external_shape</span><span class="o">.</span><span class="n">shells</span><span class="p">:</span>
+                <span class="n">area</span> <span class="o">=</span> <span class="n">area</span> <span class="o">+</span> <span class="n">i</span><span class="o">.</span><span class="n">area</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> has no solids/shells to find wetted_area from, please create a fused operation &#39;</span>
+                            <span class="s1">&#39;to resolve&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">external_shape</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">area</span></div>
+
+<div class="viewcode-block" id="ExternalBody.planform_area"><a class="viewcode-back" href="../index.html#definitions.ExternalBody.planform_area">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">planform_area</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; The projected area of an `external_shape` when looking at the XY plane in the nadir direction (&#39;z_&#39;)</span>
+
+<span class="sd">        :return: Projected Area on the XY plane in SI sq. meter</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mi">0</span></div>
+
+<div class="viewcode-block" id="ExternalBody.external_shape"><a class="viewcode-back" href="../index.html#definitions.ExternalBody.external_shape">[docs]</a>    <span class="nd">@Part</span>
+    <span class="k">def</span> <span class="nf">external_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;  The final shape of a ExternalSurface class which is to be exported THIS PART MUST BE OVERWRITTEN!!! &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Box</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">transparency</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">centered</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">)</span></div></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">parapy.gui</span> <span class="k">import</span> <span class="n">display</span>
+
+    <span class="n">obj</span> <span class="o">=</span> <span class="n">Component</span><span class="p">()</span>
+    <span class="n">display</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, San Kilkis, Nelson Johnson.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

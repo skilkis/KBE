@@ -18,7 +18,6 @@ from definitions import *
 
 
 # TODO Make sure that excel read and things are top level program features (not buried within the tree)
-# TODO add a method that gets wetted area
 
 class UAV(DesignInput):
 
