@@ -12,7 +12,10 @@ class VerticalStabilizer(ExternalBody):
 
     S_req = Input(0.8)      # This is the required total wing area from the Class I estimations. TODO CONNECT TO MAIN/ WINGPWR LOADING
     MAC = Input(0.43)       #  This is the MAC of the wing. TODO CONNECT TO MAIN/LIFTING SURFACE
+    semispan = Input(1.9)   # This is the wing semispan TODO connect to main
+    MTOW = Input(25.0)  # MUST GET THIS INPUT FROM CLASS I!!!!!!!!!!!!!!!!!!!!!!!!!!
     lvc = Input(3.0)        #  This is the VT tail arm with respect to the CG. TODO CONNECT THIS WITH MAIN/GEOMETRY
+    lvc_canard = Input(-0.5)
     #  TODO figure out tail volume for lvc_canard
 
 # BELOW ARE ALL LIFTING SUFACE INPUTS TODO CONNECT TO MAIN
@@ -25,10 +28,12 @@ class VerticalStabilizer(ExternalBody):
     airfoil_choice_v = Input('NACA0012')    #  TODO CONNECT TO MAIN/LS
     offset_v = Input(None)                  #  TODO CONNECT TO MAIN/LS
     #  TODO CONNECT THESE INPUTS TO MAIN/WINGPOWER LOADING AND MTOW!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    semispan = Input(1.9)   # This is the wing semispan TODO connect to main
+
+    #: Below is a switch to determine the configuration.
+    #: :type: str
+    configuration = Input('conventional', validator=val.OneOf(['canard', 'conventional']))
+
     vtfuse_width_factor = Input(0.1)  # This is an assumed factor relating the part of the HT covered by fuse to semispan
-    WF_VT = Input(0.1)  # This is the weight fraction of the HT.
-    MTOW = Input(25.0)  # MUST GET THIS INPUT FROM CLASS I!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     @Attribute
     def component_type(self):
@@ -36,7 +41,7 @@ class VerticalStabilizer(ExternalBody):
 
     @Attribute
     def weight(self):
-        return self.WF_VT * self.MTOW
+        return 0.1 * self.MTOW
 
     @Attribute
     def center_of_gravity(self):
@@ -44,17 +49,33 @@ class VerticalStabilizer(ExternalBody):
         pos = self.vt.cog
         return pos
 
+
     @Attribute
-    def V_v(self):
-        #  This is a collection of VTP volume coefficients of agricultural aircraft.
+    def v_v(self):
+        #  This is a collection of VTP volume coefficients of agricultural conventional aircraft.
         v_vset = [0.054, 0.036, 0.011, 0.022, 0.034, 0.024, 0.022, 0.033, 0.035, 0.035, 0.032]
         v_v_avg = sum(v_vset)/len(v_vset)
         # print v_v_avg
         return v_v_avg
 
     @Attribute
+    def v_v_canard(self):
+        """ This attribute calculates the tail volume coefficient for a canard. This is done by rewriting the equation
+        for a conventional VT volume coefficient for S_v/S, equating it to thes same equation of the canard. The canard
+        tail volume is thus a reduced tail volume coefficient (with the canard having a smaller tail arm).
+        :return: Canard VT volume coefficient
+        :rtype: float
+        """
+        v_v_canard = (self.lvc_canard/self.lvc)*(self.v_v)
+        return v_v_canard
+
+    @Attribute
     def planform_area(self):
-        return (self.V_v*self.S_req*self.semispan)/self.lvc
+        if self.configuration is 'conventional':
+            s_v_req = (self.v_v * self.S_req * self.semispan * 2) / self.lvc
+        else:
+            s_v_req = (self.v_v_canard * self.S_req * self.semispan * 2) / self.lvc_canard
+        return s_v_req
 
     @Part
     def vt_horiz(self):
