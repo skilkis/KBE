@@ -8,6 +8,8 @@ from scissorplot import ScissorPlot
 from definitions import *
 
 # TODO CONNECT WEIGHT TO MAIN!!!!!!!!!!
+__author__ = ["Nelson Johnson"]
+__all__ = ["HorizontalStabilizer"]
 
 
 class HorizontalStabilizer(ExternalBody):
@@ -19,11 +21,11 @@ class HorizontalStabilizer(ExternalBody):
     #: :type: float
     S_req = Input(0.8, validator=val.Positive())
 
-    #: Below is the required tail aspect ratio.
+    #: Below is the required HT aspect ratio.
     #: :type: float
     AR_h = Input(5.0, validator=val.Positive())
 
-    #: Below is the required tail taper ratio.
+    #: Below is the required HT taper ratio.
     #: :type: float
     taper_h = Input(0.5, validator=val.Positive())
 

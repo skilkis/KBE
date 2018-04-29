@@ -1,17 +1,19 @@
-#  This code will estimate the mass and create the geometry of the avionics
-
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 from parapy.core import *
 from parapy.geom import *
 from definitions import *
 
-#  This code will make a couple Flight controllers
+
 __author__ = ["Nelson Johnson"]
 __all__ = ["FlightController"]
 
 
 class FlightController(Component):
-
+    """ This class will size and construct the VT according to statistical VT volume coefficients.
+    :returns: ParaPy Geometry of the VT
+    """
 
     #  Navio 2 Flight computer dimensions
     l_navio = 0.065     #  65mm Length. This longest dimesion is to be oriented parallell with the x axis.
