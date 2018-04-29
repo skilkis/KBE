@@ -24,13 +24,14 @@ class UAV(DesignInput):
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'plane.png')
 
 
+
 #     @Attribute
 #     def wing_loading(self):
 #         return self.params.wingpowerloading.designpoint['wing_loading']
 #
-#     @Part
-#     def params(self):
-#         return ParameterGenerator(label="Design Parameters")
+    @Part
+    def params(self):
+        return ParameterGenerator(label="Design Parameters")
 #
 #     @Part
 #     def wing(self):

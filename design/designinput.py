@@ -47,7 +47,7 @@ class DesignInput(Base):
                     "handlaunch",
                     "portable"]
 
-    __icon__ = os.path.join(DIRS['ICON_DIR'], 'parameters.png')
+    __icon__ = os.path.join(DIRS['ICON_DIR'], 'parameters.png') # TODO Change icon
 
     # TODO add validator functions here
     performance_goal = Input('endurance', validator=val.OneOf(['endurance', 'range']))
