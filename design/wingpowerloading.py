@@ -57,19 +57,19 @@ class WingPowerLoading(Base):
 
     #: Below is the STD ISA sea level density
     #: :type: float
-    rho = 1.225
+    rho = Input(1.225)
 
     #: Below is the ISA Density at 3km height for the climb rate power loading equation.
     #: :type: float
     rho_cr = 0.9091
 
-    #: Below is the assumed throwing speed of a hand launched UAV
-    #: :type: float
-    stall_speed_handlaunch = 8.0
-
-    #: Below is assumed launch speed at the end of a catapult or runway.
-    #: :type: float
-    stall_speed = 12.0
+    # #: Below is the assumed throwing speed of a hand launched UAV
+    # #: :type: float
+    # stall_speed_handlaunch = 8.0
+    #
+    # #: Below is assumed launch speed at the end of a catapult or runway.
+    # #: :type: float
+    # stall_speed = 12.0
 
     #: Below is the assumed Value of Zero-Lift Drag Coefficient.
     #: :type: float
@@ -83,6 +83,15 @@ class WingPowerLoading(Base):
     #: :type: float
     climb_gradient = 0.507
 
+    @Input
+    def stall_speed(self):
+        #  Here we make the stall speed an attribute, to use it in other parts of the code.
+        if self.handlaunch is True:
+            stall_speed = 8.0
+        else:
+            stall_speed = 12.0
+        return stall_speed
+
 
 #  This block of Attributes calculates the wing and thrust loading parameters and generates the plot. ########----------
     @Attribute
@@ -94,14 +103,12 @@ class WingPowerLoading(Base):
         :rtype: dict
         """
         if self.handlaunch:
-            v_s = self.stall_speed_handlaunch
             ws_string = '_hand'
         else:
-            v_s = self.stall_speed
             ws_string = ''
         ws = []
         for i in range(len(self.maximum_lift_coefficient)):
-            ws.append(0.5 * self.rho * self.maximum_lift_coefficient[i] * v_s ** 2)
+            ws.append(0.5 * self.rho * self.maximum_lift_coefficient[i] * self.stall_speed ** 2)
         return {'values': ws, 'flag': ws_string}
 
     @Attribute
@@ -257,7 +264,14 @@ class WingPowerLoading(Base):
         values = [float(i) for i in range(1, int(ceil(ws_limit / 100.0)) * 100)]
         return values
 
-
+    # @Attribute
+    # def stall_speedd(self):
+    #     #  Here we make the stall speed an attribute, to use it in other parts of the code.
+    #     if self.handlaunch is True:
+    #         stall_speedd = self.stall_speed_handlaunch
+    #     else:
+    #         stall_speedd = self.stall_speed
+    #     return stall_speedd
 
 #  The Block below will estimate the required power from the battery depending on the range or endurance goal.
 

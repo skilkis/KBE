@@ -82,6 +82,10 @@ class ParameterGenerator(Base):
         return self.wingpowerloading.designpoint['lift_coefficient']
 
     @Attribute
+    def stall_speed(self):
+        return self.wingpowerloading.stall_speed
+
+    @Attribute
     def power_loading(self):
         #  Here we pull the UAV's power loading from the design point.
         return self.wingpowerloading.designpoint['power_loading']
@@ -91,6 +95,9 @@ class ParameterGenerator(Base):
         #  Here we pull the UAV's wing loading from the design point.
         return self.wingpowerloading.designpoint['wing_loading']
 
+    @Attribute
+    def rho(self):
+        return self.wingpowerloading.rho
 
 if __name__ == '__main__':
     from parapy.gui import display

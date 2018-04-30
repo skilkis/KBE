@@ -37,15 +37,17 @@ class UAV(DesignInput):
                                              'configuration',
                                              'handlaunch',
                                              'portable'],
-                                  label = 'Design Parameters')
+                                  label='Design Parameters')
 
-  #  @Part
-  #  def wing(self):
-  #      return Wing(wing_loading = self.params.wing_loading,
-  #                  weight_mtow = self.params.weight_mtow,
-  #                  stall_speed = )
+    @Part
+    def wing(self):
+        return Wing(wing_loading=self.params.wing_loading,
+                    weight_mtow=self.params.weight_mtow,
+                    stall_speed=self.params.stall_speed,
+                    rho=self.params.rho,
+                    label='Main Wing')
 
-
+# next =
 
 
    # @Part
