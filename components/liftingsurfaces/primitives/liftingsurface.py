@@ -84,9 +84,7 @@ class LiftingSurface(GeomBase):
 #  This block of Attributes calculates the planform parameters. ########------------------------------------------------
     @Attribute
     def span(self):
-        """ This attribute calculates the required semi-span based on the wing area and Aspect Ratio. REMEMBER: The
-        wing area input for this primitive is the wing area for ONE WING!
-
+        """ This attribute calculates the required wingspan based on the wing area and Aspect Ratio.
         :return: Wing Semispan
         :rtype: float
         """
@@ -96,7 +94,6 @@ class LiftingSurface(GeomBase):
     def semi_span(self):
         """ This attribute calculates the required semi-span based on the wing area and Aspect Ratio. REMEMBER: The
         wing area input for this primitive is the wing area for ONE WING!
-
         :return: Wing Semispan
         :rtype: float
         """
