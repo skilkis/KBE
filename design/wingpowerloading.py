@@ -36,7 +36,7 @@ class WingPowerLoading(Base):
 
     #: This is a list of three C_lmax's that the wing is assumed to generate. This creates multiple lines on the plots.
     #: :type: List
-    C_Lmax = Input([1.0, 1.25, 1.5])
+    maximum_lift_coefficient = Input([1.0, 1.25, 1.5])
 
     #: This is a list of three Aspect Ratios that the wing is assumed to generate. This creates multiple lines on
     #: the plots.
@@ -55,7 +55,6 @@ class WingPowerLoading(Base):
     #: :type: float
     e_factor = Input(0.8)
 
-    # TODO make these constants into an attribute for lazy evaluation
     #: Below is the STD ISA sea level density
     #: :type: float
     rho = 1.225
@@ -66,23 +65,23 @@ class WingPowerLoading(Base):
 
     #: Below is the assumed throwing speed of a hand launched UAV
     #: :type: float
-    v_s_hand = 8.0
+    stall_speed_handlaunch = 8.0
 
     #: Below is assumed launch speed at the end of a catapult or runway.
     #: :type: float
-    v_s_nonhand = 12.0
+    stall_speed = 12.0
 
     #: Below is the assumed Value of Zero-Lift Drag Coefficient.
     #: :type: float
-    C_D0 = Input(0.02)
+    zero_lift_drag = Input(0.02)
 
     #: Below is the assumption for Required Climb Rate, Same as Sparta UAV 1.1.2.
     #: :type: float
-    RC = 1.524
+    climb_rate = 1.524
 
     #: Below is the assumed Climb Gradient to clear 10m object 17m away.
     #: :type: float
-    G = 0.507
+    climb_gradient = 0.507
 
 
 #  This block of Attributes calculates the wing and thrust loading parameters and generates the plot. ########----------
@@ -95,14 +94,14 @@ class WingPowerLoading(Base):
         :rtype: dict
         """
         if self.handlaunch:
-            v_s = self.v_s_hand
+            v_s = self.stall_speed_handlaunch
             ws_string = '_hand'
         else:
-            v_s = self.v_s_nonhand
+            v_s = self.stall_speed
             ws_string = ''
         ws = []
-        for i in range(len(self.C_Lmax)):
-            ws.append(0.5 * self.rho * self.C_Lmax[i] * v_s ** 2)
+        for i in range(len(self.maximum_lift_coefficient)):
+            ws.append(0.5 * self.rho * self.maximum_lift_coefficient[i] * v_s ** 2)
         return {'values': ws, 'flag': ws_string}
 
     @Attribute
@@ -113,16 +112,16 @@ class WingPowerLoading(Base):
         """
         wp_cr = []
         for i in range(len(self.AR)):
-            wp_cr.append([self.eta_prop / (self.RC + sqrt(
-                num * (2.0 / self.rho_cr) * (sqrt(self.C_D0) / (1.81 *
-                                                                ((self.AR[i] * e) ** (3.0 / 2.0))))))
+            wp_cr.append([self.eta_prop / (self.climb_rate + sqrt(
+                num * (2.0 / self.rho_cr) * (sqrt(self.zero_lift_drag) / (1.81 *
+                                                                          ((self.AR[i] * e) ** (3.0 / 2.0))))))
                           for num in self.ws_range])
             # evaluating all values of WS_range w/ list comprehension
         # Picks the first aspect ratio and proceeds since the climb-gradient requirement is not influenced heavily by AR
         wp_cg = []
-        for i in range(len(self.C_Lmax)):
+        for i in range(len(self.maximum_lift_coefficient)):
             wp_cg.append([self.eta_prop / (sqrt(num * (2.0 / self.rho) * (1 / self.climbcoefs['lift'][i])) *
-                                           self.G + (self.climbcoefs['drag'][0][i] / self.climbcoefs['lift'][i]))
+                                           self.climb_gradient + (self.climbcoefs['drag'][0][i] / self.climbcoefs['lift'][i]))
                           for num in self.ws_range])
 
         return {'climb_rate': wp_cr,
@@ -137,20 +136,20 @@ class WingPowerLoading(Base):
         fig = plt.figure('LoadingDiagram')
         plt.style.use('ggplot')
 
-        for i in range(len(self.C_Lmax)):
+        for i in range(len(self.maximum_lift_coefficient)):
             wing_loading = self.wingloading['values'][i]
             plt.plot([wing_loading, wing_loading], [0, 2.0],
-                     label='C_Lmax%s = %.2f' % (self.wingloading['flag'], self.C_Lmax[i]))
+                     label='C_Lmax%s = %.2f' % (self.wingloading['flag'], self.maximum_lift_coefficient[i]))
 
         for i in range(len(self.AR)):
             plt.plot(self.ws_range,
                      self.powerloading['climb_rate'][i], '--',
                      label='CR, AR = %d' % self.AR[i])
 
-        for i in range(len(self.C_Lmax)):
+        for i in range(len(self.maximum_lift_coefficient)):
             plt.plot(self.ws_range,
                      self.powerloading['climb_gradient'][i], '-.',
-                     label='CG, C_Lmax = %.2f' % self.C_Lmax[i])
+                     label='CG, C_Lmax = %.2f' % self.maximum_lift_coefficient[i])
 
         plt.plot(self.designpoint['wing_loading'], self.designpoint['power_loading'],
                  marker='o',
@@ -182,7 +181,7 @@ class WingPowerLoading(Base):
 
         #: Evaluation of the distance between lift_coef_realistic and user-inputed values for C_L
         #: :type: float array
-        error = [abs(num - lift_coef_realistic) for num in self.C_Lmax]
+        error = [abs(num - lift_coef_realistic) for num in self.maximum_lift_coefficient]
 
         #: idx1 is the index corresponding to the minimum value within the array 'error'
         #: in other words idx1 is the index corresponding to the closest user-input value to lift_coef_realistic
@@ -223,7 +222,7 @@ class WingPowerLoading(Base):
         else:
             wp = wp_choices[0]
 
-        return{'lift_coefficient': self.C_Lmax[idx1],
+        return{'lift_coefficient': self.maximum_lift_coefficient[idx1],
                'aspect_ratio': self.AR[idx3],
                'wing_loading': ws,
                'power_loading': wp}
@@ -236,11 +235,12 @@ class WingPowerLoading(Base):
 
         :return: Dictionary containing modified lift coefficients ('climb_lift') and drag coefficients ('climb_drag')
         """
-        lift_coef_cg = [num - 0.2 for num in self.C_Lmax]
+        lift_coef_cg = [num - 0.2 for num in self.maximum_lift_coefficient]
         # Above we subtract 0.2 from climb gradient C_l to keep away from stall during climb out
         drag_coef_cg = []
         for i in range(len(self.AR)):
-            drag_coef_cg.append([(self.C_D0 + num ** 2 / (pi * self.AR[i] * self.e_factor)) for num in self.C_Lmax])
+            drag_coef_cg.append([(self.zero_lift_drag + num ** 2 / (pi * self.AR[i] * self.e_factor))
+                                 for num in self.maximum_lift_coefficient])
 
             # Due to how drag_coef_cg is defined, the first array dim is aspect ratios, the second dim is
             # lift coefficient. Thus accessing the 2nd aspect ratio and 1st lift coefficient would be C_dcg[1][0].
@@ -278,8 +278,8 @@ class WingPowerLoading(Base):
         :rtype: dict
         """
         if self.mission is 'range':
-            cl_opt = sqrt(self.C_D0 * pi * self.designpoint['aspect_ratio'] * self.e_factor)
-            cd_opt = self.C_D0 + (cl_opt ** 2 / (pi * self.designpoint['aspect_ratio'] * self.e_factor))
+            cl_opt = sqrt(self.zero_lift_drag * pi * self.designpoint['aspect_ratio'] * self.e_factor)
+            cd_opt = self.zero_lift_drag + (cl_opt ** 2 / (pi * self.designpoint['aspect_ratio'] * self.e_factor))
             v_opt = sqrt(self.designpoint['wing_loading']*(2/self.rho)*(1/cl_opt))
             s = self.mtow * 9.81 / self.designpoint['wing_loading']
             d_opt = cd_opt * 0.5 * self.rho * (v_opt ** 2) * s
@@ -296,8 +296,8 @@ class WingPowerLoading(Base):
             print 'optimal cruise speed range ', v_opt
 
         else:
-            cl_opt = sqrt(3 * self.C_D0 * pi * self.designpoint['aspect_ratio'] * self.e_factor)
-            cd_opt = self.C_D0 + (cl_opt**2/(pi*self.designpoint['aspect_ratio'] * self.e_factor))
+            cl_opt = sqrt(3 * self.zero_lift_drag * pi * self.designpoint['aspect_ratio'] * self.e_factor)
+            cd_opt = self.zero_lift_drag + (cl_opt ** 2 / (pi * self.designpoint['aspect_ratio'] * self.e_factor))
             v_opt = sqrt(self.designpoint['wing_loading'] * (2 / self.rho) * (1 / cl_opt))
             s = self.mtow * 9.81 / self.designpoint['wing_loading']
             d_opt = cd_opt * 0.5 * self.rho * (v_opt ** 2) * s

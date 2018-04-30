@@ -211,7 +211,7 @@ class Propeller(Component):
 
         return prop_dict
 
-    @Attribute(private=True)
+    @Attribute
     def propeller_selector(self):
         """ The main selection algorithm which iterates through all propellers in the attribute `propeller_database`.
         For each propeller the algorithm logs the maximum propulsive efficiency at each RPM as well as the true-airspeed
@@ -227,6 +227,7 @@ class Propeller(Component):
         _prop_names = []
         _design_etas = []
         _eta_splines = []
+        _spline_bounds = []
 
         _data_found = False  # Switch case to determine if data-points exist for the chosen design point
         for name in self.propeller_database:
@@ -236,11 +237,12 @@ class Propeller(Component):
             etas = max_eta['ETA']
 
             # Interpolates the data with a linear spline and appends to _eta_splines
-            eta_vs_velocity = interp1d(velocities, etas, kind='slinear')
+            eta_vs_velocity = interp1d(velocities, etas, kind='slinear', fill_value=[0])
             _eta_splines.append(eta_vs_velocity)
+            _spline_bounds.append([min(velocities), max(velocities)])
 
             # Returns the efficiency if data-points exist for `self.design_speed`
-            if self.design_speed <= max(velocities):
+            if min(velocities) <= self.design_speed <= max(velocities):
                 _design_etas.append(float(eta_vs_velocity(self.design_speed)))
                 _data_found = True
             else:
@@ -251,10 +253,11 @@ class Propeller(Component):
             selected_prop = _prop_names[idx_selected]
             selected_eta = _design_etas[idx_selected]
             selected_curve = _eta_splines[idx_selected]
+            curve_bounds = _spline_bounds[idx_selected]
         else:
             raise ValueError('No propeller data could be found for the design speed of %0.2f' % self.design_speed)
 
-        return selected_prop, selected_eta, selected_curve
+        return selected_prop, selected_eta, selected_curve, curve_bounds
 
     @Attribute
     def efficiency_plotter(self):
