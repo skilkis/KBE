@@ -22,6 +22,13 @@ class WingPowerLoading(Base):
 
 #: This block of code contains the inputs. ########---------------------------------------------------------------------
 
+    mtow = Input(5.0)  # used for to find S from design point!
+    mission = Input('range', validator=val.OneOf(['range', 'endurance']))  #  used to switch optimal flight condition.
+    range = Input(2500.0)     # this is used to determine the battery capacity required for range. units = m
+    endurance = Input(3600) #  this is used to det battery capacity for endurance requirement units = seconds
+    pl_target_weight = Input(0.2, validator=val.Positive())
+
+
     #: Boolean operator to determine if the user requires the UAV to be hand launched
     #: This parameter changes the stall-speed used for the Wing Loading
     #: :type: Boolean
@@ -77,12 +84,6 @@ class WingPowerLoading(Base):
     #: :type: float
     G = 0.507
 
-    # TODO ADD THE BELOW INPUTS TO PROPER PLACE.
-    mtow = Input(5.0)  # used for to find S from design point!
-    mission = Input('range', validator=val.OneOf(['range', 'endurance']))  #  used to switch optimal flight condition.
-    range = Input(2500.0)     # this is used to determine the battery capacity required for range. units = m
-    endurance = Input(3600) #  this is used to det battery capacity for endurance requirement units = seconds
-    pl_target_weight = Input(0.2, validator=val.Positive())
 
 #  This block of Attributes calculates the wing and thrust loading parameters and generates the plot. ########----------
     @Attribute

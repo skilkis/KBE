@@ -13,6 +13,7 @@ import xlrd
 from weightestimator import *
 from directories import *
 
+
 __author__ = ["Şan Kılkış"]
 __all__ = ["DesignInput"]
 
@@ -48,8 +49,6 @@ class DesignInput(Base):
 
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'parameters.png') # TODO Change icon
 
-    # TODO add validator functions here
-    # TODO remove this switch case, make endurance and range editable, you should be able to specify both
     performance_goal = Input('endurance', validator=val.OneOf(['endurance', 'range']))
     goal_value = Input(1.0, validator=val.Positive())
     weight_target = Input('payload', validator=val.OneOf(['payload', 'mtow']))
@@ -88,9 +87,6 @@ class DesignInput(Base):
 
         return 'Inputs have been overwritten from the supplied Excel File'
 
-    @Part
-    def weightestimator(self):
-        return ClassOne(pass_down="weight_target, target_value", label="Weight Estimation")
 
     # @Part
     # def wingpowerloading(self):

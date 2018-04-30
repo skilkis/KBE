@@ -20,22 +20,37 @@ from definitions import *
 # TODO Make sure that excel read and things are top level program features (not buried within the tree)
 
 class UAV(DesignInput):
+    """  This class will generate UAV aircraft. It inherits from 'DesignInput.py' so that the input requirements are
+    all in the top level of the tree.
+    """
 
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'plane.png')
 
-
-
-#     @Attribute
-#     def wing_loading(self):
-#         return self.params.wingpowerloading.designpoint['wing_loading']
-#
     @Part
     def params(self):
-        return ParameterGenerator(label="Design Parameters")
-#
-    @Part
-    def wing(self):
-        return Wing(wing_loading=self.params.wingpowerloading.designpoint['wing_loading'])
+        #  Here we instantiate the parameter generator, passing down the inputs from the User input file.
+        return ParameterGenerator(pass_down=['performance_goal',
+                                             'goal_value',
+                                             'weight_target',
+                                             'target_value',
+                                             'payload_type',
+                                             'configuration',
+                                             'handlaunch',
+                                             'portable'],
+                                  label = 'Design Parameters')
+
+  #  @Part
+  #  def wing(self):
+  #      return Wing(wing_loading = self.params.wing_loading,
+  #                  weight_mtow = self.params.weight_mtow,
+  #                  stall_speed = )
+
+
+
+
+   # @Part
+   # def wing(self):
+   #     return Wing(wing_loading=self.parameters.wingpowerloading.designpoint['wing_loading'])
 #
 #     @Part
 #     def stabilizer(self):
