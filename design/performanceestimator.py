@@ -81,7 +81,7 @@ class WingPowerLoading(Base):
     mtow = Input(5.0)  # used for to find S from design point!
     mission = Input('range', validator=val.OneOf(['range', 'endurance']))  #  used to switch optimal flight condition.
     range = Input(2500.0)     # this is used to determine the battery capacity required for range. units = m
-    endurance = Input(3600.0) #  this is used to det battery capacity for endurance requirement units = seconds
+    endurance = Input(3600) #  this is used to det battery capacity for endurance requirement units = seconds
     pl_target_weight = Input(0.2, validator=val.Positive())
 
 #  This block of Attributes calculates the wing and thrust loading parameters and generates the plot. ########----------
@@ -259,6 +259,7 @@ class WingPowerLoading(Base):
 
 
 #  The Block below will estimate the required power from the battery depending on the range or endurance goal.
+
     @Attribute
     def eta_tot(self):
         """ This attribute estimates the propulsive efficiency. This is done by multiplying the propellor and the motor
@@ -276,32 +277,32 @@ class WingPowerLoading(Base):
         :rtype: dict
         """
         if self.mission is 'range':
-            cl_opt = sqrt(self.C_D0*pi*self.designpoint['aspect_ratio'] * self.e_factor)
-            cd_opt = self.C_D0 + (cl_opt**2/(pi*self.designpoint['aspect_ratio']*self.e_factor))
+            cl_opt = sqrt(self.C_D0 * pi * self.designpoint['aspect_ratio'] * self.e_factor)
+            cd_opt = self.C_D0 + (cl_opt ** 2 / (pi * self.designpoint['aspect_ratio'] * self.e_factor))
             v_opt = sqrt(self.designpoint['wing_loading']*(2/self.rho)*(1/cl_opt))
-            s = self.mtow / self.designpoint['wing_loading']
-            d_opt = cd_opt*0.5*self.rho*(v_opt**2)*s
+            s = self.mtow * 9.81 / self.designpoint['wing_loading']
+            d_opt = cd_opt * 0.5 * self.rho * (v_opt ** 2) * s
             t = self.range / v_opt
             p_req_drag = (d_opt * v_opt) / self.eta_tot
-            capacity = p_req_drag*t
+            capacity = p_req_drag * (t / 3600)
             out = {'cl_opt': cl_opt,
                    'cd_opt': cd_opt,
                    'd_opt': d_opt,
-                   'v_opt':v_opt,
+                   'v_opt': v_opt,
                    't': t,
                    'p_req_drag': p_req_drag,
                    'capacity': capacity}
-            print 'optimal cruise speed range ',v_opt
+            print 'optimal cruise speed range ', v_opt
 
         else:
-            cl_opt = sqrt(3*self.C_D0*pi*self.designpoint['aspect_ratio']* self.e_factor)
-            cd_opt = self.C_D0 + (cl_opt**2/(pi*self.designpoint['aspect_ratio']*self.e_factor))
+            cl_opt = sqrt(3 * self.C_D0 * pi * self.designpoint['aspect_ratio'] * self.e_factor)
+            cd_opt = self.C_D0 + (cl_opt**2/(pi*self.designpoint['aspect_ratio'] * self.e_factor))
             v_opt = sqrt(self.designpoint['wing_loading'] * (2 / self.rho) * (1 / cl_opt))
-            s = self.mtow / self.designpoint['wing_loading']
+            s = self.mtow * 9.81 / self.designpoint['wing_loading']
             d_opt = cd_opt*0.5*self.rho*(v_opt**2)*s
             t = self.endurance
             p_req_drag = (d_opt * v_opt) / self.eta_tot
-            capacity = p_req_drag * t
+            capacity = p_req_drag * (t / 3600)
             out = {'cl_opt': cl_opt,
                    'cd_opt': cd_opt,
                    'd_opt': d_opt,
@@ -314,9 +315,9 @@ class WingPowerLoading(Base):
 
     @Attribute
     def payload_power(self):
-        """ This attribute gets the required power of the EOIR payload, passing down the target weight.
+        """ This attribute gets the required power of the EOIR payload w/ Lazy Evaluation, using the payload weight
         :rtype: float
-        :return: Required battery power due to payload.
+        :return: Required battery power due to payload SI Watt
         """
         return EOIR(target_weight=self.pl_target_weight).specs['power']
 
@@ -332,7 +333,7 @@ class WingPowerLoading(Base):
     def battery_capacity(self):
         """ This attribute calculates the required battery capacity, based on the payload mass, flight computer, and
          flight performance characteristics.
-         :return: Required flight computer power.
+         :return: Required Battery Capacity in SI Watt hour
          :rtype: float
          """
         t = self.cruise_parameters['t'] / 3600.0
