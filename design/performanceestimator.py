@@ -15,11 +15,9 @@ __all__ = ["WingPowerLoading"]
 
 class WingPowerLoading(Base):
     """ This class will construct the wing and power loading plot for the fixed wing UAV based on the input MTOW. The
-        requirements are the climb rate and climb gradient. There are assumed values for:  C_lmax, Stall speed,
-        propeller efficiency, zero-lift drag coefficient, Aspect Ratio and Oswald Efficiency Factor. All Values are in
-        SI Units unless stated.
-    :returns: Weight values for maximum take-off weight ('weight_mtow') and payload weight ('weight_payload')
-    :rtype: float
+    requirements are the climb rate and climb gradient. There are assumed values for:  C_lmax, Stall speed,
+    propeller efficiency, zero-lift drag coefficient, Aspect Ratio and Oswald Efficiency Factor. All Values are in
+    SI Units unless stated.
     """
 
 #: This block of code contains the inputs. ########---------------------------------------------------------------------
@@ -270,22 +268,21 @@ class WingPowerLoading(Base):
         """
         return self.eta_prop*self.eta_motor
 
-
     @Attribute
     def cruise_parameters(self):
         """ This attribute calculates the cruise parameters related to the requirement on range [m], or
         endurance [s]. These relations are from the year 1 Intro to aeronautics flight mechanics module.
         :return: Required battery capacity due to plane drag.
-        :rtype: float
+        :rtype: dict
         """
         if self.mission is 'range':
-            cl_opt = sqrt(self.C_D0*pi*self.designpoint['aspect_ratio']* self.e_factor)
+            cl_opt = sqrt(self.C_D0*pi*self.designpoint['aspect_ratio'] * self.e_factor)
             cd_opt = self.C_D0 + (cl_opt**2/(pi*self.designpoint['aspect_ratio']*self.e_factor))
             v_opt = sqrt(self.designpoint['wing_loading']*(2/self.rho)*(1/cl_opt))
-            s = self.mtow/self.designpoint['wing_loading']
+            s = self.mtow / self.designpoint['wing_loading']
             d_opt = cd_opt*0.5*self.rho*(v_opt**2)*s
             t = self.range / v_opt
-            p_req_drag = (d_opt * v_opt)/self.eta_tot
+            p_req_drag = (d_opt * v_opt) / self.eta_tot
             capacity = p_req_drag*t
             out = {'cl_opt': cl_opt,
                    'cd_opt': cd_opt,
@@ -303,12 +300,12 @@ class WingPowerLoading(Base):
             s = self.mtow / self.designpoint['wing_loading']
             d_opt = cd_opt*0.5*self.rho*(v_opt**2)*s
             t = self.endurance
-            p_req_drag = (d_opt * v_opt)/self.eta_tot
+            p_req_drag = (d_opt * v_opt) / self.eta_tot
             capacity = p_req_drag * t
             out = {'cl_opt': cl_opt,
                    'cd_opt': cd_opt,
                    'd_opt': d_opt,
-                   'v_opt':v_opt,
+                   'v_opt': v_opt,
                    't': t,
                    'p_req_drag': p_req_drag,
                    'capacity': capacity}
@@ -321,7 +318,7 @@ class WingPowerLoading(Base):
         :rtype: float
         :return: Required battery power due to payload.
         """
-        return EOIR(target_weight =self.pl_target_weight).specs['power']
+        return EOIR(target_weight=self.pl_target_weight).specs['power']
 
     @Attribute
     def flight_controller_power(self):
@@ -338,8 +335,8 @@ class WingPowerLoading(Base):
          :return: Required flight computer power.
          :rtype: float
          """
-        t = self.cruise_parameters['t']
-        capacity = (self.payload_power  + self.cruise_parameters['p_req_drag'] + self.flight_controller_power) * t
+        t = self.cruise_parameters['t'] / 3600.0
+        capacity = (self.payload_power + self.cruise_parameters['p_req_drag'] + self.flight_controller_power) * t
         return capacity
 
 

@@ -12,7 +12,7 @@ __author__ = ["Nelson Johnson"]
 __all__ = ["VerticalStabilizer"]
 
 
-class VerticalStabilizer(ExternalBody):
+class VerticalStabilizer(ExternalBody, LiftingSurface):
     """ This class will size the VT according to statistical VT volume coefficients and generate it using the
     LiftingSurface primitive. Also, the bounding box is made for the section of the VTP within the fuselage, which is
     used to size the fuselage frames.
@@ -46,39 +46,39 @@ class VerticalStabilizer(ExternalBody):
 
     #: Below is the plane mtow
     #: :type: float
-    MTOW = Input(25.0)  # TODO REMOVE THIS!! THIS IS USED FOR THE OLD WEIGHT ESTIMATION!!!!!!!!!!!
+    weight_mtow = Input(25.0)  # TODO REMOVE THIS!! THIS IS USED FOR THE OLD WEIGHT ESTIMATION!!!!!!!!!!!
 #  ---------------------------------------------------------------------------------------------------------------------
     #: Below is the assumed VT aspect ratio.
     #: :type: float
-    AR_v = Input(1.4)
+    aspect_ratio = Input(1.4)
+
+    #: This sets `overwrites` the is_half parameter from the class `LiftingSurface`
+    #: type: float
+    is_half = Input(True)
 
     #: Below is the assumed VT taper ratio.
     #: :type: float
-    taper_v = Input(0.35)
-
-    #: Below is the required VT dihedral angle.
-    #: :type: float
-    dihedral_v = Input(0.0)
+    taper = Input(0.35)
 
     #:  This is the wing twist for the VT.
     #: :type: float
-    phi_v = Input(0.0)
+    twist = Input(0.0)
 
     #:  This is the airfoil type for the VT. This must contain the correct folder name to the airfoils.
     #: :type: str
-    airfoil_type_v = Input('symmetric')
+    airfoil_type = Input('symmetric')
 
     #:  This is the airfoil filename for the VT. This must contain the correct filename name of the airfoil.
     #: :type: str
-    airfoil_choice_v = Input('NACA0012')
+    airfoil_choice = Input('NACA0012')
 
     #: Below is the chosen trailing edge offset.
     #: :type: NoneType or float
-    offset_v = Input(None)
+    offset = Input(None)
 
     #: Below is the assumed factor relating the part of the VT covered by fuse to semispan
     #: :type: float
-    vtfuse_width_factor = Input(0.1)
+    fuse_width_factor = Input(0.1)
 
 
 # Attributes below------------------------------------------------------------------------------------------------------
@@ -96,7 +96,7 @@ class VerticalStabilizer(ExternalBody):
         :return: float
         :rtype: float
         """
-        return 0.1 * self.MTOW
+        return 0.1 * self.weight_mtow
 
     @Attribute
     def center_of_gravity(self):
@@ -105,7 +105,7 @@ class VerticalStabilizer(ExternalBody):
         :return: ParaPy Point
         :rtype: Point
         """
-        pos = self.vt.cog
+        pos = self.solid.cog
         return pos
 
     @Attribute
@@ -148,7 +148,7 @@ class VerticalStabilizer(ExternalBody):
         :return: VTP length within the fuselage
         :rtype: float
         """
-        return self.vt_horiz.semispan * self.vtfuse_width_factor
+        return self.span * self.fuse_width_factor
 
     @Attribute(private=True)
     def vtright_cut_plane(self):
@@ -156,7 +156,7 @@ class VerticalStabilizer(ExternalBody):
         :return: VTP cut Plane ParaPy Geometry
         :rtype: Plane
         """
-        return Plane(reference=translate(self.vt.position, 'y', self.vtwing_cut_loc),
+        return Plane(reference=translate(self.position, 'z', self.vtwing_cut_loc),
                      normal=Vector(0, 0, 1))
 
     @Attribute(private=True)
@@ -166,13 +166,13 @@ class VerticalStabilizer(ExternalBody):
         :return: VTP fuselage section bounding box
         :rtype: bbox
         """
-        inner_part = PartitionedSolid(solid_in=self.vt,
+        inner_part = PartitionedSolid(solid_in=self.solid,
                                       tool=self.vtright_cut_plane).solids[0].faces[1].wires[0]
         #  Above obtains a cross section of the wing, at the specified fuselage width factor.
 
         #  mirrored_part = MirroredShape(shape_in=inner_part, reference_point=self.ht.final_wing.position,
         #                              vector1=Vector(1, 0, 0),vector2=Vector(0, 0, 1))
-        root = self.vt.wires[1]
+        root = self.solid.wires[1]
 
         first_iter = Fused(inner_part, root)
         #  Fusion of the two wing cross sections.
@@ -183,32 +183,16 @@ class VerticalStabilizer(ExternalBody):
         return bounds
 
     @Part
-    def vt_horiz(self):
-        """ This is an instantiation of the lifting surface for ONE HT. Remember, LiftingSurface takes as input the
-        wing area for ONE WING!!
-        :return: VTP surfaces ParaPy Geometry
+    def solid(self):
+        """ This rotates the entire solid LiftingSurface to 90 deg.
+        :return: ParaPy rotated lofted solid wing geometry.
         :rtype: RotatedShape
         """
-        return LiftingSurface(S=self.planform_area,
-                              AR=self.AR_v,
-                              taper=self.taper_v,
-                              dihedral=self.dihedral_v,
-                              phi=self.phi_v,
-                              airfoil_type=self.airfoil_type_v,
-                              airfoil_choice=self.airfoil_choice_v,
-                              offset=self.offset_v,
-                              hidden=True)
-
-    @Part
-    def vt(self):
-        """ This rotates the VTP over a right angle to the correct orientation WRT the aircraft reference system.
-        :return: VTP surfaces ParaPy Geometry
-        :rtype: RotatedShape
-        """
-        return RotatedShape(shape_in=self.vt_horiz.final_wing,
-                            rotation_point=Point(0, 0, 0),
+        return RotatedShape(shape_in=self.no_dihedral_solid,
+                            rotation_point=self.no_dihedral_solid.position,
                             vector=Vector(1, 0, 0),
-                            angle=radians(90))
+                            angle=radians(90),
+                            mesh_deflection=self.mesh_deflection)
 
     @Part
     def internal_shape(self):
@@ -229,10 +213,7 @@ class VerticalStabilizer(ExternalBody):
         :return: VTP ParaPy Geometry
         :rtype: RotatedShape
         """
-        return RotatedShape(shape_in=self.vt_horiz.final_wing,
-                            rotation_point=Point(0, 0, 0),
-                            vector=Vector(1, 0, 0),
-                            angle=radians(90))
+        return ScaledShape(shape_in=self.solid, reference_point=self.position, factor=0, hidden=True)
 
 
 if __name__ == '__main__':

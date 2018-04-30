@@ -7,11 +7,11 @@
   In the future, we would like to add functionality for elliptical wings.
 """
 
-from parapy.core import *       # / Required ParaPy Module
-from parapy.geom import *       # / Required ParaPy Module
-from math import *              # / Python math operations.
-from directories import *       # / Project Directory
-
+from parapy.core import *           # / Required ParaPy Module
+from parapy.geom import *           # / Required ParaPy Module
+from math import *                  # / Python math operations.
+from directories import *           # / Project Directory
+from collections import namedtuple  # / Allows creation of named tuples similar to Point
 __author__ = "Nelson Johnson"
 __all__ = ["LiftingSurface"]
 
@@ -32,9 +32,9 @@ class LiftingSurface(GeomBase):
     #: :type: float
     planform_area = Input(0.8)
 
-    #: A switch case that determines if the lifting surface is mirrored (Right/Left)
+    #: A switch case that determines if the `planform_area` is half of the total required area
     #: :type: bool
-    mirrored = Input(True)
+    is_half = Input(False)
 
     #: Below is the required Aspect Ratio of the Surface.
     #: :type: float
@@ -56,7 +56,7 @@ class LiftingSurface(GeomBase):
     #: Below is the name of the folder within the 'airfoils' folder. There are three options: 'cambered', 'reflexed' and
     #: 'symmetric'.
     #: :type: str
-    airfoil_type = Input('cambered')
+    airfoil_type = Input('cambered', validator=val.OneOf(['cambered', 'reflexed', 'symmetric']))
 
     #: Below is the default airfoil. Please see the three folders to find the correct filename, if you wish to change
     #: the airfoil.
@@ -100,10 +100,10 @@ class LiftingSurface(GeomBase):
         :return: Wing Semispan
         :rtype: float
         """
-        if self.mirrored:
-            semi_span = self.span / 2.0
-        else:
+        if self.is_half:
             semi_span = self.span
+        else:
+            semi_span = self.span / 2.0
         return semi_span
 
     @Attribute

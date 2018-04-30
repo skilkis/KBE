@@ -33,9 +33,9 @@ class UAV(DesignInput):
     def params(self):
         return ParameterGenerator(label="Design Parameters")
 #
-#     @Part
-#     def wing(self):
-#         return Wing(WS_pt=self.wing_loading, position=translate(XOY, 'x', 0.1))
+    @Part
+    def wing(self):
+        return Wing(wing_loading=self.params.wingpowerloading.designpoint['wing_loading'])
 #
 #     @Part
 #     def stabilizer(self):

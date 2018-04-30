@@ -31,7 +31,7 @@ class Battery(Component):
 
     sizing_target = Input('capacity', validator=val.OneOf(["capacity", "weight"]))
     # TODO link this to custom validator function
-    sizing_value = Input(10000000.0, validator=val.Positive())
+    sizing_value = Input(265, validator=val.Positive())
     max_width = Input(0.15, validator=val.Positive())
     max_height = Input(0.1, validator=val.Positive())  # Suggested to use a wider-battery, max_height = max_width / 2 for fuselage aerodynamics
     # position = Input(Position(Point(0, 0, 0)))
@@ -62,8 +62,8 @@ class Battery(Component):
     @Attribute
     def constants(self):
         mydict = {
-            'energy_density': (0.95*(10**6)),    # MJ/kg From WikiPedia https://en.wikipedia.org/wiki/Energy_density
-            'energy_volume': (4.32*(10**9)),    # MJ/m^3 #TODO check this value
+            'energy_density': 265.0,            # https://en.wikipedia.org/wiki/Lithium_polymer_battery
+            'energy_volume': 730.0 * (10**3),  # Wh/m^3 #TODO check this value
             'minimum_volume': 0.000015          # m^3
         }
         return mydict
@@ -83,8 +83,8 @@ class Battery(Component):
             # Code to put a minimum size of capacity to not break the code with div by zero
             e_bat = self.sizing_value
             if self.sizing_value < self.minimum_capacity:
-                raise ZeroDivisionError('%s [MJ] results in a battery size that is too small to manufacture,'
-                                        ' please change it to at least %s [MJ]' % (self.sizing_value,
+                raise ZeroDivisionError('%s [Wh] results in a battery size that is too small to manufacture,'
+                                        ' please change it to at least %s [Wh]' % (self.sizing_value,
                                                                                    self.minimum_capacity))
             else:
                 return e_bat
@@ -107,11 +107,6 @@ class Battery(Component):
     @Attribute
     def height(self):
         return self.max_height
-
-    @Attribute
-    def bbox_intern(self):
-        self.battery.bbox.color = MyColors.deep_green
-        return self.battery.bbox
 
     @Attribute(private=True)
     def minimum_capacity(self):

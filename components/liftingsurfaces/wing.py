@@ -41,11 +41,6 @@ class Wing(ExternalBody, LiftingSurface):
     #: :type: float
     stall_speed = Input(8.0)
 
-    # @Input
-    # def weight_mtow(self):
-    #     #  When wing is instantiated in main without a supplied weight_mtow, this attribute pulls the value from the ancestor.
-    #     return 25 if self.is_root else self.get_ancestor_value('weight_mtow')
-
     #: Below is the ISA STD sea level density.
     #: :type: float
     rho = Input(1.225)
@@ -188,12 +183,12 @@ class Wing(ExternalBody, LiftingSurface):
 
     @Part
     def external_shape(self):
-        return Fused(self.solid, self.left_wing, hidden=True)`
+        return Fused(self.solid, self.left_wing, hidden=True)
 
 
 # --- AVL Geometry & Analysis: -----------------------------------------------------------------------------------------
 #  In this block, the AVL analysis is setup, run and C_Lalpha is extracted.
-    @Attribute
+    @Attribute(private=True)
     def root_section(self):
         """"  This defines the root section with the chosen airfoil.
          :return: AVL Section
@@ -204,7 +199,7 @@ class Wing(ExternalBody, LiftingSurface):
                        airfoil=FileAirfoil(get_dir(os.path.join('airfoils', self.airfoil_type,
                                                                 '%s.dat' % self.airfoil_choice))))
 
-    @Attribute
+    @Attribute(private=True)
     def tip_section(self):
         """"  Here we define the tip AVL section with proper location and airfoil.
          :return: AVL Section
@@ -218,7 +213,7 @@ class Wing(ExternalBody, LiftingSurface):
                        airfoil=FileAirfoil(get_dir(os.path.join('airfoils', self.airfoil_type,
                                                                 '%s.dat' % self.airfoil_choice))))
 
-    @Attribute
+    @Attribute(private=True)
     def wing_surface(self):
         """" Here we define the wing surface using a symmetry plane at y=0. Here the number of vortecies and their
          chordwise and spanwise spacing is also set.
@@ -233,7 +228,7 @@ class Wing(ExternalBody, LiftingSurface):
                        y_duplicate=0.0,
                        sections=[self.root_section, self.tip_section])
 
-    @Attribute
+    @Attribute(private=True)
     def wing_geom(self):
         """"  Here we define the AVL geometry.
          :return: AVL Geometry
@@ -246,7 +241,7 @@ class Wing(ExternalBody, LiftingSurface):
                         reference_point=Point(0.0, 0.0, 0.0),
                         surfaces=[self.wing_surface])
 
-    @Attribute
+    @Attribute(private=True)
     def alpha_cases(self):
         """"  Here we define the run cases for AVL. We are running input cases alpha from 0 to 10 with 25 data points, at
          the speed required for the controllability curve (1.2*v_s).
@@ -259,7 +254,7 @@ class Wing(ExternalBody, LiftingSurface):
             alpha_case.append(Case(name='alpha%s' % i, alpha=alphas[i], velocity=1.2*self.stall_speed))
         return alpha_case
 
-    @Attribute
+    @Attribute(private=True)
     def avl_session(self):
         """"  Here we define the AVL session with the cases above.
          :return: AVL Session
@@ -278,7 +273,7 @@ class Wing(ExternalBody, LiftingSurface):
         return 'Done'
 
     @Attribute
-    def results(self):
+    def avl_results(self):
         """"  Here, the results are extracted and stored in the memory of ParaPy.
          :return:
          :rtype:
@@ -292,8 +287,9 @@ class Wing(ExternalBody, LiftingSurface):
         :return: Plot and float
         :rtype: dict
         """
-        cl_alpha_array = (sorted([[self.results[alpha]['Totals']['Alpha'], self.results[alpha]['Totals']['CLtot']]
-                                  for alpha in self.results], key=lambda f: float(f[0])))
+        cl_alpha_array = (sorted([[self.avl_results[alpha]['Totals']['Alpha'],
+                                   self.avl_results[alpha]['Totals']['CLtot']]
+                                  for alpha in self.avl_results], key=lambda f: float(f[0])))
         #  Above we extract the c_l and angle of attack values.
         alpha_deg = [i[0] for i in cl_alpha_array]
         alpha_rad = [radians(i[0]) for i in cl_alpha_array]
@@ -332,8 +328,8 @@ class Wing(ExternalBody, LiftingSurface):
          :return: index
          :rtype: int
          """
-        cll_array = (sorted([[self.results[alpha]['Totals']['Alpha'], self.results[alpha]['Totals']['CLtot']]
-                            for alpha in self.results], key=lambda f: float(f[1])))
+        cll_array = (sorted([[self.avl_results[alpha]['Totals']['Alpha'], self.avl_results[alpha]['Totals']['CLtot']]
+                             for alpha in self.avl_results], key=lambda f: float(f[1])))
         cll = [i[1] for i in cll_array]
         error = [abs(cll[i] - self.lift_coef_control) for i in range(0, len(cll))]
         cl_cont_index = error.index(min(error))
@@ -346,7 +342,7 @@ class Wing(ExternalBody, LiftingSurface):
          :return: C_mac
          :rtype: float
          """
-        case_name = self.results['alpha%s' % self.lift_coef_control_index]['Totals']['Cmtot']
+        case_name = self.avl_results['alpha%s' % self.lift_coef_control_index]['Totals']['Cmtot']
         return case_name
 
     @Attribute
