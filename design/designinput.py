@@ -12,7 +12,6 @@ import xlrd
 # Importing Necessary Classes
 from weightestimator import *
 from directories import *
-from design import ParameterGenerator
 
 __author__ = ["Şan Kılkış"]
 __all__ = ["DesignInput"]

@@ -35,3 +35,5 @@ class ParameterGenerator(Base):
     @Part
     def weightestimator(self):
         return ClassOne()
+
+    # TODO Make this the gathering point of all variables

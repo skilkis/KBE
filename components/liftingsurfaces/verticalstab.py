@@ -21,15 +21,15 @@ class VerticalStabilizer(ExternalBody, LiftingSurface):
 
     #: Below is the required TOTAL wing area of the main wings.
     #: :type: float
-    S_req = Input(0.8)
+    wing_planform_area = Input(0.8)
 
     #: Below is the MAC length of the wing
     #: :type: float
-    MAC = Input(0.43)
+    wing_mac_length = Input(0.43)
 
     #: Below is the semispan of the wing
     #: :type: float
-    semispan = Input(1.9)
+    wing_semi_span = Input(1.9)
 
     #: Below is non-dimensionalized vertical tail arm for the conventional plane.
     #: :type: float
@@ -137,9 +137,9 @@ class VerticalStabilizer(ExternalBody, LiftingSurface):
         :rtype: float
         """
         if self.configuration is 'conventional':
-            s_v_req = (self.v_v * self.S_req * self.semispan * 2) / self.lvc
+            s_v_req = (self.v_v * self.wing_planform_area * self.wing_semi_span * 2) / self.lvc
         else:
-            s_v_req = (self.v_v_canard * self.S_req * self.semispan * 2) / self.lvc_canard
+            s_v_req = (self.v_v_canard * self.wing_planform_area * self.wing_semi_span * 2) / self.lvc_canard
         return s_v_req
 
     @Attribute(private=True)

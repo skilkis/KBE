@@ -299,7 +299,7 @@ class WingPowerLoading(Base):
             cd_opt = self.C_D0 + (cl_opt**2/(pi*self.designpoint['aspect_ratio'] * self.e_factor))
             v_opt = sqrt(self.designpoint['wing_loading'] * (2 / self.rho) * (1 / cl_opt))
             s = self.mtow * 9.81 / self.designpoint['wing_loading']
-            d_opt = cd_opt*0.5*self.rho*(v_opt**2)*s
+            d_opt = cd_opt * 0.5 * self.rho * (v_opt ** 2) * s
             t = self.endurance
             p_req_drag = (d_opt * v_opt) / self.eta_tot
             capacity = p_req_drag * (t / 3600)

@@ -1,4 +1,4 @@
 from designinput import *
 from weightestimator import *
-from performanceestimator import *
+from wingpowerloading import *
 from parametergenerator import *
