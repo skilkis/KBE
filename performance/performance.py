@@ -11,6 +11,8 @@ class Performance(Base):
     motor_in = Input(Motor())
     propeller_in = Input(Propeller())
     weight_mtow = Input(5.0)
+    wing_loading = Input(50)
+    rho = Input(1.225)
 
     @Attribute
     def power_available(self):
@@ -23,6 +25,13 @@ class Performance(Base):
     @Attribute
     def eta_curve_bounds(self):
         return self.propeller_in.propeller_selector[3]
+
+    @Attribute
+    def power_required(self):
+        speed_range = np.linspace(self.eta_curve_bounds[0], self.eta_curve_bounds[1], 100)
+        lift_coefficients = self.wing_loading / (0.5 * self.rho * (speed_range ** 2))
+
+        return lift_coefficients
 
     @Attribute
     def plot_airspeed_vs_power(self):
