@@ -45,6 +45,10 @@ class Performance(Base):
         fig.show()
         return 'Figure Plotted and Saved'
 
+    # TODO Create L/D Plot, and Performance Squares
+    # Transparent rectangular prisms w/ Text on their sides, test enumerate function to deal w/ non array and be able to
+    # make any number of stacked bars next to each other in the GUI
+
 
 
     # @Attribute

@@ -25,7 +25,7 @@ class WingPowerLoading(Base):
     mtow = Input(5.0)  # used for to find S from design point!
     mission = Input('range', validator=val.OneOf(['range', 'endurance']))  #  used to switch optimal flight condition.
     range = Input(2500.0)     # this is used to determine the battery capacity required for range. units = m
-    endurance = Input(3600) #  this is used to det battery capacity for endurance requirement units = seconds
+    endurance = Input(3600.0) #  this is used to det battery capacity for endurance requirement units = seconds
     pl_target_weight = Input(0.2, validator=val.Positive())
 
 
