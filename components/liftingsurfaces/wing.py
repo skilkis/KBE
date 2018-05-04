@@ -64,6 +64,9 @@ class Wing(ExternalBody, LiftingSurface):
     #: :type: tuple
     color = Input(MyColors.skin_color)
 
+    # THIS IS A TEST PARAMETER
+    global_cg = Input(0.0)
+
 #  This block of Attributes calculates the planform parameters. ########------------------------------------------------
     @Attribute
     def component_type(self):
@@ -234,12 +237,25 @@ class Wing(ExternalBody, LiftingSurface):
          :return: AVL Geometry
          :rtype: Geometry
          """
-        return Geometry(name="Test wing",
+        return Geometry(name="Main Wing",
                         reference_area=self.s_req,
                         reference_chord=self.mac_length,
                         reference_span=self.semi_span * 2.0,
                         reference_point=Point(0.0, 0.0, 0.0),
                         surfaces=[self.wing_surface])
+
+    # @Attribute(private=True)
+    # def tail_surface(self):
+    #     return Surface(name="Horizontal Stabiliser",
+    #                        n_chordwise=8,
+    #                        chord_spacing=Spacing.cosine,
+    #                        n_spanwise=8,
+    #                        span_spacing=Spacing.cosine,
+    #                        y_duplicate=0.0,
+    #                        sections=[Section(leading_edge_point=Point(3.5, 0, 0.2),
+    #                                          chord=0.4),
+    #                                  Section(leading_edge_point=Point(3.7, 1.2, 0.2),
+    #                                          chord=0.25)])
 
     @Attribute(private=True)
     def alpha_cases(self):
@@ -248,10 +264,11 @@ class Wing(ExternalBody, LiftingSurface):
          :return: AVL List of RunCases
          :rtype: Case
          """
-        alphas = np.linspace(0.0, 10.0, 25)
+        alphas = np.linspace(-10, 20, 25)
         alpha_case = []
         for i in range(0, len(alphas)):
-            alpha_case.append(Case(name='alpha%s' % i, alpha=alphas[i], velocity=1.2*self.stall_speed))
+            alpha_case.append(Case(name='alpha%s' % i, alpha=alphas[i], velocity=1.2*self.stall_speed, mass=5.0,
+                                   X_cg=self.global_cg, Mach=0.1))
         return alpha_case
 
     @Attribute(private=True)
@@ -281,22 +298,30 @@ class Wing(ExternalBody, LiftingSurface):
         return self.avl_session.get_results()
 
     @Attribute(private=True)
-    def avl_lift_grabber(self):
+    def avl_data_grabber(self):
         # TODO Compare CL_max with assumed as well as plot with LLT
         """  Here, the cl vs alpha plot is created and the constant C_L vs alpha value is found.
         :return: Plot and float
         :rtype: dict
         """
-        cl_alpha_array = (sorted([[self.avl_results[alpha]['Totals']['Alpha'],
-                                   self.avl_results[alpha]['Totals']['CLtot']]
+        grabbed_values = (sorted([[self.avl_results[alpha]['Totals']['Alpha'],
+                                   self.avl_results[alpha]['Totals']['CLtot'],
+                                   self.avl_results[alpha]['Totals']['CDtot'],
+                                   self.avl_results[alpha]['Totals']['Cmtot']]
                                   for alpha in self.avl_results], key=lambda f: float(f[0])))
         #  Above we extract the c_l and angle of attack values.
-        alpha_deg = [i[0] for i in cl_alpha_array]
-        alpha_rad = [radians(i[0]) for i in cl_alpha_array]
+        alpha_deg = [i[0] for i in grabbed_values]
+        alpha_rad = [radians(i[0]) for i in grabbed_values]
         #  Conversion to radians.
-        cl = [i[1] for i in cl_alpha_array]
+        cl = [i[1] for i in grabbed_values]
+        cdi = [i[2] for i in grabbed_values]
+        cm = [i[3] for i in grabbed_values]
 
-        return {'lift_coefs': cl, 'alpha_degrees': alpha_deg, 'alpha_radians': alpha_rad}
+        return {'lift_coefs': cl,
+                'moment_coefs': cm,
+                'drag_coefs': cdi,
+                'alpha_degrees': alpha_deg,
+                'alpha_radians': alpha_rad}
 
     @Attribute
     def lift_coef_vs_alpha(self):
@@ -304,8 +329,8 @@ class Wing(ExternalBody, LiftingSurface):
 
         :return: Lift Coefficient Gradient [1/rad]
         """
-        cl = self.avl_lift_grabber['lift_coefs']
-        alpha_rad = self.avl_lift_grabber['alpha_radians']
+        cl = self.avl_data_grabber['lift_coefs']
+        alpha_rad = self.avl_data_grabber['alpha_radians']
         cl_alpha = np.mean([(cl[i+1] - cl[i]) / (alpha_rad[i+1] - alpha_rad[i]) for i in range(0, len(alpha_rad) - 1)])
         return cl_alpha
 
@@ -314,10 +339,22 @@ class Wing(ExternalBody, LiftingSurface):
         # Plotting
         plt.style.use('ggplot')
         plt.figure('LiftCoefficientGradient')
-        plt.plot(self.avl_lift_grabber['alpha_degrees'], self.avl_lift_grabber['lift_coefs'], marker='o')
+        plt.plot(self.avl_data_grabber['alpha_degrees'], self.avl_data_grabber['lift_coefs'], marker='o')
         plt.title('Lift Coefficient Gradient')
         plt.xlabel('Angle of Attack [deg]')
         plt.ylabel('Lift Coefficient [-]')
+        plt.show()
+        return 'Plot Made, See PyCharm'
+
+    @Attribute
+    def plot_momentgradient(self):
+        # Plotting
+        plt.style.use('ggplot')
+        plt.figure('MomentCoefficientGradient')
+        plt.plot(self.avl_data_grabber['alpha_degrees'], self.avl_data_grabber['moment_coefs'], marker='o')
+        plt.title('Moment Coefficient Gradient')
+        plt.xlabel('Angle of Attack [deg]')
+        plt.ylabel('Moment Coefficient [-]')
         plt.show()
         return 'Plot Made, See PyCharm'
 

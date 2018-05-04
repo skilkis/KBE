@@ -109,6 +109,10 @@ class Case(Input):
             elif key in self.CASE_PARAMETERS.keys():
                 param_str = self.CASE_PARAMETERS[key]
                 self.parameters[param_str].value = value
+            # if the key is an existing state, set the value
+            # TODO Make sure this is ok with Reno Elmendorp
+            elif key in self.CASE_STATES.keys():
+                self.states[key].value = value
             # if an unknown key-value pair is given, assume its a control and create a parameter
             else:
                 param_str = key
@@ -143,7 +147,6 @@ class Case(Input):
 
         for state in self.states.values():
             case_str += state.create_input()
-
         return case_str
 
 
