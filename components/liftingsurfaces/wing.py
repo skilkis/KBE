@@ -267,8 +267,7 @@ class Wing(ExternalBody, LiftingSurface):
         alphas = np.linspace(-10, 20, 25)
         alpha_case = []
         for i in range(0, len(alphas)):
-            alpha_case.append(Case(name='alpha%s' % i, alpha=alphas[i], velocity=1.2*self.stall_speed, mass=5.0,
-                                   X_cg=self.global_cg, Mach=0.1))
+            alpha_case.append(Case(name='alpha%s' % i, alpha=alphas[i], velocity=1.2*self.stall_speed, X_cg=self.aerodynamic_center.x))
         return alpha_case
 
     @Attribute(private=True)
@@ -372,8 +371,9 @@ class Wing(ExternalBody, LiftingSurface):
         cl_cont_index = error.index(min(error))
         return cl_cont_index
 
+
     @Attribute
-    def controllability_c_m(self):
+    def moment_coef_control(self):
         """"  This attribute gets the pitching moment of the wing about its aerodynamic center from avl corresponding to
          lift_coef_cont derived above.
          :return: C_mac

@@ -38,6 +38,7 @@ class ParameterGenerator(Base):
     handlaunch = Input(True)
     portable = Input(True)
 
+
     @Part
     def weightestimator(self):
         # Here we instantiate the class I weight estimation using the inputs.

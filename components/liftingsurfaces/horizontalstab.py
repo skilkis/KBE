@@ -6,6 +6,7 @@ from parapy.geom import *
 from primitives import LiftingSurface
 from scissorplot import ScissorPlot
 from definitions import *
+from user import MyColors
 
 # TODO CONNECT WEIGHT TO MAIN!!!!!!!!!!
 __author__ = ["Nelson Johnson"]
@@ -58,6 +59,10 @@ class HorizontalStabilizer(ExternalBody, LiftingSurface):
     #: :type: float
     fuse_width_factor = Input(0.025)
 
+    #: Changes the color of the wing skin to the one defined in MyColors
+    #: :type: tuple
+    color = Input(MyColors.skin_color)
+
 #  Attributes ########--------------------------------------------------------------------------------------------------
     @Attribute
     def component_type(self):
@@ -73,7 +78,7 @@ class HorizontalStabilizer(ExternalBody, LiftingSurface):
         :return: float
         :rtype: float
         """
-        return 0.1*self.weight_mtow
+        return 0.01*self.weight_mtow
 
     @Attribute
     def center_of_gravity(self):
@@ -86,15 +91,15 @@ class HorizontalStabilizer(ExternalBody, LiftingSurface):
         pos = Point(self.solid.cog.x, y, self.solid.cog.z)
         return pos
 
-    @Attribute(private=True)
+    @Attribute
     def htwing_cut_loc(self):
         """  This calculates the spanwise distance of the cut plane, inside of which, the wing is inside the fuselage.
          :return: Spanwise distance to cut wing.
          :rtype: float
          """
-        return self.solid.semispan*self.fuse_width_factor
+        return self.semi_span*self.fuse_width_factor
 
-    @Attribute(private=True)
+    @Attribute
     def htright_cut_plane(self):
         """  This makes a plane at the right wing span location where the fuselage is to end..
          :return: ParaPy Plane to cut wing
@@ -105,7 +110,7 @@ class HorizontalStabilizer(ExternalBody, LiftingSurface):
                      normal=Vector(0, 1, 0),
                      hidden=True)
 
-    @Attribute(private=True)
+    @Attribute
     def get_htfuse_bounds(self):
         """  This attribute is obtaining (the dimensions of) a bounded box at a fuselage width factor of the semispan
          which will be used to size the fuselage frames. These frames drive the shape of the fuselage.
@@ -117,7 +122,7 @@ class HorizontalStabilizer(ExternalBody, LiftingSurface):
         #  Above obtains a cross section of the wing, at the specified fuselage width factor.
 
         mirrored_part = MirroredShape(shape_in=inner_part,
-                                      reference_point=self.solid,
+                                      reference_point=self.solid.position,
                                       vector1=Vector(1, 0, 0),
                                       vector2=Vector(0, 0, 1))
         #  Above mirrors the cross section about the aircraft symmetry plane.
@@ -153,7 +158,9 @@ class HorizontalStabilizer(ExternalBody, LiftingSurface):
                    height=self.get_htfuse_bounds.height,
                    length=self.get_htfuse_bounds.length,
                    position=Position(self.get_htfuse_bounds.center),
-                   centered=True)
+                   centered=True,
+                   color=MyColors.cool_blue,
+                   transparency=0.5)
 
     @Part
     def external_shape(self):
@@ -161,7 +168,7 @@ class HorizontalStabilizer(ExternalBody, LiftingSurface):
         :return: Fused Shape
         :rtype: Fused
         """
-        return Fused(self.solid, self.ht_mirror)
+        return Fused(self.solid, self.ht_mirror, hidden=True)
 
 
 if __name__ == '__main__':
