@@ -47,50 +47,60 @@ class UAV(DesignInput):
                     rho=self.params.rho,
                     label='Main Wing')
 
-# next =
+    @Part
+    def stability(self):
+        #  TODO Make Function for AR_h, e_h
+        return ScissorPlot(x_cg=self.cg.x,
+                           x_ac=self.wing.aerodynamic_center.x,
+                           x_lemac=self.wing.lemac,
+                           mac=self.wing.mac_length,
+                           AR=self.params.aspect_ratio,
+                           e=self.params.wingpowerloading.e_factor,
+                           e_h=0.8,
+                           Cl_w=self.wing.lift_coef_control,
+                           C_mac=self.wing.moment_coef_control,
+                           Cla_w=self.wing.lift_coef_vs_alpha,
+                           delta_xcg=0.1,
+                           configuration=self.configuration)
+
+    #  TODO Fix HT position wrt wing AC, also wing position
+    @Part
+    def stabilizer_h(self):
+        #  TODO Fix attribute Samispan
+        return HorizontalStabilizer(position=translate(self.wing.position,
+                                                       'x', self.stability.lhc * self.wing.mac_length),
+                                    planform_area=self.wing.planform_area * self.stability.shs_req)
 
 
-   # @Part
-   # def wing(self):
-   #     return Wing(wing_loading=self.parameters.wingpowerloading.designpoint['wing_loading'])
-#
-#     @Part
-#     def stabilizer(self):
-#         return VerticalStabilizer(position=translate(self.wing.position, 'x', 0.2))
-#
-#     @Part
-#     def stability(self):
-#         return ScissorPlot(x_cg=self.cg.x,
-#                            x_ac=self.wing.wing.aerodynamic_center.x,
-#                            x_lemac=self.wing.wing.lemac.x,
-#                            mac=self.wing.wing.mac_length,
-#                            AR=12,
-#                            e=0.8,
-#                            AR_h=5.0, # TODO Make this a derived input based on wing AR
-#                            e_h=0.8,
-#                            Cl_w=self.wing.lift_coef_control,
-#                            C_mac=self.wing.controllability_c_m,
-#                            Cla_w=self.wing.lift_coef_vs_alpha,
-#                            delta_xcg=0.3,
-#                            configuration='canard')
-# #  TODO make relation for AR_h, and add dynamic validator.
-#
-#     #TODO make this from MAC to MAC
-#     @Part
-#     def stabilizer_h(self):
-#         return HorizontalStabilizer(position=translate(self.wing.position,
-#                                                        'x', self.stability.lhc * self.wing.wing.mac_length),
-#                                     S_req=self.wing.s_req * self.stability.shs_req)
-#
-#     @Part
-#     def fuselage(self):
-#         return Fuselage(compartment_type=['motor', 'container', 'container', 'tail'],
-#                         sizing_parts=[self.motor, [self.stabilizer_h, self.camera], [self.battery, self.wing, self.stabilizer], None])
-#
-#     @Part
-#     def motor(self):
-#         return Motor(integration='puller', position=translate(self.camera.position, 'x', -1, 'z', self.cg.z / 2.0))
-#
+    @Part
+    def stabilizer_v(self):
+        #  TODO connect lvc to config and figure out how to calc v_v_canard
+        #  TODO Relation for AR_v, taper -> STATISTICS
+        #  TODO integrate lvc into stability module
+        return VerticalStabilizer(position=translate(self.wing.position, 'x', self.stability.lhc * self.wing.mac_length),
+                                  wing_planform_area = self.wing.planform_area,
+                                  wing_mac_length = self.wing.mac_length,
+                                  wing_semi_span = self.wing.semi_span,
+                                  lvc = self.stability.lhc,
+                                  lvc_canard = 0.5,
+                                  configuration = self.configuration,
+                                  aspect_ratio = 1.4,
+                                  taper = 0.35,
+                                  twist = 0.0)
+
+    @Part
+    def camera(self):
+        return EOIR(target_weight=self.params.weight_payload, position=translate(self.wing.position, 'x', -0.3))
+
+    @Part
+    def fuselage(self):
+        return Fuselage(compartment_type=['nose', 'container', 'container', 'container', 'motor'],
+                        sizing_parts=[None, self.camera, self.wing, [self.stabilizer_h, self.stabilizer_v], self.motor])
+
+    @Part
+    def motor(self):
+        return Motor(integration='puller', position=translate(self.stabilizer_h.position, 'x', 0.2, 'z', self.cg.z / 2.0))
+
 #     @Part
 #     def center_of_gravity(self):
 #         return VisualCG(self.cg, self.weights['mtow'])
@@ -114,10 +124,7 @@ class UAV(DesignInput):
 #
 #
 #     # @Attribute
-#
-#     @Attribute
-#     def payload(self):
-#         return self.params.weightestimator.weight_payload
+
 #
 #     @Attribute
 #     def battery_capacity(self):
@@ -131,9 +138,6 @@ class UAV(DesignInput):
 #     # def battery_test(self):
 #     #     return Battery(position=Position(self.cg))
 #
-#     @Part
-#     def camera(self):
-#         return EOIR(target_weight=self.payload, position=translate(XOY, 'x', -0.3))
 #
 #     # TODO Add a nice bar-graph that shows performance, power consumption, drag, etc in the GUI with boxes!
 

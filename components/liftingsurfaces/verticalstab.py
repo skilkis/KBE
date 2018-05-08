@@ -96,7 +96,7 @@ class VerticalStabilizer(ExternalBody, LiftingSurface):
         :return: float
         :rtype: float
         """
-        return 0.1 * self.weight_mtow
+        return 0.01 * self.weight_mtow
 
     @Attribute
     def center_of_gravity(self):

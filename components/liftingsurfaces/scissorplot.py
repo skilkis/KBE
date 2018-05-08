@@ -232,8 +232,8 @@ class ScissorPlot(GeomBase):
     def shs_req(self):
 
         shs_req = self.shs_sm
-        xcg_vs_shs_control = interp1d(self.shs_control, self.xcg_range, kind='linear')
-        xcg_vs_shs_stability = interp1d(self.shs_stability, self.xcg_range, kind='linear')
+        xcg_vs_shs_control = interp1d(self.shs_control, self.xcg_range, kind='linear', fill_value='extrapolate')
+        xcg_vs_shs_stability = interp1d(self.shs_stability, self.xcg_range, kind='linear', fill_value='extrapolate')
 
         shs_range = np.linspace(0, max(self.shs_control), 100)
         stability_criteria = []
