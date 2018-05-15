@@ -127,7 +127,7 @@ class VerticalStabilizer(ExternalBody, LiftingSurface):
         :return: Canard VT volume coefficient
         :rtype: float
         """
-        v_v_canard = (self.lvc_canard/self.lvc)*self.v_v
+        v_v_canard = (-self.lvc_canard/self.lvc)*self.v_v
         return v_v_canard
 
     @Attribute

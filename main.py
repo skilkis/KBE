@@ -70,22 +70,22 @@ class UAV(DesignInput):
                                                        'x', self.stability.lhc * self.wing.mac_length),
                                     planform_area=self.wing.planform_area * self.stability.shs_req)
 
-
     @Part
     def stabilizer_v(self):
         #  TODO connect lvc to config and figure out how to calc v_v_canard
         #  TODO Relation for AR_v, taper -> STATISTICS
         #  TODO integrate lvc into stability module
-        return VerticalStabilizer(position=translate(self.wing.position, 'x', self.stability.lhc * self.wing.mac_length),
-                                  wing_planform_area = self.wing.planform_area,
-                                  wing_mac_length = self.wing.mac_length,
-                                  wing_semi_span = self.wing.semi_span,
-                                  lvc = self.stability.lhc,
-                                  lvc_canard = 0.5,
-                                  configuration = self.configuration,
-                                  aspect_ratio = 1.4,
-                                  taper = 0.35,
-                                  twist = 0.0)
+        return VerticalStabilizer(position=translate(self.wing.position,'x',
+                                                     self.stability.lhc * self.wing.mac_length if self.configuration is 'conventional' else 0.5*self.wing.mac_length),
+                                  wing_planform_area=self.wing.planform_area,
+                                  wing_mac_length=self.wing.mac_length,
+                                  wing_semi_span=self.wing.semi_span,
+                                  lvc=self.stability.lhc,
+                                  lvc_canard=0.5,
+                                  configuration=self.configuration,
+                                  aspect_ratio=1.4,
+                                  taper=0.35,
+                                  twist=0.0)
 
     @Part
     def camera(self):

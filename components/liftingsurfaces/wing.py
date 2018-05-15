@@ -13,7 +13,7 @@ from primitives import LiftingSurface
 from directories import *
 from definitions import *
 from user import MyColors
-from aeropy import *
+#from aeropy import *
 from shutil import copyfile
 #  Import AVL wrapper written by Reno El Mendorp. https://github.com/renoelmendorp/AVLWrapper
 from avl import Geometry, Surface, Section, Point, Spacing, Session, Case, FileAirfoil
@@ -397,16 +397,16 @@ class Wing(ExternalBody, LiftingSurface):
 
     # AeroPy Analysis
 
-    @Attribute
-    def test(self):
-        _current_aifoil_path = get_dir(os.path.join('airfoils', self.airfoil_type,
-                                               '%s.dat' % self.airfoil_choice))
+   # @Attribute
+   # def test(self):
+   #     _current_aifoil_path = get_dir(os.path.join('airfoils', self.airfoil_type,
+   #                                            '%s.dat' % self.airfoil_choice))
 
-        copyfile(_current_aifoil_path,
-                 os.path.join(DIRS['AEROPY_DIR'], '%s.dat' % self.airfoil_choice))
-        return AeroPy.find_3D_coefficients(airfoil=('%s.dat' % self.airfoil_choice),
-                                           alpha=[0, 1, 2, 3],
-                                           Reynolds=0, iteration=10, NACA=False, N=10, span=10.0, taper=1.0, chord_root=1, alpha_root=1.0, velocity=1.0)
+   #     copyfile(_current_aifoil_path,
+   #              os.path.join(DIRS['AEROPY_DIR'], '%s.dat' % self.airfoil_choice))
+   #     return AeroPy.find_3D_coefficients(airfoil=('%s.dat' % self.airfoil_choice),
+   #                                        alpha=[0, 1, 2, 3],
+   #                                        Reynolds=0, iteration=10, NACA=False, N=10, span=10.0, taper=1.0, chord_root=1, alpha_root=1.0, velocity=1.0)
 
 
 if __name__ == '__main__':
