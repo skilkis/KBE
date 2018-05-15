@@ -6,7 +6,6 @@
 @author: Şan Kılkış & Nelson Johnson
 @version: 1.0
 """
-
 # TODO Add explanation of main file here
 
 from design import *

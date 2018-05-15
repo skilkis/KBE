@@ -44,7 +44,7 @@ class EOIR(Component):
 
     @Input
     def label(self):
-        """Overwrites the inherited slot `label' with the chosen camera_name"""
+        """Overwrites the inherited slot `label` with the chosen camera_name"""
         return self.specs['name']
 
     @Attribute
@@ -123,7 +123,6 @@ class EOIR(Component):
     def text_label_position(self):
         """ Overwrites the default text_label position to put it closer to the gimbal """
         return self.gimbal.edges[0].midpoint
-
 
     # --- Output Solids: ----------------------------------------------------------------------------------------------
 
