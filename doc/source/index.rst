@@ -9,7 +9,7 @@ Welcome to KBE's documentation!
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
-.. automodule:: components.payload.eoir
+.. autoclass:: EOIR
    :members:
 .. automodule:: components.propeller.propeller
    :members:

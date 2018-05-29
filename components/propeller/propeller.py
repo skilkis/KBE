@@ -62,7 +62,7 @@ class Propeller(Component):
     # A parameter for debugging, turns the visibility of miscellaneous parts ON/OFF
     __show_primitives = False  # type: bool # TODO rename this parameter
 
-    motor = Input(Motor(integration='puller'))
+    motor = Input(Motor(integration='puller'), val=val.InstanceList("Motor"))
     design_speed = Input(15, validator=val.Range(0, 50))
     # position = Input(Position(Point(0, 0, 0)))
     database_path = DIRS['PROPELLER_DATA_DIR']
@@ -361,7 +361,6 @@ class Propeller(Component):
 
         return {'spanwise_loc': z_locs, 'chord_dist': chords, 'twist_dist': twists}
 
-
     @Attribute(private=True)
     def airfoil_data(self):
         """ Imports airfoil data, this code borrowed from LiftingSurface
@@ -434,7 +433,7 @@ class Propeller(Component):
 
     @Attribute(private=True)
     def build_direction(self):
-        """ A switch case that determines which cirection the propeller assembly is facing (value 1 is for the positive
+        """ A switch case that determines which direction the propeller assembly is facing (value 1 is for the positive
         `x` direction, value -1 is for 'x_' direction
 
         :rtype: int

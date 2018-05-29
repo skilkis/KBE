@@ -25,6 +25,10 @@ class UAV(DesignInput):
 
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'plane.png')
 
+    # TODO KEEP IT SIMPLE! THE KBE APP DOESN'T NEED TO SAVE THE WORLD...Automatic tail generation based on automatic cg
+    # TODO Not necessary...might be able to simplify all of our problems by making a final stability calculation, and
+    # TODO then using that to tell the user if it is stable or not
+
     @Part
     def params(self):
         #  Here we instantiate the parameter generator, passing down the inputs from the User input file.
@@ -98,15 +102,15 @@ class UAV(DesignInput):
 
     @Part
     def motor(self):
-        return Motor(integration='puller', position=translate(self.stabilizer_h.position, 'x', 0.2, 'z', self.cg.z / 2.0))
+        return Motor(integration='pusher', position=translate(self.stabilizer_h.position, 'x', 0.2, 'z', self.cg.z / 2.0))
 
 #     @Part
 #     def center_of_gravity(self):
 #         return VisualCG(self.cg, self.weights['mtow'])
 #
-#     @Part
-#     def propeller(self):
-#         return Propeller(self.motor)
+    @Part
+    def propeller(self):
+        return Propeller(self.motor)
 #
 #     @Attribute
 #     def configuration(self):
