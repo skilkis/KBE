@@ -50,7 +50,7 @@ class DesignInput(Base):
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'parameters.png') # TODO Change icon
 
     performance_goal = Input('endurance', validator=val.OneOf(['endurance', 'range']))
-    goal_value = Input(1.0, validator=val.Positive())
+    goal_value = Input(7200, validator=val.Positive())
     weight_target = Input('payload', validator=val.OneOf(['payload', 'mtow']))
     target_value = Input(0.25, validator=val.Positive())
     payload_type = Input('eoir', validator=val.OneOf(valid_payloads()))  #

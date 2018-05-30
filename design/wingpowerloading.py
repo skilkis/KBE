@@ -298,15 +298,16 @@ class WingPowerLoading(Base):
             cl_opt = sqrt(self.zero_lift_drag * pi * self.designpoint['aspect_ratio'] * self.e_factor)
             cd_opt = self.zero_lift_drag + (cl_opt ** 2 / (pi * self.designpoint['aspect_ratio'] * self.e_factor))
             v_opt = sqrt(self.designpoint['wing_loading']*(2/self.rho)*(1/cl_opt))
+            v_safe = 5.0 + self.stall_speed  # Safety factor to ensure optimal speed is not too close to stall
             s = self.mtow * 9.81 / self.designpoint['wing_loading']
             d_opt = cd_opt * 0.5 * self.rho * (v_opt ** 2) * s
-            t = self.range / v_opt
+            t = (self.range / v_opt) / 3600.0
             p_req_drag = (d_opt * v_opt) / self.eta_tot
-            capacity = p_req_drag * (t / 3600)
+            capacity = p_req_drag * t
             out = {'cl_opt': cl_opt,
                    'cd_opt': cd_opt,
                    'd_opt': d_opt,
-                   'v_opt': v_opt,
+                   'v_opt':  v_opt if v_opt > v_safe else v_safe,
                    't': t,
                    'p_req_drag': p_req_drag,
                    'capacity': capacity}
@@ -316,15 +317,16 @@ class WingPowerLoading(Base):
             cl_opt = sqrt(3 * self.zero_lift_drag * pi * self.designpoint['aspect_ratio'] * self.e_factor)
             cd_opt = self.zero_lift_drag + (cl_opt ** 2 / (pi * self.designpoint['aspect_ratio'] * self.e_factor))
             v_opt = sqrt(self.designpoint['wing_loading'] * (2 / self.rho) * (1 / cl_opt))
-            s = self.mtow * 9.81 / self.designpoint['wing_loading']
+            v_safe = 5.0 + self.stall_speed  # Safety factor to ensure optimal speed is not too close to stall
+            s = (self.mtow * 9.81) / self.designpoint['wing_loading']
             d_opt = cd_opt * 0.5 * self.rho * (v_opt ** 2) * s
-            t = self.endurance
+            t = self.endurance / 3600.0
             p_req_drag = (d_opt * v_opt) / self.eta_tot
-            capacity = p_req_drag * (t / 3600)
+            capacity = p_req_drag * t
             out = {'cl_opt': cl_opt,
                    'cd_opt': cd_opt,
                    'd_opt': d_opt,
-                   'v_opt': v_opt,
+                   'v_opt': v_opt if v_opt > v_safe else v_safe,
                    't': t,
                    'p_req_drag': p_req_drag,
                    'capacity': capacity}

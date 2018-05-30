@@ -104,10 +104,13 @@ class UAV(DesignInput):
     def motor(self):
         return Motor(integration='pusher', position=translate(self.stabilizer_h.position, 'x', 0.2, 'z', self.cg.z / 2.0))
 
-
-    # @Part
-    # def battery(self):
-    #     return Battery(max_width=)
+    @Part
+    def battery(self):
+        return Battery(position=translate(self.camera.position, 'x', 0.1),
+                       sizing_target='capacity',
+                       sizing_value=self.params.wingpowerloading.battery_capacity,
+                       max_width=self.camera.box_width,
+                       max_height=self.camera.box_height)
 
 #     @Part
 #     def center_of_gravity(self):

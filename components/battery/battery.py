@@ -19,6 +19,7 @@ __all__ = ["Battery", "show_primitives"]
 
 # TODO change show_primitives to be inside class definition and protected variable
 # TODO remove error message since it is already handled by a validator
+# TODO validate batteyr size
 
 # A parameter for debugging, turns the visibility of miscellaneous parts ON/OFF
 show_primitives = False  # type: bool
@@ -31,7 +32,7 @@ class Battery(Component):
 
     sizing_target = Input('capacity', validator=val.OneOf(["capacity", "weight"]))
     # TODO link this to custom validator function
-    sizing_value = Input(265, validator=val.Positive())
+    sizing_value = Input(500, validator=val.Positive())
     max_width = Input(0.15, validator=val.Positive())
     max_height = Input(0.1, validator=val.Positive())  # Suggested to use a wider-battery, max_height = max_width / 2 for fuselage aerodynamics
     # position = Input(Position(Point(0, 0, 0)))
@@ -62,9 +63,10 @@ class Battery(Component):
     @Attribute
     def constants(self):
         mydict = {
-            'energy_density': 265.0,            # https://en.wikipedia.org/wiki/Lithium_polymer_battery
-            'energy_volume': 730.0 * (10**3),   # Wh/m^3 #TODO check this value
-            'minimum_volume': 0.000015          # m^3
+            'energy_density': 158.0,            # Wh/kg http://www.hardingenergy.com/lithium/
+            'energy_volume': 220.0 * (10**3),   # Wh/m^3 http://www.hardingenergy.com/lithium/
+            'minimum_volume': 0.000015,         # m^3
+            'power_density': 430                # 430 W/kg http://www.hardingenergy.com/lithium/
         }
         return mydict
 
@@ -156,6 +158,7 @@ class Battery(Component):
     @Part(in_tree=show_primitives)
     def battery_import(self):
         return ExtrudedSolid(face_in=self.battery_profile, distance=self.length, direction='x')
+
 
 if __name__ == '__main__':
     from parapy.gui import display

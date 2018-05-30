@@ -6,6 +6,7 @@ from parapy.core import *  # / Required ParaPy Modules
 
 from user import *
 from components.fuselage.primitives import *
+from components import EOIR, Wing, Motor, Battery
 from definitions import *
 from directories import *
 
@@ -31,12 +32,15 @@ class Fuselage(ExternalBody):
 
     #: Type of containers at each station, possible entries (nose, container, motor, tail)
     #: :type: str list
-    # compartment_type = Input(['nose', 'container', 'container', 'container', 'motor'])
-    compartment_type = Input()
+    compartment_type = Input(['nose', 'container', 'container', 'motor'])
+    # compartment_type = Input()
 
     #: Parts that the fuselage will be sized for, these must correspond to the entries given in `compartment_type`
     #: :type: list
-    sizing_parts = Input()
+    # sizing_parts = Input()
+    sizing_parts = Input([None, EOIR(position=translate(XOY, 'x', -0.2)),
+                          [Battery(), Wing()],
+                          Motor(position=translate(XOY, 'x', 0.5), integration='pusher')])
 
     #: Initiates the automatic frame minimization WARNING: May lead to intersecting surfaces
     #: :type: bool
@@ -443,6 +447,6 @@ class Fuselage(ExternalBody):
 if __name__ == '__main__':
     from parapy.gui import display
 
-    obj = Fuselage(compartment_type=None, sizing_parts=None)
+    obj = Fuselage()
     display(obj)
 
