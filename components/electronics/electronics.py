@@ -8,6 +8,7 @@ from definitions import *
 from flightcontroller import FlightController
 from speedcontroller import SpeedController
 from components import Motor
+from collections import Iterable
 
 #  TODO CONNECT THIS CODE TO MAIN!!!
 
@@ -20,7 +21,7 @@ class Electronics(Component):
     :returns: ParaPy Geometry of the ESC(s)
     """
     # TODO The following input will work if tuple list or set. CONNECT WITH MAIN!!!!!!!!!!!!!!!!!!!!!!!
-    motor_in = Input((Motor(), Motor()))
+    motor_in = Input([Motor(), Motor()])
 
     @Attribute
     def component_type(self):
@@ -37,7 +38,7 @@ class Electronics(Component):
         :rtype: float
         """
         amp_req = 0
-        if self.number_engines == 1:
+        if self.number_engines == 1 and not isinstance(self.motor_in, Iterable):
             amp_req = self.motor_in.specs['esc_recommendation']
         else:
             for i in self.motor_in:
@@ -52,7 +53,7 @@ class Electronics(Component):
         """
         length = 1
         # length = len(self.motor_in) if type(self.motor_in) is tuple or list else 0
-        if isinstance(self.motor_in, (tuple, list, set)):
+        if isinstance(self.motor_in, Iterable):
             length = len(self.motor_in)
         return length
 

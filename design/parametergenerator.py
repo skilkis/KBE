@@ -38,7 +38,6 @@ class ParameterGenerator(Base):
     handlaunch = Input(True)
     portable = Input(True)
 
-
     @Part
     def weightestimator(self):
         # Here we instantiate the class I weight estimation using the inputs.
@@ -99,6 +98,7 @@ class ParameterGenerator(Base):
     @Attribute
     def rho(self):
         return self.wingpowerloading.rho
+
 
 if __name__ == '__main__':
     from parapy.gui import display

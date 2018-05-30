@@ -27,7 +27,7 @@ class SpeedController(Component):
 
     #:  This is the number of engines.
     #: :type: float
-    num_engines = Input(2)  # This is the number of engines
+    num_engines = Input(1)  # This is the number of engines
 
     #:  This is the amp rating for ESCs found on hobbyking covering our spectrum of motor options in our motor database.
     #: :type: list

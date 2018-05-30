@@ -41,7 +41,10 @@ class WingPowerLoading(Base):
     #: This is a list of three Aspect Ratios that the wing is assumed to generate. This creates multiple lines on
     #: the plots.
     #: :type: List
-    AR = Input([6, 9, 12])  # These are the 3 assumed Aspect Ratios
+    # TODO Make this a proper implementation of Iterable comprehension
+    @Input
+    def AR(self):
+        return [6, 10] if self.handlaunch else [10, 20]
 
     #: This is the assumed propeller efficiency.
     #: :type: float

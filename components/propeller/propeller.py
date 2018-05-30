@@ -62,7 +62,8 @@ class Propeller(Component):
     # A parameter for debugging, turns the visibility of miscellaneous parts ON/OFF
     __show_primitives = False  # type: bool # TODO rename this parameter
 
-    motor = Input(Motor(integration='puller'), val=val.InstanceList("Motor"))
+    # TODO Validate this instance
+    motor = Input(Motor(integration='puller'))
     design_speed = Input(15, validator=val.Range(0, 50))
     # position = Input(Position(Point(0, 0, 0)))
     database_path = DIRS['PROPELLER_DATA_DIR']

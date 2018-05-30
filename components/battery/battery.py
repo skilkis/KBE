@@ -63,7 +63,7 @@ class Battery(Component):
     def constants(self):
         mydict = {
             'energy_density': 265.0,            # https://en.wikipedia.org/wiki/Lithium_polymer_battery
-            'energy_volume': 730.0 * (10**3),  # Wh/m^3 #TODO check this value
+            'energy_volume': 730.0 * (10**3),   # Wh/m^3 #TODO check this value
             'minimum_volume': 0.000015          # m^3
         }
         return mydict

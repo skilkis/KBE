@@ -49,9 +49,9 @@ class FlightController(Component):
         :rtype: TranslatedShape
         """
         return TranslatedShape(shape_in=self.flightcontroller_offset,
-                               displacement=Vector(0,-self.w_navio*0.5,0),
+                               displacement=Vector(0, -self.w_navio*0.5, 0),
                                transparency=0.7,
-                               color='Green')
+                               color='green')
 
     @Attribute
     def flight_controller_power(self):
