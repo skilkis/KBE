@@ -21,7 +21,8 @@ class SpeedController(Component):
     :returns: ParaPy Geometry of the ESC(s)
     """
 
-    #:  This is the recommended ESC amperage from the chosen motor(s).
+    #:  This is the recommended ESC amperage from the chosen motor(s). In the case of multiple motors, this is the total
+    #:  amperage.
     #: :type: float
     amp_recc = Input(40.0)
 
@@ -45,7 +46,7 @@ class SpeedController(Component):
     #:  The ESC is assumed have the same cross secitonal dims (when looking perpendicular to x-y plane) as the flight
     #: controller and will change in height based on the required amperage (which changes the ESC size).
     l_navio = 0.065
-    w_navio = 0.025
+    w_navio = 0.055
     h_navio = 0.017
     #  For box function: Width is x direction, length is y direction, height is z direction.
 
@@ -105,7 +106,7 @@ class SpeedController(Component):
         if self.num_engines == 1:
             esc_weight = self.amp_recc * gradientt + interceptt
         else:
-            amp_per_engine = self.amp_recc / self.num_engines
+            amp_per_engine = self.amp_recc / self.num_engines #  This is why the input is total Amperage
             esc_weight = (amp_per_engine * gradientt + interceptt)*self.num_engines
 
         if esc_weight < 0:
@@ -178,7 +179,7 @@ class SpeedController(Component):
         cogs = [self.speed_controllers[i].cog for i in range(0, self.num_engines)]
         avg_z = sum([i.z for i in cogs])/self.num_engines
 
-        print avg_z
+      #  print avg_z
         return Point(cogs[0].x, cogs[0].y, avg_z)
 
     @Attribute

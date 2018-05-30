@@ -14,10 +14,10 @@ __author__ = "Nelson Johnson"
 __all__ = ["ScissorPlot"]
 
 
-class ScissorPlot(GeomBase):
+class ScissorPlot(Base):
     """  This script will generate a scissor plot to size the horizontal tail (HT). The required inputs are: the
-    aerodynamic center position of the current aircraft, the tail arm, the the HT aspect ratio, HT span efficiency,
-    the tail to main wing speed ratio, the wing pitching moment abo the aerodynamic center, thw wing lift slope,
+    aerodynamic center position of the current aircraft, the tail arm, the HT aspect ratio, HT span efficiency,
+    the tail to main wing speed ratio, the wing pitching moment about the aerodynamic center, the wing lift slope,
     the c_l for controllability (derived in wing), and the allowable shift in center of gravity.
     """
 

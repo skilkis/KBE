@@ -23,7 +23,7 @@ class FlightController(Component):
 
     #:  The 55mm width is to be oriented parallel with the y axis.
     #: :type: float
-    w_navio = 0.025
+    w_navio = 0.055
 
     #:  The 17mm height is assumed!!! It is to be oriented parallel with the y axis.
     #: :type: float
