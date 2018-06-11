@@ -33,7 +33,8 @@ class HorizontalStabilizer(ExternalBody, LiftingSurface):
 
     #: Below is the required HT taper ratio.
     #: :type: float
-    taper = Input(0.5, validator=val.Positive())
+    #taper = Input(0.5, validator=val.Positive())
+    taper = 1.0
 
     #: Below is the tail dihedral angle.
     #: :type: float
@@ -62,6 +63,8 @@ class HorizontalStabilizer(ExternalBody, LiftingSurface):
     #: Changes the color of the wing skin to the one defined in MyColors
     #: :type: tuple
     color = Input(MyColors.skin_color)
+
+
 
 #  Attributes ########--------------------------------------------------------------------------------------------------
     @Attribute
@@ -160,7 +163,8 @@ class HorizontalStabilizer(ExternalBody, LiftingSurface):
                    position=Position(self.get_htfuse_bounds.center),
                    centered=True,
                    color=MyColors.cool_blue,
-                   transparency=0.5)
+                   transparency=0.5,
+                   hidden=True)
 
     @Part
     def external_shape(self):

@@ -115,7 +115,7 @@ class VerticalStabilizer(ExternalBody, LiftingSurface):
         :return: Estimated VT volume coefficient
         :rtype: float
         """
-        v_vset = [0.054, 0.036, 0.011, 0.022, 0.034, 0.024, 0.022, 0.033, 0.035, 0.035, 0.032]
+        v_vset = [i * 2.5 for i in [0.054, 0.036, 0.011, 0.022, 0.034, 0.024, 0.022, 0.033, 0.035, 0.035, 0.032]]
         v_v_avg = sum(v_vset)/len(v_vset)
         return v_v_avg
 

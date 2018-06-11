@@ -105,7 +105,7 @@ class ScissorPlot(Base):
         :return: Non-dimensional tail arm
         :rtype: float
         """
-        return -3.0 if self.configuration is 'canard' else 3.0
+        return -4.0 if self.configuration is 'canard' else 4.0
 
     @Attribute
     def x_cg_vs_mac(self):

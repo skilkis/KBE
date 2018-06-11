@@ -28,7 +28,7 @@ class UAV(DesignInput):
     # TODO Not necessary...might be able to simplify all of our problems by making a final stability calculation, and
     # TODO then using that to tell the user if it is stable or not
 
-    motor_integration = Input('pusher', validator=val.OneOf['pusher', 'puller'])
+    motor_integration = Input('pusher', validator=val.OneOf(['pusher', 'puller']))
 
 
 
@@ -69,13 +69,65 @@ class UAV(DesignInput):
                            delta_xcg=0.1,
                            configuration=self.configuration)
 
-    #  TODO Fix HT position wrt wing AC, also wing position
     @Part
-    def stabilizer_h(self):
-        #  TODO Fix attribute Samispan
-        return HorizontalStabilizer(position=translate(self.wing.position,
-                                                       'x', self.stability.lhc * self.wing.mac_length),
-                                    planform_area=self.wing.planform_area * self.stability.shs_req)
+    def stabilizer(self):
+        return CompoundStabilizer(position=translate(self.wing.position,
+                                                     'x', self.stability.lhc * self.wing.mac_length),
+                                  planform_area=self.wing.planform_area * self.stability.shs_req,
+                                  wing_planform_area=self.wing.planform_area,
+                                  wing_mac_length=self.wing.mac_length,
+                                  wing_semi_span=self.wing.semi_span,
+                                  lvc=self.stability.lhc,
+                                  lvc_canard=0.5,
+                                  configuration=self.configuration,
+                                  aspect_ratio=1.4,
+                                  taper=0.35,
+                                  twist=0.0)
+
+    # #  TODO Fix HT position wrt wing AC, also wing position
+    # @Part
+    # def stabilizer_h(self):
+    #     #  TODO Fix attribute Samispan
+    #     return HorizontalStabilizer(position=translate(self.wing.position,
+    #                                                    'x', self.stability.lhc * self.wing.mac_length),
+    #                                 planform_area=self.wing.planform_area * self.stability.shs_req)
+    #
+    # @Part
+    # def stabilizer_vright(self):
+    #     #  TODO connect lvc to config and figure out how to calc v_v_canard
+    #     #  TODO Relation for AR_v, taper -> STATISTICS
+    #     #  TODO integrate lvc into stability module
+    #     return VerticalStabilizer(position=translate(self.wing.position,'x',
+    #                                                  self.stability.lhc * self.wing.mac_length if self.configuration is 'conventional' else 0.5*self.wing.mac_length,
+    #                                                  'y',self.stabilizer_h.semi_span),
+    #                               wing_planform_area=self.wing.planform_area,
+    #                               wing_mac_length=self.wing.mac_length,
+    #                               wing_semi_span=self.wing.semi_span,
+    #                               lvc=self.stability.lhc,
+    #                               lvc_canard=0.5,
+    #                               configuration=self.configuration,
+    #                               aspect_ratio=1.4,
+    #                               taper=0.35,
+    #                               twist=0.0)
+    #
+    # @Part
+    # def stabilizer_vleft(self):
+    #     #  TODO connect lvc to config and figure out how to calc v_v_canard
+    #     #  TODO Relation for AR_v, taper -> STATISTICS
+    #     #  TODO integrate lvc into stability module
+    #     return VerticalStabilizer(position=translate(self.wing.position,'x',
+    #                                                  self.stability.lhc * self.wing.mac_length if self.configuration is 'conventional' else 0.5*self.wing.mac_length,
+    #                                                  'y',-self.stabilizer_h.semi_span),
+    #                               wing_planform_area=self.wing.planform_area,
+    #                               wing_mac_length=self.wing.mac_length,
+    #                               wing_semi_span=self.wing.semi_span,
+    #                               lvc=self.stability.lhc,
+    #                               lvc_canard=0.5,
+    #                               configuration=self.configuration,
+    #                               aspect_ratio=1.4,
+    #                               taper=0.35,
+    #                               twist=0.0)
+
 
     @Input
     def motor_integration(self):
@@ -103,22 +155,6 @@ class UAV(DesignInput):
     #     motor_location = translate(self.wing.position, 'x', 1.2 * self.wing.root_chord)
     #     return
 
-    @Part
-    def stabilizer_v(self):
-        #  TODO connect lvc to config and figure out how to calc v_v_canard
-        #  TODO Relation for AR_v, taper -> STATISTICS
-        #  TODO integrate lvc into stability module
-        return VerticalStabilizer(position=translate(self.wing.position,'x',
-                                                     self.stability.lhc * self.wing.mac_length if self.configuration is 'conventional' else 0.5*self.wing.mac_length),
-                                  wing_planform_area=self.wing.planform_area,
-                                  wing_mac_length=self.wing.mac_length,
-                                  wing_semi_span=self.wing.semi_span,
-                                  lvc=self.stability.lhc,
-                                  lvc_canard=0.5,
-                                  configuration=self.configuration,
-                                  aspect_ratio=1.4,
-                                  taper=0.35,
-                                  twist=0.0)
 
     @Part
     def camera(self):
