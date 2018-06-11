@@ -13,7 +13,7 @@ from math import *                  # / Python math operations.
 from directories import *           # / Project Directory
 # from collections import namedtuple  # / Allows creation of named tuples similar to Point
 from Tkinter import *
-import Tkinter, Tkconstants, tkFileDialog
+import Tkinter, Tkconstants, tkFileDialog, tkMessageBox
 
 __author__ = "Nelson Johnson"
 __all__ = ["LiftingSurface"]
@@ -92,9 +92,17 @@ class LiftingSurface(GeomBase):
         path = tkFileDialog.askopenfilename(initialdir=DIRS['AIRFOIL_DIR'], title="Select Airfoil",
                                             filetypes=(("Airfoil Data Files", "*.dat"), ("All Files", "*.*")))
         root.destroy()
-        if len(path) > 0:
-            self.airfoil_choice = str(path.split('.')[-2].split('/')[-1])
-            self.airfoil_type = str(path.split('.')[-2].split('/')[-2])
+
+        if path.find(DIRS['AIRFOIL_DIR']) is -1:
+            root = Tk()
+            root.update()
+            tkMessageBox.showerror("Directory Error", "Custom airfoils must be placed in the pre-allocated directory")
+            root.destroy()
+        else:
+            if len(path) > 0:
+                self.airfoil_choice = str(path.split('.')[-2].split('/')[-1])  # Selects the airfoil name
+                self.airfoil_type = str(path.split('.')[-2].split('/')[-2])  # Selects the folder-name
+
         return self.airfoil_choice, self.airfoil_type
 
 #  This block of Attributes calculates the planform parameters. ########------------------------------------------------
