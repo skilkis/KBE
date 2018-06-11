@@ -15,6 +15,7 @@ from parapy.geom import *
 from components import *
 from directories import *
 from definitions import *
+from math import sin, radians
 
 
 class UAV(DesignInput):
@@ -72,7 +73,8 @@ class UAV(DesignInput):
     @Part
     def stabilizer(self):
         return CompoundStabilizer(position=translate(self.wing.position,
-                                                     'x', self.stability.lhc * self.wing.mac_length),
+                                                     'x', self.stability.lhc * self.wing.mac_length,
+                                                     'z', self.stabilizer.stabilizer_h.semi_span*sin(radians(self.wing.dihedral))),
                                   planform_area=self.wing.planform_area * self.stability.shs_req,
                                   wing_planform_area=self.wing.planform_area,
                                   wing_mac_length=self.wing.mac_length,
@@ -82,6 +84,11 @@ class UAV(DesignInput):
                                   aspect_ratio=1.4,
                                   taper=0.35,
                                   twist=0.0)
+
+    @Part
+    def booms(self):
+        return Boom(wing_in=self.wing,
+                    tail_in=self.stabilizer)
 
     # #  TODO Fix HT position wrt wing AC, also wing position
     # @Part

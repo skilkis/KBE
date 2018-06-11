@@ -46,15 +46,21 @@ class Boom(ExternalBody):
                                      angle=radians(90))
         return rotated_curve
 
-    @Attribute
-    def boom_right(self):
+    @Attribute(private=True)
+    def booms(self):
         _unrotated = ExtrudedSolid(island=self.boom_tail_curve, distance=self.boom_length)
-        left_boom = MirroredShape(shape_in=_unrotated, reference_point=Point(0, 0, 0), vector=Vector(1, 0, 0))
-        dual_booms = Fused(_unrotated, left_boom)
-        return RotatedShape(shape_in=dual_booms,
+        _left_boom = MirroredShape(shape_in=_unrotated, reference_point=Point(0, 0, 0), vector1=Vector(1, 0, 0),
+                                   vector2=Vector(0, 0, 1))
+        _dual_booms = Fused(_unrotated, _left_boom)
+        return _dual_booms
+
+    @Part
+    def tail_boom(self):
+        return RotatedShape(shape_in=self.booms,
                             rotation_point=self.tail_end_point,
                             vector=Vector(0, -1, 0),
                             angle=radians(90))
+
 
 if __name__ == '__main__':
     from parapy.gui import display
