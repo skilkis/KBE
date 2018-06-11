@@ -87,17 +87,23 @@ class LiftingSurface(GeomBase):
     # Airfoil Chooser
     @Input
     def browse_airfoils(self):
+        """ Allows the user to easily choose amongst available airfoils with a GUI File-Browser
+
+        :return: Sets the inputs `airfoil_type` and `airfoil_choice` above to the value chosen in the GUI Browser
+        """
         root = Tk()
         root.update()
         path = tkFileDialog.askopenfilename(initialdir=DIRS['AIRFOIL_DIR'], title="Select Airfoil",
                                             filetypes=(("Airfoil Data Files", "*.dat"), ("All Files", "*.*")))
         root.destroy()
 
-        if path.find(DIRS['AIRFOIL_DIR']) is -1:
+        valid_dir = DIRS['AIRFOIL_DIR'].replace('\\', '/')
+        if path.find(valid_dir) is -1:
             root = Tk()
             root.update()
             tkMessageBox.showerror("Directory Error", "Custom airfoils must be placed in the pre-allocated directory")
             root.destroy()
+            print 'Test Failed'
         else:
             if len(path) > 0:
                 self.airfoil_choice = str(path.split('.')[-2].split('/')[-1])  # Selects the airfoil name

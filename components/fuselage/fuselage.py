@@ -6,7 +6,7 @@ from parapy.core import *  # / Required ParaPy Modules
 
 from user import *
 from components.fuselage.primitives import *
-from components import EOIR, Wing, Motor, Battery
+# from components import EOIR, Wing, Motor, Battery
 from definitions import *
 from directories import *
 
@@ -17,6 +17,7 @@ __all__ = ["Fuselage"]
 # TODO Weight Estimation w/ Material choice
 # TODO Figure out what is wrong with apex detection (Probably wing is smaller in height than
 # TODO Add Fill-Factor safety margin for frames
+# TODO Figure out why tail cone does not appear instantly
 
 # http://www.dupont.com/content/dam/dupont/products-and-services/fabrics-fibers-and-nonwovens/fibers/documents/Kevlar_Technical_Guide.pdf
 
