@@ -28,9 +28,9 @@ class UAV(DesignInput):
     # TODO Not necessary...might be able to simplify all of our problems by making a final stability calculation, and
     # TODO then using that to tell the user if it is stable or not
 
-    @Attribute(private=True)
-    def pad_distance(self):
-        return self.fuselage.pad_factor * self.wing.root_chord
+    motor_integration = Input('pusher', validator=val.OneOf['pusher', 'puller'])
+
+
 
     @Part
     def params(self):
@@ -152,6 +152,12 @@ class UAV(DesignInput):
     @Part
     def propeller(self):
         return Propeller(motor=self.motor, design_speed=self.params.design_speed)
+
+
+    # Geometry Constraints
+    @Attribute(private=True)
+    def pad_distance(self):
+        return self.fuselage.pad_factor * self.wing.root_chord
 #
 #     @Attribute
 #     def configuration(self):
