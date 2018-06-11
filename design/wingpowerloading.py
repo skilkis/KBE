@@ -210,7 +210,7 @@ class WingPowerLoading(Base):
         #: :type: integer
         idx2 = error.index(min(error))
 
-        #  TODO Add knowledge base assumption for best aspect ratio
+        # TODO Add knowledge base assumption for best aspect ratio
         # TODO Find a better way to select optimum aspect ratio
         optimal_ars = [7, 10]
         if self.handlaunch:
@@ -301,7 +301,7 @@ class WingPowerLoading(Base):
             v_safe = 5.0 + self.stall_speed  # Safety factor to ensure optimal speed is not too close to stall
             s = self.mtow * 9.81 / self.designpoint['wing_loading']
             d_opt = cd_opt * 0.5 * self.rho * (v_opt ** 2) * s
-            t = (self.range / v_opt) / 3600.0
+            t = (self.range / v_opt)
             p_req_drag = (d_opt * v_opt) / self.eta_tot
             capacity = p_req_drag * t
             out = {'cl_opt': cl_opt,
@@ -311,7 +311,7 @@ class WingPowerLoading(Base):
                    't': t,
                    'p_req_drag': p_req_drag,
                    'capacity': capacity}
-            print 'optimal cruise speed range ', v_opt
+            print 'Optimal Cruise Speed ', v_opt
 
         else:
             cl_opt = sqrt(3 * self.zero_lift_drag * pi * self.designpoint['aspect_ratio'] * self.e_factor)
@@ -320,7 +320,7 @@ class WingPowerLoading(Base):
             v_safe = 5.0 + self.stall_speed  # Safety factor to ensure optimal speed is not too close to stall
             s = (self.mtow * 9.81) / self.designpoint['wing_loading']
             d_opt = cd_opt * 0.5 * self.rho * (v_opt ** 2) * s
-            t = self.endurance / 3600.0
+            t = self.endurance
             p_req_drag = (d_opt * v_opt) / self.eta_tot
             capacity = p_req_drag * t
             out = {'cl_opt': cl_opt,
@@ -330,7 +330,7 @@ class WingPowerLoading(Base):
                    't': t,
                    'p_req_drag': p_req_drag,
                    'capacity': capacity}
-            print 'optimal cruise speed range ', v_opt
+            print 'Optimal Endurance Speed ', v_opt
         return out
 
     @Attribute

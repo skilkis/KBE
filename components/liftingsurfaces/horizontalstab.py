@@ -126,7 +126,7 @@ class HorizontalStabilizer(ExternalBody, LiftingSurface):
                                       vector1=Vector(1, 0, 0),
                                       vector2=Vector(0, 0, 1))
         #  Above mirrors the cross section about the aircraft symmetry plane.
-        root = self.root_airfoil
+        root = sorted(self.solid.faces, key=lambda f: f.cog.y)[0].edges[0]
         first_iter = Fused(inner_part, root)
         #  Fusion of the three wing cross sections is done in 2 steps to avoid ParaPy errors.
         second_iter = Fused(first_iter, mirrored_part)

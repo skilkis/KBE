@@ -32,15 +32,19 @@ class Fuselage(ExternalBody):
 
     #: Type of containers at each station, possible entries (nose, container, motor, tail)
     #: :type: str list
-    compartment_type = Input(['nose', 'container', 'container', 'motor'])
+    compartment_type = Input(['nose', 'container', 'container', 'tail'])
     # compartment_type = Input()
 
     #: Parts that the fuselage will be sized for, these must correspond to the entries given in `compartment_type`
     #: :type: list
     # sizing_parts = Input()
     sizing_parts = Input([None, EOIR(position=translate(XOY, 'x', -0.2)),
-                          [Battery(), Wing()],
-                          Motor(position=translate(XOY, 'x', 0.5), integration='pusher')])
+                          [Battery(), Wing(fuse_width_factor=0.01)],
+                          None])
+
+    #: Sets the Padding Factor between Fuselage Sizing Parts
+    #: :type: bool
+    pad_factor = Input(0.1, validator=val.Between(0.05, 1))
 
     #: Initiates the automatic frame minimization WARNING: May lead to intersecting surfaces
     #: :type: bool

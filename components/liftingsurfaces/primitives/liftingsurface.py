@@ -11,7 +11,10 @@ from parapy.core import *           # / Required ParaPy Module
 from parapy.geom import *           # / Required ParaPy Module
 from math import *                  # / Python math operations.
 from directories import *           # / Project Directory
-from collections import namedtuple  # / Allows creation of named tuples similar to Point
+# from collections import namedtuple  # / Allows creation of named tuples similar to Point
+from Tkinter import *
+import Tkinter, Tkconstants, tkFileDialog
+
 __author__ = "Nelson Johnson"
 __all__ = ["LiftingSurface"]
 
@@ -80,6 +83,17 @@ class LiftingSurface(GeomBase):
     #: The default value is an optimum between a good quality render and performance
     #: :type: float
     mesh_deflection = Input(0.0001)
+
+    # Airfoil Chooser
+    @Input
+    def browse_airfoils(self):
+        root = Tk()
+        root.update()
+        path = tkFileDialog.askopenfilename(initialdir=DIRS['AIRFOIL_DIR'], title="Select Airfoil",
+                                            filetypes=(("Airfoil Data Files", "*.dat"), ("All Files", "*.*")))
+        root.destroy()
+        airfoil = path.split('.')[-2]
+        return path, airfoil
 
 #  This block of Attributes calculates the planform parameters. ########------------------------------------------------
     @Attribute
@@ -231,6 +245,15 @@ class LiftingSurface(GeomBase):
                                 hidden=True)
 
     @Attribute(private=True)
+    def bottom_z_loc(self):
+        """ This attribute computes the bottom surface of the root airfoil
+        :return: Z-location of the root chord bottom surface
+        :rtype: float
+        """
+        bottom_z = sorted(self.root_airfoil.bbox.corners, key=lambda point: point.z)[0].z
+        return bottom_z
+
+    @Attribute(private=True)
     def no_dihedral_solid(self):
         """ This generates a solid wing half with the sign convention mentioned above.
         :return: ParaPy lofted solid wing geometry.
@@ -238,8 +261,8 @@ class LiftingSurface(GeomBase):
         """
         return LoftedSolid([self.root_airfoil, self.tip_airfoil], position=self.position, hidden=True)
 
-    @Part
-    def solid(self):
+    @Part(private=True)
+    def dihedral_solid(self):
         """ This rotates the entire solid wing half over the dihedral angle.
         :return: ParaPy rotated lofted solid wing geometry.
         :rtype: RotatedShape
@@ -248,7 +271,16 @@ class LiftingSurface(GeomBase):
                             rotation_point=self.no_dihedral_solid.position,
                             vector=Vector(1, 0, 0),
                             angle=radians(self.dihedral),
-                            mesh_deflection=self.mesh_deflection)
+                            mesh_deflection=self.mesh_deflection,
+                            hidden=True)
+
+    @Part
+    def solid(self):
+        """ This translates the entire solid wing half to make the bottom surface flush with the origin
+        :return: ParaPy rotated lofted solid wing geometry.
+        :rtype: RotatedShape
+        """
+        return TranslatedShape(shape_in=self.dihedral_solid, displacement=Vector(0, 0, -1*self.bottom_z_loc))
 
     # --- Mean Aerodynamic Chord: -------------------------------------------------------------------------------------
 

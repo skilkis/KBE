@@ -267,7 +267,7 @@ class ScissorPlot(Base):
         # #
 
     @Attribute
-    def scissorplot(self):
+    def plot_scissordiagram(self):
         """ This attribute will plot the scissor plot.
         :return: Scissor Plot.
         :rtype: Plot

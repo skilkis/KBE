@@ -1,5 +1,6 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# from components import Battery
+
 """ Explanation of Main File Here
 
 
@@ -16,8 +17,6 @@ from directories import *
 from definitions import *
 
 
-# TODO Make sure that excel read and things are top level program features (not buried within the tree)
-
 class UAV(DesignInput):
     """  This class will generate UAV aircraft. It inherits from 'DesignInput.py' so that the input requirements are
     all in the top level of the tree.
@@ -28,6 +27,10 @@ class UAV(DesignInput):
     # TODO KEEP IT SIMPLE! THE KBE APP DOESN'T NEED TO SAVE THE WORLD...Automatic tail generation based on automatic cg
     # TODO Not necessary...might be able to simplify all of our problems by making a final stability calculation, and
     # TODO then using that to tell the user if it is stable or not
+
+    @Attribute(private=True)
+    def pad_distance(self):
+        return self.fuselage.pad_factor * self.wing.root_chord
 
     @Part
     def params(self):
@@ -74,6 +77,32 @@ class UAV(DesignInput):
                                                        'x', self.stability.lhc * self.wing.mac_length),
                                     planform_area=self.wing.planform_area * self.stability.shs_req)
 
+    @Input
+    def motor_integration(self):
+        return 'pusher'
+
+    # @Attribute(private=True)
+    # def compartment_type(self):
+    #     if self.motor.orientation is 'pusher':
+    #         compartment_type = ['nose', 'container', 'container', 'container', 'motor']
+    #     else:
+    #         compartment_type = ['motor', 'container', 'container', 'container', 'tail']
+    #     return compartment_type
+    #
+    # @Attribute(private=True)
+    # def sizing_parts(self):
+    #     if self.motor.orientation is 'pusher':
+    #         sizing_parts = [None, self.camera, self.battery, self.wing, self.motor]
+    #     else:
+    #         sizing_parts = [self.motor, self.camera, self.battery, self.wing, None]
+    #     return sizing_parts
+
+    # @Attribute(private=True)
+    # def motor_location(self):
+    #     if self.motor.orientation is ''
+    #     motor_location = translate(self.wing.position, 'x', 1.2 * self.wing.root_chord)
+    #     return
+
     @Part
     def stabilizer_v(self):
         #  TODO connect lvc to config and figure out how to calc v_v_canard
@@ -93,32 +122,36 @@ class UAV(DesignInput):
 
     @Part
     def camera(self):
-        return EOIR(target_weight=self.params.weight_payload, position=translate(self.wing.position, 'x', -0.3))
+        return EOIR(target_weight=self.params.weight_payload,
+                    position=translate(self.battery.position, 'x', -1 * (self.camera.box_length + self.pad_distance)))
 
     @Part
     def fuselage(self):
-        return Fuselage(compartment_type=['nose', 'container', 'container', 'container', 'motor'],
-                        sizing_parts=[None, self.camera, self.wing, [self.stabilizer_h, self.stabilizer_v], self.motor])
+        return Fuselage(compartment_type=['nose', 'container', 'container', 'container', 'motor'] if
+                        self.motor_integration is 'pusher' else
+                        ['motor', 'container', 'container', 'container', 'tail'],
+                        sizing_parts=[None, self.camera, self.battery, self.wing, self.motor] if self.motor_integration
+                        is 'pusher' else [self.motor, self.camera, self.battery, self.wing, None])
 
     @Part
     def motor(self):
-        return Motor(integration='pusher', position=translate(self.stabilizer_h.position, 'x', 0.2, 'z', self.cg.z / 2.0))
+        return Motor(target_power=(9.81/self.params.power_loading) * self.params.weight_mtow,
+                     integration=self.motor_integration,
+                     position=translate(self.wing.position, 'x', 1.2 * self.wing.root_chord, 'z', self.cg.z)
+                     if self.motor_integration is 'pusher' else
+                     translate(self.camera.position, 'x', -1 * (self.pad_distance + self.motor.length), 'z', self.cg.z))
 
     @Part
     def battery(self):
-        return Battery(position=translate(self.camera.position, 'x', 0.1),
+        return Battery(position=translate(self.wing.position, 'x', (self.battery.length + self.pad_distance) * -1),
                        sizing_target='capacity',
                        sizing_value=self.params.wingpowerloading.battery_capacity,
                        max_width=self.camera.box_width,
                        max_height=self.camera.box_height)
 
-#     @Part
-#     def center_of_gravity(self):
-#         return VisualCG(self.cg, self.weights['mtow'])
-#
     @Part
     def propeller(self):
-        return Propeller(self.motor)
+        return Propeller(motor=self.motor, design_speed=self.params.design_speed)
 #
 #     @Attribute
 #     def configuration(self):

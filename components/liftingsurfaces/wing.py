@@ -22,7 +22,7 @@ __author__ = "Nelson Johnson"
 __all__ = ["Wing"]
 
 
-# class Wing(GeomBase, WingPowerLoading, ClassOne):  # TODO experiment if this works, multiple inheritance
+# class Wing(GeomBase, WingPowerLoading, ClassOne):
 class Wing(ExternalBody, LiftingSurface):
     """ This class will create the wing geometry based on the required:
     Wing Area (class I output), Aspect Ratio (class I input), taper ratio (assumed),
@@ -53,7 +53,7 @@ class Wing(ExternalBody, LiftingSurface):
 
     #: Below is the a switch to hide/show the bbox of the wing section within the fuselage.
     #: :type: boolean
-    hide_bbox = Input(True)
+    hide_bbox = Input(False)
 
     #: Overwrites input from LiftingSurface to hide the Mean Aerodynamic Chord part
     hide_mac = Input(True)
@@ -80,7 +80,6 @@ class Wing(ExternalBody, LiftingSurface):
 
     @Attribute
     def weight(self):
-        #  TODO connect this with main!!!!!!!!!!
         return 0.2*self.weight_mtow
 
     @Attribute
@@ -162,7 +161,8 @@ class Wing(ExternalBody, LiftingSurface):
                                       vector1=Vector(1, 0, 0),
                                       vector2=Vector(0, 0, 1))
         #  Above mirrors the cross section about the aircraft symmetry plane.
-        root = self.root_airfoil
+        root = sorted(self.solid.faces, key=lambda f: f.cog.y)[0].edges[0]
+        # Above selects the inner-most (minimum y loc face of the lifting surface, and then the edges of that face)
         first_iter = Fused(inner_part, root)
         #  Fusion of the three wing cross sections done in 2 Fused operations to avoid ParaPy errors.
         second_iter = Fused(first_iter, mirrored_part)
@@ -373,7 +373,6 @@ class Wing(ExternalBody, LiftingSurface):
         cl_cont_index = error.index(min(error))
         return cl_cont_index
 
-
     @Attribute
     def moment_coef_control(self):
         """"  This attribute gets the pitching moment of the wing about its aerodynamic center from avl corresponding to
@@ -394,19 +393,6 @@ class Wing(ExternalBody, LiftingSurface):
         with open(os.path.join(DIRS['USER_DIR'], 'results', 'avl_wing_out.json'), 'w') as f:
             f.write(json.dumps(results))
         return 'Done'
-
-    # AeroPy Analysis
-
-   # @Attribute
-   # def test(self):
-   #     _current_aifoil_path = get_dir(os.path.join('airfoils', self.airfoil_type,
-   #                                            '%s.dat' % self.airfoil_choice))
-
-   #     copyfile(_current_aifoil_path,
-   #              os.path.join(DIRS['AEROPY_DIR'], '%s.dat' % self.airfoil_choice))
-   #     return AeroPy.find_3D_coefficients(airfoil=('%s.dat' % self.airfoil_choice),
-   #                                        alpha=[0, 1, 2, 3],
-   #                                        Reynolds=0, iteration=10, NACA=False, N=10, span=10.0, taper=1.0, chord_root=1, alpha_root=1.0, velocity=1.0)
 
 
 if __name__ == '__main__':

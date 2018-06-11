@@ -58,7 +58,7 @@ class ParameterGenerator(Base):
 #  Below are the attributes which are all the required vaiables for use in other scripts.
     @Attribute
     def weight_mtow(self):
-        #  Here we obtain the MTOW of the UAV, from the Class I estimation.
+        #  Here we obtain the MTOW of the UAV, from the Class I estimation in SI kilogram [kg]
         return self.weightestimator.weight_mtow
 
     @Attribute
@@ -84,6 +84,10 @@ class ParameterGenerator(Base):
     @Attribute
     def stall_speed(self):
         return self.wingpowerloading.stall_speed
+
+    @Attribute
+    def design_speed(self):
+        return self.wingpowerloading.cruise_parameters['v_opt']
 
     @Attribute
     def power_loading(self):

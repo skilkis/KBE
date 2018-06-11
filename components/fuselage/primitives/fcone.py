@@ -28,7 +28,7 @@ class FCone(GeomBase):
     side_tangent = Input(Vector(-0.88, -0.65, 0))
     top_tangent = Input(Vector(0.8851351164623547, 0, 0.46533410105554684))
     direction = Input('x_', validator=val.OneOf(["x", "x_"]))
-    slenderness_ratio = Input(0.5, validator=val.Range(0, 1))  # Nose-cone length / frame diagonal
+    slenderness_ratio = Input(1, validator=val.Range(0, 1.5))  # Nose-cone length / frame diagonal
     transparency = Input(None)
 
     @Attribute
