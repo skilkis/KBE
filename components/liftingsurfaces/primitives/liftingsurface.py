@@ -92,8 +92,10 @@ class LiftingSurface(GeomBase):
         path = tkFileDialog.askopenfilename(initialdir=DIRS['AIRFOIL_DIR'], title="Select Airfoil",
                                             filetypes=(("Airfoil Data Files", "*.dat"), ("All Files", "*.*")))
         root.destroy()
-        airfoil = path.split('.')[-2]
-        return path, airfoil
+        if len(path) > 0:
+            self.airfoil_choice = str(path.split('.')[-2].split('/')[-1])
+            self.airfoil_type = str(path.split('.')[-2].split('/')[-2])
+        return self.airfoil_choice, self.airfoil_type
 
 #  This block of Attributes calculates the planform parameters. ########------------------------------------------------
     @Attribute
