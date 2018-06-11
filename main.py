@@ -56,7 +56,7 @@ class UAV(DesignInput):
     @Part
     def stability(self):
         #  TODO Make Function for AR_h, e_h
-        return ScissorPlot(x_cg=self.cg.x,
+        return ScissorPlot(x_cg=self.weight_and_balance()['CG'].x,
                            x_ac=self.wing.aerodynamic_center.x,
                            x_lemac=self.wing.lemac,
                            mac=self.wing.mac_length,
@@ -77,8 +77,7 @@ class UAV(DesignInput):
                                   wing_planform_area=self.wing.planform_area,
                                   wing_mac_length=self.wing.mac_length,
                                   wing_semi_span=self.wing.semi_span,
-                                  lvc=self.stability.lhc,
-                                  lvc_canard=0.5,
+                                  lhc=self.stability.lhc,
                                   configuration=self.configuration,
                                   aspect_ratio=1.4,
                                   taper=0.35,

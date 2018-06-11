@@ -375,6 +375,23 @@ class LiftingSurface(GeomBase):
         ac_loc_z = mac_bbox.center.z
         return Point(ac_loc_x, ac_loc_y, ac_loc_z)
 
+    # --- Front Spar Plane Creation: ----------------------------------------------------------------------------------
+
+    @Attribute
+    def front_spar_line(self):
+        sorted_faces = sorted(self.solid.faces, key=lambda f: f.cog.y)
+        root_spar_point = sorted_faces[0].cog
+        tip_spar_point = sorted_faces[-1].cog
+        # faces = sorted(self.solid.faces, key=lambda x: x.cog.distance(self.position))
+        # root_le = sorted(faces[0].edges[0].sample_points, key=lambda point: point.x)[0]
+        # tip_le = sorted(faces[-1].edges[0].sample_points, key=lambda point: point.x)[0]
+        #
+        # root_spar_point = Point(root_le.x + self.front_spar_frac * self.root_chord, root_le.y, root_le.z)
+        # tip_spar_point = Point(tip_le.x + self.front_spar_frac * self.tip_chord, tip_le.y, tip_le.z)
+
+        return LineSegment(start=root_spar_point,
+                           end=tip_spar_point,
+                           color='yellow')
 
 if __name__ == '__main__':
     from parapy.gui import display
