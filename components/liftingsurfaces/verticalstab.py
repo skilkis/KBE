@@ -7,6 +7,7 @@ from parapy.geom import *
 from math import *
 from primitives import LiftingSurface
 from definitions import *
+from user import MyColors
 
 __author__ = ["Nelson Johnson"]
 __all__ = ["VerticalStabilizer"]
@@ -44,10 +45,6 @@ class VerticalStabilizer(ExternalBody, LiftingSurface):
     #: :type: str
     configuration = Input('conventional', validator=val.OneOf(['canard', 'conventional']))
 
-    #: Below is the plane mtow
-    #: :type: float
-    weight_mtow = Input(25.0)  # TODO REMOVE THIS!! THIS IS USED FOR THE OLD WEIGHT ESTIMATION!!!!!!!!!!!
-#  ---------------------------------------------------------------------------------------------------------------------
     #: Below is the assumed VT aspect ratio.
     #: :type: float
     aspect_ratio = Input(1.4)
@@ -197,7 +194,10 @@ class VerticalStabilizer(ExternalBody, LiftingSurface):
                    height=self.get_vtfuse_bounds.height,
                    length=self.get_vtfuse_bounds.length,
                    position=Position(self.get_vtfuse_bounds.center),
-                   centered=True)
+                   centered=True,
+                   color=MyColors.cool_blue,
+                   transparency=0.5,
+                   hidden=True)
 
     @Part
     def external_shape(self):

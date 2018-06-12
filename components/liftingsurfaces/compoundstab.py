@@ -45,10 +45,6 @@ class CompoundStabilizer(ExternalBody):
     #: :type: str
     configuration = Input('conventional', validator=val.OneOf(['canard', 'conventional']), settable=False)
 
-    #: Below is the plane mtow
-    #: :type: float
-    weight_mtow = Input(25.0, settable=False)  # TODO REMOVE THIS!! THIS IS USED FOR THE OLD WEIGHT ESTIMATION!!!!!!!!!
-
     #: Below is the assumed VT aspect ratio.
     #: :type: float
     aspect_ratio = Input(1.4, settable=False)
@@ -78,7 +74,7 @@ class CompoundStabilizer(ExternalBody):
         :return: Mass in SI kilogram
         :rtype: float
         """
-        return 0.0
+        return self.stabilizer_h.weight + self.stabilizer_vright.weight + self.stabilizer_vleft.weight
 
     @Attribute
     def center_of_gravity(self):
@@ -199,11 +195,10 @@ class CompoundStabilizer(ExternalBody):
         """ The final shape of a ExternalSurface class which is to be exported """
         return ScaledShape(shape_in=self.tail_joiner, reference_point=Point(0, 0, 0), factor=1, hidden=True)
 
-    @Part
+    @Attribute(private=True)
     def internal_shape(self):
-        """ The Compound tail by definition has no internal shape since it must be connected by booms, this this
-        part is overwritten by a Circle of radius 0"""
-        return Circle(radius=0, hidden=True)
+        """ This overwrites the Part defined in the class `Component` an internal_shape w/ a Dummy Value"""
+        return None
 
 
 if __name__ == '__main__':

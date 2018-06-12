@@ -212,7 +212,7 @@ class WingPowerLoading(Base):
 
         # TODO Add knowledge base assumption for best aspect ratio
         # TODO Find a better way to select optimum aspect ratio
-        optimal_ars = [7, 10]
+        optimal_ars = [7, 15]
         if self.handlaunch:
             optimal_ar = optimal_ars[0]
         else:

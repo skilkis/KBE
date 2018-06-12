@@ -124,7 +124,7 @@ class ExternalBody(Component):
     @Attribute
     def material_volume(self):
         ply_thickness = 0.234 * 10e-3
-        return self.wetted_area * ply_thickness * self.ply_number
+        return self.wetted_area * ply_thickness * float(self.ply_number)
 
     @Attribute
     def material_density(self):

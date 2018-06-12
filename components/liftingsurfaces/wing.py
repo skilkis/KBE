@@ -38,7 +38,7 @@ class Wing(ExternalBody, LiftingSurface):
     #: Below is the required MTOW from the class I weight estimation.
     #: :type: float
     weight_mtow = Input(25.0, validator=val.Positive())
-    
+
     #: The stall speed of the wing
     #: :type: float
     stall_speed = Input(8.0)
@@ -77,10 +77,6 @@ class Wing(ExternalBody, LiftingSurface):
         :rtype: str
         """
         return 'wing'
-
-    @Attribute
-    def weight(self):
-        return 0.2*self.weight_mtow
 
     @Attribute
     def center_of_gravity(self):
@@ -266,10 +262,13 @@ class Wing(ExternalBody, LiftingSurface):
          :return: AVL List of RunCases
          :rtype: Case
          """
-        alphas = np.linspace(-10, 20, 25)
+        alphas = np.linspace(-10, 20, 5)
         alpha_case = []
         for i in range(0, len(alphas)):
-            alpha_case.append(Case(name='alpha%s' % i, alpha=alphas[i], velocity=1.2*self.stall_speed, X_cg=self.aerodynamic_center.x))
+            alpha_case.append(Case(name='alpha%s' % i,
+                                   alpha=alphas[i],
+                                   velocity=1.2*self.stall_speed,
+                                   X_cg=self.aerodynamic_center.x))
         return alpha_case
 
     @Attribute(private=True)

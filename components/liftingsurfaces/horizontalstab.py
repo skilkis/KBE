@@ -19,10 +19,6 @@ class HorizontalStabilizer(ExternalBody, LiftingSurface):
     which is used to size the fuselage frames.
     """
 
-    #: Below is the MTOW from the Class I weight Estimation.
-    #: :type: float
-    weight_mtow = Input(25.0)
-
     #: Below is the required tail surface area from the scissor plot.
     #: :type: float
     planform_area = Input(0.8, validator=val.Positive())
@@ -65,7 +61,6 @@ class HorizontalStabilizer(ExternalBody, LiftingSurface):
     color = Input(MyColors.skin_color)
 
 
-
 #  Attributes ########--------------------------------------------------------------------------------------------------
     @Attribute
     def component_type(self):
@@ -74,14 +69,6 @@ class HorizontalStabilizer(ExternalBody, LiftingSurface):
         :rtype: str
         """
         return 'ht'
-
-    @Attribute
-    def weight(self):
-        """ This attribute was the old method to calculate weight, assuming the HT is 10% MTOW.
-        :return: float
-        :rtype: float
-        """
-        return 0.2*self.weight_mtow
 
     @Attribute
     def center_of_gravity(self):

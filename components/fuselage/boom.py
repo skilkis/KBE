@@ -73,13 +73,10 @@ class Boom(ExternalBody):
         """
         return ScaledShape(shape_in=self.tail_boom, reference_point=self.tail_boom.position, factor=1, hidden=True)
 
-    @Part
+    @Attribute(private=True)
     def internal_shape(self):
-        """ The geometry of the component that will be placed inside a structure, (i.e in a wing or fuselage)
-
-        :rtype: parapy.geom
-        """
-        return Circle(radius=0, hidden=True)
+        """ This overwrites the Part defined in the class `Component` an internal_shape w/ a Dummy Value"""
+        return None
 
 if __name__ == '__main__':
     from parapy.gui import display
