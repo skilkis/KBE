@@ -155,7 +155,7 @@ class SpeedController(Component):
         :return: First ESC Position
         :rtype: Position
         """
-        return Position(Point(0, -self.w_navio*0.5, self.h_navio))
+        return Position(Point(self.position.x, self.position.y -self.w_navio*0.5, self.position.z+self.h_navio))
 
     @Part
     def speed_controllers(self):
@@ -206,7 +206,8 @@ class SpeedController(Component):
         :return: Speed Controller(s) bounded box
         :rtype: ScaledShape
         """
-        return ScaledShape(shape_in=self.esc_joiner, reference_point=self.center_of_gravity, factor=1, transparency=0.7)
+        return ScaledShape(shape_in=self.esc_joiner, reference_point=self.center_of_gravity, factor=1, transparency=0.7,
+                           hidden=True)
 
     @Attribute
     def weight(self):

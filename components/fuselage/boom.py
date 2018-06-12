@@ -20,6 +20,10 @@ class Boom(ExternalBody):
     diameter_factor = Input(0.75, validator=val.Between(0.5, 1.0))
 
     @Attribute
+    def component_type(self):
+        return 'boom'
+
+    @Attribute
     def wing_end_point(self):
         """ Defines the termination point of the boom-extrude """
         srf = self.tail_in.boom_plane

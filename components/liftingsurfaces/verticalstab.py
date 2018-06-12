@@ -91,14 +91,6 @@ class VerticalStabilizer(ExternalBody, LiftingSurface):
         return 'vt'
 
     @Attribute
-    def weight(self):
-        """ This attribute was the old method to calculate weight, assuming the VT is 10% MTOW.
-        :return: float
-        :rtype: float
-        """
-        return 0.2 * self.weight_mtow
-
-    @Attribute
     def center_of_gravity(self):
         """ This shows the COG which was found from one wing and translated to origin. This is because because the fused
         shape does not exhibit a C.G.
@@ -213,7 +205,7 @@ class VerticalStabilizer(ExternalBody, LiftingSurface):
         :return: VTP ParaPy Geometry
         :rtype: RotatedShape
         """
-        return ScaledShape(shape_in=self.solid, reference_point=self.position, factor=0, hidden=True)
+        return ScaledShape(shape_in=self.solid, reference_point=self.position, factor=1, hidden=True)
 
 
 if __name__ == '__main__':
