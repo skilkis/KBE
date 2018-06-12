@@ -101,9 +101,9 @@ class UAV(DesignInput):
         return Fuselage(compartment_type=['nose', 'container', 'container', 'container', 'motor'] if
                         self.motor_integration is 'pusher' else
                         ['motor', 'container', 'container', 'container', 'tail'],
-                        sizing_parts=[None, self.camera, self.battery, [self.wing, self.electronics], self.motor] if
+                        sizing_parts=[None, [self.camera,self.electronics], self.battery, self.wing, self.motor] if
                         self.motor_integration is 'pusher' else
-                        [self.motor, self.camera, self.battery, [self.wing, self.electronics], None])
+                        [self.motor, [self.camera, self.electronics], self.battery, self.wing, None])
 
     @Part
     def motor(self):
@@ -125,11 +125,18 @@ class UAV(DesignInput):
     def propeller(self):
         return Propeller(motor=self.motor, design_speed=self.params.design_speed)
 
+    # @Part
+    # def electronics(self):
+    #     return Electronics(position=translate(self.wing.position,
+    #                                           'x', self.wing.root_chord / 2.0 + self.electronics.box_length*0.5,
+    #                                           'z', self.wing.internal_shape.bbox.height),
+    #                        motor_in=self.motor)
+
     @Part
     def electronics(self):
-        return Electronics(position=translate(self.wing.position,
-                                              'x', self.wing.root_chord / 2.0 + self.electronics.box_length*0.5,
-                                              'z', self.wing.internal_shape.bbox.height),
+        return Electronics(position=translate(self.camera.position,
+                                              'x', self.camera.box_length / 2.0 - self.electronics.box_length*0.5,
+                                              'z', self.camera.box_height),
                            motor_in=self.motor)
 
     # Geometry Constraints
@@ -329,8 +336,8 @@ class UAV(DesignInput):
                 # Special Case for Compound Tail
                 elif _child.getslot('component_type') == 'ct':
                     area_dict['WETTED']['ct'] = area_dict['WETTED']['ct'] + _child.wetted_area
-                    area_dict['WETTED']['ht'] = area_dict['WETTED']['ht'] + _child.stabilizer_h
-                    area_dict['WETTED']['vt'] = area_dict['WETTED']['vt'] + _child.stabilizer_vright * 2.0
+                    area_dict['WETTED']['ht'] = area_dict['WETTED']['ht'] + _child.stabilizer_h.wetted_area
+                    area_dict['WETTED']['vt'] = area_dict['WETTED']['vt'] + _child.stabilizer_vright.wetted_area * 2.0
 
                 elif _child.getslot('surface_type') == 'boom':
                     area_dict['WETTED']['boom'] = area_dict['WETTED']['boom'] + _child.wetted_area

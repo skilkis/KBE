@@ -114,6 +114,22 @@ class ExternalBody(Component):
 
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'air.png')
 
+    material_choice = Input('cfrp', validator=val.OneOf(['cfrp']))
+    ply_number = Input(1, validator=val.Positive())
+
+    @Attribute
+    def weight(self):
+        return self.material_volume * self.material_density
+
+    @Attribute
+    def material_volume(self):
+        ply_thickness = 0.234 * 10e-3
+        return self.wetted_area * ply_thickness * self.ply_number
+
+    @Attribute
+    def material_density(self):
+        return 1524.8 if self.material_choice is 'cfrp' else 0
+
     @Attribute
     def surface_type(self):
         """ An identifier to be able to lump areas together.
