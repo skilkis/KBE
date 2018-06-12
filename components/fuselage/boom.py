@@ -47,7 +47,7 @@ class Boom(ExternalBody):
         return rotated_curve
 
     @Attribute(private=True)
-    def booms(self):
+    def booms_import(self):
         _unrotated = ExtrudedSolid(island=self.boom_tail_curve, distance=self.boom_length)
         _left_boom = MirroredShape(shape_in=_unrotated, reference_point=Point(0, 0, 0), vector1=Vector(1, 0, 0),
                                    vector2=Vector(0, 0, 1))
@@ -56,11 +56,26 @@ class Boom(ExternalBody):
 
     @Part
     def tail_boom(self):
-        return RotatedShape(shape_in=self.booms,
+        return RotatedShape(shape_in=self.booms_import,
                             rotation_point=self.tail_end_point,
                             vector=Vector(0, -1, 0),
                             angle=radians(90))
 
+    @Part
+    def external_shape(self):
+        """ This part is the external shape of the boom.
+        :return: Fused Shape
+        :rtype: Fused
+        """
+        return ScaledShape(shape_in=self.tail_boom, reference_point=self.tail_boom.position, factor=1, hidden=True)
+
+    @Part
+    def internal_shape(self):
+        """ The geometry of the component that will be placed inside a structure, (i.e in a wing or fuselage)
+
+        :rtype: parapy.geom
+        """
+        return Circle(radius=0, hidden=True)
 
 if __name__ == '__main__':
     from parapy.gui import display

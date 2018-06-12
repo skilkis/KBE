@@ -97,7 +97,6 @@ class Electronics(Component):
         """
         return self.weight_and_balance()
 
-
     @Attribute
     def amp_req(self):
         """ This is the required amperage for the engine(s).
