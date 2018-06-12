@@ -74,7 +74,10 @@ class UAV(DesignInput):
     def stabilizer(self):
         return CompoundStabilizer(position=translate(self.wing.position,
                                                      'x', self.stability.lhc * self.wing.mac_length,
-                                                     'z', self.stabilizer.stabilizer_h.semi_span*sin(radians(self.wing.dihedral))),
+                                                     'z', self.stabilizer.stabilizer_h.semi_span *
+                                                     sin(radians(self.wing.dihedral) +
+                                                         self.wing.front_spar_line.point1.z -
+                                                         self.wing.position.z)),
                                   planform_area=self.wing.planform_area * self.stability.shs_req,
                                   wing_planform_area=self.wing.planform_area,
                                   wing_mac_length=self.wing.mac_length,

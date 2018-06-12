@@ -277,14 +277,14 @@ class LiftingSurface(GeomBase):
         """
         return LoftedSolid([self.root_airfoil, self.tip_airfoil], position=self.position, hidden=True)
 
-    @Part(private=True)
+    @Part
     def dihedral_solid(self):
         """ This rotates the entire solid wing half over the dihedral angle.
         :return: ParaPy rotated lofted solid wing geometry.
         :rtype: RotatedShape
         """
         return RotatedShape(shape_in=self.no_dihedral_solid,
-                            rotation_point=self.no_dihedral_solid.position,
+                            rotation_point=self.position,
                             vector=Vector(1, 0, 0),
                             angle=radians(self.dihedral),
                             mesh_deflection=self.mesh_deflection,
@@ -296,7 +296,8 @@ class LiftingSurface(GeomBase):
         :return: ParaPy rotated lofted solid wing geometry.
         :rtype: RotatedShape
         """
-        return TranslatedShape(shape_in=self.dihedral_solid, displacement=Vector(0, 0, -1*self.bottom_z_loc))
+        return TranslatedShape(shape_in=self.dihedral_solid,
+                               displacement=Vector(0, 0, -1*(self.bottom_z_loc - self.position.z)))
 
     # --- Mean Aerodynamic Chord: -------------------------------------------------------------------------------------
 

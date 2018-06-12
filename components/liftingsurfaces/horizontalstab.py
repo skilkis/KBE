@@ -141,16 +141,12 @@ class HorizontalStabilizer(ExternalBody, LiftingSurface):
 #  Parts #####----------------------------------------------------------------------------------------------------------
 
     @Part
-    def elevated_solid(self):
-        return TranslatedShape(shape_in=self.solid, displacement=Vector(0, 0, self.position.z))
-
-    @Part
     def ht_mirror(self):
         """  This is a mirrored shape of the right HT.
         :return: HT left wing half
         :rtype: MirroredShape
         """
-        return MirroredShape(shape_in=self.elevated_solid,
+        return MirroredShape(shape_in=self.solid,
                              reference_point=self.solid.position,
                              vector1=Vector(1, 0, 0),
                              vector2=Vector(0, 0, 1))
@@ -176,7 +172,7 @@ class HorizontalStabilizer(ExternalBody, LiftingSurface):
         :return: Fused Shape
         :rtype: Fused
         """
-        return Fused(self.elevated_solid, self.ht_mirror, hidden=True)
+        return Fused(self.solid, self.ht_mirror, hidden=True)
 
 
 if __name__ == '__main__':

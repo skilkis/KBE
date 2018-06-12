@@ -90,7 +90,7 @@ class CompoundStabilizer(ExternalBody):
         return VerticalStabilizer(position=translate(self.position,
                                                      'y', self.stabilizer_h.semi_span,
                                                      'z', sorted(self.stabilizer_h.solid.faces,
-                                                                 key=lambda f: f.cog.y)[-1].cog.z),
+                                                                 key=lambda f: f.cog.y)[-1].cog.z - self.position.z),
                                   wing_planform_area=self.wing_planform_area,
                                   wing_mac_length=self.wing_mac_length,
                                   wing_semi_span=self.wing_semi_span,
@@ -109,7 +109,7 @@ class CompoundStabilizer(ExternalBody):
         return VerticalStabilizer(position=translate(self.position,
                                                      'y', -1 * self.stabilizer_h.semi_span,
                                                      'z', sorted(self.stabilizer_h.solid.faces,
-                                                                 key=lambda f: f.cog.y)[-1].cog.z),
+                                                                 key=lambda f: f.cog.y)[-1].cog.z - self.position.z),
                                   wing_planform_area=self.wing_planform_area,
                                   wing_mac_length=self.wing_mac_length,
                                   wing_semi_span=self.wing_semi_span,
@@ -139,7 +139,7 @@ class CompoundStabilizer(ExternalBody):
     def connector_left(self):
         return MirroredShape(shape_in=self.connector_right,
                              reference_point=self.position,
-                             vector1=Vector(1, 0, 0), vector2=(0, 0, 1))
+                             vector1=Vector(1, 0, 0), vector2=Vector(0, 0, 1))
 
     @Attribute
     def boom_plane(self):
