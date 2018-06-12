@@ -128,37 +128,7 @@ class UAV(DesignInput):
     @Attribute(private=True)
     def pad_distance(self):
         return self.fuselage.pad_factor * self.wing.root_chord
-#
-#     @Attribute
-#     def configuration(self):
-#         return self.params.configuration
-#
-#     @Attribute
-#     def mtow(self):
-#         return self.weight_and_balance()['WEIGHTS']['mtow']
-#
-#     @Attribute(private=True)
-#     # TODO finish this validator attribute (make it private)
-#     def mtow_validator(self):
-#         return 1
-#
-#
-#     # @Attribute
 
-#
-#     @Attribute
-#     def battery_capacity(self):
-#         return self.sizing_value
-#
-#     @Part
-#     def battery(self):
-#         return Battery(position=translate(XOY, 'x', -0.1))
-#
-#     # @Part
-#     # def battery_test(self):
-#     #     return Battery(position=Position(self.cg))
-#
-#
 #     # TODO Add a nice bar-graph that shows performance, power consumption, drag, etc in the GUI with boxes!
 
     @Attribute
