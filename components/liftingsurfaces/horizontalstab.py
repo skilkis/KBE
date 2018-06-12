@@ -81,7 +81,7 @@ class HorizontalStabilizer(ExternalBody, LiftingSurface):
         :return: float
         :rtype: float
         """
-        return 0.01*self.weight_mtow
+        return 0.2*self.weight_mtow
 
     @Attribute
     def center_of_gravity(self):
@@ -90,8 +90,7 @@ class HorizontalStabilizer(ExternalBody, LiftingSurface):
         :return: ParaPy Point
         :rtype: Point
         """
-        y = 0
-        pos = Point(self.solid.cog.x, y, self.solid.cog.z)
+        pos = Point(self.solid.cog.x, self.position.y, self.solid.cog.z)
         return pos
 
     @Attribute

@@ -118,7 +118,6 @@ class Electronics(Component):
         :rtype: int
         """
         length = 1
-        # length = len(self.motor_in) if type(self.motor_in) is tuple or list else 0
         if isinstance(self.motor_in, Iterable):
             length = len(self.motor_in)
         return length

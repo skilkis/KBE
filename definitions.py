@@ -52,6 +52,8 @@ class Component(GeomBase):
         |   'fuselage'
         |   'vt'
         |   'ht'
+        |   'ct'
+        |   'boom'
         |   'payload'
         |   'prop'
         |   'battery'
@@ -123,6 +125,8 @@ class ExternalBody(Component):
         |   'fuselage'
         |   'vt'
         |   'ht'
+        |   'ct'
+        |   'boom'
         |
         """
 

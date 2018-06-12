@@ -13,6 +13,7 @@ __all__ = ["CompoundStabilizer"]
 
 # TODO Define proper ExternalBody attributes
 
+
 class CompoundStabilizer(ExternalBody):
     """ This class will size the VT according to statistical VT volume coefficients and generate it using the
     LiftingSurface primitive. Also, the bounding box is made for the section of the VTP within the fuselage, which is
@@ -20,7 +21,9 @@ class CompoundStabilizer(ExternalBody):
     :returns: ParaPy Geometry of the VT
     """
 
-    planform_area = Input(0.8, settable=False)
+    #: Below is the required horizontal tail area of the main wings from the stability analysis.
+    #: :type: float
+    required_planform_area = Input(0.8, settable=False)
 
     #: Below is the required TOTAL wing area of the main wings.
     #: :type: float
@@ -58,10 +61,62 @@ class CompoundStabilizer(ExternalBody):
     #: :type: float
     twist = Input(0.0, settable=False)
 
-    #
+    #: This value is used to set the default color of the wing-part
+    #: :type: tuple
     color = Input(MyColors.skin_color)
 
     @Attribute
+    def component_type(self):
+        """ An identifier to classify the part as a Compound Tail """
+
+        return 'ct'
+
+    @Attribute
+    def weight(self):
+        """ Total mass of the component
+
+        :return: Mass in SI kilogram
+        :rtype: float
+        """
+        return 0.0
+
+    @Attribute
+    def center_of_gravity(self):
+        """ Location of the center of gravity w.r.t the origin
+
+        :return: Location Tuple in SI meter
+        :rtype: Point
+        """
+        return self.position
+
+    @Attribute
+    def boom_plane(self):
+        """ Defines the XZ-plane that is coincident with the boom connector """
+        return Plane(reference=self.tail_shaft_circle[0].center,
+                     normal=Vector(0, 1, 0),
+                     binormal=Vector(0, 0, 1))
+
+    @Attribute(private=True)
+    def tail_joiner(self):
+        """ This joins the tails and connector shafts together through a series of Fuse operations to be able to
+        present a single `external_shape` required for the .step file output.
+        :return: ParaPy Fused Boxes
+        :rtype: Fused
+        """
+
+        # Fusing Right Horizontal Tail:
+        shape_in_r = Fused(shape_in=self.stabilizer_h.solid, tool=self.stabilizer_vright.solid)
+        shape_out_r = Fused(shape_in=shape_in_r, tool=self.connector_right)
+
+        # Fusing Left Horizontal Tail:
+        shape_in_l = Fused(shape_in=self.stabilizer_h.ht_mirror, tool=self.stabilizer_vleft.solid)
+        shape_out_l = Fused(shape_in=shape_in_l, tool=self.connector_left)
+
+        shape_out = Fused(shape_in=shape_out_r, tool=shape_out_l)
+
+        return shape_out
+
+    @Attribute(private=True)
     def critical_thickness(self):
         """ This attribute finds the larger airfoil thickness of the horiz. or vert. stabilizer to then be able to
         construct the tail-boom shaft.
@@ -77,10 +132,16 @@ class CompoundStabilizer(ExternalBody):
             critical_thickness = vertical_tail_thickness
         return critical_thickness
 
+    @Attribute(private=True)
+    def tail_shaft_circle(self):
+        _profile = Circle(position=self.stabilizer_vright.position, radius=(self.critical_thickness / 2.0) * 1.5)
+        _extrude = ExtrudedSolid(island=_profile, distance=self.stabilizer_h.root_chord)
+        return _profile, _extrude
+
     @Part
     def stabilizer_h(self):
         return HorizontalStabilizer(position=self.position,
-                                    planform_area=self.planform_area)
+                                    planform_area=self.required_planform_area)
 
     @Part
     def stabilizer_vright(self):
@@ -120,14 +181,6 @@ class CompoundStabilizer(ExternalBody):
                                   taper=0.35,
                                   twist=0.0)
 
-#  ---------------------------------------------------------------------------------------------------------------------
-
-    @Attribute
-    def tail_shaft_circle(self):
-        _profile = Circle(position=self.stabilizer_vright.position, radius=(self.critical_thickness / 2.0) * 1.5)
-        _extrude = ExtrudedSolid(island=_profile, distance=self.stabilizer_h.root_chord)
-        return _profile, _extrude
-
     @Part
     def connector_right(self):
         return RotatedShape(shape_in=self.tail_shaft_circle[1],
@@ -141,16 +194,20 @@ class CompoundStabilizer(ExternalBody):
                              reference_point=self.position,
                              vector1=Vector(1, 0, 0), vector2=Vector(0, 0, 1))
 
-    @Attribute
-    def boom_plane(self):
-        """ Defines the XZ-plane that is coincident with the boom connector """
-        return Plane(reference=self.tail_shaft_circle[0].center,
-                     normal=Vector(0, 1, 0),
-                     binormal=Vector(0, 0, 1))
+    @Part
+    def external_shape(self):
+        """ The final shape of a ExternalSurface class which is to be exported """
+        return ScaledShape(shape_in=self.tail_joiner, reference_point=Point(0, 0, 0), factor=1, hidden=True)
+
+    @Part
+    def internal_shape(self):
+        """ The Compound tail by definition has no internal shape since it must be connected by booms, this this
+        part is overwritten by a Circle of radius 0"""
+        return Circle(radius=0, hidden=True)
 
 
 if __name__ == '__main__':
     from parapy.gui import display
 
-    obj = CompoundStabilizer(label='compoundVstab')
+    obj = CompoundStabilizer(label='Compound Tail')
     display(obj)

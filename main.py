@@ -31,8 +31,6 @@ class UAV(DesignInput):
 
     motor_integration = Input('pusher', validator=val.OneOf(['pusher', 'puller']))
 
-
-
     @Part
     def params(self):
         #  Here we instantiate the parameter generator, passing down the inputs from the User input file.
@@ -78,7 +76,7 @@ class UAV(DesignInput):
                                                      sin(radians(self.wing.dihedral) +
                                                          self.wing.front_spar_line.point1.z -
                                                          self.wing.position.z)),
-                                  planform_area=self.wing.planform_area * self.stability.shs_req,
+                                  required_planform_area=self.wing.planform_area * self.stability.shs_req,
                                   wing_planform_area=self.wing.planform_area,
                                   wing_mac_length=self.wing.mac_length,
                                   wing_semi_span=self.wing.semi_span,
@@ -92,78 +90,6 @@ class UAV(DesignInput):
     def booms(self):
         return Boom(wing_in=self.wing,
                     tail_in=self.stabilizer)
-
-    # #  TODO Fix HT position wrt wing AC, also wing position
-    # @Part
-    # def stabilizer_h(self):
-    #     #  TODO Fix attribute Samispan
-    #     return HorizontalStabilizer(position=translate(self.wing.position,
-    #                                                    'x', self.stability.lhc * self.wing.mac_length),
-    #                                 planform_area=self.wing.planform_area * self.stability.shs_req)
-    #
-    # @Part
-    # def stabilizer_vright(self):
-    #     #  TODO connect lvc to config and figure out how to calc v_v_canard
-    #     #  TODO Relation for AR_v, taper -> STATISTICS
-    #     #  TODO integrate lvc into stability module
-    #     return VerticalStabilizer(position=translate(self.wing.position,'x',
-    #                                                  self.stability.lhc * self.wing.mac_length if self.configuration is 'conventional' else 0.5*self.wing.mac_length,
-    #                                                  'y',self.stabilizer_h.semi_span),
-    #                               wing_planform_area=self.wing.planform_area,
-    #                               wing_mac_length=self.wing.mac_length,
-    #                               wing_semi_span=self.wing.semi_span,
-    #                               lvc=self.stability.lhc,
-    #                               lvc_canard=0.5,
-    #                               configuration=self.configuration,
-    #                               aspect_ratio=1.4,
-    #                               taper=0.35,
-    #                               twist=0.0)
-    #
-    # @Part
-    # def stabilizer_vleft(self):
-    #     #  TODO connect lvc to config and figure out how to calc v_v_canard
-    #     #  TODO Relation for AR_v, taper -> STATISTICS
-    #     #  TODO integrate lvc into stability module
-    #     return VerticalStabilizer(position=translate(self.wing.position,'x',
-    #                                                  self.stability.lhc * self.wing.mac_length if self.configuration is 'conventional' else 0.5*self.wing.mac_length,
-    #                                                  'y',-self.stabilizer_h.semi_span),
-    #                               wing_planform_area=self.wing.planform_area,
-    #                               wing_mac_length=self.wing.mac_length,
-    #                               wing_semi_span=self.wing.semi_span,
-    #                               lvc=self.stability.lhc,
-    #                               lvc_canard=0.5,
-    #                               configuration=self.configuration,
-    #                               aspect_ratio=1.4,
-    #                               taper=0.35,
-    #                               twist=0.0)
-
-
-    @Input
-    def motor_integration(self):
-        return 'pusher'
-
-    # @Attribute(private=True)
-    # def compartment_type(self):
-    #     if self.motor.orientation is 'pusher':
-    #         compartment_type = ['nose', 'container', 'container', 'container', 'motor']
-    #     else:
-    #         compartment_type = ['motor', 'container', 'container', 'container', 'tail']
-    #     return compartment_type
-    #
-    # @Attribute(private=True)
-    # def sizing_parts(self):
-    #     if self.motor.orientation is 'pusher':
-    #         sizing_parts = [None, self.camera, self.battery, self.wing, self.motor]
-    #     else:
-    #         sizing_parts = [self.motor, self.camera, self.battery, self.wing, None]
-    #     return sizing_parts
-
-    # @Attribute(private=True)
-    # def motor_location(self):
-    #     if self.motor.orientation is ''
-    #     motor_location = translate(self.wing.position, 'x', 1.2 * self.wing.root_chord)
-    #     return
-
 
     @Part
     def camera(self):
@@ -197,7 +123,6 @@ class UAV(DesignInput):
     @Part
     def propeller(self):
         return Propeller(motor=self.motor, design_speed=self.params.design_speed)
-
 
     # Geometry Constraints
     @Attribute(private=True)
@@ -289,6 +214,8 @@ class UAV(DesignInput):
                                    'fuselage': 0.0,
                                    'vt': 0.0,
                                    'ht': 0.0,
+                                   'ct': 0.0,
+                                   'boom': 0.0,
                                    'payload': 0.0,
                                    'prop': 0.0,
                                    'battery': 0.0,
@@ -312,6 +239,17 @@ class UAV(DesignInput):
 
                 elif _child.getslot('component_type') == 'ht':
                     weight_dict['WEIGHTS']['ht'] = weight_dict['WEIGHTS']['ht'] + (_child.getslot('weight'))
+
+                # Special Case for Compound Tail
+                elif _child.getslot('component_type') == 'ct':
+                    weight_dict['WEIGHTS']['ct'] = weight_dict['WEIGHTS']['ct'] + (_child.getslot('weight'))
+                    weight_dict['WEIGHTS']['ht'] = weight_dict['WEIGHTS']['ht'] + \
+                                                   (_child.stabilizer_h.getslot('weight'))
+                    weight_dict['WEIGHTS']['vt'] = weight_dict['WEIGHTS']['vt'] + \
+                                                   2 * (_child.stabilizer_vright.getslot('weight'))
+
+                elif _child.getslot('component_type') == 'boom':
+                    weight_dict['WEIGHTS']['boom'] = weight_dict['WEIGHTS']['boom'] + (_child.getslot('weight'))
 
                 elif _child.getslot('component_type') == 'payload':
                     weight_dict['WEIGHTS']['payload'] = weight_dict['WEIGHTS']['payload'] + (_child.getslot('weight'))
@@ -357,6 +295,8 @@ class UAV(DesignInput):
                                 'fuselage': 0,
                                 'vt': 0,
                                 'ht': 0,
+                                'ct': 0,
+                                'boom': 0,
                                 'misc': 0,
                                 'total': 0},
                      'REFERENCE': 0}
@@ -375,11 +315,17 @@ class UAV(DesignInput):
                 elif _child.getslot('surface_type') == 'vt':
                     area_dict['WETTED']['vt'] = area_dict['WETTED']['vt'] + _child.wetted_area
 
-                elif _child.getslot('surface_type') == 'vt':
-                    area_dict['WETTED']['vt'] = area_dict['WETTED']['vt'] + _child.wetted_area
-
                 elif _child.getslot('surface_type') == 'ht':
                     area_dict['WETTED']['ht'] = area_dict['WETTED']['ht'] + _child.wetted_area
+
+                # Special Case for Compound Tail
+                elif _child.getslot('component_type') == 'ct':
+                    area_dict['WETTED']['ct'] = area_dict['WETTED']['ct'] + _child.wetted_area
+                    area_dict['WETTED']['ht'] = area_dict['WETTED']['ht'] + _child.stabilizer_h
+                    area_dict['WETTED']['vt'] = area_dict['WETTED']['vt'] + _child.stabilizer_vright * 2.0
+
+                elif _child.getslot('surface_type') == 'boom':
+                    area_dict['WETTED']['boom'] = area_dict['WETTED']['boom'] + _child.wetted_area
 
                 else:
                     area_dict['WETTED']['misc'] = area_dict['WETTED']['misc'] + _child.wetted_area
