@@ -43,7 +43,7 @@ class FlightController(Component):
                    hidden=True)
 
     @Part
-    def flightcontroller(self):
+    def solid(self):
         """ This shifts the shape to the correct place with respect to the local axis system.
         :return: ParaPy Flight Controller Geometry
         :rtype: TranslatedShape
@@ -76,7 +76,7 @@ class FlightController(Component):
         :return: ParaPy Point
         :rtype: Point
         """
-        return self.flightcontroller.cog
+        return self.solid.cog
 
     @Attribute
     def weight(self):
@@ -86,13 +86,14 @@ class FlightController(Component):
         """
         return 0.023
 
-    @Attribute
+    @Part
     def internal_shape(self):
         """ This obtains a bounding box of the flight controller to size the fuselage frames.
-        :return: Navio2 Mass
-        :rtype: float
-        """
-        return self.flightcontroller.bbox
+    #     :return: Navio2 Mass
+    #     :rtype: float
+    #     """
+        return ScaledShape(shape_in=self.solid, reference_point=self.solid.cog, factor=1,
+                           transparency=0.7, hidden=True)
 
     @Attribute
     def label(self):

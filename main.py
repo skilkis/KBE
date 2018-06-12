@@ -101,8 +101,9 @@ class UAV(DesignInput):
         return Fuselage(compartment_type=['nose', 'container', 'container', 'container', 'motor'] if
                         self.motor_integration is 'pusher' else
                         ['motor', 'container', 'container', 'container', 'tail'],
-                        sizing_parts=[None, self.camera, self.battery, self.wing, self.motor] if self.motor_integration
-                        is 'pusher' else [self.motor, self.camera, self.battery, self.wing, None])
+                        sizing_parts=[None, self.camera, self.battery, [self.wing, self.electronics], self.motor] if
+                        self.motor_integration is 'pusher' else
+                        [self.motor, self.camera, self.battery, [self.wing, self.electronics], None])
 
     @Part
     def motor(self):
@@ -123,6 +124,13 @@ class UAV(DesignInput):
     @Part
     def propeller(self):
         return Propeller(motor=self.motor, design_speed=self.params.design_speed)
+
+    @Part
+    def electronics(self):
+        return Electronics(position=translate(self.wing.position,
+                                              'x', self.wing.root_chord / 2.0 + self.electronics.box_length*0.5,
+                                              'z', self.wing.internal_shape.bbox.height),
+                           motor_in=self.motor)
 
     # Geometry Constraints
     @Attribute(private=True)

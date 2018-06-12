@@ -21,7 +21,7 @@ class Electronics(Component):
     :returns: ParaPy Geometry of the ESC(s)
     """
     # TODO The following input will work if tuple list or set. CONNECT WITH MAIN!!!!!!!!!!!!!!!!!!!!!!!
-    motor_in = Input([Motor(), Motor()])
+    motor_in = Input(Motor())
 
     @Attribute
     def component_type(self):
@@ -40,62 +40,6 @@ class Electronics(Component):
         """
         return self.flight_controller.weight + self.speed_controller.weight
 
-#  TODO overwrite weight and CG
-#  TODO Make sure this is correct below.
-#  TODO Fix internal shape
-
-    def weight_and_balance(self):
-        """ Retrieves all relevant parameters from children with `weight` and `center_of_gravity` attributes and then
-        calculates the center of gravity w.r.t the origin Point(0, 0, 0)
-
-        :return: A dictionary of component weights as well as the center of gravity fieldnames = 'WEIGHTS', 'CG'
-        :rtype: dict
-        """
-
-        children = self.get_children()
-
-        # Creating dummy lists to store all weights and respective c.g. locations
-        weight = []
-        cg = []
-
-        # Defining the structure of the weight_dictionary
-        weight_dict = {'WEIGHTS': {'flight_controller': 0.0,
-                                   'speed_controller': 0.0},
-                       'CG': Point(0, 0, 0)}
-
-        for _child in children:
-            if hasattr(_child, 'weight') and hasattr(_child, 'center_of_gravity'):
-                weight.append(_child.getslot('weight'))
-                cg.append(_child.getslot('center_of_gravity'))
-
-                if _child.getslot('component_type') == 'flight_controller':
-                    weight_dict['WEIGHTS']['flight_controller'] = weight_dict['WEIGHTS']['flight_controller'] +\
-                                                                  (_child.getslot('flight_controller'))
-                if _child.getslot('component_type') == 'speed_controller':
-                    weight_dict['WEIGHTS']['speed_controller'] = weight_dict['WEIGHTS']['speed_controller'] +\
-                                                                  (_child.getslot('speed_controller'))
-
-        total_weight = sum(weight)
-        weight_dict['WEIGHTS']['Combined'] = total_weight
-
-        # CG calculation through a weighted average utilizing list comprehension
-        if len(weight) and len(cg) is not 0:
-            cg_x = sum([weight[i] * cg[i].x for i in range(0, len(weight))]) / total_weight
-            cg_y = sum([weight[i] * cg[i].y for i in range(0, len(weight))]) / total_weight
-            cg_z = sum([weight[i] * cg[i].z for i in range(0, len(weight))]) / total_weight
-
-            weight_dict['CG'] = Point(cg_x, cg_y, cg_z)
-
-        return weight_dict
-
-    @Attribute
-    def center_of_gravity(self):
-        """ Location of the center of gravity w.r.t the origin
-
-        :return: Location Tuple in SI meter
-        :rtype: Point
-        """
-        return self.weight_and_balance()
 
     @Attribute
     def amp_req(self):
@@ -128,7 +72,7 @@ class Electronics(Component):
         :return: Flight controller geometry
         :rtype: TranslatedShape
         """
-        return FlightController()
+        return FlightController(position=self.position)
 
     @Part
     def speed_controller(self):
@@ -137,8 +81,75 @@ class Electronics(Component):
         :return: Speed Controller(s) Geometry
         :rtype: Box
         """
-        return SpeedController(amp_recc=self.amp_req,
+        return SpeedController(position=self.position,
+                               amp_recc=self.amp_req,
                                num_engines=self.number_engines)
+
+    @Attribute
+    def box_length(self):
+        return self.flight_controller.l_navio
+
+    # @Part
+    # def fc_internal_shape(self):
+    #     """ This is creating a box for the fuselage frames. This is used to get around ParaPy errors.
+    #     :return: Speed Controller(s) bounded box
+    #     :rtype: ScaledShape
+    #     """
+    #     return ScaledShape(shape_in=self.flight_controller.solid,
+    #                        reference_point=self.flight_controller.center_of_gravity,
+    #                        factor=1, transparency=0.7)
+
+    @Attribute
+    def elec_joiner(self):
+        """ This joins the ESC's together through a series of Fuse operations to be able to present a
+        single `internal_shape` required for the fuselage frame sizing.
+        :return: ParaPy Fused Boxes
+        :rtype: Fused
+        """
+        parts_in = [self.speed_controller.esc_joiner, self.flight_controller.solid]
+        if self.number_engines > 1:
+            shape_in = parts_in[0]
+            for i in range(0, self.number_engines - 1):
+                new_part = Fused(shape_in=shape_in, tool=parts_in[i+1])
+                shape_in = new_part
+            shape_out = shape_in
+        else:
+            shape_out = parts_in[0]
+        return shape_out
+    #
+    # @Part
+    # def sc_internal_shape(self):
+    #     """ This is creating a box for the fuselage frames. This is used to get around ParaPy errors.
+    #     :return: Speed Controller(s) bounded box
+    #     :rtype: ScaledShape
+    #     """
+    #     return ScaledShape(shape_in=self.speed_controller.esc_joiner,
+    #                        reference_point=self.speed_controller.center_of_gravity,
+    #                        factor=1, transparency=0.7)
+
+    @Attribute
+    def center_of_gravity(self):
+        """ This attribute finds the center of gravities of the separate ESCs, then finds the combined C.G.
+          :return: ParaPy Point
+          :rtype: Point
+          """
+        cogs = [self.speed_controller.center_of_gravity, self.flight_controller.center_of_gravity]
+        weights = [self.speed_controller.weight, self.flight_controller.weight]
+
+        # CG calculation through a weighted average utilizing list comprehension
+        cg_x = sum([weights[i] * cogs[i].x for i in range(0, len(weights))]) / self.weight
+        cg_y = sum([weights[i] * cogs[i].y for i in range(0, len(weights))]) / self.weight
+        cg_z = sum([weights[i] * cogs[i].z for i in range(0, len(weights))]) / self.weight
+
+        return Point(cg_x, cg_y, cg_z)
+
+    @Part
+    def internal_shape(self):
+        """ This is creating a box for the fuselage frames. This is used to get around ParaPy errors.
+        :return: Speed Controller(s) bounded box
+        :rtype: ScaledShape
+        """
+        return ScaledShape(shape_in=self.elec_joiner, reference_point=self.speed_controller.center_of_gravity, factor=1, transparency=0.7)
 
 
 if __name__ == '__main__':
