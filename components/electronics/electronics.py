@@ -23,6 +23,8 @@ class Electronics(Component):
     # TODO The following input will work if tuple list or set. CONNECT WITH MAIN!!!!!!!!!!!!!!!!!!!!!!!
     motor_in = Input(Motor())
 
+    label = Input('Electronics')
+
     @Attribute
     def component_type(self):
         """ This attribute names the component 'electronics' for electronics.

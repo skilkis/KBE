@@ -217,6 +217,14 @@ class SpeedController(Component):
         """
         return self.esc_weight
 
+    @Attribute
+    def label(self):
+        """ This labels the flight controller 'Avionics'
+        :return: Navio2 Mass
+        :rtype: float
+        """
+        return 'Speed Controller'
+
 
 if __name__ == '__main__':
     from parapy.gui import display
