@@ -349,6 +349,7 @@ class Fuselage(ExternalBody):
             shape_out = Fused(first_iter, self.nose.cone, hidden=True)
         elif self.build_tail:
             shape_out = Fused(self.center_section, self.tail.cone, hidden=True)
+
         elif self.build_nose:
             shape_out = Fused(self.center_section, self.nose.cone, hidden=True)
         else:
