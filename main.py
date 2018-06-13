@@ -7,6 +7,7 @@
 @author: Şan Kılkış & Nelson Johnson
 @version: 1.0
 """
+
 # TODO Add explanation of main file here
 
 from design import *
@@ -100,9 +101,25 @@ class UAV(DesignInput):
 
         for _child in children:
             if hasattr(_child, 'external_shape'):
-                output.append(_child.external_shape)
 
-        writer = STEPWriter(output, filename=os.path.join(DIRS['USER_DIR'], 'model', '%s.stp' % self.label))
+                # Special-Case to manually add the left wing due to visualization errors
+                if hasattr(_child, 'left_wing'):
+
+                    # Copying the left wing object and changing label for tree organization in a STEP Viewer
+                    left_wing = _child.left_wing
+                    setattr(left_wing, 'label', 'Left Wing')
+                    output.append(left_wing)
+
+                    # Copying the right wing object and changing label for tree organization in a STEP Viewer
+                    right_wing = _child.solid
+                    setattr(right_wing, 'label', 'Right Wing')
+                    output.append(right_wing)
+
+                # Appending to the array the current shape to be exported
+                else:
+                    output.append(_child.external_shape)
+
+        writer = STEPWriter(output, unit='M', filename=os.path.join(DIRS['USER_DIR'], 'model', '%s.stp' % self.label))
         writer.write()
         return writer
 

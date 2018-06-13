@@ -89,7 +89,7 @@ class Propeller(Component):
 
     @Attribute
     def component_type(self):
-        return 'payload'
+        return 'prop'
 
     @Attribute
     def weight(self):
@@ -331,9 +331,12 @@ class Propeller(Component):
                                color=MyColors.chill_white)
 
     @Part
-    def internal_shape(self):
-        """ The propeller does not have an internal part, thus a place holder part is created with zero area """
-        return Circle(radius=0, hidden=True)
+    def external_shape(self):
+        # TODO Fix propeller export
+        """ Presents the complete outer propeller shape for wetted area calculation as well as STEP output """
+        fuse1 = Fused(self.propeller.solids[0], self.propeller.solids[1])
+        fuse2 = Fused(fuse1.compounds[0], self.propeller_fairing, label=self.label)
+        return Fused(self.propeller.solids[0], self.propeller.solids[1])
 
     # --- Propeller Geometry Creation: --------------------------------------------------------------------------------
 
@@ -466,6 +469,11 @@ class Propeller(Component):
         return RotatedShape(shape_in=self.propeller_fairing_import,
                             rotation_point=XOY,
                             vector=XOY.Vy, angle=radians(self.build_direction * 90))
+
+    @Attribute(private=True)
+    def internal_shape(self):
+        """ The propeller does not have an internal part, thus this part is overwritten upon inheritance """
+        return None
 
 
 if __name__ == '__main__':
