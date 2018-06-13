@@ -64,8 +64,9 @@ class CompoundStabilizer(ExternalBody):
     @Attribute
     def component_type(self):
         """ An identifier to classify the part as a Compound Tail """
-
         return 'ct'
+
+    # TODO Make sure that the horizontal tail does not allow dihedral angle!!!
 
     @Attribute
     def weight(self):

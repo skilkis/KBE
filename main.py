@@ -12,6 +12,7 @@
 from design import *
 from parapy.core import *
 from parapy.geom import *
+from parapy.exchange import STEPWriter
 from components import *
 from directories import *
 from definitions import *
@@ -29,7 +30,9 @@ class UAV(DesignInput):
 
     @Input
     def cg(self):
-        """ Computes an initial-guess for the Center of Gravity Location at Run-Time """
+        """ Computes an initial-guess for the Center of Gravity Location at Run-Time utilizing 'weight_and_balance'
+
+        :rtype: Point """
         return self.weight_and_balance()['CG']
 
     @Part
@@ -51,6 +54,7 @@ class UAV(DesignInput):
                     weight_mtow=self.params.weight_mtow,
                     stall_speed=self.params.stall_speed,
                     rho=self.params.rho,
+                    aspect_ratio=self.params.aspect_ratio,
                     label='Main Wing')
 
     @Part
@@ -69,7 +73,7 @@ class UAV(DesignInput):
                            delta_xcg=0.1,
                            configuration=self.configuration)
 
-    @Attribute(in_tree=True)
+    @Attribute
     def final_cg(self):
         """ This parameter is non-lazy to enable proper Center of Gravity location and tail sizing at run-time! """
         old_cg = self.cg
@@ -79,22 +83,43 @@ class UAV(DesignInput):
         while abs(old_cg.x - new_cg.x) > 0.005 and loop < 20:
             loop = loop + 1
             print 'Current Iteration: ' + str(loop)
-            updated_UAV=self
-            old_cg = updated_UAV.cg
+            new_uav_object = self
+            old_cg = new_uav_object.cg
             print 'Old CG = %1.4f' % old_cg.x
-            new_cg = updated_UAV.weight_and_balance()['CG']
+            new_cg = new_uav_object.weight_and_balance()['CG']
             print 'New CG = %1.4f' % new_cg.x
             setattr(self, 'cg', new_cg)
         return new_cg
+
+    @Attribute
+    def write_step(self):
+        children = self.get_children()
+
+        # Creating dummy lists to store all external_bodies
+        output = []
+
+        for _child in children:
+            if hasattr(_child, 'external_shape'):
+                output.append(_child.external_shape)
+
+        writer = STEPWriter(output, filename=os.path.join(DIRS['USER_DIR'], 'model', '%s.stp' % self.label))
+        writer.write()
+        return writer
 
     @Part
     def center_of_gravity(self):
         return VisualCG(vis_cog=self.cg)
 
+    # TODO Make sure that distance is AC to AC
     @Part
     def stabilizer(self):
+        """ Instantiates a Compound Stabilizer by assuming that the location is simply a translation along the x-axis
+        with a value equivalent to the assumed tail-arm multiplied by the MAC of the main wing. Please note this value
+        neglects the dimension of the tail aerodynamic center as a simplification. Thus the tail arm is slightly larger
+        than calculated due to the additional contribution to the tail arm that the tail aerodynamic center makes """
         return CompoundStabilizer(position=translate(self.wing.position,
-                                                     'x', self.stability.lhc * self.wing.mac_length,
+                                                     'x', self.stability.lhc * self.wing.mac_length
+                                                     + self.wing.aerodynamic_center.x,
                                                      'z', self.stabilizer.stabilizer_h.semi_span *
                                                      sin(radians(self.wing.dihedral) +
                                                          self.wing.front_spar_line.point1.z -
@@ -107,12 +132,13 @@ class UAV(DesignInput):
                                   configuration=self.configuration,
                                   aspect_ratio=1.4,
                                   taper=0.35,
-                                  twist=0.0)
+                                  twist=0.0,
+                                  label='Tail')
 
     @Part
     def booms(self):
         return Boom(wing_in=self.wing,
-                    tail_in=self.stabilizer)
+                    tail_in=self.stabilizer, label='Tail Booms')
 
     @Part
     def camera(self):
@@ -126,16 +152,21 @@ class UAV(DesignInput):
                         ['motor', 'container', 'container', 'container', 'tail'],
                         sizing_parts=[None, [self.camera,self.electronics], self.battery, self.wing, self.motor] if
                         self.motor_integration is 'pusher' else
-                        [self.motor, [self.camera, self.electronics], self.battery, self.wing, None])
+                        [self.motor, [self.camera, self.electronics], self.battery, self.wing, None],
+                        label='Fuselage')
 
     # TODO fix motor placement to be better looking
     @Part
     def motor(self):
         return Motor(target_power=(9.81/self.params.power_loading) * self.params.weight_mtow,
                      integration=self.motor_integration,
-                     position=translate(self.wing.position, 'x', 1.2 * self.wing.root_chord, 'z', self.weight_and_balance()['CG'].z)
+                     position=translate(self.wing.position,
+                                        'x', 1.2 * self.wing.root_chord,
+                                        'z', self.wing.internal_shape.bbox.center.z)
                      if self.motor_integration is 'pusher' else
-                     translate(self.camera.position, 'x', -1 * (self.pad_distance + self.motor.length), 'z', self.weight_and_balance()['CG'].z))
+                     translate(self.camera.position,
+                               'x', -1 * (self.pad_distance + self.motor.length),
+                               'z', self.wing.internal_shape.bbox.center.z))
 
     @Part
     def battery(self):

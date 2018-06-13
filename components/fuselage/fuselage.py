@@ -341,10 +341,9 @@ class Fuselage(ExternalBody):
         """ This overwrites the Part defined in the class `Component` an internal_shape w/ a Dummy Value"""
         return None
 
-    @Attribute(in_tree=True)
-    def external_shape(self):
-        """ Overwrites the Part defined in class `ExternalBody` with a merge of the constructed fuselage with the
-        created nose/tail cone(s)"""
+    @Attribute(private=True)
+    def fuselage_joiner(self):
+        """ Joines the current instantiated elements (nose/tail cone(s)) of the fuselage and outputs a single part"""
         if self.build_tail and self.build_nose:
             first_iter = Fused(self.center_section, self.tail.cone)
             shape_out = Fused(first_iter, self.nose.cone, hidden=True)
@@ -355,6 +354,10 @@ class Fuselage(ExternalBody):
         else:
             raise Exception('%s Fuselage construction failed' % self)
         return shape_out
+
+    @Part
+    def external_shape(self):
+        return ScaledShape(shape_in=self.fuselage_joiner, reference_point=Point(0, 0, 0), factor=1, label=self.label)
 
     # --- Private Attributes: -----------------------------------------------------------------------------------------
 

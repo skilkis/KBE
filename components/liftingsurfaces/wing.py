@@ -184,7 +184,7 @@ class Wing(ExternalBody, LiftingSurface):
 
     @Part
     def external_shape(self):
-        return Fused(self.solid, self.left_wing, hidden=True)
+        return Fused(self.solid, self.left_wing, hidden=True, label=self.label)
 
 
 # --- AVL Geometry & Analysis: -----------------------------------------------------------------------------------------

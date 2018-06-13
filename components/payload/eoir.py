@@ -31,7 +31,7 @@ __author__ = "Şan Kılkış"
 __show_primitives = False  # type: bool
 
 
-class EOIR(Component):
+class EOIR(ExternalBody):
 
     __initargs__ = ["target_weight", "camera_name", "position"]
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'camera.png')
@@ -152,6 +152,10 @@ class EOIR(Component):
                                displacement=Vector(self.position.x + (self.box_length / 2.0),
                                                    self.position.y, self.position.z - self.exposed_height),
                                color=MyColors.light_grey)
+
+    @Part
+    def external_shape(self):
+        return Fused(self.gimbal, self.camera_body, hidden=True, label=self.label)
 
     # --- Primitives: -------------------------------------------------------------------------------------------------
 
