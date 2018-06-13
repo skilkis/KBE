@@ -16,19 +16,19 @@ class VisualCG(GeomBase):
     # TODO add header here and create a nice looking visual CG
 
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'battery.png')
-    __initargs__ = ["vis_cog", "vis_weight"]
+    __initargs__ = ["vis_cog"]
     # TODO Find a proper icon here
     vis_cog = Input()
     scale = Input(0.01)
 
-    @Attribute
-    def position(self):
-        cog = self.vis_cog
-        return translate(XOY, 'x', cog.x, 'y', cog.y, 'z', cog.z)
-
     @Part
     def visual_cg_location(self):
-        return Sphere(radius=self.scale, position=self.position, color='yellow', hidden=self.hidden)
+        return Sphere(radius=self.scale,
+                      position=translate(self.position,
+                                         'x', self.vis_cog.x,
+                                         'y', self.vis_cog.y,
+                                         'z', self.vis_cog.z),
+                      color='yellow', hidden=self.hidden)
 
 
 class Component(GeomBase):

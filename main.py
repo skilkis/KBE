@@ -71,6 +71,7 @@ class UAV(DesignInput):
 
     @Attribute(in_tree=True)
     def final_cg(self):
+        """ This parameter is non-lazy to enable proper Center of Gravity location and tail sizing at run-time! """
         old_cg = self.cg
         print 'Run-Time CG = %1.4f' % old_cg.x
         new_cg = self.weight_and_balance()['CG']
@@ -84,7 +85,11 @@ class UAV(DesignInput):
             new_cg = updated_UAV.weight_and_balance()['CG']
             print 'New CG = %1.4f' % new_cg.x
             setattr(self, 'cg', new_cg)
-        return VisualCG(vis_cog=new_cg)
+        return new_cg
+
+    @Part
+    def center_of_gravity(self):
+        return VisualCG(vis_cog=self.cg)
 
     @Part
     def stabilizer(self):
