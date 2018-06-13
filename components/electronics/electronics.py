@@ -5,12 +5,11 @@
 from parapy.core import *
 from parapy.geom import *
 from definitions import *
+from directories import *
 from flightcontroller import FlightController
 from speedcontroller import SpeedController
 from components import Motor
 from collections import Iterable
-
-#  TODO CONNECT THIS CODE TO MAIN!!!
 
 __author__ = "Nelson Johnson"
 __all__ = ["Electronics"]
@@ -20,6 +19,7 @@ class Electronics(Component):
     """  This code will estimate the mass and create the geometry of the avionics
     :returns: ParaPy Geometry of the ESC(s)
     """
+    __icon__ = os.path.join(DIRS['ICON_DIR'], 'electronics.png')
     # TODO The following input will work if tuple list or set. CONNECT WITH MAIN!!!!!!!!!!!!!!!!!!!!!!!
     motor_in = Input(Motor())
 
@@ -41,7 +41,6 @@ class Electronics(Component):
         :rtype: float
         """
         return self.flight_controller.weight + self.speed_controller.weight
-
 
     @Attribute
     def amp_req(self):

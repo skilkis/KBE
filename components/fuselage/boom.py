@@ -5,7 +5,6 @@ from parapy.geom import *  # \
 from parapy.core import *  # / Required ParaPy Modules
 
 from definitions import *
-from directories import *
 from components.liftingsurfaces import CompoundStabilizer, Wing
 from math import radians
 

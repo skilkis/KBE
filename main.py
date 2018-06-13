@@ -194,7 +194,6 @@ class UAV(DesignInput):
 
 #     # TODO Add a nice bar-graph that shows performance, power consumption, drag, etc in the GUI with boxes!
 
-
     @Attribute
     def weights(self):
         return self.weight_and_balance()['WEIGHTS']
