@@ -12,6 +12,8 @@ from components import EOIR, FlightController
 __author__ = ["Nelson Johnson", "Şan Kılkış"]
 __all__ = ["WingPowerLoading"]
 
+# TODO Fix aspect ratio choice
+
 
 class WingPowerLoading(Base):
     """ This class will construct the wing and power loading plot for the fixed wing UAV based on the input MTOW. The

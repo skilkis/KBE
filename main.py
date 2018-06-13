@@ -25,11 +25,12 @@ class UAV(DesignInput):
 
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'plane.png')
 
-    # TODO KEEP IT SIMPLE! THE KBE APP DOESN'T NEED TO SAVE THE WORLD...Automatic tail generation based on automatic cg
-    # TODO Not necessary...might be able to simplify all of our problems by making a final stability calculation, and
-    # TODO then using that to tell the user if it is stable or not
-
     motor_integration = Input('pusher', validator=val.OneOf(['pusher', 'puller']))
+
+    @Input
+    def cg(self):
+        """ Computes an initial-guess for the Center of Gravity Location at Run-Time """
+        return self.weight_and_balance()['CG']
 
     @Part
     def params(self):
@@ -55,7 +56,7 @@ class UAV(DesignInput):
     @Part
     def stability(self):
         #  TODO Make Function for AR_h, e_h
-        return ScissorPlot(x_cg=self.weight_and_balance()['CG'].x,
+        return ScissorPlot(x_cg=self.cg.x,
                            x_ac=self.wing.aerodynamic_center.x,
                            x_lemac=self.wing.lemac,
                            mac=self.wing.mac_length,
@@ -67,6 +68,23 @@ class UAV(DesignInput):
                            Cla_w=self.wing.lift_coef_vs_alpha,
                            delta_xcg=0.1,
                            configuration=self.configuration)
+
+    @Attribute(in_tree=True)
+    def final_cg(self):
+        old_cg = self.cg
+        print 'Run-Time CG = %1.4f' % old_cg.x
+        new_cg = self.weight_and_balance()['CG']
+        loop = 0
+        while abs(old_cg.x - new_cg.x) > 0.005 and loop < 20:
+            loop = loop + 1
+            print 'Current Iteration: ' + str(loop)
+            updated_UAV=self
+            old_cg = updated_UAV.cg
+            print 'Old CG = %1.4f' % old_cg.x
+            new_cg = updated_UAV.weight_and_balance()['CG']
+            print 'New CG = %1.4f' % new_cg.x
+            setattr(self, 'cg', new_cg)
+        return VisualCG(vis_cog=new_cg)
 
     @Part
     def stabilizer(self):
@@ -105,13 +123,14 @@ class UAV(DesignInput):
                         self.motor_integration is 'pusher' else
                         [self.motor, [self.camera, self.electronics], self.battery, self.wing, None])
 
+    # TODO fix motor placement to be better looking
     @Part
     def motor(self):
         return Motor(target_power=(9.81/self.params.power_loading) * self.params.weight_mtow,
                      integration=self.motor_integration,
-                     position=translate(self.wing.position, 'x', 1.2 * self.wing.root_chord, 'z', self.cg.z)
+                     position=translate(self.wing.position, 'x', 1.2 * self.wing.root_chord, 'z', self.weight_and_balance()['CG'].z)
                      if self.motor_integration is 'pusher' else
-                     translate(self.camera.position, 'x', -1 * (self.pad_distance + self.motor.length), 'z', self.cg.z))
+                     translate(self.camera.position, 'x', -1 * (self.pad_distance + self.motor.length), 'z', self.weight_and_balance()['CG'].z))
 
     @Part
     def battery(self):
@@ -124,13 +143,6 @@ class UAV(DesignInput):
     @Part
     def propeller(self):
         return Propeller(motor=self.motor, design_speed=self.params.design_speed)
-
-    # @Part
-    # def electronics(self):
-    #     return Electronics(position=translate(self.wing.position,
-    #                                           'x', self.wing.root_chord / 2.0 + self.electronics.box_length*0.5,
-    #                                           'z', self.wing.internal_shape.bbox.height),
-    #                        motor_in=self.motor)
 
     @Part
     def electronics(self):
@@ -146,10 +158,6 @@ class UAV(DesignInput):
 
 #     # TODO Add a nice bar-graph that shows performance, power consumption, drag, etc in the GUI with boxes!
 
-    @Attribute
-    def cg(self):
-        print self.weight_and_balance()['CG']
-        return self.weight_and_balance()['CG']
 
     @Attribute
     def weights(self):
@@ -264,7 +272,6 @@ class UAV(DesignInput):
             cg_z = sum([weight[i] * cg[i].z for i in range(0, len(weight))]) / total_weight
 
             weight_dict['CG'] = Point(cg_x, cg_y, cg_z)
-
         return weight_dict
 
     def sum_area(self):

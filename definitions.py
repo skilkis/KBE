@@ -19,7 +19,7 @@ class VisualCG(GeomBase):
     __initargs__ = ["vis_cog", "vis_weight"]
     # TODO Find a proper icon here
     vis_cog = Input()
-    vis_weight = Input()
+    scale = Input(0.01)
 
     @Attribute
     def position(self):
@@ -28,7 +28,7 @@ class VisualCG(GeomBase):
 
     @Part
     def visual_cg_location(self):
-        return Sphere(radius=0.01, position=self.position, color='yellow', hidden=self.hidden)
+        return Sphere(radius=self.scale, position=self.position, color='yellow', hidden=self.hidden)
 
 
 class Component(GeomBase):
@@ -38,6 +38,7 @@ class Component(GeomBase):
     position = Input(Position(Point(0, 0, 0)))  # Locks Orientation to that defined inside the component
     inside_fuselage = Input(True)  # Defaults to treating the component as a `sizing_part` used in fuselage construction
     hide_labels = Input(True)
+    hide_cg = Input(True)
 
     # TODO Make a method that automatically finds the proper faces on the YOZ axis
 
@@ -107,7 +108,7 @@ class Component(GeomBase):
 
     @Part
     def cog_sphere(self):
-        return VisualCG(self.center_of_gravity, self.weight)
+        return VisualCG(self.center_of_gravity, hidden=self.hide_cg)
 
 
 class ExternalBody(Component):

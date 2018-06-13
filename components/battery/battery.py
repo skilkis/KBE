@@ -20,6 +20,7 @@ __all__ = ["Battery", "show_primitives"]
 # TODO change show_primitives to be inside class definition and protected variable
 # TODO remove error message since it is already handled by a validator
 # TODO validate batteyr size
+# TODO Add power requirement
 
 # A parameter for debugging, turns the visibility of miscellaneous parts ON/OFF
 show_primitives = False  # type: bool
