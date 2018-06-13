@@ -71,7 +71,8 @@ class Boom(ExternalBody):
         :return: Fused Shape
         :rtype: Fused
         """
-        return ScaledShape(shape_in=self.tail_boom, reference_point=self.tail_boom.position, factor=1, hidden=True)
+        return ScaledShape(shape_in=self.tail_boom, reference_point=self.tail_boom.position, factor=1, hidden=True,
+                           label=self.label)
 
     @Attribute(private=True)
     def internal_shape(self):
