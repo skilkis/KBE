@@ -40,8 +40,6 @@ class Component(GeomBase):
     hide_labels = Input(True)
     hide_cg = Input(True)
 
-    # TODO Make a method that automatically finds the proper faces on the YOZ axis
-
     @Attribute
     def component_type(self):
         """ An identifier to be able to lump masses together.
@@ -116,7 +114,7 @@ class ExternalBody(Component):
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'air.png')
 
     material_choice = Input('cfrp', validator=val.OneOf(['cfrp']))
-    ply_number = Input(1, validator=val.Positive())
+    ply_number = Input(1, val.Instance(int))
 
     @Attribute
     def weight(self):
@@ -124,7 +122,7 @@ class ExternalBody(Component):
 
     @Attribute
     def material_volume(self):
-        ply_thickness = 0.234 * 10e-3
+        ply_thickness = 0.234 * 1e-3
         return self.wetted_area * ply_thickness * float(self.ply_number)
 
     @Attribute

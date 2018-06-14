@@ -21,7 +21,6 @@ __author__ = "Nelson Johnson"
 __all__ = ["Wing"]
 
 
-# class Wing(GeomBase, WingPowerLoading, ClassOne):
 class Wing(ExternalBody, LiftingSurface):
     """ This class will create the wing geometry based on the required:
     Wing Area (class I output), Aspect Ratio (class I input), taper ratio (assumed),
@@ -69,6 +68,10 @@ class Wing(ExternalBody, LiftingSurface):
 
     # THIS IS A TEST PARAMETER
     global_cg = Input(0.0)
+
+    #: Changes the number of ply's of carbon fiber http://www.ijera.com/papers/Vol4_issue5/Version%202/J45025355.pdf
+    #: :type: tuple
+    ply_number = Input(5, validator=val.Instance(int))
 
 #  This block of Attributes calculates the planform parameters. ########------------------------------------------------
     @Attribute

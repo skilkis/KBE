@@ -77,6 +77,10 @@ class VerticalStabilizer(ExternalBody, LiftingSurface):
     #: :type: float
     fuse_width_factor = Input(0.1)
 
+    #: Changes the number of ply's of carbon fiber http://www.ijera.com/papers/Vol4_issue5/Version%202/J45025355.pdf
+    #: :type: tuple
+    ply_number = Input(4, validator=val.Instance(int))
+
 
 # Attributes below------------------------------------------------------------------------------------------------------
     @Attribute

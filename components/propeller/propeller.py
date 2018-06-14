@@ -332,7 +332,7 @@ class Propeller(ExternalBody):
     @Part
     def external_shape(self):
         """ Presents the complete outer propeller shape for wetted area calculation as well as STEP output """
-        return Compound(built_from=[self.propeller, self.propeller_fairing], mesh_deflection=10 ** -4, hidden=True,
+        return Compound(built_from=[self.propeller], mesh_deflection=10 ** -4, hidden=True,
                         label=self.label)
 
     # --- Propeller Geometry Creation: --------------------------------------------------------------------------------

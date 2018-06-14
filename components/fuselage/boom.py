@@ -18,6 +18,10 @@ class Boom(ExternalBody):
     tail_in = Input(CompoundStabilizer())
     diameter_factor = Input(0.75, validator=val.Between(0.5, 1.0))
 
+    #: Changes the number of ply's of carbon fiber http://www.ijera.com/papers/Vol4_issue5/Version%202/J45025355.pdf
+    #: :type: tuple
+    ply_number = Input(3, validator=val.Instance(int))
+
     @Attribute
     def component_type(self):
         return 'boom'

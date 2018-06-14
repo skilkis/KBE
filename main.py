@@ -224,8 +224,12 @@ class UAV(DesignInput):
 
     @Part
     def performance(self):
-        return Performance(motor_in=self.motor, propeller_in=self.propeller, battery_in=self.battery, wing_in=self.wing,
-                           weight_mtow=self.weights['mtow'], parasitic_drag=self.parasite_drag,
+        return Performance(motor_in=self.motor,
+                           propeller_in=self.propeller,
+                           battery_in=self.battery,
+                           wing_in=self.wing,
+                           weight_mtow=self.weights['mtow'],
+                           parasitic_drag=self.parasite_drag,
                            oswald_factor=self.params.wingpowerloading.e_factor, label='Performance')
 
     # Geometry Constraints

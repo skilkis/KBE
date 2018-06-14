@@ -61,6 +61,10 @@ class Fuselage(ExternalBody):
     #: :type: str or Tuple
     color = Input(MyColors.light_grey)
 
+    #: Changes the number of ply's of carbon fiber http://www.ijera.com/papers/Vol4_issue5/Version%202/J45025355.pdf
+    #: :type: tuple
+    ply_number = Input(3, validator=val.Instance(int))
+
     @Attribute
     def component_type(self):
         return 'fuselage'
