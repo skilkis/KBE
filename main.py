@@ -8,7 +8,7 @@
 @version: 1.0
 """
 
-#  TODO !!!!!!!!!!!!!!!!!!   WRITE   OUTPUT    EXCEL    FILE   !!!!!!!!!!!!!!!!!!!!!!
+#  TODO DELIVERABLE:   WRITE   OUTPUT    EXCEL    FILE   !!!!!!!!!!!!!!!!!!!!!!
 
 #  TODO !!!!!! IF AR (for example) CHANGED IN Main Wing INSTANTIATION, SCISSOR PLOT IS NOT UPDATED WITH CORRESP. VALUE!
 #  TODO .... we must update the values in params, and change them ONLY there in the GUI!!!!!!!!!!!!!!!!
@@ -32,7 +32,7 @@
 
 #  TODO every class should have print statement saying that it has been instantiated into the console
 
-#  TODO delete all example and irrelevant documents in KBE folder and rename folder with original name.
+#  TODO delete all example and irrelevant documents & data files in KBE folder and rename folder with original name.
 
 from design import *
 from parapy.core import *
