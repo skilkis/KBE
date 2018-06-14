@@ -5,7 +5,7 @@ from parapy.geom import *  # \
 from parapy.core import *  # / Required ParaPy Modules
 
 # Required Class Definitions
-from definitions import Component
+from definitions import ExternalBody
 from components.motor import *
 
 # Other Modules
@@ -27,7 +27,7 @@ __all__ = ["Propeller"]
 # https://www.southampton.ac.uk/~jps7/Aircraft%20Design%20Resources/Sydney%20aerodynamics%20for%20students/propeller/prop1.html
 
 
-class Propeller(Component):
+class Propeller(ExternalBody):
     """ Always spins in motor direction
 
     Propeller Nomenclature
@@ -89,7 +89,7 @@ class Propeller(Component):
 
     @Attribute
     def component_type(self):
-        return 'payload'
+        return 'prop'
 
     @Attribute
     def weight(self):
@@ -331,9 +331,10 @@ class Propeller(Component):
                                color=MyColors.chill_white)
 
     @Part
-    def internal_shape(self):
-        """ The propeller does not have an internal part, thus a place holder part is created with zero area """
-        return Circle(radius=0, hidden=True)
+    def external_shape(self):
+        """ Presents the complete outer propeller shape for wetted area calculation as well as STEP output """
+        return Compound(built_from=[self.propeller, self.propeller_fairing], mesh_deflection=10 ** -4, hidden=True,
+                        label=self.label)
 
     # --- Propeller Geometry Creation: --------------------------------------------------------------------------------
 
@@ -354,7 +355,7 @@ class Propeller(Component):
 
         # Chord Distribution
         root_chord = self.motor.diameter * 0.25  # Scaled off of the motor to avoid too large of a chord
-        unit_chord_lengths = [1.0, 1.5, 2.5, 2.3, 1.5, 1.3, 1.0, 0.1]  # Scaled w.r.t the root_chord
+        unit_chord_lengths = [0.5, 1.5, 2.5, 2.3, 1.5, 1.3, 1.0, 0.1]  # Scaled w.r.t the root_chord
         chords = [i * root_chord for i in unit_chord_lengths]
 
         # Twist Distribution
@@ -396,7 +397,7 @@ class Propeller(Component):
         """ Instantiates the airfoils used to create the LoftedSolid in attribute `propeller_builder' """
         airfoils = []
         geom = self.propeller_geometry
-        for i in range(0, len(geom['spanwise_loc'])):
+        for i in range(1, len(geom['spanwise_loc'])):
             scaled = ScaledCurve(curve_in=self.airfoil_unit_curve,
                                  reference_point=XOY,
                                  factor=geom['chord_dist'][i])
@@ -409,6 +410,13 @@ class Propeller(Component):
                                                              0,
                                                              geom['spanwise_loc'][i]))
             airfoils.append(translated)
+
+        # Creating a Circle with equivalent points to the airfoils to be able to Loft to a common surface
+        circle_import = Circle(radius=geom['chord_dist'][0]).rotated(XOY.Vz_, radians(90), XOY)
+        rotated_circle = circle_import.reversed.equispaced_points(n=len(self.scaled_airfoil.sample_points))
+        center_circle = FittedCurve(points=rotated_circle)
+        airfoils = [center_circle] + airfoils
+
         return airfoils
 
     @Attribute(private=True)
@@ -421,7 +429,7 @@ class Propeller(Component):
         # TODO Comment here
         prop_top = LoftedSolid(profiles=self.airfoil_builder)
         prop_bottom = MirroredShape(shape_in=prop_top, reference_point=XOY, vector1=XOY.x_, vector2=XOY.y)
-        propeller = Compound(built_from=[prop_top, prop_bottom])
+        propeller = FusedSolid(shape_in=prop_top, tool=prop_bottom)
         return propeller
 
     @Attribute(private=True)
@@ -466,6 +474,11 @@ class Propeller(Component):
         return RotatedShape(shape_in=self.propeller_fairing_import,
                             rotation_point=XOY,
                             vector=XOY.Vy, angle=radians(self.build_direction * 90))
+
+    @Attribute(private=True)
+    def internal_shape(self):
+        """ The propeller does not have an internal part, thus this part is overwritten upon inheritance """
+        return None
 
 
 if __name__ == '__main__':

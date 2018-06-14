@@ -7,6 +7,7 @@
 @author: Şan Kılkış & Nelson Johnson
 @version: 1.0
 """
+
 # TODO Add explanation of main file here
 
 from design import *
@@ -17,6 +18,7 @@ from components import *
 from directories import *
 from definitions import *
 from math import sin, radians
+import copy
 
 
 class UAV(DesignInput):
@@ -75,7 +77,9 @@ class UAV(DesignInput):
 
     @Attribute
     def final_cg(self):
-        """ This parameter is non-lazy to enable proper Center of Gravity location and tail sizing at run-time! """
+        """ This parameter utilizes a loop to find a converged final Center of Gravity that is stable, this step is
+        necessary since at run-time the tail is not yet made and the scissor plot only calculates stability for a
+        tail-less aircraft! """
         old_cg = self.cg
         print 'Run-Time CG = %1.4f' % old_cg.x
         new_cg = self.weight_and_balance()['CG']
@@ -83,7 +87,7 @@ class UAV(DesignInput):
         while abs(old_cg.x - new_cg.x) > 0.005 and loop < 20:
             loop = loop + 1
             print 'Current Iteration: ' + str(loop)
-            new_uav_object = self
+            new_uav_object = copy.copy(self)  # Large Performance improvement from making a copy of the current object!
             old_cg = new_uav_object.cg
             print 'Old CG = %1.4f' % old_cg.x
             new_cg = new_uav_object.weight_and_balance()['CG']
@@ -100,9 +104,37 @@ class UAV(DesignInput):
 
         for _child in children:
             if hasattr(_child, 'external_shape'):
-                output.append(_child.external_shape)
 
-        writer = STEPWriter(output, filename=os.path.join(DIRS['USER_DIR'], 'model', '%s.stp' % self.label))
+                # Special-Case to manually add the left wing due to visualization errors
+                if isinstance(_child, Wing):
+
+                    # Copying the left wing object and changing label for tree organization in a STEP Viewer
+                    left_wing = copy.copy(_child.left_wing)
+                    setattr(left_wing, 'label', 'Left Wing')
+                    output.append(left_wing)
+
+                    # Copying the right wing object and changing label for tree organization in a STEP Viewer
+                    right_wing = copy.copy(_child.solid)
+                    setattr(right_wing, 'label', 'Right Wing')
+                    output.append(right_wing)
+
+                elif isinstance(_child, Propeller):
+
+                    # Copying the Propeller and changing the label for tree organization in the STEP Viewer
+                    prop_copy = copy.copy(_child.propeller)
+                    setattr(prop_copy, 'label', '%s' % _child.label)
+                    output.append(prop_copy)
+
+                    # Copying the Propeller Hub and changing the label for tree organization in the STEP Viewer
+                    hub_copy = copy.copy(_child.propeller_fairing)
+                    setattr(hub_copy, 'label', 'Propeller Hub')
+                    output.append(hub_copy)
+
+                else:
+                    # Appending the current shape to the array to be exported
+                    output.append(_child.external_shape)
+
+        writer = STEPWriter(output, unit='M', filename=os.path.join(DIRS['USER_DIR'], 'model', '%s.stp' % self.label))
         writer.write()
         return writer
 
@@ -356,7 +388,7 @@ class UAV(DesignInput):
 
                 else:
                     area_dict['WETTED']['misc'] = area_dict['WETTED']['misc'] + _child.wetted_area
-                    print Warning("%s does not have an Attribute 'surface_type'"
+                    print Warning("%s does not have an Attribute 'surface_type' "
                                   "it was thus added to the 'misc' category in the area_dictionary" % _child)
         area_dict['WETTED']['total'] = sum(areas)
 
