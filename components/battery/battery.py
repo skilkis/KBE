@@ -91,8 +91,6 @@ class Battery(Component):
                                                                                    self.minimum_capacity))
             else:
                 return e_bat
-        else:
-            return self.type_errormsg
 
     @Attribute
     def volume(self):
