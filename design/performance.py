@@ -11,6 +11,8 @@ from scipy.interpolate import interp1d
 __author__ = ["San Kilkis"]
 __all__ = ["Performance"]
 
+# TODO Comment code
+
 
 class Performance(Base):
 
@@ -165,6 +167,7 @@ class Performance(Base):
         plt.style.use('ggplot')
         plt.title('Power Available and Required as a Function of True Airspeed')
 
+        # TODO add vertical lines for max speed, endurance speed, and cruise speed
         plt.plot(self.prop_speed_range, self.power_available_cont, label='Continuous Power')
         plt.plot(self.prop_speed_range, self.power_available_burst, label='Burst Power')
         plt.plot(self.speed_range, self.parasite_power, label='Parasitic')
