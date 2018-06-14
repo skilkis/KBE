@@ -14,13 +14,10 @@ from wingpowerloading import WingPowerLoading
 from weightestimator import *
 from directories import *
 from designinput import valid_payloads
+from components import EOIR
 
 __author__ = ["Şan Kılkış"]
 __all__ = ["ParameterGenerator"]
-
-# These variables determine the default filename/sheetname(s)
-#filename = "userinput.xlsx"
-#sheetname = "export_ready_inputs"
 
 
 # Function which returns all valid payloads in the directory /components/payload
@@ -37,6 +34,10 @@ class ParameterGenerator(Base):
     configuration = Input('conventional', validator=val.OneOf(['conventional', 'canard', 'flyingwing']))
     handlaunch = Input(True)
     portable = Input(True)
+
+    # @Attribute
+    # def payload_checker(self):
+    #     return EOIR(target_weight=self.performance_goal) if self.target_value is
 
     @Part
     def weightestimator(self):
@@ -55,6 +56,7 @@ class ParameterGenerator(Base):
                                 handlaunch=self.handlaunch)
 
 
+    # TODO make sure that the right payload mass is used for the weight estimation
 #  Below are the attributes which are all the required vaiables for use in other scripts.
     @Attribute
     def weight_mtow(self):

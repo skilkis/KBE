@@ -99,8 +99,7 @@ DIRS = {'ICON_DIR': get_dir('icons'),
         'EOIR_DATA_DIR': get_dir(os.path.join('components', 'payload', 'database', 'eoir')),
         'MOTOR_DATA_DIR': get_dir(os.path.join('components', 'motor', 'database')),
         'PROPELLER_DATA_DIR': get_dir(os.path.join('components', 'propeller', 'database')),
-        'AVL_DIR': get_dir(os.path.join('avl', 'avl.exe')),
-        'AEROPY_DIR': get_dir(os.path.join('aeropy'))}
+        'AVL_DIR': get_dir(os.path.join('avl', 'avl.exe'))}
 
 if __name__ == '__main__':
     print get_dir('user')
