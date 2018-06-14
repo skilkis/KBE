@@ -20,7 +20,7 @@ class Electronics(Component):
     :returns: ParaPy Geometry of the ESC(s)
     """
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'electronics.png')
-    # TODO The following input will work if tuple list or set. CONNECT WITH MAIN!!!!!!!!!!!!!!!!!!!!!!!
+
     motor_in = Input(Motor())
 
     label = Input('Electronics')

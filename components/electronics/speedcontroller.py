@@ -20,6 +20,7 @@ class SpeedController(Component):
     ESCs stacked vertically, and the COG displayed at the end is the combined COG of all ESCs.
     :returns: ParaPy Geometry of the ESC(s)
     """
+    __icon__ = os.path.join(DIRS['ICON_DIR'], 'electricity.png')
 
     #:  This is the recommended ESC amperage from the chosen motor(s). In the case of multiple motors, this is the total
     #:  amperage.

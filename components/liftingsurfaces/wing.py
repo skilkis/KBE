@@ -30,6 +30,8 @@ class Wing(ExternalBody, LiftingSurface):
     It also can perform an avl analysis on the wing to obtain the linear value of C_L vs alpha.
     """
 
+    __icon__ = os.path.join(DIRS['ICON_DIR'], 'liftingsurface.png')
+
 #  This block of code contains the inputs. ########---------------------------------------------------------------------
     #: Below is the required wing loading from the class I weight estimation.
     #: :type: float
@@ -262,7 +264,7 @@ class Wing(ExternalBody, LiftingSurface):
          :return: AVL List of RunCases
          :rtype: Case
          """
-        alphas = np.linspace(-10, 20, 5)
+        alphas = np.linspace(-10, 20, 25)
         alpha_case = []
         for i in range(0, len(alphas)):
             alpha_case.append(Case(name='alpha%s' % i,

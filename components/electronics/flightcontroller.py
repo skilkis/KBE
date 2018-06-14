@@ -5,6 +5,7 @@
 from parapy.core import *
 from parapy.geom import *
 from definitions import *
+from directories import *
 
 
 __author__ = ["Nelson Johnson"]
@@ -15,6 +16,7 @@ class FlightController(Component):
     """ This class will create the Navio2 flight controller geometry.
     :returns: ParaPy Geometry of the flight computer
     """
+    __icon__ = os.path.join(DIRS['ICON_DIR'], 'chip.png')
 
     #: Navio 2 Flight computer dimensions are below source: https://emlid.com/navio/
     #:  The 65mm length is the longest dimension and is to be oriented parallel with the x axis.
