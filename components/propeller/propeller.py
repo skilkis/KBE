@@ -298,7 +298,6 @@ class Propeller(ExternalBody):
         plt.xlabel(r'$V_{\mathrm{TAS}}$ [m/s]')
         plt.ylabel(r'$\eta_{\mathrm{prop}}$ [-]')
         plt.legend(loc='lower right')
-        plt.ion()
         plt.show()
         fig.savefig(fname=os.path.join(DIRS['USER_DIR'], 'plots', '%s.pdf' % fig.get_label()), format='pdf')
         return "Plot generated and saved"
