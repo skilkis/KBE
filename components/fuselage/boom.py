@@ -11,6 +11,8 @@ from math import radians
 __author__ = ["Şan Kılkış", "Nelson Johnson"]
 __all__ = ["Boom"]
 
+#  TODO wing and tain _in validators
+
 
 class Boom(ExternalBody):
 

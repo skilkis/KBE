@@ -8,10 +8,17 @@
 @version: 1.0
 """
 
-#  TODO Add explanation of main file here
-
 #  TODO !!!!!! IF AR (for example) CHANGED IN Main Wing INSTANTIATION, SCISSOR PLOT IS NOT UPDATED WITH CORRESP. VALUE!
-#  TODO we must update the values in params, and change them there in the GUI!!!!!!!!!!!!!!!!
+#  TODO .... we must update the values in params, and change them ONLY there in the GUI!!!!!!!!!!!!!!!!
+
+#  TODO CHECK THE CG LOOP CONVERGENCE. SEE OLD CG AND NEW CG SIMPLY CHANGE SPOTS, IT IS INFINITE!!!!!
+
+#  TODO MAKE final_cg NON LAZY OR USER SEES WRONG TAIL!!!!!!!!!!!!!!!!!!
+#  TODO Make sure vt weight is correct in final weight for changes in the GUI ......
+#  TODO cont'd .....I tried changing # plys on right wing in GUI but cg stayed on x ax
+
+
+#  TODO FIX PLAYLOAD MASS IN FINAL MTOW TO CORRESPOND WITH WING/ TAIL SIZING & CLASS I!!!!!!!!!!!
 
 #  TODO add tkMessagebox browser to payloads
 #  TODO Add listener? for browse airfoils in lifting surface, or all to invalidate attribute

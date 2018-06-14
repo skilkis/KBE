@@ -18,6 +18,8 @@ class FCone(GeomBase):
 
 
     # TODO cleanup init args and inputs, write documentation
+    # TODO ADD VALIDATORS TO INPUTS!
+
     __initargs__ = ["support_frame", "side_tangent", "top_tangent", "direction", "tip_point_z"]
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'cone.png')
 
@@ -105,6 +107,7 @@ class FCone(GeomBase):
                              reference_point=self.position,
                              vector1=self.position.Vx_,
                              vector2=self.position.Vz)
+
 
 if __name__ == '__main__':
     from parapy.gui import display

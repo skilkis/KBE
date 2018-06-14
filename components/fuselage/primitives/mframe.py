@@ -5,7 +5,8 @@
 from parapy.geom import *
 from parapy.core import *
 
-#TODO Allow this to work with any input position
+#  TODO Allow this to work with any input position
+#  TODO add validator on position input?
 
 __author__ = ["Şan Kılkış"]
 __all__ = ["MFrame"]

@@ -27,6 +27,7 @@ __all__ = ["Fuselage"]
 class Fuselage(ExternalBody):
 
     # TODO Class description and use cases
+    # TODO compartment_type and sizing_parts validators
 
     __initargs__ = ["compartment_type", "sizing_parts"]
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'fuselage.png')
@@ -47,15 +48,15 @@ class Fuselage(ExternalBody):
 
     #: Initiates the automatic frame minimization WARNING: May lead to intersecting surfaces
     #: :type: bool
-    minimize_frames = Input(False)
+    minimize_frames = Input(False, validator=val.Instance(bool))
 
     #: Linearly joins the frames of the center fuselage WARNING: May lead to errors at the tail cone
     #: :type: bool
-    ruled = Input(False)
+    ruled = Input(False, validator=val.Instance(bool))
 
     #: Toggles transparency of the fuselage
     #: :type: bool
-    make_transparent = Input(False)
+    make_transparent = Input(False, validator=val.Instance(bool))
 
     #: Sets the color of the fuselage (Overwritten from the default yellow)
     #: :type: str or Tuple
