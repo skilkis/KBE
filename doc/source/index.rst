@@ -9,11 +9,9 @@ Welcome to KBE's documentation!
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
-.. autoclass:: EOIR
-   :members:
-.. automodule:: components.propeller.propeller
-   :members:
-   :inherited-members:
+
+   electronics
+   liftingsurface
 
 
 
