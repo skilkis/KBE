@@ -25,31 +25,45 @@ class SpeedController(Component):
     #:  This is the recommended ESC amperage from the chosen motor(s). In the case of multiple motors, this is the total
     #:  amperage.
     #: :type: float
-    amp_recc = Input(40.0)
+    amp_recc = Input(40.0, validator=val.Positive())
 
     #:  This is the number of engines.
     #: :type: float
-    num_engines = Input(1)  # This is the number of engines
+    num_engines = Input(1, validator=val.Positive())  # This is the number of engines
 
     #:  This is the amp rating for ESCs found on hobbyking covering our spectrum of motor options in our motor database.
     #: :type: list
-    amp_range = [6.0, 20.0, 30.0, 40.0, 60.0, 100.0, 120.0]
+    @Attribute
+    def amp_range(self):
+        return [6.0, 20.0, 30.0, 40.0, 60.0, 100.0, 120.0]
 
     #:  This is corresponding weights of the ESCs found on hobbyking
     #: :type: list
-    weight_range = [0.006, 0.017, 0.021, 0.036, 0.063, 0.081, 0.164]
+    @Attribute
+    def weight_range(self):
+        return [0.006, 0.017, 0.021, 0.036, 0.063, 0.081, 0.164]
 
     #:  This is corresponding volumes of the ESC's in cubic m.
     #: :type: list
-    volume_range = [1728*10**-9, 7560*10**-9, 7560*10**-9, 15444*10**-9, 19200*10**-9, 22400*10**-9, 43428*10**-9]
+    @Attribute
+    def volume_range(self):
+        return [1728*10**-9, 7560*10**-9, 7560*10**-9, 15444*10**-9, 19200*10**-9, 22400*10**-9, 43428*10**-9]
 
     #:  Below are the constant Navio 2 Flight computer dimensions
     #:  The ESC is assumed have the same cross secitonal dims (when looking perpendicular to x-y plane) as the flight
     #: controller and will change in height based on the required amperage (which changes the ESC size).
-    l_navio = 0.065
-    w_navio = 0.055
-    h_navio = 0.017
-    #  For box function: Width is x direction, length is y direction, height is z direction.
+    #:  For box function: Width is x direction, length is y direction, height is z direction.
+    @Attribute
+    def l_navio(self):
+        return 0.065
+
+    @Attribute
+    def w_navio(self):
+        return 0.055
+
+    @Attribute
+    def h_navio(self):
+        return 0.017
 
     @Attribute
     def component_type(self):
@@ -102,8 +116,8 @@ class SpeedController(Component):
         :rtype: float
         """
         gradientt, interceptt, r_valuee, p_valuee, std_errr = stats.linregress(self.amp_range, self.weight_range)
-        print "Weight Regression Gradient and intercept", gradientt, interceptt
-        print "Weight Regression R-squared", r_valuee ** 2
+        #  print "Weight Regression Gradient and intercept", gradientt, interceptt
+        #  print "Weight Regression R-squared", r_valuee ** 2
         if self.num_engines == 1:
             esc_weight = self.amp_recc * gradientt + interceptt
         else:
@@ -124,8 +138,8 @@ class SpeedController(Component):
         :rtype: float
         """
         gradient, intercept, r_value, p_value, std_err = stats.linregress(self.amp_range, self.volume_range)
-        print "Volume Regression Gradient and intercept", gradient, intercept
-        print "Volume Regression R-squared", r_value ** 2
+        #  print "Volume Regression Gradient and intercept", gradient, intercept
+        #  print "Volume Regression R-squared", r_value ** 2
         if self.num_engines == 1:
             esc_size = self.amp_recc * gradient + intercept
         else:

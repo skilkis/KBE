@@ -8,7 +8,6 @@ from math import *
 import numpy as np
 import matplotlib.pyplot as plt
 import json
-
 from primitives import LiftingSurface
 from directories import *
 from definitions import *
@@ -16,6 +15,10 @@ from user import MyColors
 
 #  Import AVL wrapper written by Reno El Mendorp. https://github.com/renoelmendorp/AVLWrapper
 from avl import Geometry, Surface, Section, Point, Spacing, Session, Case, FileAirfoil
+
+#  TODO FIX BUG IN WING WETTED AREA CALCULATION, DUE TO WING MIRROR JUNCTION OF EXTERNAL SHAPE!!!!! see low AR wing.py
+#  TODO FIX show_avl_geom IF POSSIBLE
+#  TODO Compare CL_max with assumed as well as plot with LLT
 
 __author__ = "Nelson Johnson"
 __all__ = ["Wing"]
@@ -41,33 +44,33 @@ class Wing(ExternalBody, LiftingSurface):
 
     #: The stall speed of the wing
     #: :type: float
-    stall_speed = Input(8.0)
+    stall_speed = Input(8.0, validator=val.Positive())
 
     #: Below is the ISA STD sea level density.
     #: :type: float
-    rho = Input(1.225)
+    rho = Input(1.225, validator=val.Positive())
 
     #: Below is the assumed factor of the semi_span which the fuselage extends over the wing.
     #: :type: float
-    fuse_width_factor = Input(0.07)
+    fuse_width_factor = Input(0.05, validator=val.Range(0.001, 0.5))
 
     #: Below is the a switch to hide/show the bbox of the wing section within the fuselage.
     #: :type: boolean
-    hide_bbox = Input(False)
+    hide_bbox = Input(False, validator=val.Instance(bool))
 
     #: Overwrites input from LiftingSurface to hide the Mean Aerodynamic Chord part
-    hide_mac = Input(True)
+    hide_mac = Input(True, validator=val.Instance(bool))
 
     #: Below is the chosen mesh deflection. It's is an optimum point between a good quality render and performance
     #: :type: float
-    mesh_deflection = Input(0.0001)
+    mesh_deflection = Input(0.0001, validator=val.Range(0.00001, 0.001))
 
     #: Changes the color of the wing skin to the one defined in MyColors
     #: :type: tuple
     color = Input(MyColors.skin_color)
 
     # THIS IS A TEST PARAMETER
-    global_cg = Input(0.0)
+    global_cg = Input(0.0, validator=val.Instance(float))
 
     #: Changes the number of ply's of carbon fiber http://www.ijera.com/papers/Vol4_issue5/Version%202/J45025355.pdf
     #: :type: tuple
@@ -99,7 +102,6 @@ class Wing(ExternalBody, LiftingSurface):
         :rtype: float
         """
         return (self.weight_mtow * 9.81) / self.wing_loading
-        # TODO wing loading is in N/m^2 thus we have to have a global variable for g
 
     @Attribute
     def planform_area(self):
@@ -246,19 +248,6 @@ class Wing(ExternalBody, LiftingSurface):
                         reference_point=Point(0.0, 0.0, 0.0),
                         surfaces=[self.wing_surface])
 
-    # @Attribute(private=True)
-    # def tail_surface(self):
-    #     return Surface(name="Horizontal Stabiliser",
-    #                        n_chordwise=8,
-    #                        chord_spacing=Spacing.cosine,
-    #                        n_spanwise=8,
-    #                        span_spacing=Spacing.cosine,
-    #                        y_duplicate=0.0,
-    #                        sections=[Section(leading_edge_point=Point(3.5, 0, 0.2),
-    #                                          chord=0.4),
-    #                                  Section(leading_edge_point=Point(3.7, 1.2, 0.2),
-    #                                          chord=0.25)])
-
     @Attribute(private=True)
     def alpha_cases(self):
         """"  Here we define the run cases for AVL. We are running input cases alpha from 0 to 10 with 25 data points, at
@@ -286,7 +275,7 @@ class Wing(ExternalBody, LiftingSurface):
     @Attribute
     def show_avlgeom(self):
         """"  Here we show the AVL geometry. NOTE: THERE IS A BUG HERE, IF DOUBLE CLICKED IN GUI, IT SHOWS BUT CAUSES
-         PYTHON TO FREEZE. THE CODE MUST BE STOPPED AND RESTARTED IF THE GEOMETRY IS SHOWN. TODO FIX THIS IF POSSIBLE
+         PYTHON TO FREEZE. THE CODE MUST BE STOPPED AND RESTARTED IF THE GEOMETRY IS SHOWN.
          :return: AVL Geometry
          :rtype: AVL PltLib Viewer
          """
@@ -303,7 +292,6 @@ class Wing(ExternalBody, LiftingSurface):
 
     @Attribute(private=True)
     def avl_data_grabber(self):
-        # TODO Compare CL_max with assumed as well as plot with LLT
         """  Here, the cl vs alpha plot is created and the constant C_L vs alpha value is found.
         :return: Plot and float
         :rtype: dict
@@ -330,7 +318,6 @@ class Wing(ExternalBody, LiftingSurface):
     @Attribute
     def lift_coef_vs_alpha(self):
         """
-
         :return: Lift Coefficient Gradient [1/rad]
         """
         cl = self.avl_data_grabber['lift_coefs']

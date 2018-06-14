@@ -21,15 +21,21 @@ class FlightController(Component):
     #: Navio 2 Flight computer dimensions are below source: https://emlid.com/navio/
     #:  The 65mm length is the longest dimension and is to be oriented parallel with the x axis.
     #: :type: float
-    l_navio = 0.065
+    @Attribute
+    def l_navio(self):
+        return 0.065
 
     #:  The 55mm width is to be oriented parallel with the y axis.
     #: :type: float
-    w_navio = 0.055
+    @Attribute
+    def w_navio(self):
+        return 0.055
 
     #:  The 17mm height is assumed!!! It is to be oriented parallel with the y axis.
     #: :type: float
-    h_navio = 0.017
+    @Attribute
+    def h_navio(self):
+        return 0.017
 
     @Part
     def flightcontroller_offset(self):

@@ -21,6 +21,7 @@ class Electronics(Component):
     """
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'electronics.png')
 
+    #  If multiple motors put in, give [] within input parentheses
     motor_in = Input(Motor())
 
     label = Input('Electronics')
@@ -90,16 +91,6 @@ class Electronics(Component):
     def box_length(self):
         return self.flight_controller.l_navio
 
-    # @Part
-    # def fc_internal_shape(self):
-    #     """ This is creating a box for the fuselage frames. This is used to get around ParaPy errors.
-    #     :return: Speed Controller(s) bounded box
-    #     :rtype: ScaledShape
-    #     """
-    #     return ScaledShape(shape_in=self.flight_controller.solid,
-    #                        reference_point=self.flight_controller.center_of_gravity,
-    #                        factor=1, transparency=0.7)
-
     @Attribute
     def elec_joiner(self):
         """ This joins the ESC's together through a series of Fuse operations to be able to present a
@@ -117,16 +108,6 @@ class Electronics(Component):
         else:
             shape_out = parts_in[0]
         return shape_out
-    #
-    # @Part
-    # def sc_internal_shape(self):
-    #     """ This is creating a box for the fuselage frames. This is used to get around ParaPy errors.
-    #     :return: Speed Controller(s) bounded box
-    #     :rtype: ScaledShape
-    #     """
-    #     return ScaledShape(shape_in=self.speed_controller.esc_joiner,
-    #                        reference_point=self.speed_controller.center_of_gravity,
-    #                        factor=1, transparency=0.7)
 
     @Attribute
     def center_of_gravity(self):

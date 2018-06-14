@@ -12,7 +12,7 @@ from components import EOIR, FlightController
 __author__ = ["Nelson Johnson", "Şan Kılkış"]
 __all__ = ["WingPowerLoading"]
 
-# TODO Fix aspect ratio choice
+# TODO Fix aspect ratio choice, add validator
 
 
 class WingPowerLoading(Base):
@@ -43,7 +43,7 @@ class WingPowerLoading(Base):
     #: This is a list of three Aspect Ratios that the wing is assumed to generate. This creates multiple lines on
     #: the plots.
     #: :type: List
-    # TODO Make this a proper implementation of Iterable comprehension
+    # TODO Make this a proper implementation of Iterable comprehension, add validator
     @Input
     def AR(self):
         return [6, 10] if self.handlaunch else [10, 20]

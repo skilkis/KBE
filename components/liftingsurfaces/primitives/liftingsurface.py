@@ -3,9 +3,12 @@
 
 """
   This script will generate a lifting surface primitive for the KBE app.
-  The surface type can be straight, tapered and swept swept wing.
+  The surface type can be straight, tapered and swept.
   In the future, we would like to add functionality for elliptical wings.
 """
+
+#  TODO ADD VALIDATOR FOR AIRFOIL TYPE & CHOICE, OFFSET. ALSO IN HORIZONTAL AND VERTICAL STAB!!!!!!!
+
 
 from parapy.core import *           # / Required ParaPy Module
 from parapy.geom import *           # / Required ParaPy Module
@@ -13,7 +16,8 @@ from math import *                  # / Python math operations.
 from directories import *           # / Project Directory
 # from collections import namedtuple  # / Allows creation of named tuples similar to Point
 from Tkinter import *
-import Tkinter, Tkconstants, tkFileDialog, tkMessageBox
+import tkFileDialog
+import tkMessageBox
 
 __author__ = "Nelson Johnson"
 __all__ = ["LiftingSurface"]
@@ -33,38 +37,24 @@ class LiftingSurface(GeomBase):
 
     #: Below is the Required Planfrom Area, if mirrored is true then this is the total wing area
     #: :type: float
-    planform_area = Input(0.8)
-
-    #: A switch case that determines if the `planform_area` is half of the total required area
-    #: :type: bool
-    is_half = Input(False)
+    planform_area = Input(0.8, validator=val.Positive())
 
     #: Below is the required Aspect Ratio of the Surface.
     #: :type: float
-    aspect_ratio = Input(9.0)
+    aspect_ratio = Input(9.0, validator=val.Range(1.0, 30.0))
 
     #: Below is the Taper Ratio, which is chosen by the user.
     #: :type: float
-    taper = Input(0.6)
+    taper = Input(0.3, validator=val.Range(0.1, 1.0))
 
     #: Below is the User chosen Dihedral Angle.
     #: :type: float
-    dihedral = Input(5.0)
+    dihedral = Input(5.0, validator=val.Range(-10.0, 10.0))
 
     #: Below is the twist of the tip section with respect to the root section. Positive twist is tip twisted up
     #: with respect to the root.
     #: :type: float
-    twist = Input(-5.0)
-
-    #: Below is the name of the folder within the 'airfoils' folder. There are three options: 'cambered', 'reflexed' and
-    #: 'symmetric'.
-    #: :type: str
-    airfoil_type = Input('cambered', validator=val.OneOf(['cambered', 'reflexed', 'symmetric']))
-
-    #: Below is the default airfoil. Please see the three folders to find the correct filename, if you wish to change
-    #: the airfoil.
-    #: :type: str
-    airfoil_choice = Input('SD7062')
+    twist = Input(-5.0, validator=val.Range(-5.0, 5.0))
 
     #: Below is the offset in the flow direction of the tip W.R.T. the root Leading Edge. The default input (None)
     #: causes the TE to be unswept (offset = c_r-c_t), however, if the user inputs 0 in the GUI, then the leading
@@ -72,19 +62,6 @@ class LiftingSurface(GeomBase):
     #: :type: NoneType or float
     offset = Input(None)
 
-    #: Boolean below allows the MAC curve to be shown on the wing when changed in the GUI to False.
-    #: :type: bool
-    hide_mac = Input(True)
-
-    #: Boolean below allows the leading edge line to be shown (without dihedral).
-    #: :type: bool
-    hide_leading_edge = Input(True)
-
-    #: The default value is an optimum between a good quality render and performance
-    #: :type: float
-    mesh_deflection = Input(0.0001)
-
-    # Airfoil Chooser
     @Input
     def browse_airfoils(self):
         """ Allows the user to easily choose amongst available airfoils with a GUI File-Browser
@@ -110,6 +87,32 @@ class LiftingSurface(GeomBase):
                 self.airfoil_type = str(path.split('.')[-2].split('/')[-2])  # Selects the folder-name
 
         return self.airfoil_choice, self.airfoil_type
+
+    #: Boolean below allows the MAC curve to be shown on the wing when changed in the GUI to False.
+    #: :type: bool
+    hide_mac = Input(True, validator=val.Instance(bool))
+
+    #: Boolean below allows the leading edge line to be shown (without dihedral).
+    #: :type: bool
+    hide_leading_edge = Input(True, validator=val.Instance(bool))
+
+    #: A switch case that determines if the `planform_area` is half of the total required area
+    #: :type: bool
+    is_half = Input(False, validator=val.Instance(bool))
+
+    #: The default value is an optimum between a good quality render and performance
+    #: :type: float
+    mesh_deflection = Input(0.0001, validator=val.Range(0.00001, 0.001))
+
+    #: Below is the name of the folder within the 'airfoils' folder. There are three options: 'cambered', 'reflexed' and
+    #: 'symmetric'.
+    #: :type: str
+    airfoil_type = Input('cambered', validator=val.OneOf(['cambered', 'reflexed', 'symmetric']))
+
+    #: Below is the default airfoil. Please see the three folders to find the correct filename, if you wish to change
+    #: the airfoil.
+    #: :type: str
+    airfoil_choice = Input('SD7062')
 
 #  This block of Attributes calculates the planform parameters. ########------------------------------------------------
     @Attribute
@@ -393,6 +396,7 @@ class LiftingSurface(GeomBase):
         return LineSegment(start=root_spar_point,
                            end=tip_spar_point,
                            color='yellow')
+
 
 if __name__ == '__main__':
     from parapy.gui import display

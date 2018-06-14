@@ -11,7 +11,7 @@ from definitions import ExternalBody
 __author__ = ["Nelson Johnson"]
 __all__ = ["CompoundStabilizer"]
 
-# TODO Define proper ExternalBody attributes
+#  TODO fix error when hide_label changed to false and it is displayed from tree.
 
 
 class CompoundStabilizer(ExternalBody):
@@ -43,7 +43,7 @@ class CompoundStabilizer(ExternalBody):
 
     #: Below is a switch to determine the configuration.
     #: :type: str
-    configuration = Input('conventional', validator=val.OneOf(['canard', 'conventional']), settable=False)
+    configuration = Input('conventional', validator=val.OneOf(['conventional']), settable=False)
 
     #: Below is the assumed VT aspect ratio.
     #: :type: float

@@ -9,6 +9,8 @@ from primitives import LiftingSurface
 from definitions import *
 from user import MyColors
 
+#  TODO ADD VALIDATOR FOR AIRFOIL TYPE & CHOICE, OFFSET. ALSO IN LIFTING SURF AND HORIZONTAL STAB!!!!!!!
+
 __author__ = ["Nelson Johnson"]
 __all__ = ["VerticalStabilizer"]
 
@@ -22,24 +24,24 @@ class VerticalStabilizer(ExternalBody, LiftingSurface):
 
     #: Below is the required TOTAL wing area of the main wings.
     #: :type: float
-    wing_planform_area = Input(0.8)
+    wing_planform_area = Input(0.8, validator=val.Positive())
 
     #: Below is the MAC length of the wing
     #: :type: float
-    wing_mac_length = Input(0.43)
+    wing_mac_length = Input(0.43, validator=val.Positive())
 
     #: Below is the semispan of the wing
     #: :type: float
-    wing_semi_span = Input(1.9)
+    wing_semi_span = Input(1.9, validator=val.Positive())
 
     #: Below is non-dimensionalized vertical tail arm for the conventional plane.
     #: :type: float
-    lvc = Input(3.0)
+    lvc = Input(3.0, validator=val.Instance(float))
 
     #: Below is non-dimensionalized vertical tail arm for the canard plane. Note for the canard the VTP is is much
     # closer to the main wing!
     #: :type: float
-    lvc_canard = Input(0.5)
+    lvc_canard = Input(0.5, validator=val.Instance(float))
 
     #: Below is a switch to determine the configuration.
     #: :type: str
@@ -47,27 +49,19 @@ class VerticalStabilizer(ExternalBody, LiftingSurface):
 
     #: Below is the assumed VT aspect ratio.
     #: :type: float
-    aspect_ratio = Input(1.4)
+    aspect_ratio = Input(1.4, validator=val.Positive())
 
     #: This sets `overwrites` the is_half parameter from the class `LiftingSurface`
     #: type: float
-    is_half = Input(True)
+    is_half = Input(True, validator=val.Instance(bool))
 
     #: Below is the assumed VT taper ratio.
     #: :type: float
-    taper = Input(0.35)
+    taper = Input(0.35, validator=val.Range(0.1, 1.0))
 
     #:  This is the wing twist for the VT.
     #: :type: float
-    twist = Input(0.0)
-
-    #:  This is the airfoil type for the VT. This must contain the correct folder name to the airfoils.
-    #: :type: str
-    airfoil_type = Input('symmetric')
-
-    #:  This is the airfoil filename for the VT. This must contain the correct filename name of the airfoil.
-    #: :type: str
-    airfoil_choice = Input('NACA0012')
+    twist = Input(0.0, validator=val.Range(-5.0, 5.0))
 
     #: Below is the chosen trailing edge offset.
     #: :type: NoneType or float
@@ -75,7 +69,15 @@ class VerticalStabilizer(ExternalBody, LiftingSurface):
 
     #: Below is the assumed factor relating the part of the VT covered by fuse to semispan
     #: :type: float
-    fuse_width_factor = Input(0.1)
+    fuse_width_factor = Input(0.1, validator=val.Range(0.001, 0.5))
+
+    #:  This is the airfoil type for the VT. This must contain the correct folder name to the airfoils.
+    #: :type: str
+    airfoil_type = Input('symmetric', validator=val.OneOf(['cambered', 'reflexed', 'symmetric']))
+
+    #:  This is the airfoil filename for the VT. This must contain the correct filename name of the airfoil.
+    #: :type: str
+    airfoil_choice = Input('NACA0012')
 
     #: Changes the number of ply's of carbon fiber http://www.ijera.com/papers/Vol4_issue5/Version%202/J45025355.pdf
     #: :type: tuple

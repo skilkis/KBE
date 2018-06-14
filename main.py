@@ -8,7 +8,20 @@
 @version: 1.0
 """
 
-# TODO Add explanation of main file here
+#  TODO Add explanation of main file here
+
+#  TODO !!!!!! IF AR (for example) CHANGED IN Main Wing INSTANTIATION, SCISSOR PLOT IS NOT UPDATED WITH CORRESP. VALUE!
+#  TODO we must update the values in params, and change them there in the GUI!!!!!!!!!!!!!!!!
+
+#  TODO add tkMessagebox browser to payloads
+#  TODO Add listener? for browse airfoils in lifting surface, or all to invalidate attribute
+
+# TODO Add instance validator for each class input (check out performance.py for example)
+# TODO Make a nice visual CG representation of both c.g. before and after run
+
+#  TODO increase size of VT. They look too small when handlaunch = false
+
+#  TODO every class should have print statement saying that it has been instantiated into the console
 
 from design import *
 from parapy.core import *
@@ -19,9 +32,6 @@ from directories import *
 from definitions import *
 from math import sin, radians
 import copy
-
-# TODO Add instance validator for each class input (check out performance.py for example)
-# TODO Make a nice visual CG representation of both c.g. before and after run
 
 
 class UAV(DesignInput):

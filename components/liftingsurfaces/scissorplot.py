@@ -13,6 +13,8 @@ from directories import *
 __author__ = "Nelson Johnson"
 __all__ = ["ScissorPlot"]
 
+#  TODO MAKE SURE THAT THE ASPECT RATIO IS CONSISTENT WHEN CHANGED IN OTHER PLACES OF THE GUI. SEE TODO IN MAIN!!!!!!!!
+
 
 class ScissorPlot(Base):
     """  This script will generate a scissor plot to size the horizontal tail (HT). The required inputs are: the
@@ -24,23 +26,23 @@ class ScissorPlot(Base):
 #  This block of code contains the inputs. ########---------------------------------------------------------------------
     #: Below is the current COG position
     #: :type: float
-    x_cg = Input(0.3)
+    x_cg = Input(0.3, validator=val.Instance(float))
 
     #: Below is the current Aerodynamic Center position
     #: :type: float
-    x_ac = Input(0.1)
+    x_ac = Input(0.1, validator=val.Instance(float))
 
     #: Below is the current leading edge of the MAC position
     #: :type: float
-    x_lemac = Input(0.0)
+    x_lemac = Input(0.0, validator=val.Instance(float))
 
     #: Below is the MAC length
     #: :type: float
-    mac = Input(1.0)
+    mac = Input(1.0, validator=val.Instance(float))
 
     #: Below is the wing aspect ratio.
     #: :type: float
-    AR = Input(12.0, validator=val.Positive())
+    AR = Input(9.0, validator=val.Range(1.0, 30.0))
 
     #: Below is the wing span efficiency factor
     #: :type: float
@@ -54,7 +56,7 @@ class ScissorPlot(Base):
     #: :type: float
     k_factor = Input(1.0, validator=val.Positive())
 
-    #: Below is the assumed Safety Margin.
+    #: Below is the assumed Stability Margin.
     #: :type: float
     SM = Input(0.05, validator=val.Positive())
 
@@ -84,7 +86,7 @@ class ScissorPlot(Base):
 
     #: Below is the pitching moment about the aerodynamic center of the wing. This is calculated with AVL in 'wing.py'.
     #: :type: float
-    C_mac = Input(-0.32)
+    C_mac = Input(-0.32, validator=val.Range(-2.0, 2.0))
 
     #: Below is the lift curve slope of the wing. This is calculated with AVL in 'wing.py'.
     #: :type: float
@@ -96,7 +98,7 @@ class ScissorPlot(Base):
 
     #: Below is a switch to determine the configuration.
     #: :type: str
-    configuration = Input('conventional', validator=val.OneOf(['canard', 'conventional']))
+    configuration = Input('conventional', validator=val.OneOf(['conventional']))
 
     @Input
     def lhc(self):
@@ -212,7 +214,6 @@ class ScissorPlot(Base):
 
     @Attribute
     def shs_sm(self):
-        #  TODO add error if there's a negative Sh/S output. Solution is to increase Cl_h or tail arm or reduce Cl_w
         """ This attribute will calculate the required Sh/S based on the required cg shift.
         :return: Required Sh/S.
         :rtype: float

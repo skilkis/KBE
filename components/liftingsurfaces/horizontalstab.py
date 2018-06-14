@@ -8,7 +8,8 @@ from scissorplot import ScissorPlot
 from definitions import *
 from user import MyColors
 
-# TODO CONNECT WEIGHT TO MAIN!!!!!!!!!!
+#  TODO ADD VALIDATOR FOR AIRFOIL TYPE & CHOICE, OFFSET. ALSO IN LIFTING SURF AND VERTICAL STAB!!!!!!!
+
 __author__ = ["Nelson Johnson"]
 __all__ = ["HorizontalStabilizer"]
 
@@ -29,24 +30,15 @@ class HorizontalStabilizer(ExternalBody, LiftingSurface):
 
     #: Below is the required HT taper ratio.
     #: :type: float
-    #taper = Input(0.5, validator=val.Positive())
     taper = 1.0
 
     #: Below is the tail dihedral angle.
     #: :type: float
-    dihedral = Input(0.0)
+    dihedral = 0.0
 
     #: Below is the tail wing twist angle.
     #: :type: float
-    twist = Input(-0.0)
-
-    #: Below is the tail airfoil type. The input must correspond to an existing folder.
-    #: :type: str
-    airfoil_type = Input('symmetric', validator=val.OneOf(['cambered', 'reflexed', 'symmetric']))
-
-    #: Below is the tail airfoil DAT file. The input must correspond to an existing filename.
-    #: :type: str
-    airfoil_choice = Input('NACA0012')
+    twist = Input(0.0, validator=val.Range(-5.0, 5.0))
 
     #: Below is the chosen trailing edge offset.
     #: :type: NoneType or float
@@ -59,6 +51,14 @@ class HorizontalStabilizer(ExternalBody, LiftingSurface):
     #: Changes the color of the wing skin to the one defined in MyColors
     #: :type: tuple
     color = Input(MyColors.skin_color)
+
+    #: Below is the tail airfoil type. The input must correspond to an existing folder.
+    #: :type: str
+    airfoil_type = Input('symmetric', validator=val.OneOf(['cambered', 'reflexed', 'symmetric']))
+
+    #: Below is the tail airfoil DAT file. The input must correspond to an existing filename.
+    #: :type: str
+    airfoil_choice = Input('NACA0012')
 
     #: Changes the number of ply's of carbon fiber http://www.ijera.com/papers/Vol4_issue5/Version%202/J45025355.pdf
     #: :type: tuple

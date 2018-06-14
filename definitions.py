@@ -35,10 +35,10 @@ class Component(GeomBase):
 
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'gear.png')
 
-    position = Input(Position(Point(0, 0, 0)))  # Locks Orientation to that defined inside the component
-    inside_fuselage = Input(True)  # Defaults to treating the component as a `sizing_part` used in fuselage construction
-    hide_labels = Input(True)
-    hide_cg = Input(True)
+    position = Input(Position(Point(0, 0, 0)), validator=val.Instance(Position))  # Locks Orientation to that defined inside the component
+    inside_fuselage = Input(True, validator=val.Instance(bool))  # Defaults to treating the component as a `sizing_part` used in fuselage construction
+    hide_labels = Input(True, validator=val.Instance(bool))
+    hide_cg = Input(True, validator=val.Instance(bool))
 
     @Attribute
     def component_type(self):
