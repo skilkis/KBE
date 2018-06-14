@@ -20,6 +20,9 @@ from definitions import *
 from math import sin, radians
 import copy
 
+# TODO Add instance validator for each class input (check out performance.py for example)
+# TODO Make a nice visual CG representation of both c.g. before and after run
+
 
 class UAV(DesignInput):
     """  This class will generate UAV aircraft. It inherits from 'DesignInput.py' so that the input requirements are
@@ -218,6 +221,12 @@ class UAV(DesignInput):
                                               'x', self.camera.box_length / 2.0 - self.electronics.box_length*0.5,
                                               'z', self.camera.box_height),
                            motor_in=self.motor)
+
+    @Part
+    def performance(self):
+        return Performance(motor_in=self.motor, propeller_in=self.propeller, battery_in=self.battery, wing_in=self.wing,
+                           weight_mtow=self.weights['mtow'], parasitic_drag=self.parasite_drag,
+                           oswald_factor=self.params.wingpowerloading.e_factor, label='Performance')
 
     # Geometry Constraints
     @Attribute(private=True)

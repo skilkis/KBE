@@ -13,8 +13,7 @@ from primitives import LiftingSurface
 from directories import *
 from definitions import *
 from user import MyColors
-#from aeropy import *
-from shutil import copyfile
+
 #  Import AVL wrapper written by Reno El Mendorp. https://github.com/renoelmendorp/AVLWrapper
 from avl import Geometry, Surface, Section, Point, Spacing, Session, Case, FileAirfoil
 

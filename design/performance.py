@@ -14,6 +14,9 @@ __all__ = ["Performance"]
 
 class Performance(Base):
 
+    __initargs__ = ["parasitic_drag"]
+    __icon__ = os.path.join(DIRS['ICON_DIR'], 'performance.png')
+
     motor_in = Input(Motor(), validator=val.Instance(Motor))
     propeller_in = Input(Propeller(), validator=val.Instance(Propeller))
     battery_in = Input(Battery(), validator=val.Instance(Battery))
@@ -21,7 +24,7 @@ class Performance(Base):
     weight_mtow = Input(5.0)
     parasitic_drag = Input(0.02)
     oswald_factor = Input(0.85)
-    stall_buffer = Input(1.2, validator=val.Range(0, 1.5))
+    stall_buffer = Input(1.5, validator=val.Range(1.0, 1.5))
 
     @Attribute
     def power_available(self):
@@ -33,6 +36,11 @@ class Performance(Base):
 
     @Attribute
     def eta_curve_bounds(self):
+        """ Defines the bounds of the propeller curve to not address values that are not covered by the propeller data
+        index 0 refers to the minimum velocity and index 1 refers to the maximum velocity
+
+        :rtype: list
+        """
         return self.propeller_in.propeller_selector[3]
 
     @Attribute
@@ -82,11 +90,12 @@ class Performance(Base):
         idx_e = diff.index(max(diff))
         safe_speed = self.stall_buffer * self.wing_in.stall_speed
         calc_speed = self.speed_range[idx_e]
-        safe = True
-        if safe_speed < calc_speed:
-            print 'Computed optimum endurance velocity of %1.2f [m/s] is too close to the stall speed! Instead a value' \
-                  ' safety factor has been added to the stall speed and returned'
+        if calc_speed >= safe_speed:
+            safe = True
+        else:
             safe = False
+            print 'Computed optimum endurance velocity of %1.2f [m/s] is too close to the stall speed! Instead a value' \
+                  ' safety factor has been added to the stall speed and returned' % calc_speed
         return calc_speed if safe else safe_speed
 
     @Attribute
@@ -107,16 +116,36 @@ class Performance(Base):
         idx_c = diff.index(min(diff))
         safe_speed = self.stall_buffer * self.wing_in.stall_speed
         calc_speed = self.speed_range[idx_c]
-        safe = True
-        if safe_speed < calc_speed:
-            print 'Computed optimum cruise velocity of %1.2f [m/s] is too close to the stall speed! Instead a value' \
-                  ' safety factor has been added to the stall speed and returned'
+        if calc_speed >= safe_speed:
+            safe = True
+        else:
             safe = False
+            print 'Computed optimum cruise velocity of %1.2f [m/s] is too close to the stall speed! Instead a value' \
+                  ' safety factor has been added to the stall speed and returned' % calc_speed
         return calc_speed if safe else safe_speed
 
     @Attribute
-    def power_required_spline(self):
-        return
+    def power_spline(self):
+        """ Creates a linear-spline of the power required curve to be able to call any velocity value
+
+        :rtype: interp1d
+        """
+        return interp1d(self.speed_range, self.power_required, fill_value='extrapolate')
+
+    @Attribute
+    def endurance(self):
+        velocity = self.endurance_velocity
+        prop_eta = self.propeller_eta_curve(velocity)
+        hours = (self.battery_in.total_energy * self.motor_in.efficiency * prop_eta) / (self.power_spline(velocity))
+        return hours
+
+    @Attribute
+    def range(self):
+        velocity = self.cruise_velocity
+        prop_eta = self.propeller_eta_curve(velocity)
+        hours = (self.battery_in.total_energy * self.motor_in.efficiency * prop_eta) / (self.power_spline(velocity))
+        range_km = 3.6 * hours * velocity
+        return range_km
 
     @Attribute
     def eta_values(self):
