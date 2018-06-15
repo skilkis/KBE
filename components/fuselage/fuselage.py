@@ -14,10 +14,6 @@ from copy import copy
 __author__ = "Şan Kılkış"
 __all__ = ["Fuselage"]
 
-# TODO Incorporate possibility of having a boom structure
-# TODO Weight Estimation w/ Material choice
-# TODO Figure out what is wrong with apex detection (Probably wing is smaller in height than
-# TODO Add Fill-Factor safety margin for frames
 # TODO Figure out why tail cone does not appear instantly
 # TODO Add default sizing parts back in
 
@@ -70,19 +66,24 @@ class Fuselage(ExternalBody):
     #: :type: tuple
     ply_number = Input(3, validator=val.Instance(int))
 
+    #: Disables Automatic Fuselage Frame (FFrame) Creation and allows instead manual user-input to set the shape
+    #: :type: bool
     auto_fuselage_disable = Input(False)
+
+    @auto_fuselage_disable.on_slot_change
+    def auto_disabler(self):
+        """ Pauses dependency tracking and automatic frame generation utilizing a simple caching mechanism. This is done
+        in order for the user to be able to make changes to the automatically generated fuselage frames without these
+        changes being overwritten by ParaPy due to the fuselage's dependence on the `internal_shapes` input. """
+        if self.auto_fuselage_disable:
+            # Utilizing a shallow-copy of the frames increases performance
+            setattr(self, '__framecache__', copy(self.frames))
+        else:
+            setattr(self, '__framecache__', None)
 
     @Attribute
     def component_type(self):
         return 'fuselage'
-
-    @auto_fuselage_disable.on_slot_change
-    def auto_disabler(self):
-        if self.auto_fuselage_disable:
-            setattr(self, '__framecache__', copy(self.frames))
-        else:
-            setattr(self, '__framecache__', None)
-        return 'Automatic Fuselage Generation Disabled'
 
     @Attribute(private=True)
     def frame_builder(self):
@@ -224,10 +225,14 @@ class Fuselage(ExternalBody):
         """
         grabbed_frames = [i[0] for i in self.frame_builder['built_frames']]
         apex_index = self.frame_builder['apex_index']
+
+        # Frame-minimization algorithm, USE WITH CAUTION!
         if self.minimize_frames:
             index_to_keep = [0, apex_index, apex_index+1, len(grabbed_frames) - 1]
             grabbed_frames = [grabbed_frames[i] for i in range(0, len(grabbed_frames))
                               if i in index_to_keep]
+
+        # Grabbing-cached frames if they exist
         if self.__framecache__ is not None:
             grabbed_frames = self.__framecache__
         return grabbed_frames

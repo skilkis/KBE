@@ -14,6 +14,8 @@
 #  TODO .... we must update the values in params, and change them ONLY there in the GUI!!!!!!!!!!!!!!!!
 
 #  TODO CHECK THE CG LOOP CONVERGENCE. SEE OLD CG AND NEW CG SIMPLY CHANGE SPOTS, IT IS INFINITE!!!!!
+    # Although it is infinite bro it is simply flipping back and forth on the stability plot, that is why we stop it and
+    # for now that is good enough behavior, most designs converge to a single value!
 
 #  TODO MAKE final_cg NON LAZY OR USER SEES WRONG TAIL!!!!!!!!!!!!!!!!!!
 #  TODO Make sure vt weight is correct in final weight for changes in the GUI ......
@@ -34,6 +36,8 @@
 #  TODO every class should have print statement saying that it has been instantiated into the console
 
 #  TODO delete all example and irrelevant documents & data files in KBE folder and rename folder with original name.
+
+# TODO Auto-writer function for the AVL-wrapper so La. Rocca can run the scripts w/o errors!!!!!!!!!!!!!!!!!!!!!
 
 from design import *
 from parapy.core import *
