@@ -35,15 +35,19 @@ class ParameterGenerator(Base):
     handlaunch = Input(True)
     portable = Input(True)
 
-    # @Attribute
-    # def payload_checker(self):
-    #     return EOIR(target_weight=self.performance_goal) if self.target_value is
+    @Attribute(private=True)
+    def payload_checker(self):
+        if self.weight_target is 'payload':
+            actual_weight = EOIR(target_weight=self.target_value).weight
+            self.target_value = actual_weight
+            # TODO Add custom dialog here
+        return self.target_value
 
     @Part
     def weightestimator(self):
         # Here we instantiate the class I weight estimation using the inputs.
         return ClassOne(weight_target=self.weight_target,
-                        target_value=self.target_value)
+                        target_value=self.payload_checker if self.weight_target is 'payload' else self.target_value)
 
     @Part
     def wingpowerloading(self):

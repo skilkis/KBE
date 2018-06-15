@@ -9,6 +9,7 @@ from components.fuselage.primitives import *
 # from components import EOIR, Wing, Motor, Battery
 from definitions import *
 from directories import *
+from copy import copy
 
 __author__ = "Şan Kılkış"
 __all__ = ["Fuselage"]
@@ -18,6 +19,7 @@ __all__ = ["Fuselage"]
 # TODO Figure out what is wrong with apex detection (Probably wing is smaller in height than
 # TODO Add Fill-Factor safety margin for frames
 # TODO Figure out why tail cone does not appear instantly
+# TODO Add default sizing parts back in
 
 # http://www.dupont.com/content/dam/dupont/products-and-services/fabrics-fibers-and-nonwovens/fibers/documents/Kevlar_Technical_Guide.pdf
 
@@ -31,6 +33,8 @@ class Fuselage(ExternalBody):
 
     __initargs__ = ["compartment_type", "sizing_parts"]
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'fuselage.png')
+
+    __framecache__ = None
 
     #: Type of containers at each station, possible entries (nose, container, motor, tail)
     #: :type: str list
@@ -66,9 +70,19 @@ class Fuselage(ExternalBody):
     #: :type: tuple
     ply_number = Input(3, validator=val.Instance(int))
 
+    auto_fuselage_disable = Input(False)
+
     @Attribute
     def component_type(self):
         return 'fuselage'
+
+    @auto_fuselage_disable.on_slot_change
+    def auto_disabler(self):
+        if self.auto_fuselage_disable:
+            setattr(self, '__framecache__', copy(self.frames))
+        else:
+            setattr(self, '__framecache__', None)
+        return 'Automatic Fuselage Generation Disabled'
 
     @Attribute(private=True)
     def frame_builder(self):
@@ -214,6 +228,8 @@ class Fuselage(ExternalBody):
             index_to_keep = [0, apex_index, apex_index+1, len(grabbed_frames) - 1]
             grabbed_frames = [grabbed_frames[i] for i in range(0, len(grabbed_frames))
                               if i in index_to_keep]
+        if self.__framecache__ is not None:
+            grabbed_frames = self.__framecache__
         return grabbed_frames
 
     @Attribute

@@ -30,6 +30,7 @@
 
 #  TODO increase size of VT. They look too small when handlaunch = false
 
+# TODO change input endurance to be in hours instead of seconds (more convenient)
 #  TODO every class should have print statement saying that it has been instantiated into the console
 
 #  TODO delete all example and irrelevant documents & data files in KBE folder and rename folder with original name.

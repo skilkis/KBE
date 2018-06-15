@@ -52,7 +52,7 @@ class Wing(ExternalBody, LiftingSurface):
 
     #: Below is the assumed factor of the semi_span which the fuselage extends over the wing.
     #: :type: float
-    fuse_width_factor = Input(0.05, validator=val.Range(0.001, 0.5))
+    fuse_width_factor = Input(0.07, validator=val.Range(0.001, 0.1))
 
     #: Below is the a switch to hide/show the bbox of the wing section within the fuselage.
     #: :type: boolean
@@ -77,6 +77,12 @@ class Wing(ExternalBody, LiftingSurface):
     ply_number = Input(5, validator=val.Instance(int))
 
 #  This block of Attributes calculates the planform parameters. ########------------------------------------------------
+
+    @Attribute(private=True)
+    def position(self):
+        """ Overwrites the inherited position attribute, to make the wing-fixed at Point(0, 0, 0) """
+        return Position(Point(0, 0, 0))
+
     @Attribute
     def component_type(self):
         """ This attribute names the component 'wing'.
