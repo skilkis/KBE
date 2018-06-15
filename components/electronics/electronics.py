@@ -18,15 +18,22 @@ __all__ = ["Electronics"]
 class Electronics(Component):
     """  This class will instantiate the flight controller and speed_controller(s) and place them on top of one another.
 
-    :returns: ParaPy Geometry of the electronics
+    :return: ParaPy Geometry of the electronics.
+
+    :param motor_in: This provides a link to the motor object instantiated in :class:`main.UAV`
+    :type motor_in: Motor
+
+    :param label: This names the Electronics to the specified string.
+    :type label: str
+
     """
 
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'electronics.png')
 
     #  If multiple motors put in, give [] within input parentheses
-    motor_in = Input(Motor())
+    motor_in = Input(Motor(), validator=val.Instance(Motor))
 
-    label = Input('Electronics')
+    label = Input('Electronics', validator=val.Instance(str))
 
     @Attribute
     def component_type(self):

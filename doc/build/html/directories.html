@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Directories Documentation &mdash; KBE 1.0 documentation</title>
+  <title>Directories &mdash; KBE 1.0 documentation</title>
   
 
   
@@ -29,7 +29,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Components Module" href="components/index.html" />
-    <link rel="prev" title="Definitions Documentation" href="definitions.html" /> 
+    <link rel="prev" title="Definitions" href="definitions.html" /> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -84,18 +84,28 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="definitions.html">Definitions Documentation</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Directories Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="definitions.html">Definitions</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Directories</a></li>
 <li class="toctree-l1"><a class="reference internal" href="components/index.html">Components Module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="components/battery.html">Li-PO Battery</a></li>
-<li class="toctree-l2"><a class="reference internal" href="components/electronics.html">Electronics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="components/electronics/index.html">Electronics Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="components/electronics/electronics.html">Electronics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="components/electronics/flightcontroller.html">FlightController</a></li>
+<li class="toctree-l3"><a class="reference internal" href="components/electronics/speedcontroller.html">SpeedController</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="components/liftingsurfaces/index.html">LiftingSurface Module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="components/liftingsurfaces/liftingsurfaceprim.html">LiftingSurface Documentation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="components/liftingsurfaces/wing.html">Wing Documentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="components/liftingsurfaces/liftingsurfaceprim.html">LiftingSurface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="components/liftingsurfaces/wing.html">Wing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="components/liftingsurfaces/scissorplot.html">ScissorPlot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="components/liftingsurfaces/horizontalstab.html">HorizontalStabilizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="components/liftingsurfaces/verticalstab.html">VerticalStablilizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="components/liftingsurfaces/compoundstab.html">CompoundStabilizer</a></li>
 </ul>
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="main.html">Main UAV</a></li>
 </ul>
 
             
@@ -141,7 +151,7 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>Directories Documentation</li>
+      <li>Directories</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -161,7 +171,7 @@
            <div itemprop="articleBody">
             
   <div class="section" id="module-directories">
-<span id="directories-documentation"></span><h1>Directories Documentation<a class="headerlink" href="#module-directories" title="Permalink to this headline">¶</a></h1>
+<span id="directories"></span><h1>Directories<a class="headerlink" href="#module-directories" title="Permalink to this headline">¶</a></h1>
 <p>directories.py is a file containing the function get_dir which allows the user to quickly call a directory within
 the project folder, also for convenience the packages os and sys are imported when directories.py is imported with
 the * specifier. Finally the dictionary DIRS contains common directories so as to avoid multiple calls to get_dir.
@@ -171,7 +181,7 @@ invalid directory will raise errors</p>
 <dt id="directories.get_dir">
 <code class="descclassname">directories.</code><code class="descname">get_dir</code><span class="sig-paren">(</span><em>folder_name=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/directories.html#get_dir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#directories.get_dir" title="Permalink to this definition">¶</a></dt>
 <dd><p>get_dir returns the top-level directory of the package as an absolute path if <code class="xref py py-attr docutils literal notranslate"><span class="pre">folder_name</span></code> is not
-specified [1]. If an exiting sub directory is specified as <a href="#id1"><span class="problematic" id="id2">:type:`str`</span></a> into the field <code class="xref py py-attr docutils literal notranslate"><span class="pre">folder_name</span></code> then the
+specified [1]. If an exiting sub directory is specified as <cite>str</cite> into the field <code class="xref py py-attr docutils literal notranslate"><span class="pre">folder_name</span></code> then the
 return of get_dir will be absolute path to this sub directory [2]. Usage with file names inside a directory is also
 possible, see example below [3]</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -216,7 +226,7 @@ possible, see example below [3]</p>
         <a href="components/index.html" class="btn btn-neutral float-right" title="Components Module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="definitions.html" class="btn btn-neutral" title="Definitions Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="definitions.html" class="btn btn-neutral" title="Definitions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

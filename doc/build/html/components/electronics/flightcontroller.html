@@ -1,0 +1,443 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>FlightController &mdash; KBE 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="SpeedController" href="speedcontroller.html" />
+    <link rel="prev" title="Electronics" href="electronics.html" /> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> KBE
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../definitions.html">Definitions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../directories.html">Directories</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Components Module</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../battery.html">Li-PO Battery</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Electronics Module</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="electronics.html">Electronics</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">FlightController</a></li>
+<li class="toctree-l3"><a class="reference internal" href="speedcontroller.html">SpeedController</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../liftingsurfaces/index.html">LiftingSurface Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../liftingsurfaces/liftingsurfaceprim.html">LiftingSurface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../liftingsurfaces/wing.html">Wing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../liftingsurfaces/scissorplot.html">ScissorPlot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../liftingsurfaces/horizontalstab.html">HorizontalStabilizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../liftingsurfaces/verticalstab.html">VerticalStablilizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../liftingsurfaces/compoundstab.html">CompoundStabilizer</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../main.html">Main UAV</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">KBE</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Components Module</a> &raquo;</li>
+        
+          <li><a href="index.html">Electronics Module</a> &raquo;</li>
+        
+      <li>FlightController</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/components/electronics/flightcontroller.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-components.electronics.flightcontroller">
+<span id="flightcontroller"></span><h1>FlightController<a class="headerlink" href="#module-components.electronics.flightcontroller" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="components.electronics.flightcontroller.FlightController">
+<em class="property">class </em><code class="descclassname">components.electronics.flightcontroller.</code><code class="descname">FlightController</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/components/electronics/flightcontroller.html#FlightController"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.electronics.flightcontroller.FlightController" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class will create the Navio2 flight controller geometry. The dimensions are at <a class="reference external" href="https://emlid.com/navio/">https://emlid.com/navio/</a> .</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">ParaPy Geometry of the flight computer</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="components.electronics.flightcontroller.FlightController.center_of_gravity">
+<code class="descname">center_of_gravity</code><a class="reference internal" href="../../_modules/components/electronics/flightcontroller.html#FlightController.center_of_gravity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.electronics.flightcontroller.FlightController.center_of_gravity" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute returns the COG of the flight controller.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">ParaPy Point</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">ParaPy Point</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.electronics.flightcontroller.FlightController.component_type">
+<code class="descname">component_type</code><a class="reference internal" href="../../_modules/components/electronics/flightcontroller.html#FlightController.component_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.electronics.flightcontroller.FlightController.component_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute names the component ‘flightcontroller’ for flight controller.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">String with flightcontroller’s component name</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.electronics.flightcontroller.FlightController.flight_controller_power">
+<code class="descname">flight_controller_power</code><a class="reference internal" href="../../_modules/components/electronics/flightcontroller.html#FlightController.flight_controller_power"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.electronics.flightcontroller.FlightController.flight_controller_power" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute estimates the Navio2 flight computer power. It is found by multiplying the average voltage
+(5V), by the average current (150mA). Source: <a class="reference external" href="https://emlid.com/navio/">https://emlid.com/navio/</a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Flight Computer Power</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.electronics.flightcontroller.FlightController.flightcontroller_offset">
+<code class="descname">flightcontroller_offset</code><a class="reference internal" href="../../_modules/components/electronics/flightcontroller.html#FlightController.flightcontroller_offset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.electronics.flightcontroller.FlightController.flightcontroller_offset" title="Permalink to this definition">¶</a></dt>
+<dd><p>This creates the geometry of the flight controller. FOR BOX FUNCTION: Width is x direction, length is
+y direction, height is z direction.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">ParaPy Flight Controller Geometry</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">Box</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.electronics.flightcontroller.FlightController.h_navio">
+<code class="descname">h_navio</code><a class="reference internal" href="../../_modules/components/electronics/flightcontroller.html#FlightController.h_navio"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.electronics.flightcontroller.FlightController.h_navio" title="Permalink to this definition">¶</a></dt>
+<dd><p>The flight controller height is to be oriented parallel with the y axis. This height was assumed from their
+figure.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">ParaPy Flight Controller height</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.electronics.flightcontroller.FlightController.internal_shape">
+<code class="descname">internal_shape</code><a class="reference internal" href="../../_modules/components/electronics/flightcontroller.html#FlightController.internal_shape"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.electronics.flightcontroller.FlightController.internal_shape" title="Permalink to this definition">¶</a></dt>
+<dd><p>This obtains a bounding box of the flight controller to size the fuselage frames.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Navio2 Shape</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">ScaledShape</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.electronics.flightcontroller.FlightController.l_navio">
+<code class="descname">l_navio</code><a class="reference internal" href="../../_modules/components/electronics/flightcontroller.html#FlightController.l_navio"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.electronics.flightcontroller.FlightController.l_navio" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>The 65mm length of the Flight Computer is the longest dimension and is to be oriented parallel with the x</dt>
+<dd>axis.</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">ParaPy Flight Controller Length</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.electronics.flightcontroller.FlightController.label">
+<code class="descname">label</code><a class="reference internal" href="../../_modules/components/electronics/flightcontroller.html#FlightController.label"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.electronics.flightcontroller.FlightController.label" title="Permalink to this definition">¶</a></dt>
+<dd><p>This labels the flight controller ‘Avionics’</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Avionics Label</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.electronics.flightcontroller.FlightController.solid">
+<code class="descname">solid</code><a class="reference internal" href="../../_modules/components/electronics/flightcontroller.html#FlightController.solid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.electronics.flightcontroller.FlightController.solid" title="Permalink to this definition">¶</a></dt>
+<dd><p>This shifts the shape to the correct place with respect to the local axis system.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">ParaPy Flight Controller Geometry</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">TranslatedShape</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.electronics.flightcontroller.FlightController.w_navio">
+<code class="descname">w_navio</code><a class="reference internal" href="../../_modules/components/electronics/flightcontroller.html#FlightController.w_navio"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.electronics.flightcontroller.FlightController.w_navio" title="Permalink to this definition">¶</a></dt>
+<dd><p>The 55mm width is to be oriented parallel with the y axis.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">ParaPy Flight Controller Width</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.electronics.flightcontroller.FlightController.weight">
+<code class="descname">weight</code><a class="reference internal" href="../../_modules/components/electronics/flightcontroller.html#FlightController.weight"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.electronics.flightcontroller.FlightController.weight" title="Permalink to this definition">¶</a></dt>
+<dd><p>The mass of the Navio2 flight computer is 23 grams.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Navio2 Mass</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="speedcontroller.html" class="btn btn-neutral float-right" title="SpeedController" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="electronics.html" class="btn btn-neutral" title="Electronics" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, San Kilkis, Nelson Johnson.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'1.0',
+            LANGUAGE:'en',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -5,5 +5,5 @@ Components Module
    :maxdepth: 2
 
    battery
-   electronics
+   electronics/index
    liftingsurfaces/index

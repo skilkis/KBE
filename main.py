@@ -56,8 +56,9 @@ import xlwt
 
 
 class UAV(DesignInput):
-    """  This class will generate UAV aircraft. It inherits from :class:`design.designinput.DesignInput`so that the
-    input requirements are all in the top level of the tree.
+    """  This class will generate UAV aircraft. It inherits from 'DesignInput.py' so that the input requirements are
+    all in the top level of the tree.
+
     """
 
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'plane.png')
@@ -196,7 +197,7 @@ class UAV(DesignInput):
                                   wing_semi_span=self.wing.semi_span,
                                   lhc=self.stability.lhc,
                                   configuration=self.configuration,
-                                  aspect_ratio=1.4,
+                                  aspect_ratio=5.0,
                                   taper=0.35,
                                   twist=0.0,
                                   label='Tail')

@@ -82,18 +82,28 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../definitions.html">Definitions Documentation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../directories.html">Directories Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../definitions.html">Definitions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../directories.html">Directories</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../components/index.html">Components Module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../components/battery.html">Li-PO Battery</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../components/electronics.html">Electronics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/electronics/index.html">Electronics Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/electronics/electronics.html">Electronics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/electronics/flightcontroller.html">FlightController</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/electronics/speedcontroller.html">SpeedController</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../../../components/liftingsurfaces/index.html">LiftingSurface Module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/liftingsurfaceprim.html">LiftingSurface Documentation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/wing.html">Wing Documentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/liftingsurfaceprim.html">LiftingSurface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/wing.html">Wing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/scissorplot.html">ScissorPlot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/horizontalstab.html">HorizontalStabilizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/verticalstab.html">VerticalStablilizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/compoundstab.html">CompoundStabilizer</a></li>
 </ul>
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../../main.html">Main UAV</a></li>
 </ul>
 
             
@@ -171,20 +181,20 @@
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;FlightController&quot;</span><span class="p">]</span>
 
 
-<div class="viewcode-block" id="FlightController"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.flightcontroller.FlightController">[docs]</a><span class="k">class</span> <span class="nc">FlightController</span><span class="p">(</span><span class="n">Component</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; This class will create the Navio2 flight controller geometry.</span>
+<div class="viewcode-block" id="FlightController"><a class="viewcode-back" href="../../../components/electronics/flightcontroller.html#components.electronics.flightcontroller.FlightController">[docs]</a><span class="k">class</span> <span class="nc">FlightController</span><span class="p">(</span><span class="n">Component</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; This class will create the Navio2 flight controller geometry. The dimensions are at https://emlid.com/navio/ .</span>
 
 <span class="sd">    :returns: ParaPy Geometry of the flight computer</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">__icon__</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;ICON_DIR&#39;</span><span class="p">],</span> <span class="s1">&#39;chip.png&#39;</span><span class="p">)</span>
 
     <span class="c1">#: Navio 2 Flight computer dimensions are below. Source: https://emlid.com/navio/</span>
-
-<div class="viewcode-block" id="FlightController.l_navio"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.flightcontroller.FlightController.l_navio">[docs]</a>    <span class="nd">@Attribute</span>
+<div class="viewcode-block" id="FlightController.l_navio"><a class="viewcode-back" href="../../../components/electronics/flightcontroller.html#components.electronics.flightcontroller.FlightController.l_navio">[docs]</a>    <span class="nd">@Attribute</span>
     <span class="k">def</span> <span class="nf">l_navio</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; The 65mm length of the Flight Computer is the longest dimension and is to be oriented parallel with the x</span>
-<span class="sd">         axis. Dimensions are at https://emlid.com/navio/</span>
+<span class="sd">         axis.</span>
 
 <span class="sd">        :return: ParaPy Flight Controller Length</span>
 <span class="sd">        :rtype: float</span>
@@ -192,7 +202,7 @@
         <span class="k">return</span> <span class="mf">0.065</span></div>
 
     <span class="c1">#: :type: float</span>
-<div class="viewcode-block" id="FlightController.w_navio"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.flightcontroller.FlightController.w_navio">[docs]</a>    <span class="nd">@Attribute</span>
+<div class="viewcode-block" id="FlightController.w_navio"><a class="viewcode-back" href="../../../components/electronics/flightcontroller.html#components.electronics.flightcontroller.FlightController.w_navio">[docs]</a>    <span class="nd">@Attribute</span>
     <span class="k">def</span> <span class="nf">w_navio</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; The 55mm width is to be oriented parallel with the y axis.</span>
 
@@ -201,7 +211,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="mf">0.055</span></div>
 
-<div class="viewcode-block" id="FlightController.h_navio"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.flightcontroller.FlightController.h_navio">[docs]</a>    <span class="nd">@Attribute</span>
+<div class="viewcode-block" id="FlightController.h_navio"><a class="viewcode-back" href="../../../components/electronics/flightcontroller.html#components.electronics.flightcontroller.FlightController.h_navio">[docs]</a>    <span class="nd">@Attribute</span>
     <span class="k">def</span> <span class="nf">h_navio</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; The flight controller height is to be oriented parallel with the y axis. This height was assumed from their</span>
 <span class="sd">        figure.</span>
@@ -211,7 +221,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="mf">0.017</span></div>
 
-<div class="viewcode-block" id="FlightController.flightcontroller_offset"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.flightcontroller.FlightController.flightcontroller_offset">[docs]</a>    <span class="nd">@Part</span>
+<div class="viewcode-block" id="FlightController.flightcontroller_offset"><a class="viewcode-back" href="../../../components/electronics/flightcontroller.html#components.electronics.flightcontroller.FlightController.flightcontroller_offset">[docs]</a>    <span class="nd">@Part</span>
     <span class="k">def</span> <span class="nf">flightcontroller_offset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; This creates the geometry of the flight controller. FOR BOX FUNCTION: Width is x direction, length is</span>
 <span class="sd">        y direction, height is z direction.</span>
@@ -225,7 +235,7 @@
                    <span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">,</span>
                    <span class="n">hidden</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="FlightController.solid"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.flightcontroller.FlightController.solid">[docs]</a>    <span class="nd">@Part</span>
+<div class="viewcode-block" id="FlightController.solid"><a class="viewcode-back" href="../../../components/electronics/flightcontroller.html#components.electronics.flightcontroller.FlightController.solid">[docs]</a>    <span class="nd">@Part</span>
     <span class="k">def</span> <span class="nf">solid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; This shifts the shape to the correct place with respect to the local axis system.</span>
 
@@ -237,7 +247,7 @@
                                <span class="n">transparency</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span>
                                <span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="FlightController.flight_controller_power"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.flightcontroller.FlightController.flight_controller_power">[docs]</a>    <span class="nd">@Attribute</span>
+<div class="viewcode-block" id="FlightController.flight_controller_power"><a class="viewcode-back" href="../../../components/electronics/flightcontroller.html#components.electronics.flightcontroller.FlightController.flight_controller_power">[docs]</a>    <span class="nd">@Attribute</span>
     <span class="k">def</span> <span class="nf">flight_controller_power</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; This attribute estimates the Navio2 flight computer power. It is found by multiplying the average voltage</span>
 <span class="sd">        (5V), by the average current (150mA). Source: https://emlid.com/navio/</span>
@@ -247,7 +257,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="mf">0.15</span><span class="o">*</span><span class="mi">5</span></div>
 
-<div class="viewcode-block" id="FlightController.component_type"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.flightcontroller.FlightController.component_type">[docs]</a>    <span class="nd">@Attribute</span>
+<div class="viewcode-block" id="FlightController.component_type"><a class="viewcode-back" href="../../../components/electronics/flightcontroller.html#components.electronics.flightcontroller.FlightController.component_type">[docs]</a>    <span class="nd">@Attribute</span>
     <span class="k">def</span> <span class="nf">component_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; This attribute names the component &#39;flightcontroller&#39; for flight controller.</span>
 
@@ -256,7 +266,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="s1">&#39;flightcontroller&#39;</span></div>
 
-<div class="viewcode-block" id="FlightController.center_of_gravity"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.flightcontroller.FlightController.center_of_gravity">[docs]</a>    <span class="nd">@Attribute</span>
+<div class="viewcode-block" id="FlightController.center_of_gravity"><a class="viewcode-back" href="../../../components/electronics/flightcontroller.html#components.electronics.flightcontroller.FlightController.center_of_gravity">[docs]</a>    <span class="nd">@Attribute</span>
     <span class="k">def</span> <span class="nf">center_of_gravity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; This attribute returns the COG of the flight controller.</span>
 
@@ -265,7 +275,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">solid</span><span class="o">.</span><span class="n">cog</span></div>
 
-<div class="viewcode-block" id="FlightController.weight"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.flightcontroller.FlightController.weight">[docs]</a>    <span class="nd">@Attribute</span>
+<div class="viewcode-block" id="FlightController.weight"><a class="viewcode-back" href="../../../components/electronics/flightcontroller.html#components.electronics.flightcontroller.FlightController.weight">[docs]</a>    <span class="nd">@Attribute</span>
     <span class="k">def</span> <span class="nf">weight</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; The mass of the Navio2 flight computer is 23 grams.</span>
 
@@ -274,7 +284,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="mf">0.023</span></div>
 
-<div class="viewcode-block" id="FlightController.internal_shape"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.flightcontroller.FlightController.internal_shape">[docs]</a>    <span class="nd">@Part</span>
+<div class="viewcode-block" id="FlightController.internal_shape"><a class="viewcode-back" href="../../../components/electronics/flightcontroller.html#components.electronics.flightcontroller.FlightController.internal_shape">[docs]</a>    <span class="nd">@Part</span>
     <span class="k">def</span> <span class="nf">internal_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; This obtains a bounding box of the flight controller to size the fuselage frames.</span>
 
@@ -284,7 +294,7 @@
         <span class="k">return</span> <span class="n">ScaledShape</span><span class="p">(</span><span class="n">shape_in</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">solid</span><span class="p">,</span> <span class="n">reference_point</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">solid</span><span class="o">.</span><span class="n">cog</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                            <span class="n">transparency</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">hidden</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="FlightController.label"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.flightcontroller.FlightController.label">[docs]</a>    <span class="nd">@Attribute</span>
+<div class="viewcode-block" id="FlightController.label"><a class="viewcode-back" href="../../../components/electronics/flightcontroller.html#components.electronics.flightcontroller.FlightController.label">[docs]</a>    <span class="nd">@Attribute</span>
     <span class="k">def</span> <span class="nf">label</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; This labels the flight controller &#39;Avionics&#39;</span>
 

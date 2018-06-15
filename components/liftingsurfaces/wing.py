@@ -32,51 +32,69 @@ class Wing(ExternalBody, LiftingSurface):
     vs. angle of attack.
 
     :returns: ParaPy Geometry of the Main Wing Surface
+
+    :param wing_loading: This is the required wing loading from the class I weight estimation in [N/m^2]
+    :type wing_loading: float
+
+    :param weight_mtow: This is the required MTOW from the class I weight estimation in kg
+    :type weight_mtow: float
+
+    :param stall_speed: This is the stall speed of the wing from the class I weight estimation in m/s.
+    :type stall_speed: float
+
+    :param rho: This is the ISA STD sea level density in kg/m^3.
+    :type rho: float
+
+    :param fuse_width_factor: This is the assumed factor of the semispan which the fuselage extends over the wing.
+    :type fuse_width_factor: float
+
+    :param hide_bbox: This is a switch to hide/show the bbox of the wing section within the fuselage.
+    :type hide_bbox: bool
+
+    :param hide_mac: This overwrites input from LiftingSurface to hide the Mean Aerodynamic Chord part
+    :type hide_mac: bool
+
+    :param mesh_deflection: The default value is an optimum between a good quality render and performance.
+    :type mesh_deflection: float
+
+    :param color: Changes the color of the wing skin to the one defined in MyColors
+    :type color: tuple
+
+    :param ply_number: Changes the number of ply's of carbon fiber pre-preg.
+    :type ply_number: int
     """
 
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'liftingsurface.png')
 
 #   This block of code contains the inputs. ########--------------------------------------------------------------------
     #: Below is the required wing loading from the class I weight estimation.
-    #: :type: float
     wing_loading = Input(100.0, validator=val.Positive())
 
     #: Below is the required MTOW from the class I weight estimation.
-    #: :type: float
     weight_mtow = Input(25.0, validator=val.Positive())
 
-    #: The stall speed of the wing
-    #: :type: float
+    #: The stall speed of the wing from the class I weight estimation.
     stall_speed = Input(8.0, validator=val.Positive())
 
-    #: Below is the ISA STD sea level density.
-    #: :type: float
+    #: Below is the ISA STD sea level density in kg/m^3.
     rho = Input(1.225, validator=val.Positive())
 
     #: Below is the assumed factor of the semi_span which the fuselage extends over the wing.
-    #: :type: float
     fuse_width_factor = Input(0.07, validator=val.Range(0.001, 0.1))
 
-    #: Below is the a switch to hide/show the bbox of the wing section within the fuselage.
-    #: :type: boolean
+    #: Below is a switch to hide/show the bbox of the wing section within the fuselage.
     hide_bbox = Input(False, validator=val.Instance(bool))
 
     #: Overwrites input from LiftingSurface to hide the Mean Aerodynamic Chord part
     hide_mac = Input(True, validator=val.Instance(bool))
 
     #: Below is the chosen mesh deflection. It's is an optimum point between a good quality render and performance
-    #: :type: float
     mesh_deflection = Input(0.0001, validator=val.Range(0.00001, 0.001))
 
     #: Changes the color of the wing skin to the one defined in MyColors
-    #: :type: tuple
     color = Input(MyColors.skin_color)
 
-    # THIS IS A TEST PARAMETER
-    global_cg = Input(0.0, validator=val.Instance(float))
-
     #: Changes the number of ply's of carbon fiber http://www.ijera.com/papers/Vol4_issue5/Version%202/J45025355.pdf
-    #: :type: tuple
     ply_number = Input(5, validator=val.Instance(int))
 
 #  This block of Attributes calculates the planform parameters. ########------------------------------------------------
@@ -111,7 +129,7 @@ class Wing(ExternalBody, LiftingSurface):
     def s_req(self):
         """ This attribute contains the calculation of the required TOTAL wing area from the design point.
 
-        :return: float
+        :return: Calculation of wing aera from design point in m^2
         :rtype: float
         """
         return (self.weight_mtow * 9.81) / self.wing_loading
@@ -120,7 +138,7 @@ class Wing(ExternalBody, LiftingSurface):
     def planform_area(self):
         """ Instantiating the required variable name for the class ExternalBody
 
-        :return: Wing planform area
+        :return: Wing planform area in m^2
         :rtype: float
         """
         return self.s_req
@@ -201,7 +219,7 @@ class Wing(ExternalBody, LiftingSurface):
     def internal_shape(self):
         """"  This part creates the bounding box for the part of the wing within the fuselage.
 
-        :return: HT center section bounding box
+        :return: Wing fuselage frame bbox
         :rtype: Box
         """
         return Box(width=self.get_wingfuse_bounds.width,
@@ -331,9 +349,9 @@ class Wing(ExternalBody, LiftingSurface):
 
     @Attribute(private=True)
     def avl_data_grabber(self):
-        """  Here, we grab the data from
+        """  Here, we grab and sort the data by angle of attack from AVL.
 
-        :return: Plot and float
+        :return: Sort AVL data
         :rtype: dict
         """
         grabbed_values = (sorted([[self.avl_results[alpha]['Totals']['Alpha'],
@@ -357,8 +375,10 @@ class Wing(ExternalBody, LiftingSurface):
 
     @Attribute
     def lift_coef_vs_alpha(self):
-        """
+        """ This estimates the lift curve slope.
+
         :return: Lift Coefficient Gradient [1/rad]
+        :rtype: float
         """
         cl = self.avl_data_grabber['lift_coefs']
         alpha_rad = self.avl_data_grabber['alpha_radians']
@@ -367,7 +387,10 @@ class Wing(ExternalBody, LiftingSurface):
 
     @Attribute
     def plot_liftgradient(self):
-        # Plotting
+        """ This plots the lift coefficient vs angle of attack for the current wing in PyCharm.
+
+        :return: Lift Coefficient vs. angle of attack Plot
+        """
         plt.style.use('ggplot')
         plt.figure('LiftCoefficientGradient')
         plt.plot(self.avl_data_grabber['alpha_degrees'], self.avl_data_grabber['lift_coefs'], marker='o')
@@ -379,7 +402,10 @@ class Wing(ExternalBody, LiftingSurface):
 
     @Attribute
     def plot_momentgradient(self):
-        # Plotting
+        """ This plots the moment coefficient vs angle of attack for the current wing in PyCharm.
+
+        :return: Moment Coefficient vs. angle of attack Plot
+        """
         plt.style.use('ggplot')
         plt.figure('MomentCoefficientGradient')
         plt.plot(self.avl_data_grabber['alpha_degrees'], self.avl_data_grabber['moment_coefs'], marker='o')
@@ -392,8 +418,9 @@ class Wing(ExternalBody, LiftingSurface):
     @Attribute
     def lift_coef_control_index(self):
         """"  This attribute returns the index of the AVL data corresponding to the case when C_L is closest to the
-         required lift_coef_control required by the lift equation for the controllability curve.
-         :return: index
+         required C_L by the lift equation at 1.2 * V_s for the controllability curve in scissor plot.
+
+         :return: Index of data set with C_L for Controllability curve of Scissor Plot.
          :rtype: int
          """
         cll_array = (sorted([[self.avl_results[alpha]['Totals']['Alpha'], self.avl_results[alpha]['Totals']['CLtot']]
@@ -406,8 +433,9 @@ class Wing(ExternalBody, LiftingSurface):
     @Attribute
     def moment_coef_control(self):
         """"  This attribute gets the pitching moment of the wing about its aerodynamic center from avl corresponding to
-         lift_coef_cont derived above.
-         :return: C_mac
+         index found from the above lift coefficient at 1.2* V_s.
+
+         :return: C_mac at 1.2*V_s
          :rtype: float
          """
         case_name = self.avl_results['alpha%s' % self.lift_coef_control_index]['Totals']['Cmtot']
@@ -415,9 +443,10 @@ class Wing(ExternalBody, LiftingSurface):
 
     @Attribute
     def write_results(self):
-        """"  Here the results are written into a .json file
-         :return: AVL data file
-         :rtype: .json file
+        """"  Here the results are written into a .json file named 'avl_wing_out'.
+
+         :return: AVL output data file
+         :rtype: .json
          """
         results = self.avl_session.get_results()
         with open(os.path.join(DIRS['USER_DIR'], 'results', 'avl_wing_out.json'), 'w') as f:

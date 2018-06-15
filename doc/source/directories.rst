@@ -1,4 +1,4 @@
-Directories Documentation
+Directories
 ===============================
 
 .. automodule:: directories

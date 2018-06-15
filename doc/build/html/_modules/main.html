@@ -1,0 +1,701 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>main &mdash; KBE 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> KBE
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../definitions.html">Definitions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../directories.html">Directories</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components/index.html">Components Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../components/battery.html">Li-PO Battery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../components/electronics/index.html">Electronics Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../components/electronics/electronics.html">Electronics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../components/electronics/flightcontroller.html">FlightController</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../components/electronics/speedcontroller.html">SpeedController</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../components/liftingsurfaces/index.html">LiftingSurface Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../components/liftingsurfaces/liftingsurfaceprim.html">LiftingSurface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../components/liftingsurfaces/wing.html">Wing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../components/liftingsurfaces/scissorplot.html">ScissorPlot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../components/liftingsurfaces/horizontalstab.html">HorizontalStabilizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../components/liftingsurfaces/verticalstab.html">VerticalStablilizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../components/liftingsurfaces/compoundstab.html">CompoundStabilizer</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../main.html">Main UAV</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">KBE</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Module code</a> &raquo;</li>
+        
+      <li>main</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for main</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="sd">&quot;&quot;&quot; Explanation of Main File Here</span>
+
+
+<span class="sd">@author: Şan Kılkış &amp; Nelson Johnson</span>
+<span class="sd">@version: 1.0</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1">#  TODO DELIVERABLE:   WRITE   OUTPUT    EXCEL    FILE   !!!!!!!!!!!!!!!!!!!!!!</span>
+
+<span class="c1">#  TODO !!!!!! IF AR (for example) CHANGED IN Main Wing INSTANTIATION, SCISSOR PLOT IS NOT UPDATED WITH CORRESP. VALUE!</span>
+<span class="c1">#  TODO .... we must update the values in params, and change them ONLY there in the GUI!!!!!!!!!!!!!!!!</span>
+
+<span class="c1">#  TODO CHECK THE CG LOOP CONVERGENCE. SEE OLD CG AND NEW CG SIMPLY CHANGE SPOTS, IT IS INFINITE!!!!!</span>
+    <span class="c1"># Although it is infinite bro it is simply flipping back and forth on the stability plot, that is why we stop it and</span>
+    <span class="c1"># for now that is good enough behavior, most designs converge to a single value!</span>
+
+<span class="c1">#  TODO MAKE final_cg NON LAZY OR USER SEES WRONG TAIL!!!!!!!!!!!!!!!!!!</span>
+<span class="c1">#  TODO Make sure vt weight is correct in final weight for changes in the GUI ......</span>
+<span class="c1">#  TODO cont&#39;d .....I tried changing # plys on right wing in GUI but cg stayed on x ax</span>
+
+
+<span class="c1">#  TODO FIX PLAYLOAD MASS IN FINAL MTOW TO CORRESPOND WITH WING/ TAIL SIZING &amp; CLASS I!!!!!!!!!!!</span>
+
+<span class="c1">#  TODO add tkMessagebox browser to payloads</span>
+<span class="c1">#  TODO Add listener? for browse airfoils in lifting surface, or all to invalidate attribute</span>
+
+<span class="c1"># TODO Add instance validator for each class input (check out performance.py for example)</span>
+<span class="c1"># TODO Make a nice visual CG representation of both c.g. before and after run</span>
+
+<span class="c1">#  TODO increase size of VT. They look too small when handlaunch = false</span>
+
+<span class="c1"># TODO change input endurance to be in hours instead of seconds (more convenient)</span>
+<span class="c1">#  TODO every class should have print statement saying that it has been instantiated into the console</span>
+
+<span class="c1">#  TODO delete all example and irrelevant documents &amp; data files in KBE folder and rename folder with original name.</span>
+
+<span class="c1"># TODO Auto-writer function for the AVL-wrapper so La. Rocca can run the scripts w/o errors!!!!!!!!!!!!!!!!!!!!!</span>
+
+<span class="c1"># TODO move everything except for main.py into a \bin folder to clean up directory</span>
+
+<span class="c1"># TODO Add UML in doc</span>
+
+<span class="kn">from</span> <span class="nn">design</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">parapy.core</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">parapy.geom</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">parapy.exchange</span> <span class="k">import</span> <span class="n">STEPWriter</span>
+<span class="kn">from</span> <span class="nn">components</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">directories</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">definitions</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="n">sin</span><span class="p">,</span> <span class="n">radians</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">xlwt</span>
+
+
+<div class="viewcode-block" id="UAV"><a class="viewcode-back" href="../main.html#main.UAV">[docs]</a><span class="k">class</span> <span class="nc">UAV</span><span class="p">(</span><span class="n">DesignInput</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;  This class will generate UAV aircraft. It inherits from &#39;DesignInput.py&#39; so that the input requirements are</span>
+<span class="sd">    all in the top level of the tree.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">__icon__</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;ICON_DIR&#39;</span><span class="p">],</span> <span class="s1">&#39;plane.png&#39;</span><span class="p">)</span>
+
+    <span class="n">motor_integration</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;pusher&#39;</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">OneOf</span><span class="p">([</span><span class="s1">&#39;pusher&#39;</span><span class="p">,</span> <span class="s1">&#39;puller&#39;</span><span class="p">]))</span>
+
+<div class="viewcode-block" id="UAV.cg"><a class="viewcode-back" href="../main.html#main.UAV.cg">[docs]</a>    <span class="nd">@Input</span>
+    <span class="k">def</span> <span class="nf">cg</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Computes an initial-guess for the Center of Gravity Location at Run-Time utilizing &#39;weight_and_balance&#39;</span>
+
+<span class="sd">        :rtype: Point &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_and_balance</span><span class="p">()[</span><span class="s1">&#39;CG&#39;</span><span class="p">]</span></div>
+
+    <span class="nd">@Part</span>
+    <span class="k">def</span> <span class="nf">params</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1">#  Here we instantiate the parameter generator, passing down the inputs from the User input file.</span>
+        <span class="k">return</span> <span class="n">ParameterGenerator</span><span class="p">(</span><span class="n">pass_down</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;performance_goal&#39;</span><span class="p">,</span>
+                                             <span class="s1">&#39;goal_value&#39;</span><span class="p">,</span>
+                                             <span class="s1">&#39;weight_target&#39;</span><span class="p">,</span>
+                                             <span class="s1">&#39;target_value&#39;</span><span class="p">,</span>
+                                             <span class="s1">&#39;payload_type&#39;</span><span class="p">,</span>
+                                             <span class="s1">&#39;configuration&#39;</span><span class="p">,</span>
+                                             <span class="s1">&#39;handlaunch&#39;</span><span class="p">,</span>
+                                             <span class="s1">&#39;portable&#39;</span><span class="p">],</span>
+                                  <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Design Parameters&#39;</span><span class="p">)</span>
+
+    <span class="nd">@Part</span>
+    <span class="k">def</span> <span class="nf">wing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Wing</span><span class="p">(</span><span class="n">wing_loading</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">wing_loading</span><span class="p">,</span>
+                    <span class="n">weight_mtow</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">weight_mtow</span><span class="p">,</span>
+                    <span class="n">stall_speed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">stall_speed</span><span class="p">,</span>
+                    <span class="n">rho</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">rho</span><span class="p">,</span>
+                    <span class="n">aspect_ratio</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">aspect_ratio</span><span class="p">,</span>
+                    <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Main Wing&#39;</span><span class="p">)</span>
+
+    <span class="nd">@Part</span>
+    <span class="k">def</span> <span class="nf">stability</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1">#  TODO Make Function for AR_h, e_h</span>
+        <span class="k">return</span> <span class="n">ScissorPlot</span><span class="p">(</span><span class="n">x_cg</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cg</span><span class="o">.</span><span class="n">x</span><span class="p">,</span>
+                           <span class="n">x_ac</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="o">.</span><span class="n">aerodynamic_center</span><span class="o">.</span><span class="n">x</span><span class="p">,</span>
+                           <span class="n">x_lemac</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="o">.</span><span class="n">lemac</span><span class="p">,</span>
+                           <span class="n">mac</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="o">.</span><span class="n">mac_length</span><span class="p">,</span>
+                           <span class="n">AR</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">aspect_ratio</span><span class="p">,</span>
+                           <span class="n">e</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">wingpowerloading</span><span class="o">.</span><span class="n">e_factor</span><span class="p">,</span>
+                           <span class="n">e_h</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
+                           <span class="n">Cl_w</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="o">.</span><span class="n">lift_coef_control</span><span class="p">,</span>
+                           <span class="n">C_mac</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="o">.</span><span class="n">moment_coef_control</span><span class="p">,</span>
+                           <span class="n">Cla_w</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="o">.</span><span class="n">lift_coef_vs_alpha</span><span class="p">,</span>
+                           <span class="n">delta_xcg</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+                           <span class="n">configuration</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">configuration</span><span class="p">)</span>
+
+<div class="viewcode-block" id="UAV.final_cg"><a class="viewcode-back" href="../main.html#main.UAV.final_cg">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">final_cg</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This parameter utilizes a loop to find a converged final Center of Gravity that is stable, this step is</span>
+<span class="sd">        necessary since at run-time the tail is not yet made and the scissor plot only calculates stability for a</span>
+<span class="sd">        tail-less aircraft! &quot;&quot;&quot;</span>
+        <span class="n">old_cg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cg</span>
+        <span class="nb">print</span> <span class="s1">&#39;Run-Time CG = </span><span class="si">%1.4f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">old_cg</span><span class="o">.</span><span class="n">x</span>
+        <span class="n">new_cg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_and_balance</span><span class="p">()[</span><span class="s1">&#39;CG&#39;</span><span class="p">]</span>
+        <span class="n">loop</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="nb">abs</span><span class="p">(</span><span class="n">old_cg</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">new_cg</span><span class="o">.</span><span class="n">x</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">0.005</span> <span class="ow">and</span> <span class="n">loop</span> <span class="o">&lt;</span> <span class="mi">20</span><span class="p">:</span>
+            <span class="n">loop</span> <span class="o">=</span> <span class="n">loop</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="nb">print</span> <span class="s1">&#39;Current Iteration: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">loop</span><span class="p">)</span>
+            <span class="n">new_uav_object</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>  <span class="c1"># Large Performance improvement from making a copy of the current object!</span>
+            <span class="n">old_cg</span> <span class="o">=</span> <span class="n">new_uav_object</span><span class="o">.</span><span class="n">cg</span>
+            <span class="nb">print</span> <span class="s1">&#39;Old CG = </span><span class="si">%1.4f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">old_cg</span><span class="o">.</span><span class="n">x</span>
+            <span class="n">new_cg</span> <span class="o">=</span> <span class="n">new_uav_object</span><span class="o">.</span><span class="n">weight_and_balance</span><span class="p">()[</span><span class="s1">&#39;CG&#39;</span><span class="p">]</span>
+            <span class="nb">print</span> <span class="s1">&#39;New CG = </span><span class="si">%1.4f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">new_cg</span><span class="o">.</span><span class="n">x</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;cg&#39;</span><span class="p">,</span> <span class="n">new_cg</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">new_cg</span></div>
+
+    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">write_step</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">children</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_children</span><span class="p">()</span>
+
+        <span class="c1"># Creating dummy lists to store all external_bodies</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">_child</span> <span class="ow">in</span> <span class="n">children</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">_child</span><span class="p">,</span> <span class="s1">&#39;external_shape&#39;</span><span class="p">):</span>
+
+                <span class="c1"># Special-Case to manually add the left wing due to visualization errors</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">_child</span><span class="p">,</span> <span class="n">Wing</span><span class="p">):</span>
+
+                    <span class="c1"># Copying the left wing object and changing label for tree organization in a STEP Viewer</span>
+                    <span class="n">left_wing</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">_child</span><span class="o">.</span><span class="n">left_wing</span><span class="p">)</span>
+                    <span class="nb">setattr</span><span class="p">(</span><span class="n">left_wing</span><span class="p">,</span> <span class="s1">&#39;label&#39;</span><span class="p">,</span> <span class="s1">&#39;Left Wing&#39;</span><span class="p">)</span>
+                    <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">left_wing</span><span class="p">)</span>
+
+                    <span class="c1"># Copying the right wing object and changing label for tree organization in a STEP Viewer</span>
+                    <span class="n">right_wing</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">_child</span><span class="o">.</span><span class="n">solid</span><span class="p">)</span>
+                    <span class="nb">setattr</span><span class="p">(</span><span class="n">right_wing</span><span class="p">,</span> <span class="s1">&#39;label&#39;</span><span class="p">,</span> <span class="s1">&#39;Right Wing&#39;</span><span class="p">)</span>
+                    <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">right_wing</span><span class="p">)</span>
+
+                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">_child</span><span class="p">,</span> <span class="n">Propeller</span><span class="p">):</span>
+
+                    <span class="c1"># Copying the Propeller and changing the label for tree organization in the STEP Viewer</span>
+                    <span class="n">prop_copy</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">_child</span><span class="o">.</span><span class="n">propeller</span><span class="p">)</span>
+                    <span class="nb">setattr</span><span class="p">(</span><span class="n">prop_copy</span><span class="p">,</span> <span class="s1">&#39;label&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">_child</span><span class="o">.</span><span class="n">label</span><span class="p">)</span>
+                    <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">prop_copy</span><span class="p">)</span>
+
+                    <span class="c1"># Copying the Propeller Hub and changing the label for tree organization in the STEP Viewer</span>
+                    <span class="n">hub_copy</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">_child</span><span class="o">.</span><span class="n">propeller_fairing</span><span class="p">)</span>
+                    <span class="nb">setattr</span><span class="p">(</span><span class="n">hub_copy</span><span class="p">,</span> <span class="s1">&#39;label&#39;</span><span class="p">,</span> <span class="s1">&#39;Propeller Hub&#39;</span><span class="p">)</span>
+                    <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">hub_copy</span><span class="p">)</span>
+
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># Appending the current shape to the array to be exported</span>
+                    <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_child</span><span class="o">.</span><span class="n">external_shape</span><span class="p">)</span>
+
+        <span class="n">writer</span> <span class="o">=</span> <span class="n">STEPWriter</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;M&#39;</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;USER_DIR&#39;</span><span class="p">],</span> <span class="s1">&#39;model&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">.stp&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">))</span>
+        <span class="n">writer</span><span class="o">.</span><span class="n">write</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">writer</span>
+
+    <span class="nd">@Part</span>
+    <span class="k">def</span> <span class="nf">center_of_gravity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">VisualCG</span><span class="p">(</span><span class="n">vis_cog</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cg</span><span class="p">)</span>
+
+    <span class="c1"># TODO Make sure that distance is AC to AC</span>
+<div class="viewcode-block" id="UAV.stabilizer"><a class="viewcode-back" href="../main.html#main.UAV.stabilizer">[docs]</a>    <span class="nd">@Part</span>
+    <span class="k">def</span> <span class="nf">stabilizer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Instantiates a Compound Stabilizer by assuming that the location is simply a translation along the x-axis</span>
+<span class="sd">        with a value equivalent to the assumed tail-arm multiplied by the MAC of the main wing. Please note this value</span>
+<span class="sd">        neglects the dimension of the tail aerodynamic center as a simplification. Thus the tail arm is slightly larger</span>
+<span class="sd">        than calculated due to the additional contribution to the tail arm that the tail aerodynamic center makes &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">CompoundStabilizer</span><span class="p">(</span><span class="n">position</span><span class="o">=</span><span class="n">translate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="o">.</span><span class="n">position</span><span class="p">,</span>
+                                                     <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stability</span><span class="o">.</span><span class="n">lhc</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="o">.</span><span class="n">mac_length</span>
+                                                     <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="o">.</span><span class="n">aerodynamic_center</span><span class="o">.</span><span class="n">x</span><span class="p">,</span>
+                                                     <span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stabilizer</span><span class="o">.</span><span class="n">stabilizer_h</span><span class="o">.</span><span class="n">semi_span</span> <span class="o">*</span>
+                                                     <span class="n">sin</span><span class="p">(</span><span class="n">radians</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="o">.</span><span class="n">dihedral</span><span class="p">)</span> <span class="o">+</span>
+                                                         <span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="o">.</span><span class="n">front_spar_line</span><span class="o">.</span><span class="n">point1</span><span class="o">.</span><span class="n">z</span> <span class="o">-</span>
+                                                         <span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">z</span><span class="p">)),</span>
+                                  <span class="n">required_planform_area</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="o">.</span><span class="n">planform_area</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">stability</span><span class="o">.</span><span class="n">shs_req</span><span class="p">,</span>
+                                  <span class="n">wing_planform_area</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="o">.</span><span class="n">planform_area</span><span class="p">,</span>
+                                  <span class="n">wing_mac_length</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="o">.</span><span class="n">mac_length</span><span class="p">,</span>
+                                  <span class="n">wing_semi_span</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="o">.</span><span class="n">semi_span</span><span class="p">,</span>
+                                  <span class="n">lhc</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stability</span><span class="o">.</span><span class="n">lhc</span><span class="p">,</span>
+                                  <span class="n">configuration</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">configuration</span><span class="p">,</span>
+                                  <span class="n">aspect_ratio</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span>
+                                  <span class="n">taper</span><span class="o">=</span><span class="mf">0.35</span><span class="p">,</span>
+                                  <span class="n">twist</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+                                  <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Tail&#39;</span><span class="p">)</span></div>
+
+    <span class="nd">@Part</span>
+    <span class="k">def</span> <span class="nf">booms</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Boom</span><span class="p">(</span><span class="n">wing_in</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="p">,</span>
+                    <span class="n">tail_in</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stabilizer</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Tail Booms&#39;</span><span class="p">)</span>
+
+    <span class="nd">@Part</span>
+    <span class="k">def</span> <span class="nf">camera</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">EOIR</span><span class="p">(</span><span class="n">target_weight</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">weight_payload</span><span class="p">,</span>
+                    <span class="n">position</span><span class="o">=</span><span class="n">translate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">battery</span><span class="o">.</span><span class="n">position</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">box_length</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">pad_distance</span><span class="p">)))</span>
+
+    <span class="nd">@Part</span>
+    <span class="k">def</span> <span class="nf">fuselage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Fuselage</span><span class="p">(</span><span class="n">compartment_type</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;nose&#39;</span><span class="p">,</span> <span class="s1">&#39;container&#39;</span><span class="p">,</span> <span class="s1">&#39;container&#39;</span><span class="p">,</span> <span class="s1">&#39;container&#39;</span><span class="p">,</span> <span class="s1">&#39;motor&#39;</span><span class="p">]</span> <span class="k">if</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">motor_integration</span> <span class="ow">is</span> <span class="s1">&#39;pusher&#39;</span> <span class="k">else</span>
+                        <span class="p">[</span><span class="s1">&#39;motor&#39;</span><span class="p">,</span> <span class="s1">&#39;container&#39;</span><span class="p">,</span> <span class="s1">&#39;container&#39;</span><span class="p">,</span> <span class="s1">&#39;container&#39;</span><span class="p">,</span> <span class="s1">&#39;tail&#39;</span><span class="p">],</span>
+                        <span class="n">sizing_parts</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">camera</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">electronics</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">battery</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor</span><span class="p">]</span> <span class="k">if</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">motor_integration</span> <span class="ow">is</span> <span class="s1">&#39;pusher&#39;</span> <span class="k">else</span>
+                        <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">motor</span><span class="p">,</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">camera</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">electronics</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">battery</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span>
+                        <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Fuselage&#39;</span><span class="p">)</span>
+
+    <span class="c1"># TODO fix motor placement to be better looking</span>
+    <span class="nd">@Part</span>
+    <span class="k">def</span> <span class="nf">motor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Motor</span><span class="p">(</span><span class="n">target_power</span><span class="o">=</span><span class="p">(</span><span class="mf">9.81</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">power_loading</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">weight_mtow</span><span class="p">,</span>
+                     <span class="n">integration</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">motor_integration</span><span class="p">,</span>
+                     <span class="n">position</span><span class="o">=</span><span class="n">translate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="o">.</span><span class="n">position</span><span class="p">,</span>
+                                        <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="mf">1.2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="o">.</span><span class="n">root_chord</span><span class="p">,</span>
+                                        <span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="o">.</span><span class="n">internal_shape</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">center</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+                     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor_integration</span> <span class="ow">is</span> <span class="s1">&#39;pusher&#39;</span> <span class="k">else</span>
+                     <span class="n">translate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">position</span><span class="p">,</span>
+                               <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pad_distance</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor</span><span class="o">.</span><span class="n">length</span><span class="p">),</span>
+                               <span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="o">.</span><span class="n">internal_shape</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">center</span><span class="o">.</span><span class="n">z</span><span class="p">))</span>
+
+    <span class="nd">@Part</span>
+    <span class="k">def</span> <span class="nf">battery</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Battery</span><span class="p">(</span><span class="n">position</span><span class="o">=</span><span class="n">translate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="o">.</span><span class="n">position</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">battery</span><span class="o">.</span><span class="n">length</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">pad_distance</span><span class="p">)</span> <span class="o">*</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+                       <span class="n">sizing_target</span><span class="o">=</span><span class="s1">&#39;capacity&#39;</span><span class="p">,</span>
+                       <span class="n">sizing_value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">wingpowerloading</span><span class="o">.</span><span class="n">battery_capacity</span><span class="p">,</span>
+                       <span class="n">max_width</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">box_width</span><span class="p">,</span>
+                       <span class="n">max_height</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">box_height</span><span class="p">)</span>
+
+    <span class="nd">@Part</span>
+    <span class="k">def</span> <span class="nf">propeller</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Propeller</span><span class="p">(</span><span class="n">motor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">motor</span><span class="p">,</span> <span class="n">design_speed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">design_speed</span><span class="p">)</span>
+
+    <span class="nd">@Part</span>
+    <span class="k">def</span> <span class="nf">electronics</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Electronics</span><span class="p">(</span><span class="n">position</span><span class="o">=</span><span class="n">translate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">position</span><span class="p">,</span>
+                                              <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">box_length</span> <span class="o">/</span> <span class="mf">2.0</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">electronics</span><span class="o">.</span><span class="n">box_length</span><span class="o">*</span><span class="mf">0.5</span><span class="p">,</span>
+                                              <span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">box_height</span><span class="p">),</span>
+                           <span class="n">motor_in</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">motor</span><span class="p">)</span>
+
+    <span class="nd">@Part</span>
+    <span class="k">def</span> <span class="nf">performance</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Performance</span><span class="p">(</span><span class="n">motor_in</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">motor</span><span class="p">,</span>
+                           <span class="n">propeller_in</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">propeller</span><span class="p">,</span>
+                           <span class="n">battery_in</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">battery</span><span class="p">,</span>
+                           <span class="n">wing_in</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="p">,</span>
+                           <span class="n">weight_mtow</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">[</span><span class="s1">&#39;mtow&#39;</span><span class="p">],</span>
+                           <span class="n">parasitic_drag</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">parasite_drag</span><span class="p">,</span>
+                           <span class="n">oswald_factor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">wingpowerloading</span><span class="o">.</span><span class="n">e_factor</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Performance&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Geometry Constraints</span>
+    <span class="nd">@Attribute</span><span class="p">(</span><span class="n">private</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">pad_distance</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fuselage</span><span class="o">.</span><span class="n">pad_factor</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="o">.</span><span class="n">root_chord</span>
+
+<span class="c1">#     # TODO Add a nice bar-graph that shows performance, power consumption, drag, etc in the GUI with boxes!</span>
+
+    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">weights</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_and_balance</span><span class="p">()[</span><span class="s1">&#39;WEIGHTS&#39;</span><span class="p">]</span>
+
+<div class="viewcode-block" id="UAV.parasite_drag"><a class="viewcode-back" href="../main.html#main.UAV.parasite_drag">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">parasite_drag</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Utilizes Raymer&#39;s Equivalent skin-friction drag method to compute Zero-Lift Drag. The utilized value used</span>
+<span class="sd">        for the skin_friction_coef is taken from subsonic, light propeller aircraft</span>
+
+<span class="sd">        http://www.fzt.haw-hamburg.de/pers/Scholz/HOOU/AircraftDesign_13_Drag.pdf</span>
+
+<span class="sd">        :return: Zero-Lift Drag Coefficient</span>
+<span class="sd">        :rtype: Float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># TODO Incorporate drag estimation into the knowledge base</span>
+        <span class="n">skin_friction_coef</span> <span class="o">=</span> <span class="mf">0.0055</span>
+        <span class="n">area_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sum_area</span><span class="p">()</span>
+        <span class="n">reference_area</span> <span class="o">=</span> <span class="n">area_dict</span><span class="p">[</span><span class="s1">&#39;REFERENCE&#39;</span><span class="p">]</span>
+        <span class="n">wetted_area</span> <span class="o">=</span> <span class="n">area_dict</span><span class="p">[</span><span class="s1">&#39;WETTED&#39;</span><span class="p">][</span><span class="s1">&#39;total&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">wetted_area</span> <span class="ow">and</span> <span class="n">reference_area</span> <span class="ow">is</span> <span class="ow">not</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">parasite_drag</span> <span class="o">=</span> <span class="n">skin_friction_coef</span> <span class="o">*</span> <span class="p">(</span><span class="n">wetted_area</span> <span class="o">/</span> <span class="n">reference_area</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">parasite_drag</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">parasite_drag</span></div>
+
+    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">areas</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sum_area</span><span class="p">()</span>
+
+<div class="viewcode-block" id="UAV.weight_and_balance"><a class="viewcode-back" href="../main.html#main.UAV.weight_and_balance">[docs]</a>    <span class="k">def</span> <span class="nf">weight_and_balance</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Retrieves all relevant parameters from children with `weight` and `center_of_gravity` attributes and then</span>
+<span class="sd">        calculates the center of gravity w.r.t the origin Point(0, 0, 0)</span>
+
+<span class="sd">        :return: A dictionary of component weights as well as the center of gravity fieldnames = &#39;WEIGHTS&#39;, &#39;CG&#39;</span>
+<span class="sd">        :rtype: dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">children</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_children</span><span class="p">()</span>
+
+        <span class="c1"># Creating dummy lists to store all weights and respective c.g. locations</span>
+        <span class="n">weight</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">cg</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># Defining the structure of the weight_dictionary</span>
+        <span class="n">weight_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;WEIGHTS&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;wing&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+                                   <span class="s1">&#39;fuselage&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+                                   <span class="s1">&#39;vt&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+                                   <span class="s1">&#39;ht&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+                                   <span class="s1">&#39;ct&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+                                   <span class="s1">&#39;boom&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+                                   <span class="s1">&#39;payload&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+                                   <span class="s1">&#39;prop&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+                                   <span class="s1">&#39;battery&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+                                   <span class="s1">&#39;electronics&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+                                   <span class="s1">&#39;misc&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">},</span>
+                       <span class="s1">&#39;CG&#39;</span><span class="p">:</span> <span class="n">Point</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)}</span>
+
+        <span class="k">for</span> <span class="n">_child</span> <span class="ow">in</span> <span class="n">children</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">_child</span><span class="p">,</span> <span class="s1">&#39;weight&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">_child</span><span class="p">,</span> <span class="s1">&#39;center_of_gravity&#39;</span><span class="p">):</span>
+                <span class="n">weight</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_child</span><span class="o">.</span><span class="n">getslot</span><span class="p">(</span><span class="s1">&#39;weight&#39;</span><span class="p">))</span>
+                <span class="n">cg</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_child</span><span class="o">.</span><span class="n">getslot</span><span class="p">(</span><span class="s1">&#39;center_of_gravity&#39;</span><span class="p">))</span>
+
+                <span class="k">if</span> <span class="n">_child</span><span class="o">.</span><span class="n">getslot</span><span class="p">(</span><span class="s1">&#39;component_type&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;wing&#39;</span><span class="p">:</span>
+                    <span class="n">weight_dict</span><span class="p">[</span><span class="s1">&#39;WEIGHTS&#39;</span><span class="p">][</span><span class="s1">&#39;wing&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">weight_dict</span><span class="p">[</span><span class="s1">&#39;WEIGHTS&#39;</span><span class="p">][</span><span class="s1">&#39;wing&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">_child</span><span class="o">.</span><span class="n">getslot</span><span class="p">(</span><span class="s1">&#39;weight&#39;</span><span class="p">))</span>
+
+                <span class="k">elif</span> <span class="n">_child</span><span class="o">.</span><span class="n">getslot</span><span class="p">(</span><span class="s1">&#39;component_type&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;fuselage&#39;</span><span class="p">:</span>
+                    <span class="n">weight_dict</span><span class="p">[</span><span class="s1">&#39;WEIGHTS&#39;</span><span class="p">][</span><span class="s1">&#39;fuselage&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">weight_dict</span><span class="p">[</span><span class="s1">&#39;WEIGHTS&#39;</span><span class="p">][</span><span class="s1">&#39;fuselage&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">_child</span><span class="o">.</span><span class="n">getslot</span><span class="p">(</span><span class="s1">&#39;weight&#39;</span><span class="p">))</span>
+
+                <span class="k">elif</span> <span class="n">_child</span><span class="o">.</span><span class="n">getslot</span><span class="p">(</span><span class="s1">&#39;component_type&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;vt&#39;</span><span class="p">:</span>
+                    <span class="n">weight_dict</span><span class="p">[</span><span class="s1">&#39;WEIGHTS&#39;</span><span class="p">][</span><span class="s1">&#39;vt&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">weight_dict</span><span class="p">[</span><span class="s1">&#39;WEIGHTS&#39;</span><span class="p">][</span><span class="s1">&#39;vt&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">_child</span><span class="o">.</span><span class="n">getslot</span><span class="p">(</span><span class="s1">&#39;weight&#39;</span><span class="p">))</span>
+
+                <span class="k">elif</span> <span class="n">_child</span><span class="o">.</span><span class="n">getslot</span><span class="p">(</span><span class="s1">&#39;component_type&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;ht&#39;</span><span class="p">:</span>
+                    <span class="n">weight_dict</span><span class="p">[</span><span class="s1">&#39;WEIGHTS&#39;</span><span class="p">][</span><span class="s1">&#39;ht&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">weight_dict</span><span class="p">[</span><span class="s1">&#39;WEIGHTS&#39;</span><span class="p">][</span><span class="s1">&#39;ht&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">_child</span><span class="o">.</span><span class="n">getslot</span><span class="p">(</span><span class="s1">&#39;weight&#39;</span><span class="p">))</span>
+
+                <span class="c1"># Special Case for Compound Tail</span>
+                <span class="k">elif</span> <span class="n">_child</span><span class="o">.</span><span class="n">getslot</span><span class="p">(</span><span class="s1">&#39;component_type&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;ct&#39;</span><span class="p">:</span>
+                    <span class="n">weight_dict</span><span class="p">[</span><span class="s1">&#39;WEIGHTS&#39;</span><span class="p">][</span><span class="s1">&#39;ct&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">weight_dict</span><span class="p">[</span><span class="s1">&#39;WEIGHTS&#39;</span><span class="p">][</span><span class="s1">&#39;ct&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">_child</span><span class="o">.</span><span class="n">getslot</span><span class="p">(</span><span class="s1">&#39;weight&#39;</span><span class="p">))</span>
+                    <span class="n">weight_dict</span><span class="p">[</span><span class="s1">&#39;WEIGHTS&#39;</span><span class="p">][</span><span class="s1">&#39;ht&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">weight_dict</span><span class="p">[</span><span class="s1">&#39;WEIGHTS&#39;</span><span class="p">][</span><span class="s1">&#39;ht&#39;</span><span class="p">]</span> <span class="o">+</span> \
+                                                   <span class="p">(</span><span class="n">_child</span><span class="o">.</span><span class="n">stabilizer_h</span><span class="o">.</span><span class="n">getslot</span><span class="p">(</span><span class="s1">&#39;weight&#39;</span><span class="p">))</span>
+                    <span class="n">weight_dict</span><span class="p">[</span><span class="s1">&#39;WEIGHTS&#39;</span><span class="p">][</span><span class="s1">&#39;vt&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">weight_dict</span><span class="p">[</span><span class="s1">&#39;WEIGHTS&#39;</span><span class="p">][</span><span class="s1">&#39;vt&#39;</span><span class="p">]</span> <span class="o">+</span> \
+                                                   <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">_child</span><span class="o">.</span><span class="n">stabilizer_vright</span><span class="o">.</span><span class="n">getslot</span><span class="p">(</span><span class="s1">&#39;weight&#39;</span><span class="p">))</span>
+
+                <span class="k">elif</span> <span class="n">_child</span><span class="o">.</span><span class="n">getslot</span><span class="p">(</span><span class="s1">&#39;component_type&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;boom&#39;</span><span class="p">:</span>
+                    <span class="n">weight_dict</span><span class="p">[</span><span class="s1">&#39;WEIGHTS&#39;</span><span class="p">][</span><span class="s1">&#39;boom&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">weight_dict</span><span class="p">[</span><span class="s1">&#39;WEIGHTS&#39;</span><span class="p">][</span><span class="s1">&#39;boom&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">_child</span><span class="o">.</span><span class="n">getslot</span><span class="p">(</span><span class="s1">&#39;weight&#39;</span><span class="p">))</span>
+
+                <span class="k">elif</span> <span class="n">_child</span><span class="o">.</span><span class="n">getslot</span><span class="p">(</span><span class="s1">&#39;component_type&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;payload&#39;</span><span class="p">:</span>
+                    <span class="n">weight_dict</span><span class="p">[</span><span class="s1">&#39;WEIGHTS&#39;</span><span class="p">][</span><span class="s1">&#39;payload&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">weight_dict</span><span class="p">[</span><span class="s1">&#39;WEIGHTS&#39;</span><span class="p">][</span><span class="s1">&#39;payload&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">_child</span><span class="o">.</span><span class="n">getslot</span><span class="p">(</span><span class="s1">&#39;weight&#39;</span><span class="p">))</span>
+
+                <span class="k">elif</span> <span class="n">_child</span><span class="o">.</span><span class="n">getslot</span><span class="p">(</span><span class="s1">&#39;component_type&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;prop&#39;</span><span class="p">:</span>
+                    <span class="n">weight_dict</span><span class="p">[</span><span class="s1">&#39;WEIGHTS&#39;</span><span class="p">][</span><span class="s1">&#39;prop&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">weight_dict</span><span class="p">[</span><span class="s1">&#39;WEIGHTS&#39;</span><span class="p">][</span><span class="s1">&#39;prop&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">_child</span><span class="o">.</span><span class="n">getslot</span><span class="p">(</span><span class="s1">&#39;weight&#39;</span><span class="p">))</span>
+
+                <span class="k">elif</span> <span class="n">_child</span><span class="o">.</span><span class="n">getslot</span><span class="p">(</span><span class="s1">&#39;component_type&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;battery&#39;</span><span class="p">:</span>
+                    <span class="n">weight_dict</span><span class="p">[</span><span class="s1">&#39;WEIGHTS&#39;</span><span class="p">][</span><span class="s1">&#39;battery&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">weight_dict</span><span class="p">[</span><span class="s1">&#39;WEIGHTS&#39;</span><span class="p">][</span><span class="s1">&#39;battery&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">_child</span><span class="o">.</span><span class="n">getslot</span><span class="p">(</span><span class="s1">&#39;weight&#39;</span><span class="p">))</span>
+
+                <span class="k">elif</span> <span class="n">_child</span><span class="o">.</span><span class="n">getslot</span><span class="p">(</span><span class="s1">&#39;component_type&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;electronics&#39;</span><span class="p">:</span>
+                    <span class="n">weight_dict</span><span class="p">[</span><span class="s1">&#39;WEIGHTS&#39;</span><span class="p">][</span><span class="s1">&#39;electronics&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">weight_dict</span><span class="p">[</span><span class="s1">&#39;WEIGHTS&#39;</span><span class="p">][</span><span class="s1">&#39;electronics&#39;</span><span class="p">]</span> <span class="o">+</span> \
+                                                            <span class="p">(</span><span class="n">_child</span><span class="o">.</span><span class="n">getslot</span><span class="p">(</span><span class="s1">&#39;weight&#39;</span><span class="p">))</span>
+
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">weight_dict</span><span class="p">[</span><span class="s1">&#39;WEIGHTS&#39;</span><span class="p">][</span><span class="s1">&#39;misc&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">weight_dict</span><span class="p">[</span><span class="s1">&#39;WEIGHTS&#39;</span><span class="p">][</span><span class="s1">&#39;misc&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">_child</span><span class="o">.</span><span class="n">getslot</span><span class="p">(</span><span class="s1">&#39;weight&#39;</span><span class="p">)</span>
+                    <span class="nb">print</span> <span class="ne">Warning</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> does not have an Attribute &#39;component_type&#39;&quot;</span>
+                                  <span class="s2">&quot;it was thus added to the &#39;misc&#39; category in the weight_dictionary&quot;</span> <span class="o">%</span> <span class="n">_child</span><span class="p">)</span>
+
+        <span class="n">total_weight</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">weight</span><span class="p">)</span>
+        <span class="n">weight_dict</span><span class="p">[</span><span class="s1">&#39;WEIGHTS&#39;</span><span class="p">][</span><span class="s1">&#39;mtow&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">total_weight</span>
+
+        <span class="c1"># CG calculation through a weighted average utilizing list comprehension</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">weight</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">cg</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">cg_x</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">weight</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">cg</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">x</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">weight</span><span class="p">))])</span> <span class="o">/</span> <span class="n">total_weight</span>
+            <span class="n">cg_y</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">weight</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">cg</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">y</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">weight</span><span class="p">))])</span> <span class="o">/</span> <span class="n">total_weight</span>
+            <span class="n">cg_z</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">weight</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">cg</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">z</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">weight</span><span class="p">))])</span> <span class="o">/</span> <span class="n">total_weight</span>
+
+            <span class="n">weight_dict</span><span class="p">[</span><span class="s1">&#39;CG&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span><span class="n">cg_x</span><span class="p">,</span> <span class="n">cg_y</span><span class="p">,</span> <span class="n">cg_z</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">weight_dict</span></div>
+
+<div class="viewcode-block" id="UAV.sum_area"><a class="viewcode-back" href="../main.html#main.UAV.sum_area">[docs]</a>    <span class="k">def</span> <span class="nf">sum_area</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Retrieves all wetted surface areas of instantiated children that have the attributes `wetted_area` and</span>
+<span class="sd">        `planform_area` which are defined by the class `ExternalBody`. This class</span>
+
+<span class="sd">        :return: A dictionary of wetted surface and reference area with the fieldnames: &#39;WETTED&#39; and &#39;REFERENCE&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">children</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_children</span><span class="p">()</span>
+
+        <span class="n">areas</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">area_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;WETTED&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;wing&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                                <span class="s1">&#39;fuselage&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                                <span class="s1">&#39;vt&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                                <span class="s1">&#39;ht&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                                <span class="s1">&#39;ct&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                                <span class="s1">&#39;boom&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                                <span class="s1">&#39;misc&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                                <span class="s1">&#39;total&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span>
+                     <span class="s1">&#39;REFERENCE&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+
+        <span class="k">for</span> <span class="n">_child</span> <span class="ow">in</span> <span class="n">children</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">_child</span><span class="p">,</span> <span class="s1">&#39;wetted_area&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">_child</span><span class="p">,</span> <span class="s1">&#39;planform_area&#39;</span><span class="p">):</span>
+                <span class="n">areas</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_child</span><span class="o">.</span><span class="n">wetted_area</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">_child</span><span class="o">.</span><span class="n">getslot</span><span class="p">(</span><span class="s1">&#39;surface_type&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;wing&#39;</span><span class="p">:</span>
+                    <span class="n">area_dict</span><span class="p">[</span><span class="s1">&#39;WETTED&#39;</span><span class="p">][</span><span class="s1">&#39;wing&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">area_dict</span><span class="p">[</span><span class="s1">&#39;WETTED&#39;</span><span class="p">][</span><span class="s1">&#39;wing&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">_child</span><span class="o">.</span><span class="n">wetted_area</span>
+                    <span class="n">area_dict</span><span class="p">[</span><span class="s1">&#39;REFERENCE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">area_dict</span><span class="p">[</span><span class="s1">&#39;REFERENCE&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">_child</span><span class="o">.</span><span class="n">planform_area</span>
+
+                <span class="k">elif</span> <span class="n">_child</span><span class="o">.</span><span class="n">getslot</span><span class="p">(</span><span class="s1">&#39;surface_type&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;fuselage&#39;</span><span class="p">:</span>
+                    <span class="n">area_dict</span><span class="p">[</span><span class="s1">&#39;WETTED&#39;</span><span class="p">][</span><span class="s1">&#39;fuselage&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">area_dict</span><span class="p">[</span><span class="s1">&#39;WETTED&#39;</span><span class="p">][</span><span class="s1">&#39;fuselage&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">_child</span><span class="o">.</span><span class="n">wetted_area</span>
+
+                <span class="k">elif</span> <span class="n">_child</span><span class="o">.</span><span class="n">getslot</span><span class="p">(</span><span class="s1">&#39;surface_type&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;vt&#39;</span><span class="p">:</span>
+                    <span class="n">area_dict</span><span class="p">[</span><span class="s1">&#39;WETTED&#39;</span><span class="p">][</span><span class="s1">&#39;vt&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">area_dict</span><span class="p">[</span><span class="s1">&#39;WETTED&#39;</span><span class="p">][</span><span class="s1">&#39;vt&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">_child</span><span class="o">.</span><span class="n">wetted_area</span>
+
+                <span class="k">elif</span> <span class="n">_child</span><span class="o">.</span><span class="n">getslot</span><span class="p">(</span><span class="s1">&#39;surface_type&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;ht&#39;</span><span class="p">:</span>
+                    <span class="n">area_dict</span><span class="p">[</span><span class="s1">&#39;WETTED&#39;</span><span class="p">][</span><span class="s1">&#39;ht&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">area_dict</span><span class="p">[</span><span class="s1">&#39;WETTED&#39;</span><span class="p">][</span><span class="s1">&#39;ht&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">_child</span><span class="o">.</span><span class="n">wetted_area</span>
+
+                <span class="c1"># Special Case for Compound Tail</span>
+                <span class="k">elif</span> <span class="n">_child</span><span class="o">.</span><span class="n">getslot</span><span class="p">(</span><span class="s1">&#39;component_type&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;ct&#39;</span><span class="p">:</span>
+                    <span class="n">area_dict</span><span class="p">[</span><span class="s1">&#39;WETTED&#39;</span><span class="p">][</span><span class="s1">&#39;ct&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">area_dict</span><span class="p">[</span><span class="s1">&#39;WETTED&#39;</span><span class="p">][</span><span class="s1">&#39;ct&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">_child</span><span class="o">.</span><span class="n">wetted_area</span>
+                    <span class="n">area_dict</span><span class="p">[</span><span class="s1">&#39;WETTED&#39;</span><span class="p">][</span><span class="s1">&#39;ht&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">area_dict</span><span class="p">[</span><span class="s1">&#39;WETTED&#39;</span><span class="p">][</span><span class="s1">&#39;ht&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">_child</span><span class="o">.</span><span class="n">stabilizer_h</span><span class="o">.</span><span class="n">wetted_area</span>
+                    <span class="n">area_dict</span><span class="p">[</span><span class="s1">&#39;WETTED&#39;</span><span class="p">][</span><span class="s1">&#39;vt&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">area_dict</span><span class="p">[</span><span class="s1">&#39;WETTED&#39;</span><span class="p">][</span><span class="s1">&#39;vt&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">_child</span><span class="o">.</span><span class="n">stabilizer_vright</span><span class="o">.</span><span class="n">wetted_area</span> <span class="o">*</span> <span class="mf">2.0</span>
+
+                <span class="k">elif</span> <span class="n">_child</span><span class="o">.</span><span class="n">getslot</span><span class="p">(</span><span class="s1">&#39;surface_type&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;boom&#39;</span><span class="p">:</span>
+                    <span class="n">area_dict</span><span class="p">[</span><span class="s1">&#39;WETTED&#39;</span><span class="p">][</span><span class="s1">&#39;boom&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">area_dict</span><span class="p">[</span><span class="s1">&#39;WETTED&#39;</span><span class="p">][</span><span class="s1">&#39;boom&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">_child</span><span class="o">.</span><span class="n">wetted_area</span>
+
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">area_dict</span><span class="p">[</span><span class="s1">&#39;WETTED&#39;</span><span class="p">][</span><span class="s1">&#39;misc&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">area_dict</span><span class="p">[</span><span class="s1">&#39;WETTED&#39;</span><span class="p">][</span><span class="s1">&#39;misc&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">_child</span><span class="o">.</span><span class="n">wetted_area</span>
+                    <span class="nb">print</span> <span class="ne">Warning</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> does not have an Attribute &#39;surface_type&#39; &quot;</span>
+                                  <span class="s2">&quot;it was thus added to the &#39;misc&#39; category in the area_dictionary&quot;</span> <span class="o">%</span> <span class="n">_child</span><span class="p">)</span>
+        <span class="n">area_dict</span><span class="p">[</span><span class="s1">&#39;WETTED&#39;</span><span class="p">][</span><span class="s1">&#39;total&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">areas</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">area_dict</span></div>
+
+    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">write_excel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">hdr_font</span> <span class="o">=</span> <span class="n">xlwt</span><span class="o">.</span><span class="n">Font</span><span class="p">()</span>
+        <span class="n">hdr_font</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;Times New Roman&#39;</span>
+        <span class="n">hdr_font</span><span class="o">.</span><span class="n">bold</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="n">hdr_style</span> <span class="o">=</span> <span class="n">xlwt</span><span class="o">.</span><span class="n">XFStyle</span><span class="p">()</span>
+        <span class="n">hdr_style</span><span class="o">.</span><span class="n">font</span> <span class="o">=</span> <span class="n">hdr_font</span>
+
+        <span class="n">wb</span> <span class="o">=</span> <span class="n">xlwt</span><span class="o">.</span><span class="n">Workbook</span><span class="p">()</span>
+        <span class="n">ws0</span> <span class="o">=</span> <span class="n">wb</span><span class="o">.</span><span class="n">add_sheet</span><span class="p">(</span><span class="s1">&#39;Dimensions&#39;</span><span class="p">)</span>
+
+        <span class="n">headers</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Parameter&#39;</span><span class="p">,</span> <span class="s1">&#39;Value&#39;</span><span class="p">,</span> <span class="s1">&#39;Units&#39;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">headers</span><span class="p">)):</span>
+            <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">headers</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">hdr_style</span><span class="p">)</span>
+
+        <span class="n">row</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">row</span> <span class="o">=</span> <span class="n">row</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+                <span class="c1"># ws0.write(i + 2, i + 2, value)</span>
+                <span class="c1"># ws0.write(i + 2, i + 3, &#39;[kg]&#39;)</span>
+
+        <span class="n">wb</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;USER_DIR&#39;</span><span class="p">],</span> <span class="s1">&#39;results&#39;</span><span class="p">,</span> <span class="s1">&#39;output.xls&#39;</span><span class="p">))</span>
+        <span class="k">return</span> <span class="s1">&#39;Excel File Written&#39;</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">parapy.gui</span> <span class="k">import</span> <span class="n">display</span>
+
+    <span class="n">obj</span> <span class="o">=</span> <span class="n">UAV</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;myUAV&#39;</span><span class="p">)</span>
+    <span class="n">display</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, San Kilkis, Nelson Johnson.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.0',
+            LANGUAGE:'en',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -82,18 +82,28 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../definitions.html">Definitions Documentation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../directories.html">Directories Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../definitions.html">Definitions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../directories.html">Directories</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../components/index.html">Components Module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../components/battery.html">Li-PO Battery</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../components/electronics.html">Electronics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../components/electronics/index.html">Electronics Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../components/electronics/electronics.html">Electronics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../components/electronics/flightcontroller.html">FlightController</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../components/electronics/speedcontroller.html">SpeedController</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../components/liftingsurfaces/index.html">LiftingSurface Module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../components/liftingsurfaces/liftingsurfaceprim.html">LiftingSurface Documentation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../components/liftingsurfaces/wing.html">Wing Documentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../components/liftingsurfaces/liftingsurfaceprim.html">LiftingSurface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../components/liftingsurfaces/wing.html">Wing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../components/liftingsurfaces/scissorplot.html">ScissorPlot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../components/liftingsurfaces/horizontalstab.html">HorizontalStabilizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../components/liftingsurfaces/verticalstab.html">VerticalStablilizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../components/liftingsurfaces/compoundstab.html">CompoundStabilizer</a></li>
 </ul>
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../main.html">Main UAV</a></li>
 </ul>
 
             
@@ -197,7 +207,7 @@
 
 <div class="viewcode-block" id="get_dir"><a class="viewcode-back" href="../directories.html#directories.get_dir">[docs]</a><span class="k">def</span> <span class="nf">get_dir</span><span class="p">(</span><span class="n">folder_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;get_dir returns the top-level directory of the package as an absolute path if :attr:`folder_name` is not</span>
-<span class="sd">    specified [1]. If an exiting sub directory is specified as :type:`str` into the field :attr:`folder_name` then the</span>
+<span class="sd">    specified [1]. If an exiting sub directory is specified as `str` into the field :attr:`folder_name` then the</span>
 <span class="sd">    return of get_dir will be absolute path to this sub directory [2]. Usage with file names inside a directory is also</span>
 <span class="sd">    possible, see example below [3]</span>
 

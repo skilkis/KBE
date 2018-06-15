@@ -11,66 +11,144 @@ from definitions import ExternalBody
 __author__ = ["Nelson Johnson"]
 __all__ = ["CompoundStabilizer"]
 
-#  TODO fix error when hide_label changed to false and it is displayed from tree.
-
 
 class CompoundStabilizer(ExternalBody):
-    """ This class will size the VT according to statistical VT volume coefficients and generate it using the
-    LiftingSurface primitive. Also, the bounding box is made for the section of the VTP within the fuselage, which is
-    used to size the fuselage frames.
+    """ This class will instantiate the horizontal tail with the required area form the scissor plot. Also it will
+    instantiate the vertical tails and position them relative to one another in a 'boom tail' conifguration.  It also
+    places a connector at the VT and HT intersection for the fuselage booms.
+
     :returns: ParaPy Geometry of the VT
+
+    :param required_planform_area: This is the required horizontal tail area of the main wings from the stability \
+    analysis.
+    :type required_planform_area: float
+
+    :param wing_planform_area: This is the wing planfrom area in [m^2]
+    :type wing_planform_area: float
+
+    :param wing_mac_length: This is the MAC length of the wing in SI meters
+    :type wing_mac_length: float
+
+    :param wing_semi_span: This is the semispan of the wing in SI meters
+    :type wing_semi_span: float
+
+    :param lhc: This is non-dimensionalized horizontal tail arm for the conventional plane.
+    :type lhc: float
+
+    :param configuration: This is a switch to determine the configuration.
+    :type configuration: float
+
+    :param aspect_ratio: This is the assumed Aspect Ratio of the HT Surface. The VT surface is a fixed AR of 1.4
+    :type aspect_ratio: float
+
+    :param taper: This is the required Taper Ratio of the VT Surface.
+    :type taper: float
+
+    :param twist: This is the required Twist Angle of the Tip Airfoil w.r.t the Root Airfoil in degrees.
+    :type twist: float
+
+    :param color: Changes the color of the wing skin to the one defined in MyColors
+    :type color: tuple
     """
 
     #: Below is the required horizontal tail area of the main wings from the stability analysis.
-    #: :type: float
     required_planform_area = Input(0.8, settable=False)
 
     #: Below is the required TOTAL wing area of the main wings.
-    #: :type: float
     wing_planform_area = Input(0.8, settable=False)
 
     #: Below is the MAC length of the wing
-    #: :type: float
     wing_mac_length = Input(0.43, settable=False)
 
     #: Below is the semispan of the wing
-    #: :type: float
     wing_semi_span = Input(1.9, settable=False)
 
     #: Below is the non-dimensionalized horizontal tail arm
-    #: :type: float
     lhc = Input(3.0, settable=False)
 
     #: Below is a switch to determine the configuration.
-    #: :type: str
     configuration = Input('conventional', validator=val.OneOf(['conventional']), settable=False)
 
-    #: Below is the assumed VT aspect ratio.
-    #: :type: float
-    aspect_ratio = Input(1.4, settable=False)
+    #: Below is the assumed HT aspect ratio.
+    aspect_ratio = Input(5.0, settable=False)
 
     #: Below is the assumed VT taper ratio.
-    #: :type: float
     taper = Input(0.35, settable=False)
 
     #:  This is the wing twist for the VT.
-    #: :type: float
     twist = Input(0.0, settable=False)
 
     #: This value is used to set the default color of the wing-part
-    #: :type: tuple
     color = Input(MyColors.skin_color)
+
+    @Part
+    def stabilizer_h(self):
+        """ This is an instantiation of the HorizontalStabilizer class with the required planform area from the scissor
+        plot.
+
+        :return: Horizontal Tail Object
+        :rtype: Fused
+        """
+        return HorizontalStabilizer(position=self.position,
+                                    planform_area=self.required_planform_area,
+                                    aspect_ratio=self.aspect_ratio)
+
+    @Part
+    def stabilizer_vright(self):
+        """ This is an instantiation of the VerticalStablilizer class with the current aircraft dimensions for the right
+        VT.
+
+        :return: Right Vertical Tail Object
+        :rtype: Fused
+        """
+        return VerticalStabilizer(position=translate(self.position,
+                                                     'y', self.stabilizer_h.semi_span,
+                                                     'z', sorted(self.stabilizer_h.solid.faces,
+                                                                 key=lambda f: f.cog.y)[-1].cog.z - self.position.z),
+                                  wing_planform_area=self.wing_planform_area,
+                                  wing_mac_length=self.wing_mac_length,
+                                  wing_semi_span=self.wing_semi_span,
+                                  lvc=self.lhc,
+                                  lvc_canard=0.5,
+                                  configuration=self.configuration,
+                                  aspect_ratio=1.4,
+                                  taper=0.35,
+                                  twist=0.0)
+
+    @Part
+    def stabilizer_vleft(self):
+        """ This is an instantiation of the VerticalStablilizer class with the current aircraft dimensions for the left
+        VT.
+
+        :return: Left Vertical Tail Object
+        :rtype: Fused
+        """
+        return VerticalStabilizer(position=translate(self.position,
+                                                     'y', -1 * self.stabilizer_h.semi_span,
+                                                     'z', sorted(self.stabilizer_h.solid.faces,
+                                                                 key=lambda f: f.cog.y)[-1].cog.z - self.position.z),
+                                  wing_planform_area=self.wing_planform_area,
+                                  wing_mac_length=self.wing_mac_length,
+                                  wing_semi_span=self.wing_semi_span,
+                                  lvc=self.lhc,
+                                  lvc_canard=self.lhc,
+                                  configuration=self.configuration,
+                                  aspect_ratio=1.4,
+                                  taper=0.35,
+                                  twist=0.0)
 
     @Attribute
     def component_type(self):
-        """ An identifier to classify the part as a Compound Tail """
-        return 'ct'
+        """ This attribute names the component 'ct' for compound stabilizer.
 
-    # TODO Make sure that the horizontal tail does not allow dihedral angle!!!
+        :return: Name of VT
+        :rtype: str
+        """
+        return 'ct'
 
     @Attribute
     def weight(self):
-        """ Total mass of the component
+        """ Total mass of the compound tail.
 
         :return: Mass in SI kilogram
         :rtype: float
@@ -79,24 +157,27 @@ class CompoundStabilizer(ExternalBody):
 
     @Attribute
     def center_of_gravity(self):
-        """ Location of the center of gravity w.r.t the origin
+        """ Location of the center of gravity of the compound stabilizer w.r.t the origin. This is calculated with
+        weighted averages.
 
         :return: Location Tuple in SI meter
         :rtype: Point
         """
-        return self.position
+        weights = [self.stabilizer_h.weight, self.stabilizer_vright.weight, self.stabilizer_vleft.weight]
+        cgs = [self.stabilizer_h.center_of_gravity, self.stabilizer_vright.center_of_gravity,
+               self.stabilizer_vleft.center_of_gravity]
+        total_weight = sum(weights)
+        cg_x = sum([weights[i] * cgs[i].x for i in range(0, len(weights))]) / total_weight
+        cg_y = sum([weights[i] * cgs[i].y for i in range(0, len(weights))]) / total_weight
+        cg_z = sum([weights[i] * cgs[i].z for i in range(0, len(weights))]) / total_weight
 
-    @Attribute
-    def boom_plane(self):
-        """ Defines the XZ-plane that is coincident with the boom connector """
-        return Plane(reference=self.tail_shaft_circle[0].center,
-                     normal=Vector(0, 1, 0),
-                     binormal=Vector(0, 0, 1))
+        return Point(cg_x, cg_y, cg_z)
 
     @Attribute(private=True)
     def tail_joiner(self):
         """ This joins the tails and connector shafts together through a series of Fuse operations to be able to
         present a single `external_shape` required for the .step file output.
+
         :return: ParaPy Fused Boxes
         :rtype: Fused
         """
@@ -115,10 +196,10 @@ class CompoundStabilizer(ExternalBody):
 
     @Attribute(private=True)
     def critical_thickness(self):
-        """ This attribute finds the larger airfoil thickness of the horiz. or vert. stabilizer to then be able to
-        construct the tail-boom shaft.
+        """ This attribute finds the larger airfoil thickness of the HT or VT stabilizers to then be able to
+        construct the tail-boom shaft with a radius equal to this larger thickness.
 
-        :return: The larger airfoil thickness of the horiz. or vert. stabilizer
+        :return: The larger airfoil thickness of the HT or VT
         :rtype: float
         """
         horizontal_tail_thickness = sorted(self.stabilizer_h.solid.faces, key=lambda f: f.cog.y)[-1].bbox.height
@@ -131,55 +212,33 @@ class CompoundStabilizer(ExternalBody):
 
     @Attribute(private=True)
     def tail_shaft_circle(self):
+        """ This attribute makes a circle with thickness found from 'critical_thickness' attribute and extrudes it
+        along the HT tip chord.
+
+        :return: Boom Connector Cross-Section and Extrude
+        """
         _profile = Circle(position=self.stabilizer_vright.position, radius=(self.critical_thickness / 2.0) * 1.5)
         _extrude = ExtrudedSolid(island=_profile, distance=self.stabilizer_h.root_chord)
         return _profile, _extrude
 
-    @Part
-    def stabilizer_h(self):
-        return HorizontalStabilizer(position=self.position,
-                                    planform_area=self.required_planform_area)
+    @Attribute
+    def boom_plane(self):
+        """ Defines the XZ-plane that is coincident with the boom connector.
 
-    @Part
-    def stabilizer_vright(self):
-    #  TODO connect lvc to config and figure out how to calc v_v_canard
-    #  TODO Relation for AR_v, taper -> STATISTICS
-    #  TODO integrate lvc into stability module
-        return VerticalStabilizer(position=translate(self.position,
-                                                     'y', self.stabilizer_h.semi_span,
-                                                     'z', sorted(self.stabilizer_h.solid.faces,
-                                                                 key=lambda f: f.cog.y)[-1].cog.z - self.position.z),
-                                  wing_planform_area=self.wing_planform_area,
-                                  wing_mac_length=self.wing_mac_length,
-                                  wing_semi_span=self.wing_semi_span,
-                                  lvc=self.lhc,
-                                  lvc_canard=0.5,
-                                  configuration=self.configuration,
-                                  aspect_ratio=1.4,
-                                  taper=0.35,
-                                  twist=0.0)
-
-    @Part
-    def stabilizer_vleft(self):
-    #  TODO connect lvc to config and figure out how to calc v_v_canard
-    #  TODO Relation for AR_v, taper -> STATISTICS
-    #  TODO integrate lvc into stability module
-        return VerticalStabilizer(position=translate(self.position,
-                                                     'y', -1 * self.stabilizer_h.semi_span,
-                                                     'z', sorted(self.stabilizer_h.solid.faces,
-                                                                 key=lambda f: f.cog.y)[-1].cog.z - self.position.z),
-                                  wing_planform_area=self.wing_planform_area,
-                                  wing_mac_length=self.wing_mac_length,
-                                  wing_semi_span=self.wing_semi_span,
-                                  lvc=self.lhc,
-                                  lvc_canard=self.lhc,
-                                  configuration=self.configuration,
-                                  aspect_ratio=1.4,
-                                  taper=0.35,
-                                  twist=0.0)
+        :return: Boom XZ Plane
+        :rtype: Plane
+        """
+        return Plane(reference=self.tail_shaft_circle[0].center,
+                     normal=Vector(0, 1, 0),
+                     binormal=Vector(0, 0, 1))
 
     @Part
     def connector_right(self):
+        """ This rotates the extruded right boom shaft connector to point in the X direction.
+
+        :return: Right Boom Connector
+        :rtype: RotatedShape
+        """
         return RotatedShape(shape_in=self.tail_shaft_circle[1],
                             rotation_point=self.tail_shaft_circle[0].center,
                             vector=Vector(0, 1, 0),
@@ -187,18 +246,32 @@ class CompoundStabilizer(ExternalBody):
 
     @Part
     def connector_left(self):
+        """ This rotates the extruded left boom shaft connector to point in the X direction.
+
+        :return: Left Boom Connector
+        :rtype: MirroredShape
+        """
         return MirroredShape(shape_in=self.connector_right,
                              reference_point=self.position,
                              vector1=Vector(1, 0, 0), vector2=Vector(0, 0, 1))
 
     @Part
     def external_shape(self):
-        """ The final shape of a ExternalSurface class which is to be exported """
+        """ This defines the external shape for the ExternalBody class in definitions.
+
+        :return: CompoundStabilizer External Geometry
+        :rtype: ScaledShape
+        """
         return ScaledShape(shape_in=self.tail_joiner, reference_point=Point(0, 0, 0), factor=1, hidden=True)
 
     @Attribute(private=True)
     def internal_shape(self):
-        """ This overwrites the Part defined in the class `Component` an internal_shape w/ a Dummy Value"""
+        """ This is the internal shape of the compound stabilizer. It is None because the current app uses a boom tail
+        structure instead of a single fuselage.
+
+        :return: VTP fuselage section bounding box
+        :rtype: NoneType
+        """
         return None
 
 

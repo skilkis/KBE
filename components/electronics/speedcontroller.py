@@ -21,19 +21,21 @@ class SpeedController(Component):
     and volume) my linear regression of reference ESC's found on HobbyKing.
 
     :return: ParaPy Geometry of the ESC(s)
+
+    :param amp_recc: This is the recommended ESC amperage from the chosen motor(s). In the case of multiple motors.
+    :type amp_recc: float
+
+    :param num_engines: This is the number of engines.
+    :type num_engines: int
     """
 
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'electricity.png')
 
     #:  This is the recommended ESC amperage from the chosen motor(s). In the case of multiple motors, this is the total
     #:  amperage.
-    #: :type: float
-
     amp_recc = Input(40.0, validator=val.Positive())
 
     #:  This is the number of engines.
-    #: :type: float
-
     num_engines = Input(1, validator=val.Positive())
 
     @Attribute

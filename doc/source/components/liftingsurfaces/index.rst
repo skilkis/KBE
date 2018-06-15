@@ -6,3 +6,7 @@ LiftingSurface Module
 
    liftingsurfaceprim
    wing
+   scissorplot
+   horizontalstab
+   verticalstab
+   compoundstab

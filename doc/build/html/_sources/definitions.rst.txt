@@ -1,4 +1,4 @@
-Definitions Documentation
+Definitions
 ===============================
 
 .. automodule:: definitions

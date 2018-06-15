@@ -19,68 +19,102 @@ class VerticalStabilizer(ExternalBody, LiftingSurface):
     """ This class will size the VT according to statistical VT volume coefficients and generate it using the
     LiftingSurface primitive. Also, the bounding box is made for the section of the VTP within the fuselage, which is
     used to size the fuselage frames.
+
     :returns: ParaPy Geometry of the VT
+
+    :param wing_planform_area: This is the wing planfrom area in [m^2]
+    :type wing_planform_area: float
+
+    :param wing_mac_length: This is the MAC length of the wing in SI meters
+    :type wing_mac_length: float
+
+    :param wing_semi_span: This is the semispan of the wing in SI meters
+    :type wing_semi_span: float
+
+    :param lvc: This is non-dimensionalized vertical tail arm for the conventional plane.
+    :type lvc: float
+
+    :param lvc_canard: This is non-dimensionalized vertical tail arm for the canard plane. Note for the canard the \
+    VTP is is much closer to the main wing!
+    :type lvc_canard: float
+
+    :param configuration: This is a switch to determine the configuration.
+    :type configuration: float
+
+    :param aspect_ratio: This is the assumed Aspect Ratio of the VT Surface.
+    :type aspect_ratio: float
+
+    :param is_half: This overwrites the is_half parameter from the class LiftingSurface stating that the entire \
+    surface area is covering one VT.
+    :type is_half: bool
+
+    :param taper: This is the required Taper Ratio of the VT Surface.
+    :type taper: float
+
+    :param twist: This is the required Twist Angle of the Tip Airfoil w.r.t the Root Airfoil in degrees.
+    :type twist: float
+
+    :param offset: This is the offset in the flow direction of the tip W.R.T. the root Leading Edge.
+    :type offset: float or NoneType
+
+    :param fuse_width_factor: This is the assumed factor of the semispan which the fuselage extends over the VT semispan
+    :type fuse_width_factor: float
+
+    :param airfoil_type: This is the name of the folder within the 'airfoils' folder. There are three options \
+    'cambered', 'reflexed' and 'symmetric'.
+    :type airfoil_type: str
+
+    :param airfoil_choice: This is the filename of the requested airfoil.
+    :type airfoil_choice: str
+
+    :param ply_number: Changes the number of ply's of carbon fiber pre-preg.
+    :type ply_number: int
     """
 
     #: Below is the required TOTAL wing area of the main wings.
-    #: :type: float
     wing_planform_area = Input(0.8, validator=val.Positive())
 
-    #: Below is the MAC length of the wing
-    #: :type: float
+    #: Below is the MAC length of the wing.
     wing_mac_length = Input(0.43, validator=val.Positive())
 
-    #: Below is the semispan of the wing
-    #: :type: float
+    #: Below is the semispan of the wing.
     wing_semi_span = Input(1.9, validator=val.Positive())
 
     #: Below is non-dimensionalized vertical tail arm for the conventional plane.
-    #: :type: float
     lvc = Input(3.0, validator=val.Instance(float))
 
     #: Below is non-dimensionalized vertical tail arm for the canard plane. Note for the canard the VTP is is much
     # closer to the main wing!
-    #: :type: float
     lvc_canard = Input(0.5, validator=val.Instance(float))
 
     #: Below is a switch to determine the configuration.
-    #: :type: str
     configuration = Input('conventional', validator=val.OneOf(['canard', 'conventional']))
 
     #: Below is the assumed VT aspect ratio.
-    #: :type: float
     aspect_ratio = Input(1.4, validator=val.Positive())
 
-    #: This sets `overwrites` the is_half parameter from the class `LiftingSurface`
-    #: type: float
+    #: This overwrites the is_half parameter from the class `LiftingSurface`.
     is_half = Input(True, validator=val.Instance(bool))
 
     #: Below is the assumed VT taper ratio.
-    #: :type: float
     taper = Input(0.35, validator=val.Range(0.1, 1.0))
 
     #:  This is the wing twist for the VT.
-    #: :type: float
     twist = Input(0.0, validator=val.Range(-5.0, 5.0))
 
     #: Below is the chosen trailing edge offset.
-    #: :type: NoneType or float
     offset = Input(None)
 
-    #: Below is the assumed factor relating the part of the VT covered by fuse to semispan
-    #: :type: float
+    #: Below is the assumed factor relating the part of the VT covered by fuse to semispan.
     fuse_width_factor = Input(0.1, validator=val.Range(0.001, 0.5))
 
     #:  This is the airfoil type for the VT. This must contain the correct folder name to the airfoils.
-    #: :type: str
     airfoil_type = Input('symmetric', validator=val.OneOf(['cambered', 'reflexed', 'symmetric']))
 
     #:  This is the airfoil filename for the VT. This must contain the correct filename name of the airfoil.
-    #: :type: str
     airfoil_choice = Input('NACA0012')
 
     #: Changes the number of ply's of carbon fiber http://www.ijera.com/papers/Vol4_issue5/Version%202/J45025355.pdf
-    #: :type: tuple
     ply_number = Input(3, validator=val.Instance(int))
 
 
@@ -88,15 +122,16 @@ class VerticalStabilizer(ExternalBody, LiftingSurface):
     @Attribute
     def component_type(self):
         """ This attribute names the component 'vt' for horizontal stabilizer.
-        :return: str
+
+        :return: Name of VT
         :rtype: str
         """
         return 'vt'
 
     @Attribute
     def center_of_gravity(self):
-        """ This shows the COG which was found from one wing and translated to origin. This is because because the fused
-        shape does not exhibit a C.G.
+        """ This finds the COG for the VT.
+
         :return: ParaPy Point
         :rtype: Point
         """
@@ -107,6 +142,7 @@ class VerticalStabilizer(ExternalBody, LiftingSurface):
     def v_v(self):
         """ This attribute estimates the VTP volume coefficient from statistical agricultural conventional aircraft
         data.
+
         :return: Estimated VT volume coefficient
         :rtype: float
         """
@@ -119,7 +155,8 @@ class VerticalStabilizer(ExternalBody, LiftingSurface):
         """ This attribute calculates the tail volume coefficient for a canard. This is done by rewriting the equation
         for a conventional VT volume coefficient for S_v/S, equating it to the same equation of the canard. The canard
         tail volume is thus a reduced tail volume coefficient (with the canard having a smaller tail arm).
-        :return: Canard VT volume coefficient
+
+        :return: Estimated Canard VT volume coefficient
         :rtype: float
         """
         v_v_canard = (-self.lvc_canard/self.lvc)*self.v_v
@@ -128,6 +165,7 @@ class VerticalStabilizer(ExternalBody, LiftingSurface):
     @Attribute
     def planform_area(self):
         """ This attribute calculates the total tail surface area based on the estimated VT volume coefficient.
+
         :return: VT planform area
         :rtype: float
         """
@@ -140,6 +178,7 @@ class VerticalStabilizer(ExternalBody, LiftingSurface):
     @Attribute(private=True)
     def vtwing_cut_loc(self):
         """ This calculates the spanwise distance of the cut, inside of which, the VTP is inside the fuselage.
+
         :return: VTP length within the fuselage
         :rtype: float
         """
@@ -148,6 +187,7 @@ class VerticalStabilizer(ExternalBody, LiftingSurface):
     @Attribute(private=True)
     def vtright_cut_plane(self):
         """ This makes a plane at the VTP span location where the fuselage is to end.
+
         :return: VTP cut Plane ParaPy Geometry
         :rtype: Plane
         """
@@ -156,8 +196,9 @@ class VerticalStabilizer(ExternalBody, LiftingSurface):
 
     @Attribute(private=True)
     def get_vtfuse_bounds(self):
-        """ This attribute is obtaining (the dimensions of) a bounded box at a fuselaage width factor of the semispan
+        """ This attribute is obtaining (the dimensions of) a bounded box at a fuselage width factor of the semispan
         which will be used to size the fuselage frames. These frames drive the shape of the fuselage.
+
         :return: VTP fuselage section bounding box
         :rtype: bbox
         """
@@ -179,7 +220,8 @@ class VerticalStabilizer(ExternalBody, LiftingSurface):
 
     @Part
     def solid(self):
-        """ This rotates the entire solid LiftingSurface to 90 deg.
+        """ This rotates the entire VT solid LiftingSurface instantiation by 90 deg.
+
         :return: ParaPy rotated lofted solid wing geometry.
         :rtype: RotatedShape
         """
@@ -193,6 +235,7 @@ class VerticalStabilizer(ExternalBody, LiftingSurface):
     def internal_shape(self):
         """ This is creating the bounded box at a fuselage width factor of the semispan which will be used to size the
         fuselage frames. These frames drive the shape of the fuselage.
+
         :return: VTP fuselage section bounding box
         :rtype: Box
         """
@@ -209,8 +252,8 @@ class VerticalStabilizer(ExternalBody, LiftingSurface):
     def external_shape(self):
         """ This defines the external shape for the ExternalBody class in definitions.
 
-        :return: VTP ParaPy Geometry
-        :rtype: Scaled
+        :return: VTP External Geometry
+        :rtype: ScaledShape
         """
         return ScaledShape(shape_in=self.solid, reference_point=self.position, factor=1, hidden=True)
 

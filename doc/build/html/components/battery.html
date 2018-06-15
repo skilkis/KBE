@@ -28,7 +28,7 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Electronics" href="electronics.html" />
+    <link rel="next" title="Electronics Module" href="electronics/index.html" />
     <link rel="prev" title="Components Module" href="index.html" /> 
 
   
@@ -84,18 +84,28 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../definitions.html">Definitions Documentation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../directories.html">Directories Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../definitions.html">Definitions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../directories.html">Directories</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Components Module</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Li-PO Battery</a></li>
-<li class="toctree-l2"><a class="reference internal" href="electronics.html">Electronics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="electronics/index.html">Electronics Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="electronics/electronics.html">Electronics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="electronics/flightcontroller.html">FlightController</a></li>
+<li class="toctree-l3"><a class="reference internal" href="electronics/speedcontroller.html">SpeedController</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="liftingsurfaces/index.html">LiftingSurface Module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="liftingsurfaces/liftingsurfaceprim.html">LiftingSurface Documentation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="liftingsurfaces/wing.html">Wing Documentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="liftingsurfaces/liftingsurfaceprim.html">LiftingSurface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="liftingsurfaces/wing.html">Wing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="liftingsurfaces/scissorplot.html">ScissorPlot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="liftingsurfaces/horizontalstab.html">HorizontalStabilizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="liftingsurfaces/verticalstab.html">VerticalStablilizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="liftingsurfaces/compoundstab.html">CompoundStabilizer</a></li>
 </ul>
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../main.html">Main UAV</a></li>
 </ul>
 
             
@@ -178,14 +188,11 @@ inner fuselage structure.</p>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">ParaPy Geometry of the Battery(s)</p>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Param:</th><td class="field-body"><p class="first">xxx</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-even field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>sizing_target</strong> (<em>basestring</em>) – Accepts either ‘capacity’ or ‘weight’ and sizes based on required capacity on the former</li>
 <li><strong>sizing_value</strong> (<em>float</em>) – The sizing value corresponding to the current target</li>
 <li><strong>max_width</strong> (<em>float</em>) – Sets the maximum allowed width of the battery in SI meter [m]</li>
-<li><strong>max_height</strong> – Sets the maximum allowed height of the battery in SI meter [m]</li>
+<li><strong>max_height</strong> (<em>float</em>) – Sets the maximum allowed height of the battery in SI meter [m]</li>
 </ul>
 </td>
 </tr>
@@ -327,7 +334,7 @@ inner fuselage structure.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="electronics.html" class="btn btn-neutral float-right" title="Electronics" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="electronics/index.html" class="btn btn-neutral float-right" title="Electronics Module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="index.html" class="btn btn-neutral" title="Components Module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

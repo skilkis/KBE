@@ -1,0 +1,435 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>components.liftingsurfaces.horizontalstab &mdash; KBE 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> KBE
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../definitions.html">Definitions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../directories.html">Directories</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/index.html">Components Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/battery.html">Li-PO Battery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/electronics/index.html">Electronics Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/electronics/electronics.html">Electronics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/electronics/flightcontroller.html">FlightController</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/electronics/speedcontroller.html">SpeedController</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/liftingsurfaces/index.html">LiftingSurface Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/liftingsurfaceprim.html">LiftingSurface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/wing.html">Wing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/scissorplot.html">ScissorPlot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/horizontalstab.html">HorizontalStabilizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/verticalstab.html">VerticalStablilizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/compoundstab.html">CompoundStabilizer</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../main.html">Main UAV</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">KBE</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>components.liftingsurfaces.horizontalstab</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for components.liftingsurfaces.horizontalstab</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="kn">from</span> <span class="nn">parapy.core</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">parapy.geom</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">primitives</span> <span class="k">import</span> <span class="n">LiftingSurface</span>
+<span class="kn">from</span> <span class="nn">scissorplot</span> <span class="k">import</span> <span class="n">ScissorPlot</span>
+<span class="kn">from</span> <span class="nn">definitions</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">user</span> <span class="k">import</span> <span class="n">MyColors</span>
+
+<span class="c1">#  TODO ADD VALIDATOR FOR AIRFOIL TYPE &amp; CHOICE, OFFSET. ALSO IN LIFTING SURF AND VERTICAL STAB!!!!!!!</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Nelson Johnson&quot;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;HorizontalStabilizer&quot;</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="HorizontalStabilizer"><a class="viewcode-back" href="../../../components/liftingsurfaces/horizontalstab.html#components.liftingsurfaces.horizontalstab.HorizontalStabilizer">[docs]</a><span class="k">class</span> <span class="nc">HorizontalStabilizer</span><span class="p">(</span><span class="n">ExternalBody</span><span class="p">,</span> <span class="n">LiftingSurface</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;  This script will generate the horizontal stabilizer using the lifting surface primitive with the required area</span>
+<span class="sd">    from the &#39;scissorplot.py&#39; script. Also, the bounding box is made for the section of the HTP within the fuselage,</span>
+<span class="sd">    which is used to size the fuselage frames.</span>
+
+<span class="sd">    :returns: ParaPy Geometry of the Horizontal Tail Surface</span>
+
+<span class="sd">    :param planform_area: This is the Required Planfrom Area for the HT from the Scissor Plot in [m^2]</span>
+<span class="sd">    :type planform_area: float</span>
+
+<span class="sd">    :param aspect_ratio: This is the required Aspect Ratio of the HT Surface corresponding to the scissor plot value.</span>
+<span class="sd">    :type aspect_ratio: float</span>
+
+<span class="sd">    :param taper: This is the required Taper Ratio of the HT Surface.</span>
+<span class="sd">    :type taper: float</span>
+
+<span class="sd">    :param dihedral: This is the required Dihedral Angle of the HT Surface in degrees.</span>
+<span class="sd">    :type dihedral: float</span>
+
+<span class="sd">    :param twist: This is the required Twist Angle of the Tip Airfoil w.r.t the Root Airfoil in degrees.</span>
+<span class="sd">    :type twist: float</span>
+
+<span class="sd">    :param offset: This is the offset in the flow direction of the tip W.R.T. the root Leading Edge.</span>
+<span class="sd">    :type offset: float or NoneType</span>
+
+<span class="sd">    :param fuse_width_factor: This is the assumed factor of the semispan which the fuselage extends over the HT semispan</span>
+<span class="sd">    :type fuse_width_factor: float</span>
+
+<span class="sd">    :param color: Changes the color of the wing skin to the one defined in MyColors</span>
+<span class="sd">    :type color: tuple</span>
+
+<span class="sd">    :param airfoil_type: This is the name of the folder within the &#39;airfoils&#39; folder. There are three options \</span>
+<span class="sd">    &#39;cambered&#39;, &#39;reflexed&#39; and &#39;symmetric&#39;.</span>
+<span class="sd">    :type airfoil_type: str</span>
+
+<span class="sd">    :param airfoil_choice: This is the filename of the requested airfoil.</span>
+<span class="sd">    :type airfoil_choice: str</span>
+
+<span class="sd">    :param ply_number: Changes the number of ply&#39;s of carbon fiber pre-preg.</span>
+<span class="sd">    :type ply_number: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1">#: Below is the required tail surface area from the scissor plot.</span>
+    <span class="n">planform_area</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">())</span>
+
+    <span class="c1">#: Below is the required HT aspect ratio.</span>
+    <span class="n">aspect_ratio</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">5.0</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">())</span>
+
+    <span class="c1">#: Below is the required HT taper ratio.</span>
+    <span class="n">taper</span> <span class="o">=</span> <span class="mf">1.0</span>
+
+    <span class="c1">#: Below is the tail dihedral angle.</span>
+    <span class="n">dihedral</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+    <span class="c1">#: Below is the tail wing twist angle.</span>
+    <span class="n">twist</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Range</span><span class="p">(</span><span class="o">-</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">))</span>
+
+    <span class="c1">#: Below is the chosen trailing edge offset.</span>
+    <span class="n">offset</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+
+    <span class="c1">#: Below is the assumed factor relating the part of the HT covered by fuse to semispan</span>
+    <span class="n">fuse_width_factor</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.025</span><span class="p">)</span>
+
+    <span class="c1">#: Changes the color of the wing skin to the one defined in MyColors</span>
+    <span class="n">color</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">MyColors</span><span class="o">.</span><span class="n">skin_color</span><span class="p">)</span>
+
+    <span class="c1">#: Below is the tail airfoil type. The input must correspond to an existing folder.</span>
+    <span class="n">airfoil_type</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;symmetric&#39;</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">OneOf</span><span class="p">([</span><span class="s1">&#39;cambered&#39;</span><span class="p">,</span> <span class="s1">&#39;reflexed&#39;</span><span class="p">,</span> <span class="s1">&#39;symmetric&#39;</span><span class="p">]))</span>
+
+    <span class="c1">#: Below is the tail airfoil DAT file. The input must correspond to an existing filename.</span>
+    <span class="n">airfoil_choice</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;NACA0012&#39;</span><span class="p">)</span>
+
+    <span class="c1">#: Changes the number of ply&#39;s of carbon fiber http://www.ijera.com/papers/Vol4_issue5/Version%202/J45025355.pdf</span>
+    <span class="n">ply_number</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
+
+
+<span class="c1">#  Attributes ########--------------------------------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="HorizontalStabilizer.component_type"><a class="viewcode-back" href="../../../components/liftingsurfaces/horizontalstab.html#components.liftingsurfaces.horizontalstab.HorizontalStabilizer.component_type">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">component_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This attribute names the component &#39;ht&#39; for horizontal stabilizer.</span>
+
+<span class="sd">        :return: Name of HT</span>
+<span class="sd">        :rtype: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s1">&#39;ht&#39;</span></div>
+
+<div class="viewcode-block" id="HorizontalStabilizer.center_of_gravity"><a class="viewcode-back" href="../../../components/liftingsurfaces/horizontalstab.html#components.liftingsurfaces.horizontalstab.HorizontalStabilizer.center_of_gravity">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">center_of_gravity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This shows the COG which was found from one wing and translated to origin. This is because because the fused</span>
+<span class="sd">        shape does not exhibit a C.G.</span>
+
+<span class="sd">        :return: ParaPy Point of HT CG</span>
+<span class="sd">        :rtype: Point</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pos</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">solid</span><span class="o">.</span><span class="n">cog</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">solid</span><span class="o">.</span><span class="n">cog</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">pos</span></div>
+
+<div class="viewcode-block" id="HorizontalStabilizer.htwing_cut_loc"><a class="viewcode-back" href="../../../components/liftingsurfaces/horizontalstab.html#components.liftingsurfaces.horizontalstab.HorizontalStabilizer.htwing_cut_loc">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">htwing_cut_loc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This calculates the spanwise distance of the cut, inside of which, the HT is inside the fuselage. This</span>
+<span class="sd">        location is where the HT bbox to size the fuselage frame(s) ends in the spanwise direction. The height of this</span>
+<span class="sd">        bbox is the maximum thickness of the wing at this cut location.</span>
+
+<span class="sd">        :return: Spanwise distance from HT root chord to cut location</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">semi_span</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">fuse_width_factor</span></div>
+
+<div class="viewcode-block" id="HorizontalStabilizer.htright_cut_plane"><a class="viewcode-back" href="../../../components/liftingsurfaces/horizontalstab.html#components.liftingsurfaces.horizontalstab.HorizontalStabilizer.htright_cut_plane">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">htright_cut_plane</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;  This makes a plane at the right HT span location where the fuselage is to end.</span>
+
+<span class="sd">         :return: ParaPy Plane to cut HT</span>
+<span class="sd">         :rtype: Plane</span>
+<span class="sd">         &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Plane</span><span class="p">(</span><span class="n">reference</span><span class="o">=</span><span class="n">translate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">solid</span><span class="o">.</span><span class="n">position</span><span class="p">,</span>
+                                         <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">htwing_cut_loc</span><span class="p">),</span>
+                     <span class="n">normal</span><span class="o">=</span><span class="n">Vector</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                     <span class="n">hidden</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HorizontalStabilizer.get_htfuse_bounds"><a class="viewcode-back" href="../../../components/liftingsurfaces/horizontalstab.html#components.liftingsurfaces.horizontalstab.HorizontalStabilizer.get_htfuse_bounds">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">get_htfuse_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;  This attribute is obtaining (the dimensions of) a bounded box at a fuselage width factor of the semispan</span>
+<span class="sd">         which will be used to size the fuselage frames. These frames drive the shape of the fuselage.</span>
+
+<span class="sd">         :return: ParaPy Bounding Box</span>
+<span class="sd">         :rtype: bbox</span>
+<span class="sd">         &quot;&quot;&quot;</span>
+        <span class="n">inner_part</span> <span class="o">=</span> <span class="n">PartitionedSolid</span><span class="p">(</span><span class="n">solid_in</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">solid</span><span class="p">,</span>
+                                      <span class="n">tool</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">htright_cut_plane</span><span class="p">)</span><span class="o">.</span><span class="n">solids</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">faces</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">wires</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="c1">#  Above obtains a cross section of the wing, at the specified fuselage width factor.</span>
+
+        <span class="n">mirrored_part</span> <span class="o">=</span> <span class="n">MirroredShape</span><span class="p">(</span><span class="n">shape_in</span><span class="o">=</span><span class="n">inner_part</span><span class="p">,</span>
+                                      <span class="n">reference_point</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">solid</span><span class="o">.</span><span class="n">position</span><span class="p">,</span>
+                                      <span class="n">vector1</span><span class="o">=</span><span class="n">Vector</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                                      <span class="n">vector2</span><span class="o">=</span><span class="n">Vector</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="c1">#  Above mirrors the cross section about the aircraft symmetry plane.</span>
+        <span class="n">root</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">solid</span><span class="o">.</span><span class="n">faces</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="n">cog</span><span class="o">.</span><span class="n">y</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">first_iter</span> <span class="o">=</span> <span class="n">Fused</span><span class="p">(</span><span class="n">inner_part</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+        <span class="c1">#  Fusion of the three wing cross sections is done in 2 steps to avoid ParaPy errors.</span>
+        <span class="n">second_iter</span> <span class="o">=</span> <span class="n">Fused</span><span class="p">(</span><span class="n">first_iter</span><span class="p">,</span> <span class="n">mirrored_part</span><span class="p">)</span>
+
+        <span class="n">bounds</span> <span class="o">=</span> <span class="n">second_iter</span><span class="o">.</span><span class="n">bbox</span>
+        <span class="c1">#  Above gets the bounds of the wing fuselage bounding box for return.</span>
+        <span class="k">return</span> <span class="n">bounds</span></div>
+
+<span class="c1">#  Parts #####----------------------------------------------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="HorizontalStabilizer.ht_mirror"><a class="viewcode-back" href="../../../components/liftingsurfaces/horizontalstab.html#components.liftingsurfaces.horizontalstab.HorizontalStabilizer.ht_mirror">[docs]</a>    <span class="nd">@Part</span>
+    <span class="k">def</span> <span class="nf">ht_mirror</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;  This is a mirrored shape of the right HT.</span>
+
+<span class="sd">        :return: HT left wing half</span>
+<span class="sd">        :rtype: MirroredShape</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">MirroredShape</span><span class="p">(</span><span class="n">shape_in</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">solid</span><span class="p">,</span>
+                             <span class="n">reference_point</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">solid</span><span class="o">.</span><span class="n">position</span><span class="p">,</span>
+                             <span class="n">vector1</span><span class="o">=</span><span class="n">Vector</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                             <span class="n">vector2</span><span class="o">=</span><span class="n">Vector</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="HorizontalStabilizer.internal_shape"><a class="viewcode-back" href="../../../components/liftingsurfaces/horizontalstab.html#components.liftingsurfaces.horizontalstab.HorizontalStabilizer.internal_shape">[docs]</a>    <span class="nd">@Part</span>
+    <span class="k">def</span> <span class="nf">internal_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This part creates the bounding box for the part of the HT within the fuselage.</span>
+
+<span class="sd">        :return: HT fuselage Sizing bbox</span>
+<span class="sd">        :rtype: Box</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Box</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get_htfuse_bounds</span><span class="o">.</span><span class="n">width</span><span class="p">,</span>
+                   <span class="n">height</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get_htfuse_bounds</span><span class="o">.</span><span class="n">height</span><span class="p">,</span>
+                   <span class="n">length</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get_htfuse_bounds</span><span class="o">.</span><span class="n">length</span><span class="p">,</span>
+                   <span class="n">position</span><span class="o">=</span><span class="n">Position</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_htfuse_bounds</span><span class="o">.</span><span class="n">center</span><span class="p">),</span>
+                   <span class="n">centered</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                   <span class="n">color</span><span class="o">=</span><span class="n">MyColors</span><span class="o">.</span><span class="n">cool_blue</span><span class="p">,</span>
+                   <span class="n">transparency</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+                   <span class="n">hidden</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HorizontalStabilizer.external_shape"><a class="viewcode-back" href="../../../components/liftingsurfaces/horizontalstab.html#components.liftingsurfaces.horizontalstab.HorizontalStabilizer.external_shape">[docs]</a>    <span class="nd">@Part</span>
+    <span class="k">def</span> <span class="nf">external_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This part is the external shape of the HT.</span>
+
+<span class="sd">        :return: Fused Shape of left and right HT surfaces</span>
+<span class="sd">        :rtype: Fused</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Fused</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">solid</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ht_mirror</span><span class="p">,</span> <span class="n">hidden</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">parapy.gui</span> <span class="k">import</span> <span class="n">display</span>
+
+    <span class="n">obj</span> <span class="o">=</span> <span class="n">HorizontalStabilizer</span><span class="p">()</span>
+    <span class="n">display</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, San Kilkis, Nelson Johnson.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'1.0',
+            LANGUAGE:'en',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

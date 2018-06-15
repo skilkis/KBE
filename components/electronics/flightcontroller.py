@@ -13,19 +13,19 @@ __all__ = ["FlightController"]
 
 
 class FlightController(Component):
-    """ This class will create the Navio2 flight controller geometry.
+    """ This class will create the Navio2 flight controller geometry. The dimensions are at https://emlid.com/navio/ .
 
     :returns: ParaPy Geometry of the flight computer
+
     """
 
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'chip.png')
 
     #: Navio 2 Flight computer dimensions are below. Source: https://emlid.com/navio/
-
     @Attribute
     def l_navio(self):
         """ The 65mm length of the Flight Computer is the longest dimension and is to be oriented parallel with the x
-         axis. Dimensions are at https://emlid.com/navio/
+         axis.
 
         :return: ParaPy Flight Controller Length
         :rtype: float

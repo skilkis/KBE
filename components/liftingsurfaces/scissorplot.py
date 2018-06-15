@@ -17,87 +17,131 @@ __all__ = ["ScissorPlot"]
 
 
 class ScissorPlot(Base):
-    """  This script will generate a scissor plot to size the horizontal tail (HT). The required inputs are: the
-    aerodynamic center position of the current aircraft, the tail arm, the HT aspect ratio, HT span efficiency,
+    """  This script will generate a scissor plot to size the horizontal tail (HT). The required inputs are: the CG
+    position, aerodynamic center position, the tail arm, the HT aspect ratio, HT span efficiency,
     the tail to main wing speed ratio, the wing pitching moment about the aerodynamic center, the wing lift slope,
     the c_l for controllability (derived in wing), and the allowable shift in center of gravity.
+
+    :returns: Required Tail Surface Area and Scissor Plot
+
+    :param x_cg: The CG positon in SI meters.
+    :type x_cg: float
+
+    :param x_ac: The aerodynamic center positon in SI meters.
+    :type x_ac: float
+
+    :param x_lemac: The distance to the leading edge of the Mean Aerodynamic center in SI meters.
+    :type x_lemac: float
+
+    :param mac: This is the MAC length.
+    :type mac: float
+
+    :param AR: This is the aspect ratio of the aircraft.
+    :type AR: float
+
+    :param e: This is the oswald efficiency factor of the aircraft.
+    :type e: float
+
+    :param CD0: This is the zero-lift drag coefficient of the aircraft.
+    :type CD0: float
+
+    :param k_factor: This is the k factor to correct the canard main wing's C_L alpha due to canard downwash.
+    :type k_factor: float
+
+    :param SM: This is the required stability margin.
+    :type SM: float
+
+    :param AR_h: This is the assumed aspect ratio of the horizontal tail.
+    :type AR_h: float
+
+    :param e_h: This is the oswald efficiency factor of the HT.
+    :type e_h: float
+
+    :param VhV_conv: This is the speed ratio for a conventional tail aircraft.
+    :type VhV_conv: float
+
+    :param VhV_canard: This is the speed ratio for a canard aircraft.
+    :type VhV_canard: float
+
+    :param a_0: This is the lift slope for a thin airfoil.
+    :type a_0: float
+
+    :param Cl_w: This is the controllability lift coefficient of the wing at 1.2*V_s imported from wing.
+    :type Cl_w: float
+
+    :param C_mac: This is the pitching moment about the aerodynamic center of the wing. This is calculated with \
+    AVL in 'wing.py'
+    :type C_mac: float
+
+    :param Cla_w: This is the lift curve slope of the wing. This is calculated with AVL in 'wing.py'.
+    :type Cla_w: float
+
+    :param delta_xcg: This is the assumed change in the cg location.
+    :type delta_xcg: float
+
+    :param configuration: This is a switch to determine the configuration.
+    :type configuration: float
+
+    :param lhc: Derived input of the non-dimensionalized tail arm based on configuration choice
+    :type lhc: float
     """
 
 #  This block of code contains the inputs. ########---------------------------------------------------------------------
     #: Below is the current COG position
-    #: :type: float
     x_cg = Input(0.3, validator=val.Instance(float))
 
     #: Below is the current Aerodynamic Center position
-    #: :type: float
     x_ac = Input(0.1, validator=val.Instance(float))
 
     #: Below is the current leading edge of the MAC position
-    #: :type: float
     x_lemac = Input(0.0, validator=val.Instance(float))
 
     #: Below is the MAC length
-    #: :type: float
     mac = Input(1.0, validator=val.Instance(float))
 
     #: Below is the wing aspect ratio.
-    #: :type: float
     AR = Input(9.0, validator=val.Range(1.0, 30.0))
 
     #: Below is the wing span efficiency factor
-    #: :type: float
     e = Input(0.8, validator=val.Positive())
 
     #: Below is the assumed zero lift drag coefficient
-    #: :type: float
     CD0 = Input(0.02, validator=val.Positive())
 
     #: Below is the k factor to correct the canard main wing C_Lalpha due to canard downwash.
-    #: :type: float
     k_factor = Input(1.0, validator=val.Positive())
 
     #: Below is the assumed Stability Margin.
-    #: :type: float
     SM = Input(0.05, validator=val.Positive())
 
     #: Below is the HT aspect ratio.
-    #: :type: float
     AR_h = Input(5.0, validator=val.Positive())
 
     #: Below is the assumed HT span efficiency factor.
-    #: :type: float
     e_h = Input(0.8, validator=val.Positive())
 
     #: Below is the speed ratio for a conventional tail aircraft.
-    #: :type: float
     VhV_conv = sqrt(0.85)
 
     #: Below is the speed ratio for a canard aircraft.
-    #: :type: float
     VhV_canard = 1.0
 
     #: Below is the lift slope for a thin airfoil.
-    #: :type: float
     a_0 = 2*pi
 
     #: Below is the controllability lift coefficient of the wing at 1.2*V_s imported from wing.
-    #: :type: float
     Cl_w = Input(0.5, validator=val.Positive())
 
     #: Below is the pitching moment about the aerodynamic center of the wing. This is calculated with AVL in 'wing.py'.
-    #: :type: float
     C_mac = Input(-0.32, validator=val.Range(-2.0, 2.0))
 
     #: Below is the lift curve slope of the wing. This is calculated with AVL in 'wing.py'.
-    #: :type: float
     Cla_w = Input(5.14, validator=val.Positive())
 
     #: Below is the assumed change in the cg location.
-    #: :type: float
     delta_xcg = Input(0.3, validator=val.Positive())
 
     #: Below is a switch to determine the configuration.
-    #: :type: str
     configuration = Input('conventional', validator=val.OneOf(['conventional']))
 
     @Input
@@ -112,14 +156,16 @@ class ScissorPlot(Base):
     @Attribute
     def x_cg_vs_mac(self):
         """ This attribute returns the non dimensional distance between the COG and the wing AC.
-        :return: x_cg
+
+        :return: The distance between the COG and the wing AC in meters
         :rtype: float
         """
         return (self.x_cg - self.x_ac) / self.mac
 
     @Attribute
     def cla_h(self):
-        """ This attribute estimates the lift slope of a low sweep, low speed 3D HT.
+        """ This attribute estimates the lift slope of a low sweep, low speed three dimensional wing.
+
         :return: HT lift curve slope
         :rtype: float
         """
@@ -129,7 +175,8 @@ class ScissorPlot(Base):
     @Attribute
     def downwash_a(self):
         """ This attribute estimates the wings change in downwash with angle of attack.
-        :return: Downwash gradient
+
+        :return: Downwash gradient of main wing
         :rtype: float
         """
         deda = 4/(self.AR + 2)
@@ -139,6 +186,7 @@ class ScissorPlot(Base):
     def cl_h(self):
         """ This attribute returns the lift coefficient of the tail for the controllability case. The
         canard is assumed to be all moving.
+
         :return: HT lift coefficient
         :rtype: float
         """
@@ -153,8 +201,9 @@ class ScissorPlot(Base):
 
     @Attribute
     def cla_w_canard(self):
-        """ This attribute reduces the wing lift slope for the canard case. It is reducing the C_lalpha from AVL.
-        :return: Canard wing lift slope
+        """ This attribute reduces the wing lift slope for the canard case. It is reducing the C_l alpha from AVL.
+
+        :return: Canard main wing lift slope
         :rtype: float
         """
         return self.Cla_w*(1 - ((2 * self.cla_h * self.shs_sm) / (pi * self.AR * self.k_factor)))
@@ -162,6 +211,7 @@ class ScissorPlot(Base):
     @Attribute
     def xcg_range(self):
         """ This attribute is a dummy list of x_cg used for plotting Sh/S.
+
         :return: List of values of X_cg
         :rtype: list
         """
@@ -170,7 +220,8 @@ class ScissorPlot(Base):
 
     @Attribute
     def shs_stability(self):
-        """ This attribute calculates the required Sh/S for the stability requirement.
+        """ This attribute calculates the required Sh/S for the stability requirement as a function of CG position.
+
         :return: Required Sh/S for stability
         :rtype: list
         """
@@ -193,8 +244,10 @@ class ScissorPlot(Base):
 
     @Attribute
     def shs_control(self):
-        """ This attribute calculates the required Sh/S for the controllability requirement
-        :return: Required Sh/S for controllability.
+        """ This attribute calculates the required Sh/S for the controllability requirement as a function of CG
+        position.
+
+        :return: Required Sh/S for controllability
         :rtype: list
         """
         shs_c = []
@@ -215,7 +268,8 @@ class ScissorPlot(Base):
     @Attribute
     def shs_sm(self):
         """ This attribute will calculate the required Sh/S based on the required cg shift.
-        :return: Required Sh/S.
+
+        :return: Required Sh/S
         :rtype: float
         """
         if self.configuration is 'conventional':
@@ -231,7 +285,12 @@ class ScissorPlot(Base):
 
     @Attribute
     def shs_req(self):
+        """ This attribute will fit a linear spline to the controllability and stability curves to be able to address
+        any value of Sh/S if probelems occur with the attribute 'shs_sm'.
 
+        :return: Required Sh/S
+        :rtype: float
+        """
         shs_req = self.shs_sm
         xcg_vs_shs_control = interp1d(self.shs_control, self.xcg_range, kind='linear', fill_value='extrapolate')
         xcg_vs_shs_stability = interp1d(self.shs_stability, self.xcg_range, kind='linear', fill_value='extrapolate')
@@ -257,20 +316,12 @@ class ScissorPlot(Base):
             print Warning('The current aircraft design is not stable w/ reference tail arm ratios')
 
         return shs_req
-        # shs_control = float(shs_control_vs_xcg(self.x_cg_vs_mac + 0.05))  # Adding a SF to allow forward shift
-        # neutral_point = float(xcg_vs_shs_stability(shs_control))
-        # stability_margin = neutral_point - self.x_cg_vs_mac
-        # if stability_margin > 0:
-        #     stable = True
-        # else:
-        #     raise Warning('The current design is unstable')
-        # return stability_margin, shs_control
-        # #
 
     @Attribute
     def plot_scissordiagram(self):
         """ This attribute will plot the scissor plot.
-        :return: Scissor Plot.
+
+        :return: Scissor Plot
         :rtype: Plot
         """
         fig = plt.figure('ScissorPlot')

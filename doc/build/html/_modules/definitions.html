@@ -82,18 +82,28 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../definitions.html">Definitions Documentation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../directories.html">Directories Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../definitions.html">Definitions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../directories.html">Directories</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../components/index.html">Components Module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../components/battery.html">Li-PO Battery</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../components/electronics.html">Electronics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../components/electronics/index.html">Electronics Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../components/electronics/electronics.html">Electronics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../components/electronics/flightcontroller.html">FlightController</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../components/electronics/speedcontroller.html">SpeedController</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../components/liftingsurfaces/index.html">LiftingSurface Module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../components/liftingsurfaces/liftingsurfaceprim.html">LiftingSurface Documentation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../components/liftingsurfaces/wing.html">Wing Documentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../components/liftingsurfaces/liftingsurfaceprim.html">LiftingSurface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../components/liftingsurfaces/wing.html">Wing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../components/liftingsurfaces/scissorplot.html">ScissorPlot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../components/liftingsurfaces/horizontalstab.html">HorizontalStabilizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../components/liftingsurfaces/verticalstab.html">VerticalStablilizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../components/liftingsurfaces/compoundstab.html">CompoundStabilizer</a></li>
 </ul>
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../main.html">Main UAV</a></li>
 </ul>
 
             
@@ -193,7 +203,7 @@
 
 <span class="sd">         &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">Sphere</span><span class="p">(</span><span class="n">radius</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scale</span><span class="p">,</span>
-                      <span class="n">position</span><span class="o">=</span><span class="n">translate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">,</span>
+                      <span class="n">position</span><span class="o">=</span><span class="n">translate</span><span class="p">(</span><span class="n">XOY</span><span class="p">,</span>
                                          <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vis_cog</span><span class="o">.</span><span class="n">x</span><span class="p">,</span>
                                          <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vis_cog</span><span class="o">.</span><span class="n">y</span><span class="p">,</span>
                                          <span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vis_cog</span><span class="o">.</span><span class="n">z</span><span class="p">),</span>
@@ -253,7 +263,9 @@
 
 <span class="sd">        :rtype: Point</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">internal_shape</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">corners</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">internal_shape</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">corners</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">internal_shape</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">Point</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">x</span><span class="p">,</span>
+                                                                                                 <span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">y</span><span class="p">,</span>
+                                                                                                 <span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">z</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Component.internal_shape"><a class="viewcode-back" href="../definitions.html#definitions.Component.internal_shape">[docs]</a>    <span class="nd">@Part</span>
     <span class="k">def</span> <span class="nf">internal_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

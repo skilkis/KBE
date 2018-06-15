@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Wing Documentation &mdash; KBE 1.0 documentation</title>
+  <title>Wing &mdash; KBE 1.0 documentation</title>
   
 
   
@@ -28,7 +28,8 @@
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="prev" title="LiftingSurface Documentation" href="liftingsurfaceprim.html" /> 
+    <link rel="next" title="ScissorPlot" href="scissorplot.html" />
+    <link rel="prev" title="LiftingSurface" href="liftingsurfaceprim.html" /> 
 
   
   <script src="../../_static/js/modernizr.min.js"></script>
@@ -83,18 +84,28 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../../definitions.html">Definitions Documentation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../directories.html">Directories Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../definitions.html">Definitions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../directories.html">Directories</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../index.html">Components Module</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../battery.html">Li-PO Battery</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../electronics.html">Electronics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../electronics/index.html">Electronics Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../electronics/electronics.html">Electronics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../electronics/flightcontroller.html">FlightController</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../electronics/speedcontroller.html">SpeedController</a></li>
+</ul>
+</li>
 <li class="toctree-l2 current"><a class="reference internal" href="index.html">LiftingSurface Module</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="liftingsurfaceprim.html">LiftingSurface Documentation</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Wing Documentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="liftingsurfaceprim.html">LiftingSurface</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Wing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scissorplot.html">ScissorPlot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="horizontalstab.html">HorizontalStabilizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="verticalstab.html">VerticalStablilizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="compoundstab.html">CompoundStabilizer</a></li>
 </ul>
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../main.html">Main UAV</a></li>
 </ul>
 
             
@@ -144,7 +155,7 @@
         
           <li><a href="index.html">LiftingSurface Module</a> &raquo;</li>
         
-      <li>Wing Documentation</li>
+      <li>Wing</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -164,7 +175,7 @@
            <div itemprop="articleBody">
             
   <div class="section" id="module-components.liftingsurfaces.wing">
-<span id="wing-documentation"></span><h1>Wing Documentation<a class="headerlink" href="#module-components.liftingsurfaces.wing" title="Permalink to this headline">¶</a></h1>
+<span id="wing"></span><h1>Wing<a class="headerlink" href="#module-components.liftingsurfaces.wing" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="components.liftingsurfaces.wing.Wing">
 <em class="property">class </em><code class="descclassname">components.liftingsurfaces.wing.</code><code class="descname">Wing</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/components/liftingsurfaces/wing.html#Wing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.liftingsurfaces.wing.Wing" title="Permalink to this definition">¶</a></dt>
@@ -177,7 +188,22 @@ vs. angle of attack.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">ParaPy Geometry of the Main Wing Surface</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">ParaPy Geometry of the Main Wing Surface</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>wing_loading</strong> (<em>float</em>) – This is the required wing loading from the class I weight estimation in [N/m^2]</li>
+<li><strong>weight_mtow</strong> (<em>float</em>) – This is the required MTOW from the class I weight estimation in kg</li>
+<li><strong>stall_speed</strong> (<em>float</em>) – This is the stall speed of the wing from the class I weight estimation in m/s.</li>
+<li><strong>rho</strong> (<em>float</em>) – This is the ISA STD sea level density in kg/m^3.</li>
+<li><strong>fuse_width_factor</strong> (<em>float</em>) – This is the assumed factor of the semispan which the fuselage extends over the wing.</li>
+<li><strong>hide_bbox</strong> (<em>bool</em>) – This is a switch to hide/show the bbox of the wing section within the fuselage.</li>
+<li><strong>hide_mac</strong> (<em>bool</em>) – This overwrites input from LiftingSurface to hide the Mean Aerodynamic Chord part</li>
+<li><strong>mesh_deflection</strong> (<em>float</em>) – The default value is an optimum between a good quality render and performance.</li>
+<li><strong>color</strong> (<em>tuple</em>) – Changes the color of the wing skin to the one defined in MyColors</li>
+<li><strong>ply_number</strong> (<em>int</em>) – Changes the number of ply’s of carbon fiber pre-preg.</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
@@ -201,12 +227,12 @@ the speed required for the controllability curve (1.2 x v_s).</p>
 <dl class="attribute">
 <dt id="components.liftingsurfaces.wing.Wing.avl_data_grabber">
 <code class="descname">avl_data_grabber</code><a class="reference internal" href="../../_modules/components/liftingsurfaces/wing.html#Wing.avl_data_grabber"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.liftingsurfaces.wing.Wing.avl_data_grabber" title="Permalink to this definition">¶</a></dt>
-<dd><p>Here, we grab the data from</p>
+<dd><p>Here, we grab and sort the data by angle of attack from AVL.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Plot and float</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Sort AVL data</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
 </tr>
@@ -265,8 +291,7 @@ the speed required for the controllability curve (1.2 x v_s).</p>
 <dl class="attribute">
 <dt id="components.liftingsurfaces.wing.Wing.color">
 <code class="descname">color</code><a class="headerlink" href="#components.liftingsurfaces.wing.Wing.color" title="Permalink to this definition">¶</a></dt>
-<dd><p>Changes the color of the wing skin to the one defined in MyColors
-:type: tuple</p>
+<dd><p>Changes the color of the wing skin to the one defined in MyColors</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -304,8 +329,7 @@ the speed required for the controllability curve (1.2 x v_s).</p>
 <dl class="attribute">
 <dt id="components.liftingsurfaces.wing.Wing.fuse_width_factor">
 <code class="descname">fuse_width_factor</code><a class="headerlink" href="#components.liftingsurfaces.wing.Wing.fuse_width_factor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Below is the assumed factor of the semi_span which the fuselage extends over the wing.
-:type: float</p>
+<dd><p>Below is the assumed factor of the semi_span which the fuselage extends over the wing.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -330,8 +354,7 @@ the speed required for the controllability curve (1.2 x v_s).</p>
 <dl class="attribute">
 <dt id="components.liftingsurfaces.wing.Wing.hide_bbox">
 <code class="descname">hide_bbox</code><a class="headerlink" href="#components.liftingsurfaces.wing.Wing.hide_bbox" title="Permalink to this definition">¶</a></dt>
-<dd><p>Below is the a switch to hide/show the bbox of the wing section within the fuselage.
-:type: boolean</p>
+<dd><p>Below is a switch to hide/show the bbox of the wing section within the fuselage.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -348,7 +371,7 @@ the speed required for the controllability curve (1.2 x v_s).</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">HT center section bounding box</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Wing fuselage frame bbox</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">Box</td>
 </tr>
@@ -393,19 +416,30 @@ the scissor plot.</p>
 <dt id="components.liftingsurfaces.wing.Wing.lift_coef_control_index">
 <code class="descname">lift_coef_control_index</code><a class="reference internal" href="../../_modules/components/liftingsurfaces/wing.html#Wing.lift_coef_control_index"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.liftingsurfaces.wing.Wing.lift_coef_control_index" title="Permalink to this definition">¶</a></dt>
 <dd><p>”  This attribute returns the index of the AVL data corresponding to the case when C_L is closest to the
-required lift_coef_control required by the lift equation for the controllability curve.
-:return: index
-:rtype: int</p>
+required C_L by the lift equation at 1.2 * V_s for the controllability curve in scissor plot.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Index of data set with C_L for Controllability curve of Scissor Plot.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="components.liftingsurfaces.wing.Wing.lift_coef_vs_alpha">
 <code class="descname">lift_coef_vs_alpha</code><a class="reference internal" href="../../_modules/components/liftingsurfaces/wing.html#Wing.lift_coef_vs_alpha"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.liftingsurfaces.wing.Wing.lift_coef_vs_alpha" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
+<dd><p>This estimates the lift curve slope.</p>
+<table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Lift Coefficient Gradient [1/rad]</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
 </tr>
 </tbody>
 </table>
@@ -414,17 +448,24 @@ required lift_coef_control required by the lift equation for the controllability
 <dl class="attribute">
 <dt id="components.liftingsurfaces.wing.Wing.mesh_deflection">
 <code class="descname">mesh_deflection</code><a class="headerlink" href="#components.liftingsurfaces.wing.Wing.mesh_deflection" title="Permalink to this definition">¶</a></dt>
-<dd><p>Below is the chosen mesh deflection. It’s is an optimum point between a good quality render and performance
-:type: float</p>
+<dd><p>Below is the chosen mesh deflection. It’s is an optimum point between a good quality render and performance</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="components.liftingsurfaces.wing.Wing.moment_coef_control">
 <code class="descname">moment_coef_control</code><a class="reference internal" href="../../_modules/components/liftingsurfaces/wing.html#Wing.moment_coef_control"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.liftingsurfaces.wing.Wing.moment_coef_control" title="Permalink to this definition">¶</a></dt>
 <dd><p>”  This attribute gets the pitching moment of the wing about its aerodynamic center from avl corresponding to
-lift_coef_cont derived above.
-:return: C_mac
-:rtype: float</p>
+index found from the above lift coefficient at 1.2* V_s.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">C_mac at 1.2*V_s</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
@@ -435,7 +476,7 @@ lift_coef_cont derived above.
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Wing planform area</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Wing planform area in m^2</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
 </tr>
@@ -444,17 +485,43 @@ lift_coef_cont derived above.
 </dd></dl>
 
 <dl class="attribute">
+<dt id="components.liftingsurfaces.wing.Wing.plot_liftgradient">
+<code class="descname">plot_liftgradient</code><a class="reference internal" href="../../_modules/components/liftingsurfaces/wing.html#Wing.plot_liftgradient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.liftingsurfaces.wing.Wing.plot_liftgradient" title="Permalink to this definition">¶</a></dt>
+<dd><p>This plots the lift coefficient vs angle of attack for the current wing in PyCharm.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Lift Coefficient vs. angle of attack Plot</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.wing.Wing.plot_momentgradient">
+<code class="descname">plot_momentgradient</code><a class="reference internal" href="../../_modules/components/liftingsurfaces/wing.html#Wing.plot_momentgradient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.liftingsurfaces.wing.Wing.plot_momentgradient" title="Permalink to this definition">¶</a></dt>
+<dd><p>This plots the moment coefficient vs angle of attack for the current wing in PyCharm.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Moment Coefficient vs. angle of attack Plot</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="components.liftingsurfaces.wing.Wing.ply_number">
 <code class="descname">ply_number</code><a class="headerlink" href="#components.liftingsurfaces.wing.Wing.ply_number" title="Permalink to this definition">¶</a></dt>
-<dd><p>Changes the number of ply’s of carbon fiber <a class="reference external" href="http://www.ijera.com/papers/Vol4_issue5/Version%202/J45025355.pdf">http://www.ijera.com/papers/Vol4_issue5/Version%202/J45025355.pdf</a>
-:type: tuple</p>
+<dd><p>Changes the number of ply’s of carbon fiber <a class="reference external" href="http://www.ijera.com/papers/Vol4_issue5/Version%202/J45025355.pdf">http://www.ijera.com/papers/Vol4_issue5/Version%202/J45025355.pdf</a></p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="components.liftingsurfaces.wing.Wing.rho">
 <code class="descname">rho</code><a class="headerlink" href="#components.liftingsurfaces.wing.Wing.rho" title="Permalink to this definition">¶</a></dt>
-<dd><p>Below is the ISA STD sea level density.
-:type: float</p>
+<dd><p>Below is the ISA STD sea level density in kg/m^3.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -497,7 +564,7 @@ lift_coef_cont derived above.
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">float</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Calculation of wing aera from design point in m^2</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
 </tr>
@@ -526,8 +593,7 @@ PYTHON TO FREEZE. THE CODE MUST BE STOPPED AND RESTARTED IF THE GEOMETRY IS SHOW
 <dl class="attribute">
 <dt id="components.liftingsurfaces.wing.Wing.stall_speed">
 <code class="descname">stall_speed</code><a class="headerlink" href="#components.liftingsurfaces.wing.Wing.stall_speed" title="Permalink to this definition">¶</a></dt>
-<dd><p>The stall speed of the wing
-:type: float</p>
+<dd><p>The stall speed of the wing from the class I weight estimation.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -549,8 +615,7 @@ PYTHON TO FREEZE. THE CODE MUST BE STOPPED AND RESTARTED IF THE GEOMETRY IS SHOW
 <dl class="attribute">
 <dt id="components.liftingsurfaces.wing.Wing.weight_mtow">
 <code class="descname">weight_mtow</code><a class="headerlink" href="#components.liftingsurfaces.wing.Wing.weight_mtow" title="Permalink to this definition">¶</a></dt>
-<dd><p>Below is the required MTOW from the class I weight estimation.
-:type: float</p>
+<dd><p>Below is the required MTOW from the class I weight estimation.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -590,8 +655,7 @@ bbox is the maximum thickness of the wing at this cut location.</p>
 <dl class="attribute">
 <dt id="components.liftingsurfaces.wing.Wing.wing_loading">
 <code class="descname">wing_loading</code><a class="headerlink" href="#components.liftingsurfaces.wing.Wing.wing_loading" title="Permalink to this definition">¶</a></dt>
-<dd><p>Below is the required wing loading from the class I weight estimation.
-:type: float</p>
+<dd><p>Below is the required wing loading from the class I weight estimation.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -614,14 +678,21 @@ chordwise and spanwise spacing is also set.</p>
 <dl class="attribute">
 <dt id="components.liftingsurfaces.wing.Wing.write_results">
 <code class="descname">write_results</code><a class="reference internal" href="../../_modules/components/liftingsurfaces/wing.html#Wing.write_results"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.liftingsurfaces.wing.Wing.write_results" title="Permalink to this definition">¶</a></dt>
-<dd><p>”  Here the results are written into a .json file
-:return: AVL data file
-:rtype: .json file</p>
+<dd><p>”  Here the results are written into a .json file named ‘avl_wing_out’.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">AVL output data file</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">json</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
 
-<p>:q</p>
 </div>
 
 
@@ -632,8 +703,10 @@ chordwise and spanwise spacing is also set.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
+        <a href="scissorplot.html" class="btn btn-neutral float-right" title="ScissorPlot" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
-        <a href="liftingsurfaceprim.html" class="btn btn-neutral" title="LiftingSurface Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+        <a href="liftingsurfaceprim.html" class="btn btn-neutral" title="LiftingSurface" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

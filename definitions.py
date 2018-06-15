@@ -34,7 +34,7 @@ class VisualCG(GeomBase):
 
          """
         return Sphere(radius=self.scale,
-                      position=translate(self.position,
+                      position=translate(XOY,
                                          'x', self.vis_cog.x,
                                          'y', self.vis_cog.y,
                                          'z', self.vis_cog.z),
@@ -94,7 +94,9 @@ class Component(GeomBase):
 
         :rtype: Point
         """
-        return self.internal_shape.bbox.corners[0]
+        return self.internal_shape.bbox.corners[0] if self.internal_shape is not None else Point(self.position.x,
+                                                                                                 self.position.y,
+                                                                                                 self.position.z)
 
     @Part
     def internal_shape(self):

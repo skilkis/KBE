@@ -28,6 +28,45 @@ class LiftingSurface(GeomBase):
     +y pointing toward right wingtip, +z up.
 
     :returns: ParaPy Geometry of a Lifting Surface
+
+    :param planform_area: This is the Required Planfrom Area [m^2]
+    :type planform_area: float
+
+    :param aspect_ratio: This is the required Aspect Ratio of the Surface.
+    :type aspect_ratio: float
+
+    :param taper: This is the required Taper Ratio of the Surface.
+    :type taper: float
+
+    :param dihedral: This is the required Dihedral Angle of the Surface in degrees.
+    :type dihedral: float
+
+    :param twist: This is the required Twist Angle of the Tip Airfoil w.r.t the Root Airfoil in degrees.
+    :type twist: float
+
+    :param offset: This is the offset in the flow direction of the tip W.R.T. the root Leading Edge.
+    :type offset: float or NoneType
+
+    :param browse_airfoils: Allows the user to easily choose amongst available airfoils with a GUI File-Browser.
+
+    :param hide_mac: This allows the MAC curve to be shown on the wing when changed in the GUI to False.
+    :type hide_mac: bool
+
+    :param hide_leading_edge: This allows the leading edge line to be shown (without dihedral).
+    :type hide_leading_edge: bool
+
+    :param is_half: A switch case that determines if the `planform_area` is half of the total required area.
+    :type is_half: bool
+
+    :param mesh_deflection: The default value is an optimum between a good quality render and performance.
+    :type mesh_deflection: float
+
+    :param airfoil_type: This is the name of the folder within the 'airfoils' folder. There are three options \
+    'cambered', 'reflexed' and 'symmetric'.
+    :type airfoil_type: str
+
+    :param airfoil_choice: This is the filename of the requested airfoil.
+    :type airfoil_choice: str
     """
 
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'liftingsurface.png')
@@ -35,35 +74,29 @@ class LiftingSurface(GeomBase):
     # --- Inputs: -----------------------------------------------------------------------------------------------------
 
     #: Below is the Required Planfrom Area, if mirrored is true then this is the total wing area
-    #: :type: float
     planform_area = Input(0.8, validator=val.Positive())
 
     #: Below is the required Aspect Ratio of the Surface.
-    #: :type: float
     aspect_ratio = Input(9.0, validator=val.Range(1.0, 30.0))
 
     #: Below is the Taper Ratio, which is chosen by the user.
-    #: :type: float
     taper = Input(0.3, validator=val.Range(0.1, 1.0))
 
     #: Below is the User chosen Dihedral Angle.
-    #: :type: float
     dihedral = Input(5.0, validator=val.Range(-10.0, 10.0))
 
     #: Below is the twist of the tip section with respect to the root section. Positive twist is tip twisted up
     #: with respect to the root.
-    #: :type: float
     twist = Input(-5.0, validator=val.Range(-5.0, 5.0))
 
     #: Below is the offset in the flow direction of the tip W.R.T. the root Leading Edge. The default input (None)
     #: causes the TE to be unswept (offset = c_r-c_t), however, if the user inputs 0 in the GUI, then the leading
     #: edge becomes unswept. In this case, with taper ratio < 1, the TE becomes forward swept.
-    #: :type: NoneType or float
     offset = Input(None)
 
     @Input
     def browse_airfoils(self):
-        """ Allows the user to easily choose amongst available airfoils with a GUI File-Browser
+        """ Allows the user to easily choose amongst available airfoils with a GUI File-Browser.
 
         :return: Sets the inputs `airfoil_type` and `airfoil_choice` above to the value chosen in the GUI Browser
         """
@@ -88,29 +121,23 @@ class LiftingSurface(GeomBase):
         return self.airfoil_choice, self.airfoil_type
 
     #: Boolean below allows the MAC curve to be shown on the wing when changed in the GUI to False.
-    #: :type: bool
     hide_mac = Input(True, validator=val.Instance(bool))
 
     #: Boolean below allows the leading edge line to be shown (without dihedral).
-    #: :type: bool
     hide_leading_edge = Input(True, validator=val.Instance(bool))
 
     #: A switch case that determines if the `planform_area` is half of the total required area
-    #: :type: bool
     is_half = Input(False, validator=val.Instance(bool))
 
-    #: The default value is an optimum between a good quality render and performance
-    #: :type: float
+    #: The default value is an optimum between a good quality render and performance.
     mesh_deflection = Input(0.0001, validator=val.Range(0.00001, 0.001))
 
     #: Below is the name of the folder within the 'airfoils' folder. There are three options: 'cambered', 'reflexed' and
     #: 'symmetric'.
-    #: :type: str
     airfoil_type = Input('cambered', validator=val.OneOf(['cambered', 'reflexed', 'symmetric']))
 
     #: Below is the default airfoil. Please see the three folders to find the correct filename, if you wish to change
     #: the airfoil.
-    #: :type: str
     airfoil_choice = Input('SD7062')
 
 #  This block of Attributes calculates the planform parameters. ########------------------------------------------------
@@ -127,7 +154,7 @@ class LiftingSurface(GeomBase):
     def semi_span(self):
         """ This attribute calculates the required semi-span based on the wing area and Aspect Ratio.
 
-        :return: Wing Semispan
+        :return: Wing Semispan in SI meter
         :rtype: float
         """
         if self.is_half:
@@ -140,7 +167,7 @@ class LiftingSurface(GeomBase):
     def root_chord(self):
         """ This attribute calculates the required root chord, with an assumed taper ratio.
 
-        :return: Wing Root Chord
+        :return: Wing Root Chord in SI meter
         :rtype: float
         """
         return 2 * self.planform_area / ((1 + self.taper) * self.span)
@@ -149,7 +176,7 @@ class LiftingSurface(GeomBase):
     def tip_chord(self):
         """ This attribute calculates the tip chord, with the assumed taper ratio and the root chord.
 
-        :return: Wing Tip Chord
+        :return: Wing Tip Chord in SI meter
         :rtype: float
         """
         return self.root_chord * self.taper
@@ -173,7 +200,7 @@ class LiftingSurface(GeomBase):
     def le_sweep(self):
         """ This will calculate the leading edge sweep of the wing.
 
-        :return: Wing LE sweep
+        :return: Wing LE sweep in degrees
         :rtype: float
         """
         le_sweep = degrees(atan((self.tip_airfoil.position.x-self.root_airfoil.position.x) / self.semi_span))

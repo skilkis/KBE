@@ -82,18 +82,28 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../definitions.html">Definitions Documentation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../directories.html">Directories Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../definitions.html">Definitions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../directories.html">Directories</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../components/index.html">Components Module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../components/battery.html">Li-PO Battery</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../components/electronics.html">Electronics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/electronics/index.html">Electronics Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/electronics/electronics.html">Electronics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/electronics/flightcontroller.html">FlightController</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/electronics/speedcontroller.html">SpeedController</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../../../components/liftingsurfaces/index.html">LiftingSurface Module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/liftingsurfaceprim.html">LiftingSurface Documentation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/wing.html">Wing Documentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/liftingsurfaceprim.html">LiftingSurface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/wing.html">Wing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/scissorplot.html">ScissorPlot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/horizontalstab.html">HorizontalStabilizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/verticalstab.html">VerticalStablilizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/compoundstab.html">CompoundStabilizer</a></li>
 </ul>
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../../main.html">Main UAV</a></li>
 </ul>
 
             
@@ -174,20 +184,27 @@
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Electronics&quot;</span><span class="p">]</span>
 
 
-<div class="viewcode-block" id="Electronics"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.electronics.Electronics">[docs]</a><span class="k">class</span> <span class="nc">Electronics</span><span class="p">(</span><span class="n">Component</span><span class="p">):</span>
+<div class="viewcode-block" id="Electronics"><a class="viewcode-back" href="../../../components/electronics/electronics.html#components.electronics.electronics.Electronics">[docs]</a><span class="k">class</span> <span class="nc">Electronics</span><span class="p">(</span><span class="n">Component</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;  This class will instantiate the flight controller and speed_controller(s) and place them on top of one another.</span>
 
-<span class="sd">    :returns: ParaPy Geometry of the electronics</span>
+<span class="sd">    :return: ParaPy Geometry of the electronics.</span>
+
+<span class="sd">    :param motor_in: This provides a link to the motor object instantiated in :class:`main.UAV`</span>
+<span class="sd">    :type motor_in: Motor</span>
+
+<span class="sd">    :param label: This names the Electronics to the specified string.</span>
+<span class="sd">    :type label: str</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">__icon__</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;ICON_DIR&#39;</span><span class="p">],</span> <span class="s1">&#39;electronics.png&#39;</span><span class="p">)</span>
 
     <span class="c1">#  If multiple motors put in, give [] within input parentheses</span>
-    <span class="n">motor_in</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">Motor</span><span class="p">())</span>
+    <span class="n">motor_in</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">Motor</span><span class="p">(),</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="n">Motor</span><span class="p">))</span>
 
-    <span class="n">label</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;Electronics&#39;</span><span class="p">)</span>
+    <span class="n">label</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;Electronics&#39;</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">str</span><span class="p">))</span>
 
-<div class="viewcode-block" id="Electronics.component_type"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.electronics.Electronics.component_type">[docs]</a>    <span class="nd">@Attribute</span>
+<div class="viewcode-block" id="Electronics.component_type"><a class="viewcode-back" href="../../../components/electronics/electronics.html#components.electronics.electronics.Electronics.component_type">[docs]</a>    <span class="nd">@Attribute</span>
     <span class="k">def</span> <span class="nf">component_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; This attribute names the component &#39;electronics&#39; for electronics.</span>
 
@@ -196,7 +213,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="s1">&#39;electronics&#39;</span></div>
 
-<div class="viewcode-block" id="Electronics.weight"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.electronics.Electronics.weight">[docs]</a>    <span class="nd">@Attribute</span>
+<div class="viewcode-block" id="Electronics.weight"><a class="viewcode-back" href="../../../components/electronics/electronics.html#components.electronics.electronics.Electronics.weight">[docs]</a>    <span class="nd">@Attribute</span>
     <span class="k">def</span> <span class="nf">weight</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Total mass of the electronics components</span>
 
@@ -205,7 +222,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">flight_controller</span><span class="o">.</span><span class="n">weight</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_controller</span><span class="o">.</span><span class="n">weight</span></div>
 
-<div class="viewcode-block" id="Electronics.amp_req"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.electronics.Electronics.amp_req">[docs]</a>    <span class="nd">@Attribute</span>
+<div class="viewcode-block" id="Electronics.amp_req"><a class="viewcode-back" href="../../../components/electronics/electronics.html#components.electronics.electronics.Electronics.amp_req">[docs]</a>    <span class="nd">@Attribute</span>
     <span class="k">def</span> <span class="nf">amp_req</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; This is the required amperage for the engine(s).</span>
 
@@ -220,7 +237,7 @@
                 <span class="n">amp_req</span> <span class="o">=</span> <span class="n">amp_req</span> <span class="o">+</span> <span class="n">i</span><span class="o">.</span><span class="n">specs</span><span class="p">[</span><span class="s1">&#39;esc_recommendation&#39;</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">amp_req</span></div>
 
-<div class="viewcode-block" id="Electronics.number_engines"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.electronics.Electronics.number_engines">[docs]</a>    <span class="nd">@Attribute</span>
+<div class="viewcode-block" id="Electronics.number_engines"><a class="viewcode-back" href="../../../components/electronics/electronics.html#components.electronics.electronics.Electronics.number_engines">[docs]</a>    <span class="nd">@Attribute</span>
     <span class="k">def</span> <span class="nf">number_engines</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; This is used to determine the number of engines from the input motor_in.</span>
 
@@ -232,7 +249,7 @@
             <span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">motor_in</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">length</span></div>
 
-<div class="viewcode-block" id="Electronics.flight_controller"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.electronics.Electronics.flight_controller">[docs]</a>    <span class="nd">@Part</span>
+<div class="viewcode-block" id="Electronics.flight_controller"><a class="viewcode-back" href="../../../components/electronics/electronics.html#components.electronics.electronics.Electronics.flight_controller">[docs]</a>    <span class="nd">@Part</span>
     <span class="k">def</span> <span class="nf">flight_controller</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; This an instantiation of the flight controller. It takes only the position input.</span>
 
@@ -241,7 +258,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">FlightController</span><span class="p">(</span><span class="n">position</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Electronics.speed_controller"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.electronics.Electronics.speed_controller">[docs]</a>    <span class="nd">@Part</span>
+<div class="viewcode-block" id="Electronics.speed_controller"><a class="viewcode-back" href="../../../components/electronics/electronics.html#components.electronics.electronics.Electronics.speed_controller">[docs]</a>    <span class="nd">@Part</span>
     <span class="k">def</span> <span class="nf">speed_controller</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; This an instantiation of the speed controller class. It requires the amp draw and the number of engines and</span>
 <span class="sd">        position as input.</span>
@@ -253,7 +270,7 @@
                                <span class="n">amp_recc</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">amp_req</span><span class="p">,</span>
                                <span class="n">num_engines</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">number_engines</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Electronics.box_length"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.electronics.Electronics.box_length">[docs]</a>    <span class="nd">@Attribute</span>
+<div class="viewcode-block" id="Electronics.box_length"><a class="viewcode-back" href="../../../components/electronics/electronics.html#components.electronics.electronics.Electronics.box_length">[docs]</a>    <span class="nd">@Attribute</span>
     <span class="k">def</span> <span class="nf">box_length</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; This returns the length of the flight controller box for calculations.</span>
 
@@ -262,7 +279,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">flight_controller</span><span class="o">.</span><span class="n">l_navio</span></div>
 
-<div class="viewcode-block" id="Electronics.elec_joiner"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.electronics.Electronics.elec_joiner">[docs]</a>    <span class="nd">@Attribute</span>
+<div class="viewcode-block" id="Electronics.elec_joiner"><a class="viewcode-back" href="../../../components/electronics/electronics.html#components.electronics.electronics.Electronics.elec_joiner">[docs]</a>    <span class="nd">@Attribute</span>
     <span class="k">def</span> <span class="nf">elec_joiner</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; This joins the ESC&#39;s together through a series of Fuse operations to be able to present a</span>
 <span class="sd">        single `internal_shape` required for the fuselage frame sizing.</span>
@@ -281,7 +298,7 @@
             <span class="n">shape_out</span> <span class="o">=</span> <span class="n">parts_in</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">shape_out</span></div>
 
-<div class="viewcode-block" id="Electronics.center_of_gravity"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.electronics.Electronics.center_of_gravity">[docs]</a>    <span class="nd">@Attribute</span>
+<div class="viewcode-block" id="Electronics.center_of_gravity"><a class="viewcode-back" href="../../../components/electronics/electronics.html#components.electronics.electronics.Electronics.center_of_gravity">[docs]</a>    <span class="nd">@Attribute</span>
     <span class="k">def</span> <span class="nf">center_of_gravity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; This attribute finds the center of gravities of the separate ESCs, then finds the combined C.G.</span>
 
@@ -298,7 +315,7 @@
 
         <span class="k">return</span> <span class="n">Point</span><span class="p">(</span><span class="n">cg_x</span><span class="p">,</span> <span class="n">cg_y</span><span class="p">,</span> <span class="n">cg_z</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Electronics.internal_shape"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.electronics.Electronics.internal_shape">[docs]</a>    <span class="nd">@Part</span>
+<div class="viewcode-block" id="Electronics.internal_shape"><a class="viewcode-back" href="../../../components/electronics/electronics.html#components.electronics.electronics.Electronics.internal_shape">[docs]</a>    <span class="nd">@Part</span>
     <span class="k">def</span> <span class="nf">internal_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; This is creating a box for the fuselage frames. This is used to get around ParaPy errors.</span>
 

@@ -82,18 +82,28 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../definitions.html">Definitions Documentation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../directories.html">Directories Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../definitions.html">Definitions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../directories.html">Directories</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../components/index.html">Components Module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../components/battery.html">Li-PO Battery</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../components/electronics.html">Electronics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/electronics/index.html">Electronics Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/electronics/electronics.html">Electronics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/electronics/flightcontroller.html">FlightController</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/electronics/speedcontroller.html">SpeedController</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../../../components/liftingsurfaces/index.html">LiftingSurface Module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/liftingsurfaceprim.html">LiftingSurface Documentation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/wing.html">Wing Documentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/liftingsurfaceprim.html">LiftingSurface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/wing.html">Wing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/scissorplot.html">ScissorPlot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/horizontalstab.html">HorizontalStabilizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/verticalstab.html">VerticalStablilizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/compoundstab.html">CompoundStabilizer</a></li>
 </ul>
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../../main.html">Main UAV</a></li>
 </ul>
 
             
@@ -173,12 +183,8 @@
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Battery&quot;</span><span class="p">,</span> <span class="s2">&quot;show_primitives&quot;</span><span class="p">]</span>
 
-<span class="c1"># TODO change show_primitives to be inside class definition and protected variable</span>
 
 <span class="c1"># TODO remove error message since it is already handled by a validator</span>
-
-<span class="c1"># TODO validate batteyr size</span>
-
 <span class="c1"># TODO Add power requirement</span>
 
 <span class="c1"># A parameter for debugging, turns the visibility of miscellaneous parts ON/OFF</span>
@@ -192,7 +198,6 @@
 <span class="sd">    inner fuselage structure.</span>
 
 <span class="sd">    :return: ParaPy Geometry of the Battery(s)</span>
-<span class="sd">    :param: xxx</span>
 
 <span class="sd">    :param sizing_target: Accepts either &#39;capacity&#39; or &#39;weight&#39; and sizes based on required capacity on the former</span>
 <span class="sd">    :type sizing_target: basestring</span>
@@ -204,7 +209,7 @@
 <span class="sd">    :type max_width: float</span>
 
 <span class="sd">    :param max_height: Sets the maximum allowed height of the battery in SI meter [m]</span>
-<span class="sd">    :type max_width: float</span>
+<span class="sd">    :type max_height: float</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">__initargs__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;sizing_target&quot;</span><span class="p">,</span> <span class="s2">&quot;sizing_value&quot;</span><span class="p">]</span>
@@ -325,7 +330,6 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">min_dimension</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">min_dimension</span> <span class="o">/</span> <span class="mf">2.0</span></div>
-
 
     <span class="nd">@Attribute</span><span class="p">(</span><span class="n">private</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">type_errormsg</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

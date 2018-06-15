@@ -1,7 +1,5 @@
-Wing Documentation
+Wing
 ===============================
 
 .. automodule:: components.liftingsurfaces.wing
    :members:
-
-:q

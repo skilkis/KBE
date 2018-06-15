@@ -82,18 +82,28 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../definitions.html">Definitions Documentation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../directories.html">Directories Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../definitions.html">Definitions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../directories.html">Directories</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../components/index.html">Components Module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../components/battery.html">Li-PO Battery</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../components/electronics.html">Electronics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/electronics/index.html">Electronics Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/electronics/electronics.html">Electronics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/electronics/flightcontroller.html">FlightController</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/electronics/speedcontroller.html">SpeedController</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../../../components/liftingsurfaces/index.html">LiftingSurface Module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/liftingsurfaceprim.html">LiftingSurface Documentation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/wing.html">Wing Documentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/liftingsurfaceprim.html">LiftingSurface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/wing.html">Wing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/scissorplot.html">ScissorPlot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/horizontalstab.html">HorizontalStabilizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/verticalstab.html">VerticalStablilizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/compoundstab.html">CompoundStabilizer</a></li>
 </ul>
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../../main.html">Main UAV</a></li>
 </ul>
 
             
@@ -191,51 +201,69 @@
 <span class="sd">    vs. angle of attack.</span>
 
 <span class="sd">    :returns: ParaPy Geometry of the Main Wing Surface</span>
+
+<span class="sd">    :param wing_loading: This is the required wing loading from the class I weight estimation in [N/m^2]</span>
+<span class="sd">    :type wing_loading: float</span>
+
+<span class="sd">    :param weight_mtow: This is the required MTOW from the class I weight estimation in kg</span>
+<span class="sd">    :type weight_mtow: float</span>
+
+<span class="sd">    :param stall_speed: This is the stall speed of the wing from the class I weight estimation in m/s.</span>
+<span class="sd">    :type stall_speed: float</span>
+
+<span class="sd">    :param rho: This is the ISA STD sea level density in kg/m^3.</span>
+<span class="sd">    :type rho: float</span>
+
+<span class="sd">    :param fuse_width_factor: This is the assumed factor of the semispan which the fuselage extends over the wing.</span>
+<span class="sd">    :type fuse_width_factor: float</span>
+
+<span class="sd">    :param hide_bbox: This is a switch to hide/show the bbox of the wing section within the fuselage.</span>
+<span class="sd">    :type hide_bbox: bool</span>
+
+<span class="sd">    :param hide_mac: This overwrites input from LiftingSurface to hide the Mean Aerodynamic Chord part</span>
+<span class="sd">    :type hide_mac: bool</span>
+
+<span class="sd">    :param mesh_deflection: The default value is an optimum between a good quality render and performance.</span>
+<span class="sd">    :type mesh_deflection: float</span>
+
+<span class="sd">    :param color: Changes the color of the wing skin to the one defined in MyColors</span>
+<span class="sd">    :type color: tuple</span>
+
+<span class="sd">    :param ply_number: Changes the number of ply&#39;s of carbon fiber pre-preg.</span>
+<span class="sd">    :type ply_number: int</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">__icon__</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;ICON_DIR&#39;</span><span class="p">],</span> <span class="s1">&#39;liftingsurface.png&#39;</span><span class="p">)</span>
 
 <span class="c1">#   This block of code contains the inputs. ########--------------------------------------------------------------------</span>
     <span class="c1">#: Below is the required wing loading from the class I weight estimation.</span>
-    <span class="c1">#: :type: float</span>
     <span class="n">wing_loading</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">100.0</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">())</span>
 
     <span class="c1">#: Below is the required MTOW from the class I weight estimation.</span>
-    <span class="c1">#: :type: float</span>
     <span class="n">weight_mtow</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">25.0</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">())</span>
 
-    <span class="c1">#: The stall speed of the wing</span>
-    <span class="c1">#: :type: float</span>
+    <span class="c1">#: The stall speed of the wing from the class I weight estimation.</span>
     <span class="n">stall_speed</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">8.0</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">())</span>
 
-    <span class="c1">#: Below is the ISA STD sea level density.</span>
-    <span class="c1">#: :type: float</span>
+    <span class="c1">#: Below is the ISA STD sea level density in kg/m^3.</span>
     <span class="n">rho</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">1.225</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">())</span>
 
     <span class="c1">#: Below is the assumed factor of the semi_span which the fuselage extends over the wing.</span>
-    <span class="c1">#: :type: float</span>
     <span class="n">fuse_width_factor</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.07</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Range</span><span class="p">(</span><span class="mf">0.001</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">))</span>
 
-    <span class="c1">#: Below is the a switch to hide/show the bbox of the wing section within the fuselage.</span>
-    <span class="c1">#: :type: boolean</span>
+    <span class="c1">#: Below is a switch to hide/show the bbox of the wing section within the fuselage.</span>
     <span class="n">hide_bbox</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">bool</span><span class="p">))</span>
 
     <span class="c1">#: Overwrites input from LiftingSurface to hide the Mean Aerodynamic Chord part</span>
     <span class="n">hide_mac</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">bool</span><span class="p">))</span>
 
     <span class="c1">#: Below is the chosen mesh deflection. It&#39;s is an optimum point between a good quality render and performance</span>
-    <span class="c1">#: :type: float</span>
     <span class="n">mesh_deflection</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.0001</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Range</span><span class="p">(</span><span class="mf">0.00001</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">))</span>
 
     <span class="c1">#: Changes the color of the wing skin to the one defined in MyColors</span>
-    <span class="c1">#: :type: tuple</span>
     <span class="n">color</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">MyColors</span><span class="o">.</span><span class="n">skin_color</span><span class="p">)</span>
 
-    <span class="c1"># THIS IS A TEST PARAMETER</span>
-    <span class="n">global_cg</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">float</span><span class="p">))</span>
-
     <span class="c1">#: Changes the number of ply&#39;s of carbon fiber http://www.ijera.com/papers/Vol4_issue5/Version%202/J45025355.pdf</span>
-    <span class="c1">#: :type: tuple</span>
     <span class="n">ply_number</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
 
 <span class="c1">#  This block of Attributes calculates the planform parameters. ########------------------------------------------------</span>
@@ -270,7 +298,7 @@
     <span class="k">def</span> <span class="nf">s_req</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; This attribute contains the calculation of the required TOTAL wing area from the design point.</span>
 
-<span class="sd">        :return: float</span>
+<span class="sd">        :return: Calculation of wing aera from design point in m^2</span>
 <span class="sd">        :rtype: float</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weight_mtow</span> <span class="o">*</span> <span class="mf">9.81</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">wing_loading</span></div>
@@ -279,7 +307,7 @@
     <span class="k">def</span> <span class="nf">planform_area</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Instantiating the required variable name for the class ExternalBody</span>
 
-<span class="sd">        :return: Wing planform area</span>
+<span class="sd">        :return: Wing planform area in m^2</span>
 <span class="sd">        :rtype: float</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">s_req</span></div>
@@ -360,7 +388,7 @@
     <span class="k">def</span> <span class="nf">internal_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;&quot;  This part creates the bounding box for the part of the wing within the fuselage.</span>
 
-<span class="sd">        :return: HT center section bounding box</span>
+<span class="sd">        :return: Wing fuselage frame bbox</span>
 <span class="sd">        :rtype: Box</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">Box</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get_wingfuse_bounds</span><span class="o">.</span><span class="n">width</span><span class="p">,</span>
@@ -490,9 +518,9 @@
 
 <div class="viewcode-block" id="Wing.avl_data_grabber"><a class="viewcode-back" href="../../../components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing.avl_data_grabber">[docs]</a>    <span class="nd">@Attribute</span><span class="p">(</span><span class="n">private</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">avl_data_grabber</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;  Here, we grab the data from</span>
+        <span class="sd">&quot;&quot;&quot;  Here, we grab and sort the data by angle of attack from AVL.</span>
 
-<span class="sd">        :return: Plot and float</span>
+<span class="sd">        :return: Sort AVL data</span>
 <span class="sd">        :rtype: dict</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">grabbed_values</span> <span class="o">=</span> <span class="p">(</span><span class="nb">sorted</span><span class="p">([[</span><span class="bp">self</span><span class="o">.</span><span class="n">avl_results</span><span class="p">[</span><span class="n">alpha</span><span class="p">][</span><span class="s1">&#39;Totals&#39;</span><span class="p">][</span><span class="s1">&#39;Alpha&#39;</span><span class="p">],</span>
@@ -516,17 +544,22 @@
 
 <div class="viewcode-block" id="Wing.lift_coef_vs_alpha"><a class="viewcode-back" href="../../../components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing.lift_coef_vs_alpha">[docs]</a>    <span class="nd">@Attribute</span>
     <span class="k">def</span> <span class="nf">lift_coef_vs_alpha</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot; This estimates the lift curve slope.</span>
+
 <span class="sd">        :return: Lift Coefficient Gradient [1/rad]</span>
+<span class="sd">        :rtype: float</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">cl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">avl_data_grabber</span><span class="p">[</span><span class="s1">&#39;lift_coefs&#39;</span><span class="p">]</span>
         <span class="n">alpha_rad</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">avl_data_grabber</span><span class="p">[</span><span class="s1">&#39;alpha_radians&#39;</span><span class="p">]</span>
         <span class="n">cl_alpha</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">([(</span><span class="n">cl</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">cl</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="n">alpha_rad</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">alpha_rad</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">alpha_rad</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)])</span>
         <span class="k">return</span> <span class="n">cl_alpha</span></div>
 
-    <span class="nd">@Attribute</span>
+<div class="viewcode-block" id="Wing.plot_liftgradient"><a class="viewcode-back" href="../../../components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing.plot_liftgradient">[docs]</a>    <span class="nd">@Attribute</span>
     <span class="k">def</span> <span class="nf">plot_liftgradient</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># Plotting</span>
+        <span class="sd">&quot;&quot;&quot; This plots the lift coefficient vs angle of attack for the current wing in PyCharm.</span>
+
+<span class="sd">        :return: Lift Coefficient vs. angle of attack Plot</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;ggplot&#39;</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="s1">&#39;LiftCoefficientGradient&#39;</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">avl_data_grabber</span><span class="p">[</span><span class="s1">&#39;alpha_degrees&#39;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">avl_data_grabber</span><span class="p">[</span><span class="s1">&#39;lift_coefs&#39;</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">)</span>
@@ -534,11 +567,14 @@
         <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Angle of Attack [deg]&#39;</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Lift Coefficient [-]&#39;</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-        <span class="k">return</span> <span class="s1">&#39;Plot Made, See PyCharm&#39;</span>
+        <span class="k">return</span> <span class="s1">&#39;Plot Made, See PyCharm&#39;</span></div>
 
-    <span class="nd">@Attribute</span>
+<div class="viewcode-block" id="Wing.plot_momentgradient"><a class="viewcode-back" href="../../../components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing.plot_momentgradient">[docs]</a>    <span class="nd">@Attribute</span>
     <span class="k">def</span> <span class="nf">plot_momentgradient</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># Plotting</span>
+        <span class="sd">&quot;&quot;&quot; This plots the moment coefficient vs angle of attack for the current wing in PyCharm.</span>
+
+<span class="sd">        :return: Moment Coefficient vs. angle of attack Plot</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;ggplot&#39;</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="s1">&#39;MomentCoefficientGradient&#39;</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">avl_data_grabber</span><span class="p">[</span><span class="s1">&#39;alpha_degrees&#39;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">avl_data_grabber</span><span class="p">[</span><span class="s1">&#39;moment_coefs&#39;</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">)</span>
@@ -546,13 +582,14 @@
         <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Angle of Attack [deg]&#39;</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Moment Coefficient [-]&#39;</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-        <span class="k">return</span> <span class="s1">&#39;Plot Made, See PyCharm&#39;</span>
+        <span class="k">return</span> <span class="s1">&#39;Plot Made, See PyCharm&#39;</span></div>
 
 <div class="viewcode-block" id="Wing.lift_coef_control_index"><a class="viewcode-back" href="../../../components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing.lift_coef_control_index">[docs]</a>    <span class="nd">@Attribute</span>
     <span class="k">def</span> <span class="nf">lift_coef_control_index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;&quot;  This attribute returns the index of the AVL data corresponding to the case when C_L is closest to the</span>
-<span class="sd">         required lift_coef_control required by the lift equation for the controllability curve.</span>
-<span class="sd">         :return: index</span>
+<span class="sd">         required C_L by the lift equation at 1.2 * V_s for the controllability curve in scissor plot.</span>
+
+<span class="sd">         :return: Index of data set with C_L for Controllability curve of Scissor Plot.</span>
 <span class="sd">         :rtype: int</span>
 <span class="sd">         &quot;&quot;&quot;</span>
         <span class="n">cll_array</span> <span class="o">=</span> <span class="p">(</span><span class="nb">sorted</span><span class="p">([[</span><span class="bp">self</span><span class="o">.</span><span class="n">avl_results</span><span class="p">[</span><span class="n">alpha</span><span class="p">][</span><span class="s1">&#39;Totals&#39;</span><span class="p">][</span><span class="s1">&#39;Alpha&#39;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">avl_results</span><span class="p">[</span><span class="n">alpha</span><span class="p">][</span><span class="s1">&#39;Totals&#39;</span><span class="p">][</span><span class="s1">&#39;CLtot&#39;</span><span class="p">]]</span>
@@ -565,8 +602,9 @@
 <div class="viewcode-block" id="Wing.moment_coef_control"><a class="viewcode-back" href="../../../components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing.moment_coef_control">[docs]</a>    <span class="nd">@Attribute</span>
     <span class="k">def</span> <span class="nf">moment_coef_control</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;&quot;  This attribute gets the pitching moment of the wing about its aerodynamic center from avl corresponding to</span>
-<span class="sd">         lift_coef_cont derived above.</span>
-<span class="sd">         :return: C_mac</span>
+<span class="sd">         index found from the above lift coefficient at 1.2* V_s.</span>
+
+<span class="sd">         :return: C_mac at 1.2*V_s</span>
 <span class="sd">         :rtype: float</span>
 <span class="sd">         &quot;&quot;&quot;</span>
         <span class="n">case_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">avl_results</span><span class="p">[</span><span class="s1">&#39;alpha</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">lift_coef_control_index</span><span class="p">][</span><span class="s1">&#39;Totals&#39;</span><span class="p">][</span><span class="s1">&#39;Cmtot&#39;</span><span class="p">]</span>
@@ -574,9 +612,10 @@
 
 <div class="viewcode-block" id="Wing.write_results"><a class="viewcode-back" href="../../../components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing.write_results">[docs]</a>    <span class="nd">@Attribute</span>
     <span class="k">def</span> <span class="nf">write_results</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;&quot;  Here the results are written into a .json file</span>
-<span class="sd">         :return: AVL data file</span>
-<span class="sd">         :rtype: .json file</span>
+        <span class="sd">&quot;&quot;&quot;&quot;  Here the results are written into a .json file named &#39;avl_wing_out&#39;.</span>
+
+<span class="sd">         :return: AVL output data file</span>
+<span class="sd">         :rtype: .json</span>
 <span class="sd">         &quot;&quot;&quot;</span>
         <span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">avl_session</span><span class="o">.</span><span class="n">get_results</span><span class="p">()</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;USER_DIR&#39;</span><span class="p">],</span> <span class="s1">&#39;results&#39;</span><span class="p">,</span> <span class="s1">&#39;avl_wing_out.json&#39;</span><span class="p">),</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>

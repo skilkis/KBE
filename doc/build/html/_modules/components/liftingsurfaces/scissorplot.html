@@ -1,0 +1,576 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>components.liftingsurfaces.scissorplot &mdash; KBE 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> KBE
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../definitions.html">Definitions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../directories.html">Directories</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/index.html">Components Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/battery.html">Li-PO Battery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/electronics/index.html">Electronics Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/electronics/electronics.html">Electronics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/electronics/flightcontroller.html">FlightController</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/electronics/speedcontroller.html">SpeedController</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/liftingsurfaces/index.html">LiftingSurface Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/liftingsurfaceprim.html">LiftingSurface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/wing.html">Wing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/scissorplot.html">ScissorPlot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/horizontalstab.html">HorizontalStabilizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/verticalstab.html">VerticalStablilizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/compoundstab.html">CompoundStabilizer</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../main.html">Main UAV</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">KBE</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>components.liftingsurfaces.scissorplot</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for components.liftingsurfaces.scissorplot</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="c1">#  Required Modules</span>
+<span class="kn">from</span> <span class="nn">parapy.core</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">parapy.geom</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="k">import</span> <span class="n">interp1d</span>
+<span class="kn">from</span> <span class="nn">directories</span> <span class="k">import</span> <span class="o">*</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Nelson Johnson&quot;</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ScissorPlot&quot;</span><span class="p">]</span>
+
+<span class="c1">#  TODO MAKE SURE THAT THE ASPECT RATIO IS CONSISTENT WHEN CHANGED IN OTHER PLACES OF THE GUI. SEE TODO IN MAIN!!!!!!!!</span>
+
+
+<div class="viewcode-block" id="ScissorPlot"><a class="viewcode-back" href="../../../components/liftingsurfaces/scissorplot.html#components.liftingsurfaces.scissorplot.ScissorPlot">[docs]</a><span class="k">class</span> <span class="nc">ScissorPlot</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;  This script will generate a scissor plot to size the horizontal tail (HT). The required inputs are: the CG</span>
+<span class="sd">    position, aerodynamic center position, the tail arm, the HT aspect ratio, HT span efficiency,</span>
+<span class="sd">    the tail to main wing speed ratio, the wing pitching moment about the aerodynamic center, the wing lift slope,</span>
+<span class="sd">    the c_l for controllability (derived in wing), and the allowable shift in center of gravity.</span>
+
+<span class="sd">    :returns: Required Tail Surface Area and Scissor Plot</span>
+
+<span class="sd">    :param x_cg: The CG positon in SI meters.</span>
+<span class="sd">    :type x_cg: float</span>
+
+<span class="sd">    :param x_ac: The aerodynamic center positon in SI meters.</span>
+<span class="sd">    :type x_ac: float</span>
+
+<span class="sd">    :param x_lemac: The distance to the leading edge of the Mean Aerodynamic center in SI meters.</span>
+<span class="sd">    :type x_lemac: float</span>
+
+<span class="sd">    :param mac: This is the MAC length.</span>
+<span class="sd">    :type mac: float</span>
+
+<span class="sd">    :param AR: This is the aspect ratio of the aircraft.</span>
+<span class="sd">    :type AR: float</span>
+
+<span class="sd">    :param e: This is the oswald efficiency factor of the aircraft.</span>
+<span class="sd">    :type e: float</span>
+
+<span class="sd">    :param CD0: This is the zero-lift drag coefficient of the aircraft.</span>
+<span class="sd">    :type CD0: float</span>
+
+<span class="sd">    :param k_factor: This is the k factor to correct the canard main wing&#39;s C_L alpha due to canard downwash.</span>
+<span class="sd">    :type k_factor: float</span>
+
+<span class="sd">    :param SM: This is the required stability margin.</span>
+<span class="sd">    :type SM: float</span>
+
+<span class="sd">    :param AR_h: This is the assumed aspect ratio of the horizontal tail.</span>
+<span class="sd">    :type AR_h: float</span>
+
+<span class="sd">    :param e_h: This is the oswald efficiency factor of the HT.</span>
+<span class="sd">    :type e_h: float</span>
+
+<span class="sd">    :param VhV_conv: This is the speed ratio for a conventional tail aircraft.</span>
+<span class="sd">    :type VhV_conv: float</span>
+
+<span class="sd">    :param VhV_canard: This is the speed ratio for a canard aircraft.</span>
+<span class="sd">    :type VhV_canard: float</span>
+
+<span class="sd">    :param a_0: This is the lift slope for a thin airfoil.</span>
+<span class="sd">    :type a_0: float</span>
+
+<span class="sd">    :param Cl_w: This is the controllability lift coefficient of the wing at 1.2*V_s imported from wing.</span>
+<span class="sd">    :type Cl_w: float</span>
+
+<span class="sd">    :param C_mac: This is the pitching moment about the aerodynamic center of the wing. This is calculated with \</span>
+<span class="sd">    AVL in &#39;wing.py&#39;</span>
+<span class="sd">    :type C_mac: float</span>
+
+<span class="sd">    :param Cla_w: This is the lift curve slope of the wing. This is calculated with AVL in &#39;wing.py&#39;.</span>
+<span class="sd">    :type Cla_w: float</span>
+
+<span class="sd">    :param delta_xcg: This is the assumed change in the cg location.</span>
+<span class="sd">    :type delta_xcg: float</span>
+
+<span class="sd">    :param configuration: This is a switch to determine the configuration.</span>
+<span class="sd">    :type configuration: float</span>
+
+<span class="sd">    :param lhc: Derived input of the non-dimensionalized tail arm based on configuration choice</span>
+<span class="sd">    :type lhc: float</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<span class="c1">#  This block of code contains the inputs. ########---------------------------------------------------------------------</span>
+    <span class="c1">#: Below is the current COG position</span>
+    <span class="n">x_cg</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">float</span><span class="p">))</span>
+
+    <span class="c1">#: Below is the current Aerodynamic Center position</span>
+    <span class="n">x_ac</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">float</span><span class="p">))</span>
+
+    <span class="c1">#: Below is the current leading edge of the MAC position</span>
+    <span class="n">x_lemac</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">float</span><span class="p">))</span>
+
+    <span class="c1">#: Below is the MAC length</span>
+    <span class="n">mac</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">float</span><span class="p">))</span>
+
+    <span class="c1">#: Below is the wing aspect ratio.</span>
+    <span class="n">AR</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">9.0</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Range</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">30.0</span><span class="p">))</span>
+
+    <span class="c1">#: Below is the wing span efficiency factor</span>
+    <span class="n">e</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">())</span>
+
+    <span class="c1">#: Below is the assumed zero lift drag coefficient</span>
+    <span class="n">CD0</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">())</span>
+
+    <span class="c1">#: Below is the k factor to correct the canard main wing C_Lalpha due to canard downwash.</span>
+    <span class="n">k_factor</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">())</span>
+
+    <span class="c1">#: Below is the assumed Stability Margin.</span>
+    <span class="n">SM</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">())</span>
+
+    <span class="c1">#: Below is the HT aspect ratio.</span>
+    <span class="n">AR_h</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">5.0</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">())</span>
+
+    <span class="c1">#: Below is the assumed HT span efficiency factor.</span>
+    <span class="n">e_h</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">())</span>
+
+    <span class="c1">#: Below is the speed ratio for a conventional tail aircraft.</span>
+    <span class="n">VhV_conv</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="mf">0.85</span><span class="p">)</span>
+
+    <span class="c1">#: Below is the speed ratio for a canard aircraft.</span>
+    <span class="n">VhV_canard</span> <span class="o">=</span> <span class="mf">1.0</span>
+
+    <span class="c1">#: Below is the lift slope for a thin airfoil.</span>
+    <span class="n">a_0</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">pi</span>
+
+    <span class="c1">#: Below is the controllability lift coefficient of the wing at 1.2*V_s imported from wing.</span>
+    <span class="n">Cl_w</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">())</span>
+
+    <span class="c1">#: Below is the pitching moment about the aerodynamic center of the wing. This is calculated with AVL in &#39;wing.py&#39;.</span>
+    <span class="n">C_mac</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="o">-</span><span class="mf">0.32</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Range</span><span class="p">(</span><span class="o">-</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">))</span>
+
+    <span class="c1">#: Below is the lift curve slope of the wing. This is calculated with AVL in &#39;wing.py&#39;.</span>
+    <span class="n">Cla_w</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">5.14</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">())</span>
+
+    <span class="c1">#: Below is the assumed change in the cg location.</span>
+    <span class="n">delta_xcg</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">())</span>
+
+    <span class="c1">#: Below is a switch to determine the configuration.</span>
+    <span class="n">configuration</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;conventional&#39;</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">OneOf</span><span class="p">([</span><span class="s1">&#39;conventional&#39;</span><span class="p">]))</span>
+
+<div class="viewcode-block" id="ScissorPlot.lhc"><a class="viewcode-back" href="../../../components/liftingsurfaces/scissorplot.html#components.liftingsurfaces.scissorplot.ScissorPlot.lhc">[docs]</a>    <span class="nd">@Input</span>
+    <span class="k">def</span> <span class="nf">lhc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Derived input of the non-dimensionalized tail arm based on configuration choice</span>
+
+<span class="sd">        :return: Non-dimensional tail arm</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mf">3.0</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">configuration</span> <span class="ow">is</span> <span class="s1">&#39;canard&#39;</span> <span class="k">else</span> <span class="mf">3.0</span></div>
+
+<div class="viewcode-block" id="ScissorPlot.x_cg_vs_mac"><a class="viewcode-back" href="../../../components/liftingsurfaces/scissorplot.html#components.liftingsurfaces.scissorplot.ScissorPlot.x_cg_vs_mac">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">x_cg_vs_mac</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This attribute returns the non dimensional distance between the COG and the wing AC.</span>
+
+<span class="sd">        :return: The distance between the COG and the wing AC in meters</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x_cg</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_ac</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">mac</span></div>
+
+<div class="viewcode-block" id="ScissorPlot.cla_h"><a class="viewcode-back" href="../../../components/liftingsurfaces/scissorplot.html#components.liftingsurfaces.scissorplot.ScissorPlot.cla_h">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">cla_h</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This attribute estimates the lift slope of a low sweep, low speed three dimensional wing.</span>
+
+<span class="sd">        :return: HT lift curve slope</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cla_h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">a_0</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">a_0</span> <span class="o">/</span> <span class="p">(</span><span class="n">pi</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">AR_h</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">e_h</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="n">cla_h</span></div>
+
+<div class="viewcode-block" id="ScissorPlot.downwash_a"><a class="viewcode-back" href="../../../components/liftingsurfaces/scissorplot.html#components.liftingsurfaces.scissorplot.ScissorPlot.downwash_a">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">downwash_a</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This attribute estimates the wings change in downwash with angle of attack.</span>
+
+<span class="sd">        :return: Downwash gradient of main wing</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">deda</span> <span class="o">=</span> <span class="mi">4</span><span class="o">/</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">AR</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">deda</span></div>
+
+<div class="viewcode-block" id="ScissorPlot.cl_h"><a class="viewcode-back" href="../../../components/liftingsurfaces/scissorplot.html#components.liftingsurfaces.scissorplot.ScissorPlot.cl_h">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">cl_h</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This attribute returns the lift coefficient of the tail for the controllability case. The</span>
+<span class="sd">        canard is assumed to be all moving.</span>
+
+<span class="sd">        :return: HT lift coefficient</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">configuration</span> <span class="ow">is</span> <span class="s1">&#39;conventional&#39;</span><span class="p">:</span>
+            <span class="n">cl_h</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.35</span><span class="o">*</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">AR_h</span><span class="o">**</span><span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="mf">3.0</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">cl_h</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="c1"># = 0.35 * (self.AR_h ** (1.0 / 3.0))</span>
+            <span class="c1">#  Canard assumed to be full moving with Cl max = 1 in slow speed case.</span>
+            <span class="c1">#  This assumption allows the scissor plot lines to intersect and create a design space.</span>
+        <span class="k">return</span> <span class="n">cl_h</span></div>
+
+<div class="viewcode-block" id="ScissorPlot.cla_w_canard"><a class="viewcode-back" href="../../../components/liftingsurfaces/scissorplot.html#components.liftingsurfaces.scissorplot.ScissorPlot.cla_w_canard">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">cla_w_canard</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This attribute reduces the wing lift slope for the canard case. It is reducing the C_l alpha from AVL.</span>
+
+<span class="sd">        :return: Canard main wing lift slope</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">Cla_w</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="p">((</span><span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">cla_h</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">shs_sm</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">pi</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">AR</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">k_factor</span><span class="p">)))</span></div>
+
+<div class="viewcode-block" id="ScissorPlot.xcg_range"><a class="viewcode-back" href="../../../components/liftingsurfaces/scissorplot.html#components.liftingsurfaces.scissorplot.ScissorPlot.xcg_range">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">xcg_range</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This attribute is a dummy list of x_cg used for plotting Sh/S.</span>
+
+<span class="sd">        :return: List of values of X_cg</span>
+<span class="sd">        :rtype: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">values</span></div>
+
+<div class="viewcode-block" id="ScissorPlot.shs_stability"><a class="viewcode-back" href="../../../components/liftingsurfaces/scissorplot.html#components.liftingsurfaces.scissorplot.ScissorPlot.shs_stability">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">shs_stability</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This attribute calculates the required Sh/S for the stability requirement as a function of CG position.</span>
+
+<span class="sd">        :return: Required Sh/S for stability</span>
+<span class="sd">        :rtype: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">shs_stab</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xcg_range</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">configuration</span> <span class="ow">is</span> <span class="s1">&#39;conventional&#39;</span><span class="p">:</span>
+                <span class="n">shs_conv</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xcg_range</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">cla_h</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">Cla_w</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">downwash_a</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">lhc</span> <span class="o">*</span>
+                                                 <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">VhV_conv</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)))</span> <span class="o">-</span> \
+                           <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">x_ac</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">SM</span><span class="p">)</span> <span class="o">/</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">cla_h</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">Cla_w</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">downwash_a</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">lhc</span> <span class="o">*</span>
+                                                     <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">VhV_conv</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)))</span>
+                <span class="n">shs_stab</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">shs_conv</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">shs_canard</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xcg_range</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">cla_h</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">cla_w_canard</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">lhc</span> <span class="o">*</span>
+                                                   <span class="bp">self</span><span class="o">.</span><span class="n">VhV_canard</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span> <span class="o">-</span> \
+                             <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">x_ac</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">SM</span><span class="p">)</span> <span class="o">/</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">cla_h</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">cla_w_canard</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">lhc</span> <span class="o">*</span>
+                                                       <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">VhV_canard</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)))</span>
+                <span class="n">shs_stab</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">shs_canard</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">shs_stab</span></div>
+
+<div class="viewcode-block" id="ScissorPlot.shs_control"><a class="viewcode-back" href="../../../components/liftingsurfaces/scissorplot.html#components.liftingsurfaces.scissorplot.ScissorPlot.shs_control">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">shs_control</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This attribute calculates the required Sh/S for the controllability requirement as a function of CG</span>
+<span class="sd">        position.</span>
+
+<span class="sd">        :return: Required Sh/S for controllability</span>
+<span class="sd">        :rtype: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">shs_c</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xcg_range</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">configuration</span> <span class="ow">is</span> <span class="s1">&#39;conventional&#39;</span><span class="p">:</span>
+                <span class="n">shs_conv</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xcg_range</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">cl_h</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">Cl_w</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">lhc</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">VhV_conv</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span> <span class="o">+</span> \
+                           <span class="p">(((</span><span class="bp">self</span><span class="o">.</span><span class="n">C_mac</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">Cl_w</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_ac</span><span class="p">)</span> <span class="o">/</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">cl_h</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">Cl_w</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">lhc</span> <span class="o">*</span>
+                                                                    <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">VhV_conv</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)))</span>
+                <span class="n">shs_c</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">shs_conv</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">shs_canard</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xcg_range</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">cl_h</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">Cl_w</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">lhc</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">VhV_canard</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>\
+                             <span class="o">+</span> <span class="p">(((</span><span class="bp">self</span><span class="o">.</span><span class="n">C_mac</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">Cl_w</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_ac</span><span class="p">)</span> <span class="o">/</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">cl_h</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">Cl_w</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">lhc</span> <span class="o">*</span>
+                                                                          <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">VhV_canard</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)))</span>
+                <span class="n">shs_c</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">shs_canard</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">shs_c</span></div>
+
+<div class="viewcode-block" id="ScissorPlot.shs_sm"><a class="viewcode-back" href="../../../components/liftingsurfaces/scissorplot.html#components.liftingsurfaces.scissorplot.ScissorPlot.shs_sm">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">shs_sm</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This attribute will calculate the required Sh/S based on the required cg shift.</span>
+
+<span class="sd">        :return: Required Sh/S</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">configuration</span> <span class="ow">is</span> <span class="s1">&#39;conventional&#39;</span><span class="p">:</span>
+            <span class="n">shs_req_sm</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">delta_xcg</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">SM</span> <span class="o">-</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">C_mac</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">Cl_w</span><span class="p">))</span> <span class="o">/</span> \
+                      <span class="p">((((</span><span class="bp">self</span><span class="o">.</span><span class="n">cla_h</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">Cla_w</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">downwash_a</span><span class="p">))</span> <span class="o">-</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cl_h</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">Cl_w</span><span class="p">))</span> <span class="o">*</span>
+                       <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">VhV_conv</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">lhc</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">shs_req_sm</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">delta_xcg</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">SM</span> <span class="o">-</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">C_mac</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">Cl_w</span><span class="p">))</span> <span class="o">/</span> \
+                      <span class="p">(((</span><span class="bp">self</span><span class="o">.</span><span class="n">cla_h</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">Cla_w</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cl_h</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">Cl_w</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">VhV_canard</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span>
+                       <span class="bp">self</span><span class="o">.</span><span class="n">lhc</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">shs_req_sm</span></div>
+
+<div class="viewcode-block" id="ScissorPlot.shs_req"><a class="viewcode-back" href="../../../components/liftingsurfaces/scissorplot.html#components.liftingsurfaces.scissorplot.ScissorPlot.shs_req">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">shs_req</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This attribute will fit a linear spline to the controllability and stability curves to be able to address</span>
+<span class="sd">        any value of Sh/S if probelems occur with the attribute &#39;shs_sm&#39;.</span>
+
+<span class="sd">        :return: Required Sh/S</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">shs_req</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shs_sm</span>
+        <span class="n">xcg_vs_shs_control</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shs_control</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">xcg_range</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="s1">&#39;extrapolate&#39;</span><span class="p">)</span>
+        <span class="n">xcg_vs_shs_stability</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shs_stability</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">xcg_range</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="s1">&#39;extrapolate&#39;</span><span class="p">)</span>
+
+        <span class="n">shs_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shs_control</span><span class="p">),</span> <span class="mi">100</span><span class="p">)</span>
+        <span class="n">stability_criteria</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">shs_range</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">xcg_range</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_cg_vs_mac</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">xcg_range</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="n">_stab_pnt</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">xcg_vs_shs_stability</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+                <span class="n">_cont_pnt</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">xcg_vs_shs_control</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+                <span class="k">if</span> <span class="n">_cont_pnt</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_cg_vs_mac</span> <span class="o">&lt;=</span> <span class="n">_stab_pnt</span><span class="p">:</span>
+                    <span class="n">_current_margin</span> <span class="o">=</span> <span class="n">_stab_pnt</span> <span class="o">-</span> <span class="n">_cont_pnt</span>
+                    <span class="n">midpoint</span> <span class="o">=</span> <span class="n">_current_margin</span> <span class="o">/</span> <span class="mf">2.0</span> <span class="o">+</span> <span class="n">_cont_pnt</span>
+                    <span class="n">error</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x_cg_vs_mac</span> <span class="o">-</span> <span class="n">midpoint</span><span class="p">)</span>
+                    <span class="n">stability_criteria</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">i</span><span class="p">,</span> <span class="n">_cont_pnt</span><span class="p">,</span> <span class="n">_stab_pnt</span><span class="p">,</span> <span class="n">_current_margin</span><span class="p">,</span> <span class="n">error</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">stability_criteria</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">stability_criteria</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">stability_criteria</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+            <span class="n">shs_cg</span> <span class="o">=</span> <span class="n">stability_criteria</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">shs_cg</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shs_sm</span><span class="p">:</span>
+                <span class="n">shs_req</span> <span class="o">=</span> <span class="n">shs_cg</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span> <span class="ne">Warning</span><span class="p">(</span><span class="s1">&#39;The current aircraft design is not stable w/ reference tail arm ratios&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">shs_req</span></div>
+
+<div class="viewcode-block" id="ScissorPlot.plot_scissordiagram"><a class="viewcode-back" href="../../../components/liftingsurfaces/scissorplot.html#components.liftingsurfaces.scissorplot.ScissorPlot.plot_scissordiagram">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">plot_scissordiagram</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This attribute will plot the scissor plot.</span>
+
+<span class="sd">        :return: Scissor Plot</span>
+<span class="sd">        :rtype: Plot</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="s1">&#39;ScissorPlot&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;ggplot&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Scissor Plot&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xcg_range</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">shs_stability</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Stability&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xcg_range</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">shs_control</span><span class="p">,</span> <span class="s1">&#39;g&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Controllablility&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">shs_req</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-.&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Required Sh/S&#39;</span><span class="p">)</span>
+        <span class="c1"># plt.axhline(y=self.test[1])</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">x_cg_vs_mac</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">shs_req</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;CG Location&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\frac{S_</span><span class="si">{h}</span><span class="s1">}</span><span class="si">{S}</span><span class="s1">$&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\frac{X_</span><span class="si">{cg}</span><span class="s1">-X_</span><span class="si">{ac}</span><span class="s1">}</span><span class="si">{c}</span><span class="s1">$&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">([</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fname</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;USER_DIR&#39;</span><span class="p">],</span> <span class="s1">&#39;plots&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">.pdf&#39;</span> <span class="o">%</span> <span class="n">fig</span><span class="o">.</span><span class="n">get_label</span><span class="p">()),</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;pdf&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        <span class="k">return</span> <span class="s1">&#39;Plot Made, See PyCharm&#39;</span></div></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">parapy.gui</span> <span class="k">import</span> <span class="n">display</span>
+
+    <span class="n">obj</span> <span class="o">=</span> <span class="n">ScissorPlot</span><span class="p">()</span>
+    <span class="n">display</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, San Kilkis, Nelson Johnson.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'1.0',
+            LANGUAGE:'en',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

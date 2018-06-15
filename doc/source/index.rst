@@ -13,11 +13,9 @@ Welcome to KBE's documentation!
    definitions
    directories
    components/index
-
+   main
 
 Indices and Tables
 ==================
 
-* :ref:`genindex`
 * :ref:`modindex`
-* :ref:`search`

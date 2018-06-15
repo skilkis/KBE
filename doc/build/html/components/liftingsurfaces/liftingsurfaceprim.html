@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>LiftingSurface Documentation &mdash; KBE 1.0 documentation</title>
+  <title>LiftingSurface &mdash; KBE 1.0 documentation</title>
   
 
   
@@ -28,7 +28,7 @@
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Wing Documentation" href="wing.html" />
+    <link rel="next" title="Wing" href="wing.html" />
     <link rel="prev" title="LiftingSurface Module" href="index.html" /> 
 
   
@@ -84,18 +84,28 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../../definitions.html">Definitions Documentation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../directories.html">Directories Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../definitions.html">Definitions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../directories.html">Directories</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../index.html">Components Module</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../battery.html">Li-PO Battery</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../electronics.html">Electronics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../electronics/index.html">Electronics Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../electronics/electronics.html">Electronics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../electronics/flightcontroller.html">FlightController</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../electronics/speedcontroller.html">SpeedController</a></li>
+</ul>
+</li>
 <li class="toctree-l2 current"><a class="reference internal" href="index.html">LiftingSurface Module</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="#">LiftingSurface Documentation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="wing.html">Wing Documentation</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">LiftingSurface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="wing.html">Wing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scissorplot.html">ScissorPlot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="horizontalstab.html">HorizontalStabilizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="verticalstab.html">VerticalStablilizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="compoundstab.html">CompoundStabilizer</a></li>
 </ul>
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../main.html">Main UAV</a></li>
 </ul>
 
             
@@ -145,7 +155,7 @@
         
           <li><a href="index.html">LiftingSurface Module</a> &raquo;</li>
         
-      <li>LiftingSurface Documentation</li>
+      <li>LiftingSurface</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -165,7 +175,7 @@
            <div itemprop="articleBody">
             
   <div class="section" id="module-components.liftingsurfaces.primitives.liftingsurface">
-<span id="liftingsurface-documentation"></span><h1>LiftingSurface Documentation<a class="headerlink" href="#module-components.liftingsurfaces.primitives.liftingsurface" title="Permalink to this headline">¶</a></h1>
+<span id="liftingsurface"></span><h1>LiftingSurface<a class="headerlink" href="#module-components.liftingsurfaces.primitives.liftingsurface" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="components.liftingsurfaces.primitives.liftingsurface.LiftingSurface">
 <em class="property">class </em><code class="descclassname">components.liftingsurfaces.primitives.liftingsurface.</code><code class="descname">LiftingSurface</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/components/liftingsurfaces/primitives/liftingsurface.html#LiftingSurface"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface" title="Permalink to this definition">¶</a></dt>
@@ -180,7 +190,25 @@ wing twist and airfoil DAT file. Possible airfoils are in the folder ‘airfoils
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">ParaPy Geometry of a Lifting Surface</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">ParaPy Geometry of a Lifting Surface</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>planform_area</strong> (<em>float</em>) – This is the Required Planfrom Area [m^2]</li>
+<li><strong>aspect_ratio</strong> (<em>float</em>) – This is the required Aspect Ratio of the Surface.</li>
+<li><strong>taper</strong> (<em>float</em>) – This is the required Taper Ratio of the Surface.</li>
+<li><strong>dihedral</strong> (<em>float</em>) – This is the required Dihedral Angle of the Surface in degrees.</li>
+<li><strong>twist</strong> (<em>float</em>) – This is the required Twist Angle of the Tip Airfoil w.r.t the Root Airfoil in degrees.</li>
+<li><strong>offset</strong> (<em>float</em><em> or </em><em>NoneType</em>) – This is the offset in the flow direction of the tip W.R.T. the root Leading Edge.</li>
+<li><strong>browse_airfoils</strong> – Allows the user to easily choose amongst available airfoils with a GUI File-Browser.</li>
+<li><strong>hide_mac</strong> (<em>bool</em>) – This allows the MAC curve to be shown on the wing when changed in the GUI to False.</li>
+<li><strong>hide_leading_edge</strong> (<em>bool</em>) – This allows the leading edge line to be shown (without dihedral).</li>
+<li><strong>is_half</strong> (<em>bool</em>) – A switch case that determines if the <cite>planform_area</cite> is half of the total required area.</li>
+<li><strong>mesh_deflection</strong> (<em>float</em>) – The default value is an optimum between a good quality render and performance.</li>
+<li><strong>airfoil_type</strong> (<em>str</em>) – This is the name of the folder within the ‘airfoils’ folder. There are three options     ‘cambered’, ‘reflexed’ and ‘symmetric’.</li>
+<li><strong>airfoil_choice</strong> (<em>str</em>) – This is the filename of the requested airfoil.</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
@@ -220,8 +248,7 @@ wing twist and airfoil DAT file. Possible airfoils are in the folder ‘airfoils
 <dt id="components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.airfoil_choice">
 <code class="descname">airfoil_choice</code><a class="headerlink" href="#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.airfoil_choice" title="Permalink to this definition">¶</a></dt>
 <dd><p>Below is the default airfoil. Please see the three folders to find the correct filename, if you wish to change
-the airfoil.
-:type: str</p>
+the airfoil.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -244,15 +271,13 @@ the airfoil.
 <dt id="components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.airfoil_type">
 <code class="descname">airfoil_type</code><a class="headerlink" href="#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.airfoil_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Below is the name of the folder within the ‘airfoils’ folder. There are three options: ‘cambered’, ‘reflexed’ and
-‘symmetric’.
-:type: str</p>
+‘symmetric’.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.aspect_ratio">
 <code class="descname">aspect_ratio</code><a class="headerlink" href="#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.aspect_ratio" title="Permalink to this definition">¶</a></dt>
-<dd><p>Below is the required Aspect Ratio of the Surface.
-:type: float</p>
+<dd><p>Below is the required Aspect Ratio of the Surface.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -274,7 +299,7 @@ the airfoil.
 <dl class="attribute">
 <dt id="components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.browse_airfoils">
 <code class="descname">browse_airfoils</code><a class="reference internal" href="../../_modules/components/liftingsurfaces/primitives/liftingsurface.html#LiftingSurface.browse_airfoils"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.browse_airfoils" title="Permalink to this definition">¶</a></dt>
-<dd><p>Allows the user to easily choose amongst available airfoils with a GUI File-Browser</p>
+<dd><p>Allows the user to easily choose amongst available airfoils with a GUI File-Browser.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -288,8 +313,7 @@ the airfoil.
 <dl class="attribute">
 <dt id="components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.dihedral">
 <code class="descname">dihedral</code><a class="headerlink" href="#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.dihedral" title="Permalink to this definition">¶</a></dt>
-<dd><p>Below is the User chosen Dihedral Angle.
-:type: float</p>
+<dd><p>Below is the User chosen Dihedral Angle.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -327,22 +351,19 @@ the airfoil.
 <dl class="attribute">
 <dt id="components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.hide_leading_edge">
 <code class="descname">hide_leading_edge</code><a class="headerlink" href="#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.hide_leading_edge" title="Permalink to this definition">¶</a></dt>
-<dd><p>Boolean below allows the leading edge line to be shown (without dihedral).
-:type: bool</p>
+<dd><p>Boolean below allows the leading edge line to be shown (without dihedral).</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.hide_mac">
 <code class="descname">hide_mac</code><a class="headerlink" href="#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.hide_mac" title="Permalink to this definition">¶</a></dt>
-<dd><p>Boolean below allows the MAC curve to be shown on the wing when changed in the GUI to False.
-:type: bool</p>
+<dd><p>Boolean below allows the MAC curve to be shown on the wing when changed in the GUI to False.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.is_half">
 <code class="descname">is_half</code><a class="headerlink" href="#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.is_half" title="Permalink to this definition">¶</a></dt>
-<dd><p>A switch case that determines if the <cite>planform_area</cite> is half of the total required area
-:type: bool</p>
+<dd><p>A switch case that determines if the <cite>planform_area</cite> is half of the total required area</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -353,7 +374,7 @@ the airfoil.
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Wing LE sweep</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Wing LE sweep in degrees</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
 </tr>
@@ -481,8 +502,7 @@ position of the wing root.</p>
 <dl class="attribute">
 <dt id="components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.mesh_deflection">
 <code class="descname">mesh_deflection</code><a class="headerlink" href="#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.mesh_deflection" title="Permalink to this definition">¶</a></dt>
-<dd><p>The default value is an optimum between a good quality render and performance
-:type: float</p>
+<dd><p>The default value is an optimum between a good quality render and performance.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -506,15 +526,13 @@ position of the wing root.</p>
 <code class="descname">offset</code><a class="headerlink" href="#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.offset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Below is the offset in the flow direction of the tip W.R.T. the root Leading Edge. The default input (None)
 causes the TE to be unswept (offset = c_r-c_t), however, if the user inputs 0 in the GUI, then the leading
-edge becomes unswept. In this case, with taper ratio &lt; 1, the TE becomes forward swept.
-:type: NoneType or float</p>
+edge becomes unswept. In this case, with taper ratio &lt; 1, the TE becomes forward swept.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.planform_area">
 <code class="descname">planform_area</code><a class="headerlink" href="#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.planform_area" title="Permalink to this definition">¶</a></dt>
-<dd><p>Below is the Required Planfrom Area, if mirrored is true then this is the total wing area
-:type: float</p>
+<dd><p>Below is the Required Planfrom Area, if mirrored is true then this is the total wing area</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -541,7 +559,7 @@ edge becomes unswept. In this case, with taper ratio &lt; 1, the TE becomes forw
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Wing Root Chord</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Wing Root Chord in SI meter</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
 </tr>
@@ -573,7 +591,7 @@ edge becomes unswept. In this case, with taper ratio &lt; 1, the TE becomes forw
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Wing Semispan</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Wing Semispan in SI meter</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
 </tr>
@@ -616,8 +634,7 @@ edge becomes unswept. In this case, with taper ratio &lt; 1, the TE becomes forw
 <dl class="attribute">
 <dt id="components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.taper">
 <code class="descname">taper</code><a class="headerlink" href="#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.taper" title="Permalink to this definition">¶</a></dt>
-<dd><p>Below is the Taper Ratio, which is chosen by the user.
-:type: float</p>
+<dd><p>Below is the Taper Ratio, which is chosen by the user.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -661,7 +678,7 @@ It does not yet incorporate twist.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Wing Tip Chord</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Wing Tip Chord in SI meter</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
 </tr>
@@ -691,13 +708,11 @@ edge becomes unswept. In this case, with taper ratio &lt; 1, the TE becomes forw
 <dt id="components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.twist">
 <code class="descname">twist</code><a class="headerlink" href="#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.twist" title="Permalink to this definition">¶</a></dt>
 <dd><p>Below is the twist of the tip section with respect to the root section. Positive twist is tip twisted up
-with respect to the root.
-:type: float</p>
+with respect to the root.</p>
 </dd></dl>
 
 </dd></dl>
 
-<p>:q</p>
 </div>
 
 
@@ -708,7 +723,7 @@ with respect to the root.
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="wing.html" class="btn btn-neutral float-right" title="Wing Documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="wing.html" class="btn btn-neutral float-right" title="Wing" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="index.html" class="btn btn-neutral" title="LiftingSurface Module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
