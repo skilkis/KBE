@@ -14,9 +14,6 @@ from directories import *
 import webbrowser
 import os
 
-# TODO Change icon for params
-#  TODO add validator on user_input_file
-
 __author__ = ["Şan Kılkış"]
 __all__ = ["DesignInput"]
 
@@ -58,8 +55,8 @@ class DesignInput(Base):
     :param configuration: Sets the base configuration for the UAV (currently only 'conventional' is supported)
     :type configuration: str
 
-    :param configuration: Sets the base configuration for the UAV (currently only 'conventional' is supported)
-    :type configuration: str
+    :param handlaunch: Sets the base configuration for the UAV (currently only 'conventional' is supported)
+    :type handlaunch: bool
 
     """
 
@@ -81,7 +78,6 @@ class DesignInput(Base):
     payload_type = Input('eoir', validator=val.OneOf(valid_payloads()))  #
     configuration = Input('conventional', validator=val.OneOf(['conventional']))
     handlaunch = Input(True, validator=val.Instance(bool))
-    portable = Input(True, validator=val.Instance(bool))
     user_input_file = Input([filename, sheetname])
 
     @Attribute
@@ -108,14 +104,13 @@ class DesignInput(Base):
         self.payload_type = [str(i[1]) for i in ws._cell_values if i[0] == 'payload_type'][0]
         self.configuration = [str(i[1]) for i in ws._cell_values if i[0] == 'configuration'][0]
         self.handlaunch = [True if str(i[1]) == 'True' else False for i in ws._cell_values if i[0] == 'handlaunch'][0]
-        self.portable = [True if str(i[1]) == 'True' else False for i in ws._cell_values if i[0] == 'portable'][0]
 
         return 'Inputs have been overwritten from the supplied Excel File'
 
     @Attribute
     def open_documentation(self):
         """ Allows the user to open the documentation from within the GUI for reference or help """
-        webbrowser.open('file://' + DIRS['DOC_DIR'])
+        webbrowser.open('file://' + os.path.join(DIRS['DOC_DIR'], 'index.html'))
         return 'Documentation Opened'
 
 

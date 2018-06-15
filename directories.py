@@ -14,10 +14,6 @@ import sys
 
 __all__ = ["get_dir", "DIRS", "os", "sys"]
 
-# TODO Re-organize this to be a class structure if needed
-
-# TODO Maybe re-write to use os.getcwd()
-
 
 def is_frozen():
     """Is the current application code *frozen?*, i.e. build by a tool like
@@ -104,7 +100,7 @@ DIRS = {'ICON_DIR': get_dir('icons'),
         'MOTOR_DATA_DIR': get_dir(os.path.join('components', 'motor', 'database')),
         'PROPELLER_DATA_DIR': get_dir(os.path.join('components', 'propeller', 'database')),
         'AVL_DIR': get_dir(os.path.join('avl', 'avl.exe')),
-        'DOC_DIR': get_dir(os.path.join('doc', 'build', 'html', 'index.html'))}
+        'DOC_DIR': get_dir(os.path.join('doc', 'build', 'html'))}
 
 if __name__ == '__main__':
     print get_dir('user')
