@@ -41,6 +41,8 @@
 
 # TODO move everything except for main.py into a \bin folder to clean up directory
 
+# TODO Add UML in doc
+
 from design import *
 from parapy.core import *
 from parapy.geom import *
@@ -438,24 +440,29 @@ class UAV(DesignInput):
 
     @Attribute
     def write_excel(self):
-        book = xlwt.Workbook()
-        book.add_sheet('Inputs')
+        hdr_font = xlwt.Font()
+        hdr_font.name = 'Times New Roman'
+        hdr_font.bold = True
 
-        font0 = xlwt.Font()
-        font0.name = 'Times New Roman'
-        font0.struck_out = True
-        font0.bold = True
-
-        style0 = xlwt.XFStyle()
-        style0.font = font0
+        hdr_style = xlwt.XFStyle()
+        hdr_style.font = hdr_font
 
         wb = xlwt.Workbook()
-        ws0 = wb.add_sheet('0')
+        ws0 = wb.add_sheet('Dimensions')
 
-        ws0.write(1, 1, 'Test', style0)
+        headers = ['Parameter', 'Value', 'Units']
+        for i in range(0, len(headers)):
+            ws0.write(1, i+1, headers[i], hdr_style)
 
-        book.save(os.path.join(DIRS['USER_DIR'], 'results', 'output.xlsx'))
-        return 'Performance data has been saved /user/results/output.xlsx'
+        row = 1
+        for key, value in self.weights.items():
+            row = row + 1
+            ws0.write(row, i + 1, key)
+                # ws0.write(i + 2, i + 2, value)
+                # ws0.write(i + 2, i + 3, '[kg]')
+
+        wb.save(os.path.join(DIRS['USER_DIR'], 'results', 'output.xls'))
+        return 'Excel File Written'
 
 
 if __name__ == '__main__':
