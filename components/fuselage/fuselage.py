@@ -21,6 +21,9 @@ __all__ = ["Fuselage"]
 
 # ^ Potential knowledge base for materials
 
+# TODO make the boundary condition spline more robust with sorting and lambda functions
+# TODO add a validator function for the fuselage promting user input if intersections occur
+
 
 class Fuselage(ExternalBody):
 
@@ -76,7 +79,7 @@ class Fuselage(ExternalBody):
         in order for the user to be able to make changes to the automatically generated fuselage frames without these
         changes being overwritten by ParaPy due to the fuselage's dependence on the `internal_shapes` input. """
         if self.auto_fuselage_disable:
-            # Utilizing a shallow-copy of the frames increases performance
+            # Utilizing a shallow-copy of the frames increases performance since dependency on sizing_parts is removed
             setattr(self, '__framecache__', copy(self.frames))
         else:
             setattr(self, '__framecache__', None)
@@ -193,7 +196,7 @@ class Fuselage(ExternalBody):
                                 apex_index = i - 1
 
                 # Boom Logic
-                # TODO (TBD) Currently not implemented, but would be nice to have in the future
+                # TODO (TBD) Currently not implemented, but would be nice to have in the future for RQ-11 type designs
                 elif _type == 'boom':
                     still_to_build.append(['boom', i])
 

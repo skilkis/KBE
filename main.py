@@ -39,6 +39,8 @@
 
 # TODO Auto-writer function for the AVL-wrapper so La. Rocca can run the scripts w/o errors!!!!!!!!!!!!!!!!!!!!!
 
+# TODO move everything except for main.py into a \bin folder to clean up directory
+
 from design import *
 from parapy.core import *
 from parapy.geom import *
