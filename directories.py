@@ -38,7 +38,7 @@ def is_frozen():
 
 def get_dir(folder_name=None):
     """get_dir returns the top-level directory of the package as an absolute path if :attr:`folder_name` is not
-    specified [1]. If an exiting sub directory is specified as :type:`str` into the field :attr:`folder_name` then the
+    specified [1]. If an exiting sub directory is specified as `str` into the field :attr:`folder_name` then the
     return of get_dir will be absolute path to this sub directory [2]. Usage with file names inside a directory is also
     possible, see example below [3]
 
