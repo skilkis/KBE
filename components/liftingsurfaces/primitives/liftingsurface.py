@@ -29,6 +29,7 @@ class LiftingSurface(GeomBase):
     'cambered', 'reflexed', or 'symmetric'. Feel free to add new airfoils. Also note, this primitive is instantiated in
     'wing.py', where you can perform an AVL analysis. The sign convention is +x pointing with direction of chord,
     +y pointing toward right wingtip, +z up.
+
     """
 
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'liftingsurface.png')

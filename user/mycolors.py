@@ -1,5 +1,6 @@
 __all__ = ["MyColors"]
 
+#  TODO explanation/ docuemtation???
 
 class MyColors(object):
 

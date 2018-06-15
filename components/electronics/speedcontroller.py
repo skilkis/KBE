@@ -18,35 +18,49 @@ class SpeedController(Component):
     """ This class will create the electronic speed controllers for the UAV. This is done based on the number of
     engines (each requires its own ESC), and the engine choice (determines amp rating). This will return a number of
     ESCs stacked vertically, and the COG displayed at the end is the combined COG of all ESCs.
-    :returns: ParaPy Geometry of the ESC(s)
+
+    :return: ParaPy Geometry of the ESC(s)
     """
+
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'electricity.png')
 
     #:  This is the recommended ESC amperage from the chosen motor(s). In the case of multiple motors, this is the total
     #:  amperage.
     #: :type: float
+
     amp_recc = Input(40.0, validator=val.Positive())
 
     #:  This is the number of engines.
     #: :type: float
-    num_engines = Input(1, validator=val.Positive())  # This is the number of engines
 
-    #:  This is the amp rating for ESCs found on hobbyking covering our spectrum of motor options in our motor database.
-    #: :type: list
+    num_engines = Input(1, validator=val.Positive())
+
     @Attribute
     def amp_range(self):
+        """ This attribute contains the amp rating for ESCs found on hobbyking covering our spectrum of motor options
+        in our motor database that will be used for regression.
+
+        :return: List of ECS amperage's
+        :rtype: list
+        """
         return [6.0, 20.0, 30.0, 40.0, 60.0, 100.0, 120.0]
 
-    #:  This is corresponding weights of the ESCs found on hobbyking
-    #: :type: list
     @Attribute
     def weight_range(self):
+        """ This attribute contains the corresponding weights of the ESCs found on hobbyking
+
+        :return: List of ECS Weights
+        :rtype: list
+        """
         return [0.006, 0.017, 0.021, 0.036, 0.063, 0.081, 0.164]
 
-    #:  This is corresponding volumes of the ESC's in cubic m.
-    #: :type: list
     @Attribute
     def volume_range(self):
+        """ This attribute contains the corresponding volumes of the ESCs found on hobbyking
+
+        :return: List of ECS Volumes
+        :rtype: list
+        """
         return [1728*10**-9, 7560*10**-9, 7560*10**-9, 15444*10**-9, 19200*10**-9, 22400*10**-9, 43428*10**-9]
 
     #:  Below are the constant Navio 2 Flight computer dimensions
@@ -68,6 +82,7 @@ class SpeedController(Component):
     @Attribute
     def component_type(self):
         """ This attribute names the component 'speedcontroller' for speedcontroller.
+
         :return: str
         :rtype: str
         """
@@ -76,6 +91,7 @@ class SpeedController(Component):
     @Attribute
     def esc_weight_plot(self):
         """ This attribute creates a plot of the ESC weight vs. continuous amperage. It is save in the path 'user/plots'
+
         :return: Plot
         :rtype: Plot
         """
@@ -93,6 +109,7 @@ class SpeedController(Component):
     @Attribute
     def esc_size_plot(self):
         """ This attribute creates a plot of the ESC volume vs. continuous amperage. It is save in the path 'user/plots'
+
         :return: Plot
         :rtype: Plot
         """
@@ -112,6 +129,7 @@ class SpeedController(Component):
         """ This attribute estimates the esc weight from the linear regression of the found ESC amperage's and
         corresponding weights. If there are more than one motor, multiple ESCs are used and the complete weight is
         calculated here
+
         :return: Total ESC weight
         :rtype: float
         """
@@ -134,6 +152,7 @@ class SpeedController(Component):
     def esc_size(self):
         """ This attribute estimates the esc size from the linear regression of the found ESC amperage's and
         corresponding volumes. If there are more than one engine, there will be more than one ESC.
+
         :return: Total ESC weight
         :rtype: float
         """
@@ -156,6 +175,7 @@ class SpeedController(Component):
     def esc_dims(self):
         """ This attribute creates the speed controller dimensions, with the same cross section as the flight computer.
         their height can change, according to the required size.
+
         :return: ESC Dimensions
         :rtype: List
         """
@@ -167,6 +187,7 @@ class SpeedController(Component):
     @Attribute
     def first_esc_pos(self):
         """   This is the first position of the bottom ESC, which is to be placed on top of the flight computer
+
         :return: First ESC Position
         :rtype: Position
         """
@@ -175,6 +196,7 @@ class SpeedController(Component):
     @Part
     def speed_controllers(self):
         """   This creates the speed controller(s). If there are multiple, they are positioned relative to one another.
+
          :return: ESC Geometries
          :rtype: Box
          """
@@ -188,6 +210,7 @@ class SpeedController(Component):
     @Attribute
     def center_of_gravity(self):
         """ This attribute finds the center of gravities of the separate ESCs, then finds the combined C.G.
+
           :return: ParaPy Point
           :rtype: Point
           """
@@ -201,6 +224,7 @@ class SpeedController(Component):
     def esc_joiner(self):
         """ This joins the ESC's together through a series of Fuse operations to be able to present a
         single `internal_shape` required for the fuselage frame sizing.
+
         :return: ParaPy Fused Boxes
         :rtype: Fused
         """
@@ -218,6 +242,7 @@ class SpeedController(Component):
     @Part
     def internal_shape(self):
         """ This is creating a box for the fuselage frames. This is used to get around ParaPy errors.
+
         :return: Speed Controller(s) bounded box
         :rtype: ScaledShape
         """
@@ -227,6 +252,7 @@ class SpeedController(Component):
     @Attribute
     def weight(self):
         """ The mass of the speed controller(s)
+
         :return: Speed Controller(s) Mass
         :rtype: float
         """
@@ -235,6 +261,7 @@ class SpeedController(Component):
     @Attribute
     def label(self):
         """ This labels the flight controller 'Avionics'
+
         :return: Navio2 Mass
         :rtype: float
         """

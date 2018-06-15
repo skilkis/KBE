@@ -5,7 +5,9 @@
 the project folder, also for convenience the packages os and sys are imported when directories.py is imported with
 the * specifier. Finally the dictionary DIRS contains common directories so as to avoid multiple calls to get_dir.
 Finally since the entries in DIRS are outputs of get_dir the inherent directory checking is also present. Thus an
-invalid directory will raise errors"""
+invalid directory will raise errors
+
+"""
 
 import os
 import sys
@@ -44,8 +46,8 @@ def get_dir(folder_name=None):
     return of get_dir will be absolute path to this sub directory [2]. Usage with file names inside a directory is also
     possible, see example below [3]
 
-        :param folder_name: The name of a folder, file, or relative path
-        :type folder_name: basestring
+        :param: folder_name: The name of a folder, file, or relative path
+        :type: folder_name: basestring
 
         :return: The absolute path to the root directory or, if specified, to a sub directory within the root
         :rtype: unicode
@@ -64,6 +66,7 @@ def get_dir(folder_name=None):
 
         >>> get_dir('user/userinput.xlsx') # This will return the absolute path to the file userinput.xlsx
         C:/Python27/KBE\user\userinput.xlsx
+
     """
 
     encoding = sys.getfilesystemencoding()  # A variable that returns encoding of the user's machine
@@ -82,7 +85,7 @@ def get_dir(folder_name=None):
             if os.path.isdir(subdir) or os.path.isfile(subdir):  # Check to see if folder_name is a valid path or file
                 return subdir
             else:
-            # TODO Properly distinguish between folder and file type, a folder named '2.0' will be treated as a file
+            #  TODO Properly distinguish between folder and file type, a folder named '2.0' will be treated as a file
                 if subdir.find('.') != -1:  # Error handling to see if user was looking for a file or directory
                     raise NameError('Specified file %s does not exist' % subdir)
                 else:

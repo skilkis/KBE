@@ -1,0 +1,186 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>directories &#8212; KBE 1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for directories</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="sd">&quot;&quot;&quot; directories.py is a file containing the function get_dir which allows the user to quickly call a directory within</span>
+<span class="sd">the project folder, also for convenience the packages os and sys are imported when directories.py is imported with</span>
+<span class="sd">the * specifier. Finally the dictionary DIRS contains common directories so as to avoid multiple calls to get_dir.</span>
+<span class="sd">Finally since the entries in DIRS are outputs of get_dir the inherent directory checking is also present. Thus an</span>
+<span class="sd">invalid directory will raise errors</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;get_dir&quot;</span><span class="p">,</span> <span class="s2">&quot;DIRS&quot;</span><span class="p">,</span> <span class="s2">&quot;os&quot;</span><span class="p">,</span> <span class="s2">&quot;sys&quot;</span><span class="p">]</span>
+
+<span class="c1"># TODO Re-organize this to be a class structure if needed</span>
+
+<span class="c1"># TODO Maybe re-write to use os.getcwd()</span>
+
+
+<span class="k">def</span> <span class="nf">is_frozen</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Is the current application code *frozen?*, i.e. build by a tool like</span>
+<span class="sd">    py2exe.</span>
+
+<span class="sd">    :rtype: bool</span>
+
+<span class="sd">    # Copyright (C) 2016-2017 ParaPy Holding B.V.</span>
+<span class="sd">    #</span>
+<span class="sd">    # This file is subject to the terms and conditions defined in</span>
+<span class="sd">    # the license agreement that you have received with this source code</span>
+<span class="sd">    #</span>
+<span class="sd">    # THIS CODE AND INFORMATION ARE PROVIDED &quot;AS IS&quot; WITHOUT WARRANTY OF ANY</span>
+<span class="sd">    # KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE</span>
+<span class="sd">    # IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR</span>
+<span class="sd">    # PURPOSE.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">sys</span><span class="p">,</span> <span class="s2">&quot;frozen&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="get_dir"><a class="viewcode-back" href="../directories.html#directories.get_dir">[docs]</a><span class="k">def</span> <span class="nf">get_dir</span><span class="p">(</span><span class="n">folder_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;get_dir returns the top-level directory of the package as an absolute path if :attr:`folder_name` is not</span>
+<span class="sd">    specified [1]. If an exiting sub directory is specified as :type:`str` into the field :attr:`folder_name` then the</span>
+<span class="sd">    return of get_dir will be absolute path to this sub directory [2]. Usage with file names inside a directory is also</span>
+<span class="sd">    possible, see example below [3]</span>
+
+<span class="sd">        :param: folder_name: The name of a folder, file, or relative path</span>
+<span class="sd">        :type: folder_name: basestring</span>
+
+<span class="sd">        :return: The absolute path to the root directory or, if specified, to a sub directory within the root</span>
+<span class="sd">        :rtype: unicode</span>
+
+<span class="sd">        [1] Obtaining Root Directory:</span>
+
+<span class="sd">        &gt;&gt;&gt; get_dir() # This will return the absolute path to root directory</span>
+<span class="sd">        C:/Python27/KBE</span>
+
+<span class="sd">        [2] Obtaining a Sub-Directory:</span>
+
+<span class="sd">        &gt;&gt;&gt; get_dir(&#39;icons&#39;) # This will return the absolute path to the subdirectory /icons</span>
+<span class="sd">        C:/Python27/KBE\icons</span>
+
+<span class="sd">        [3] Obtaining File-Directory:</span>
+
+<span class="sd">        &gt;&gt;&gt; get_dir(&#39;user/userinput.xlsx&#39;) # This will return the absolute path to the file userinput.xlsx</span>
+<span class="sd">        C:/Python27/KBE\user\userinput.xlsx</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">encoding</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">getfilesystemencoding</span><span class="p">()</span>  <span class="c1"># A variable that returns encoding of the user&#39;s machine</span>
+
+    <span class="k">if</span> <span class="n">is_frozen</span><span class="p">():</span>  <span class="c1"># Checks if the user is running through an .exe or from Python, Refer to is_frozen definition above</span>
+        <span class="n">root</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">unicode</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">,</span> <span class="n">encoding</span><span class="p">)),</span>
+                            <span class="s2">&quot;KBE&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">root</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">unicode</span><span class="p">(</span><span class="vm">__file__</span><span class="p">,</span> <span class="n">encoding</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">folder_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># Checks if user has specified a value for field :attr:`folder_name`</span>
+        <span class="k">return</span> <span class="n">root</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">folder_name</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">folder_name</span><span class="p">,</span> <span class="n">unicode</span><span class="p">):</span>  <span class="c1"># Check if folder_name has valid input</span>
+            <span class="n">subdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">folder_name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">subdir</span><span class="p">)</span> <span class="ow">or</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">subdir</span><span class="p">):</span>  <span class="c1"># Check to see if folder_name is a valid path or file</span>
+                <span class="k">return</span> <span class="n">subdir</span>
+            <span class="k">else</span><span class="p">:</span>
+            <span class="c1">#  TODO Properly distinguish between folder and file type, a folder named &#39;2.0&#39; will be treated as a file</span>
+                <span class="k">if</span> <span class="n">subdir</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>  <span class="c1"># Error handling to see if user was looking for a file or directory</span>
+                    <span class="k">raise</span> <span class="ne">NameError</span><span class="p">(</span><span class="s1">&#39;Specified file </span><span class="si">%s</span><span class="s1"> does not exist&#39;</span> <span class="o">%</span> <span class="n">subdir</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">NameError</span><span class="p">(</span><span class="s1">&#39;Specified directory </span><span class="si">%s</span><span class="s1"> does not exist&#39;</span> <span class="o">%</span> <span class="n">subdir</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Please enter a valid string or unicode path into folder_name, </span><span class="si">%s</span><span class="s1"> is </span><span class="si">%s</span><span class="s1">&#39;</span>
+                            <span class="o">%</span> <span class="p">(</span><span class="n">folder_name</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">folder_name</span><span class="p">)))</span></div>
+
+
+<span class="n">DIRS</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;ICON_DIR&#39;</span><span class="p">:</span> <span class="n">get_dir</span><span class="p">(</span><span class="s1">&#39;icons&#39;</span><span class="p">),</span>
+        <span class="s1">&#39;AIRFOIL_DIR&#39;</span><span class="p">:</span> <span class="n">get_dir</span><span class="p">(</span><span class="s1">&#39;airfoils&#39;</span><span class="p">),</span>
+        <span class="s1">&#39;USER_DIR&#39;</span><span class="p">:</span> <span class="n">get_dir</span><span class="p">(</span><span class="s1">&#39;user&#39;</span><span class="p">),</span>
+        <span class="s1">&#39;COMPONENTS_DIR&#39;</span><span class="p">:</span> <span class="n">get_dir</span><span class="p">(</span><span class="s1">&#39;components&#39;</span><span class="p">),</span>
+        <span class="s1">&#39;EOIR_DATA_DIR&#39;</span><span class="p">:</span> <span class="n">get_dir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;components&#39;</span><span class="p">,</span> <span class="s1">&#39;payload&#39;</span><span class="p">,</span> <span class="s1">&#39;database&#39;</span><span class="p">,</span> <span class="s1">&#39;eoir&#39;</span><span class="p">)),</span>
+        <span class="s1">&#39;MOTOR_DATA_DIR&#39;</span><span class="p">:</span> <span class="n">get_dir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;components&#39;</span><span class="p">,</span> <span class="s1">&#39;motor&#39;</span><span class="p">,</span> <span class="s1">&#39;database&#39;</span><span class="p">)),</span>
+        <span class="s1">&#39;PROPELLER_DATA_DIR&#39;</span><span class="p">:</span> <span class="n">get_dir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;components&#39;</span><span class="p">,</span> <span class="s1">&#39;propeller&#39;</span><span class="p">,</span> <span class="s1">&#39;database&#39;</span><span class="p">)),</span>
+        <span class="s1">&#39;AVL_DIR&#39;</span><span class="p">:</span> <span class="n">get_dir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;avl&#39;</span><span class="p">,</span> <span class="s1">&#39;avl.exe&#39;</span><span class="p">))}</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="nb">print</span> <span class="n">get_dir</span><span class="p">(</span><span class="s1">&#39;user&#39;</span><span class="p">)</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, San Kilkis, Nelson Johnson.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

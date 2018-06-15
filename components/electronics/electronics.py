@@ -16,9 +16,11 @@ __all__ = ["Electronics"]
 
 
 class Electronics(Component):
-    """  This code will estimate the mass and create the geometry of the avionics
-    :returns: ParaPy Geometry of the ESC(s)
+    """  This code will estimate the mass and create the geometry of the avionics.
+
+    :returns: ParaPy Geometry of the electronics
     """
+
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'electronics.png')
 
     #  If multiple motors put in, give [] within input parentheses
@@ -29,6 +31,7 @@ class Electronics(Component):
     @Attribute
     def component_type(self):
         """ This attribute names the component 'electronics' for electronics.
+
         :return: str
         :rtype: str
         """
@@ -46,6 +49,7 @@ class Electronics(Component):
     @Attribute
     def amp_req(self):
         """ This is the required amperage for the engine(s).
+
         :return: Complete Amp draw from the engine(s)
         :rtype: float
         """
@@ -60,6 +64,7 @@ class Electronics(Component):
     @Attribute
     def number_engines(self):
         """ This is used to determine the number of engines.
+
         :return: Number of Engines
         :rtype: int
         """
@@ -71,6 +76,7 @@ class Electronics(Component):
     @Part
     def flight_controller(self):
         """ This an instantiation of the flight controller. It takes no inputs.
+
         :return: Flight controller geometry
         :rtype: TranslatedShape
         """
@@ -80,6 +86,7 @@ class Electronics(Component):
     def speed_controller(self):
         """ This an instantiation of the speed controller class. It requires the amp draw and the number of engines as
         input.
+
         :return: Speed Controller(s) Geometry
         :rtype: Box
         """
@@ -95,6 +102,7 @@ class Electronics(Component):
     def elec_joiner(self):
         """ This joins the ESC's together through a series of Fuse operations to be able to present a
         single `internal_shape` required for the fuselage frame sizing.
+
         :return: ParaPy Fused Boxes
         :rtype: Fused
         """
@@ -112,6 +120,7 @@ class Electronics(Component):
     @Attribute
     def center_of_gravity(self):
         """ This attribute finds the center of gravities of the separate ESCs, then finds the combined C.G.
+
           :return: ParaPy Point
           :rtype: Point
           """
@@ -128,6 +137,7 @@ class Electronics(Component):
     @Part
     def internal_shape(self):
         """ This is creating a box for the fuselage frames. This is used to get around ParaPy errors.
+
         :return: Speed Controller(s) bounded box
         :rtype: ScaledShape
         """

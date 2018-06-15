@@ -1,0 +1,724 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Electronics Documentation &#8212; KBE 1.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Battery Documentation" href="battery.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-components.electronics.electronics">
+<span id="electronics-documentation"></span><h1>Electronics Documentation<a class="headerlink" href="#module-components.electronics.electronics" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="components.electronics.electronics.Electronics">
+<em class="property">class </em><code class="descclassname">components.electronics.electronics.</code><code class="descname">Electronics</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/components/electronics/electronics.html#Electronics"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.electronics.electronics.Electronics" title="Permalink to this definition">¶</a></dt>
+<dd><p>This code will estimate the mass and create the geometry of the avionics.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">ParaPy Geometry of the electronics</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="components.electronics.electronics.Electronics.amp_req">
+<code class="descname">amp_req</code><a class="reference internal" href="_modules/components/electronics/electronics.html#Electronics.amp_req"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.electronics.electronics.Electronics.amp_req" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the required amperage for the engine(s).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Complete Amp draw from the engine(s)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.electronics.electronics.Electronics.center_of_gravity">
+<code class="descname">center_of_gravity</code><a class="reference internal" href="_modules/components/electronics/electronics.html#Electronics.center_of_gravity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.electronics.electronics.Electronics.center_of_gravity" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute finds the center of gravities of the separate ESCs, then finds the combined C.G.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">ParaPy Point</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">Point</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.electronics.electronics.Electronics.component_type">
+<code class="descname">component_type</code><a class="reference internal" href="_modules/components/electronics/electronics.html#Electronics.component_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.electronics.electronics.Electronics.component_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute names the component ‘electronics’ for electronics.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">str</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.electronics.electronics.Electronics.elec_joiner">
+<code class="descname">elec_joiner</code><a class="reference internal" href="_modules/components/electronics/electronics.html#Electronics.elec_joiner"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.electronics.electronics.Electronics.elec_joiner" title="Permalink to this definition">¶</a></dt>
+<dd><p>This joins the ESC’s together through a series of Fuse operations to be able to present a
+single <cite>internal_shape</cite> required for the fuselage frame sizing.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">ParaPy Fused Boxes</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">Fused</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.electronics.electronics.Electronics.flight_controller">
+<code class="descname">flight_controller</code><a class="reference internal" href="_modules/components/electronics/electronics.html#Electronics.flight_controller"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.electronics.electronics.Electronics.flight_controller" title="Permalink to this definition">¶</a></dt>
+<dd><p>This an instantiation of the flight controller. It takes no inputs.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Flight controller geometry</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">TranslatedShape</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.electronics.electronics.Electronics.internal_shape">
+<code class="descname">internal_shape</code><a class="reference internal" href="_modules/components/electronics/electronics.html#Electronics.internal_shape"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.electronics.electronics.Electronics.internal_shape" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is creating a box for the fuselage frames. This is used to get around ParaPy errors.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Speed Controller(s) bounded box</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">ScaledShape</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.electronics.electronics.Electronics.number_engines">
+<code class="descname">number_engines</code><a class="reference internal" href="_modules/components/electronics/electronics.html#Electronics.number_engines"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.electronics.electronics.Electronics.number_engines" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is used to determine the number of engines.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Number of Engines</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.electronics.electronics.Electronics.speed_controller">
+<code class="descname">speed_controller</code><a class="reference internal" href="_modules/components/electronics/electronics.html#Electronics.speed_controller"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.electronics.electronics.Electronics.speed_controller" title="Permalink to this definition">¶</a></dt>
+<dd><p>This an instantiation of the speed controller class. It requires the amp draw and the number of engines as
+input.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Speed Controller(s) Geometry</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">Box</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.electronics.electronics.Electronics.weight">
+<code class="descname">weight</code><a class="reference internal" href="_modules/components/electronics/electronics.html#Electronics.weight"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.electronics.electronics.Electronics.weight" title="Permalink to this definition">¶</a></dt>
+<dd><p>Total mass of the component</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Mass in SI kilogram</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<span class="target" id="module-components.electronics.flightcontroller"></span><dl class="class">
+<dt id="components.electronics.flightcontroller.FlightController">
+<em class="property">class </em><code class="descclassname">components.electronics.flightcontroller.</code><code class="descname">FlightController</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/components/electronics/flightcontroller.html#FlightController"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.electronics.flightcontroller.FlightController" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class will create the Navio2 flight controller geometry.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">ParaPy Geometry of the flight computer</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="components.electronics.flightcontroller.FlightController.center_of_gravity">
+<code class="descname">center_of_gravity</code><a class="reference internal" href="_modules/components/electronics/flightcontroller.html#FlightController.center_of_gravity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.electronics.flightcontroller.FlightController.center_of_gravity" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute returns the COG of the flight controller.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">ParaPy Point</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">Point</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.electronics.flightcontroller.FlightController.component_type">
+<code class="descname">component_type</code><a class="reference internal" href="_modules/components/electronics/flightcontroller.html#FlightController.component_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.electronics.flightcontroller.FlightController.component_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute names the component ‘flightcontroller’ for flight controller.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">str</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.electronics.flightcontroller.FlightController.flight_controller_power">
+<code class="descname">flight_controller_power</code><a class="reference internal" href="_modules/components/electronics/flightcontroller.html#FlightController.flight_controller_power"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.electronics.flightcontroller.FlightController.flight_controller_power" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute estimates the Navio2 flight computer power. It is found by multiplying the average voltage
+(5V), by the average current (150mA). Source: <a class="reference external" href="https://emlid.com/navio/">https://emlid.com/navio/</a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Flight Computer Power</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.electronics.flightcontroller.FlightController.flightcontroller_offset">
+<code class="descname">flightcontroller_offset</code><a class="reference internal" href="_modules/components/electronics/flightcontroller.html#FlightController.flightcontroller_offset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.electronics.flightcontroller.FlightController.flightcontroller_offset" title="Permalink to this definition">¶</a></dt>
+<dd><p>This creates the geometry of the flight controller. FOR BOX FUNCTION: Width is x direction, length is
+y direction, height is z direction.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">ParaPy Flight Controller Geometry</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">Box</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.electronics.flightcontroller.FlightController.h_navio">
+<code class="descname">h_navio</code><a class="reference internal" href="_modules/components/electronics/flightcontroller.html#FlightController.h_navio"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.electronics.flightcontroller.FlightController.h_navio" title="Permalink to this definition">¶</a></dt>
+<dd><p>The flight controller height is to be oriented parallel with the y axis. This height was assumed</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">ParaPy Flight Controller height</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.electronics.flightcontroller.FlightController.internal_shape">
+<code class="descname">internal_shape</code><a class="reference internal" href="_modules/components/electronics/flightcontroller.html#FlightController.internal_shape"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.electronics.flightcontroller.FlightController.internal_shape" title="Permalink to this definition">¶</a></dt>
+<dd><p>This obtains a bounding box of the flight controller to size the fuselage frames.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Navio2 Mass</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.electronics.flightcontroller.FlightController.l_navio">
+<code class="descname">l_navio</code><a class="reference internal" href="_modules/components/electronics/flightcontroller.html#FlightController.l_navio"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.electronics.flightcontroller.FlightController.l_navio" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>The 65mm length of the Flight Computer is the longest dimension and is to be oriented parallel with the x</dt>
+<dd>axis. Dimensions are at <a class="reference external" href="https://emlid.com/navio/">https://emlid.com/navio/</a></dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">ParaPy Flight Controller Length</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.electronics.flightcontroller.FlightController.label">
+<code class="descname">label</code><a class="reference internal" href="_modules/components/electronics/flightcontroller.html#FlightController.label"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.electronics.flightcontroller.FlightController.label" title="Permalink to this definition">¶</a></dt>
+<dd><p>This labels the flight controller ‘Avionics’</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Navio2 Mass</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.electronics.flightcontroller.FlightController.solid">
+<code class="descname">solid</code><a class="reference internal" href="_modules/components/electronics/flightcontroller.html#FlightController.solid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.electronics.flightcontroller.FlightController.solid" title="Permalink to this definition">¶</a></dt>
+<dd><p>This shifts the shape to the correct place with respect to the local axis system.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">ParaPy Flight Controller Geometry</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">TranslatedShape</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.electronics.flightcontroller.FlightController.w_navio">
+<code class="descname">w_navio</code><a class="reference internal" href="_modules/components/electronics/flightcontroller.html#FlightController.w_navio"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.electronics.flightcontroller.FlightController.w_navio" title="Permalink to this definition">¶</a></dt>
+<dd><p>The 55mm width is to be oriented parallel with the y axis.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">ParaPy Flight Controller Width</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.electronics.flightcontroller.FlightController.weight">
+<code class="descname">weight</code><a class="reference internal" href="_modules/components/electronics/flightcontroller.html#FlightController.weight"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.electronics.flightcontroller.FlightController.weight" title="Permalink to this definition">¶</a></dt>
+<dd><p>The mass of the Navio2 flight computer is 23 grams.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Navio2 Mass</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<span class="target" id="module-components.electronics.speedcontroller"></span><dl class="class">
+<dt id="components.electronics.speedcontroller.SpeedController">
+<em class="property">class </em><code class="descclassname">components.electronics.speedcontroller.</code><code class="descname">SpeedController</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/components/electronics/speedcontroller.html#SpeedController"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.electronics.speedcontroller.SpeedController" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class will create the electronic speed controllers for the UAV. This is done based on the number of
+engines (each requires its own ESC), and the engine choice (determines amp rating). This will return a number of
+ESCs stacked vertically, and the COG displayed at the end is the combined COG of all ESCs.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">ParaPy Geometry of the ESC(s)</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="components.electronics.speedcontroller.SpeedController.amp_range">
+<code class="descname">amp_range</code><a class="reference internal" href="_modules/components/electronics/speedcontroller.html#SpeedController.amp_range"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.electronics.speedcontroller.SpeedController.amp_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute contains the amp rating for ESCs found on hobbyking covering our spectrum of motor options
+in our motor database that will be used for regression.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">List of ECS amperage’s</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.electronics.speedcontroller.SpeedController.center_of_gravity">
+<code class="descname">center_of_gravity</code><a class="reference internal" href="_modules/components/electronics/speedcontroller.html#SpeedController.center_of_gravity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.electronics.speedcontroller.SpeedController.center_of_gravity" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute finds the center of gravities of the separate ESCs, then finds the combined C.G.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">ParaPy Point</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">Point</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.electronics.speedcontroller.SpeedController.component_type">
+<code class="descname">component_type</code><a class="reference internal" href="_modules/components/electronics/speedcontroller.html#SpeedController.component_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.electronics.speedcontroller.SpeedController.component_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute names the component ‘speedcontroller’ for speedcontroller.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">str</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.electronics.speedcontroller.SpeedController.esc_dims">
+<code class="descname">esc_dims</code><a class="reference internal" href="_modules/components/electronics/speedcontroller.html#SpeedController.esc_dims"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.electronics.speedcontroller.SpeedController.esc_dims" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute creates the speed controller dimensions, with the same cross section as the flight computer.
+their height can change, according to the required size.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">ESC Dimensions</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">List</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.electronics.speedcontroller.SpeedController.esc_joiner">
+<code class="descname">esc_joiner</code><a class="reference internal" href="_modules/components/electronics/speedcontroller.html#SpeedController.esc_joiner"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.electronics.speedcontroller.SpeedController.esc_joiner" title="Permalink to this definition">¶</a></dt>
+<dd><p>This joins the ESC’s together through a series of Fuse operations to be able to present a
+single <cite>internal_shape</cite> required for the fuselage frame sizing.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">ParaPy Fused Boxes</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">Fused</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.electronics.speedcontroller.SpeedController.esc_size">
+<code class="descname">esc_size</code><a class="reference internal" href="_modules/components/electronics/speedcontroller.html#SpeedController.esc_size"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.electronics.speedcontroller.SpeedController.esc_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute estimates the esc size from the linear regression of the found ESC amperage’s and
+corresponding volumes. If there are more than one engine, there will be more than one ESC.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Total ESC weight</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.electronics.speedcontroller.SpeedController.esc_size_plot">
+<code class="descname">esc_size_plot</code><a class="reference internal" href="_modules/components/electronics/speedcontroller.html#SpeedController.esc_size_plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.electronics.speedcontroller.SpeedController.esc_size_plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute creates a plot of the ESC volume vs. continuous amperage. It is save in the path ‘user/plots’</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Plot</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">Plot</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.electronics.speedcontroller.SpeedController.esc_weight">
+<code class="descname">esc_weight</code><a class="reference internal" href="_modules/components/electronics/speedcontroller.html#SpeedController.esc_weight"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.electronics.speedcontroller.SpeedController.esc_weight" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute estimates the esc weight from the linear regression of the found ESC amperage’s and
+corresponding weights. If there are more than one motor, multiple ESCs are used and the complete weight is
+calculated here</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Total ESC weight</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.electronics.speedcontroller.SpeedController.esc_weight_plot">
+<code class="descname">esc_weight_plot</code><a class="reference internal" href="_modules/components/electronics/speedcontroller.html#SpeedController.esc_weight_plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.electronics.speedcontroller.SpeedController.esc_weight_plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute creates a plot of the ESC weight vs. continuous amperage. It is save in the path ‘user/plots’</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Plot</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">Plot</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.electronics.speedcontroller.SpeedController.first_esc_pos">
+<code class="descname">first_esc_pos</code><a class="reference internal" href="_modules/components/electronics/speedcontroller.html#SpeedController.first_esc_pos"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.electronics.speedcontroller.SpeedController.first_esc_pos" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the first position of the bottom ESC, which is to be placed on top of the flight computer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">First ESC Position</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">Position</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.electronics.speedcontroller.SpeedController.internal_shape">
+<code class="descname">internal_shape</code><a class="reference internal" href="_modules/components/electronics/speedcontroller.html#SpeedController.internal_shape"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.electronics.speedcontroller.SpeedController.internal_shape" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is creating a box for the fuselage frames. This is used to get around ParaPy errors.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Speed Controller(s) bounded box</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">ScaledShape</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.electronics.speedcontroller.SpeedController.label">
+<code class="descname">label</code><a class="reference internal" href="_modules/components/electronics/speedcontroller.html#SpeedController.label"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.electronics.speedcontroller.SpeedController.label" title="Permalink to this definition">¶</a></dt>
+<dd><p>This labels the flight controller ‘Avionics’</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Navio2 Mass</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.electronics.speedcontroller.SpeedController.speed_controllers">
+<code class="descname">speed_controllers</code><a class="reference internal" href="_modules/components/electronics/speedcontroller.html#SpeedController.speed_controllers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.electronics.speedcontroller.SpeedController.speed_controllers" title="Permalink to this definition">¶</a></dt>
+<dd><p>This creates the speed controller(s). If there are multiple, they are positioned relative to one another.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">ESC Geometries</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">Box</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.electronics.speedcontroller.SpeedController.volume_range">
+<code class="descname">volume_range</code><a class="reference internal" href="_modules/components/electronics/speedcontroller.html#SpeedController.volume_range"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.electronics.speedcontroller.SpeedController.volume_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute contains the corresponding volumes of the ESCs found on hobbyking</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">List of ECS Volumes</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.electronics.speedcontroller.SpeedController.weight">
+<code class="descname">weight</code><a class="reference internal" href="_modules/components/electronics/speedcontroller.html#SpeedController.weight"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.electronics.speedcontroller.SpeedController.weight" title="Permalink to this definition">¶</a></dt>
+<dd><p>The mass of the speed controller(s)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Speed Controller(s) Mass</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.electronics.speedcontroller.SpeedController.weight_range">
+<code class="descname">weight_range</code><a class="reference internal" href="_modules/components/electronics/speedcontroller.html#SpeedController.weight_range"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.electronics.speedcontroller.SpeedController.weight_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute contains the corresponding weights of the ESCs found on hobbyking</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">List of ECS Weights</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<p>:q</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="battery.html" title="previous chapter">Battery Documentation</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/electronics.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, San Kilkis, Nelson Johnson.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/electronics.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

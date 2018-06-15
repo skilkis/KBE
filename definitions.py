@@ -12,8 +12,13 @@ __all__ = ["Component", "ExternalBody", "VisualCG"]
 
 
 class VisualCG(GeomBase):
+    """  xxxx
+
+    :return: xxx
+    """
 
     # TODO add header here and create a nice looking visual CG
+    #  TODO add validators to 2 inputs
 
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'battery.png')
     __initargs__ = ["vis_cog"]
@@ -23,6 +28,11 @@ class VisualCG(GeomBase):
 
     @Part
     def visual_cg_location(self):
+        """  xxxx
+
+         :return: xxx
+
+         """
         return Sphere(radius=self.scale,
                       position=translate(self.position,
                                          'x', self.vis_cog.x,
@@ -43,20 +53,19 @@ class Component(GeomBase):
     @Attribute
     def component_type(self):
         """ An identifier to be able to lump masses together.
-
-        |
         Possible entries:
+        'wing'
+        'fuselage'
+        'vt'
+        'ht'
+        'ct'
+        'boom'
+        'payload'
+        'prop'
+        'battery'
+        'electronics'
 
-        |   'wing'
-        |   'fuselage'
-        |   'vt'
-        |   'ht'
-        |   'ct'
-        |   'boom'
-        |   'payload'
-        |   'prop'
-        |   'battery'
-        |   'electronics'
+        :return: Component Type
         """
 
         return None
@@ -82,6 +91,7 @@ class Component(GeomBase):
     @Attribute(private=True)
     def text_label_position(self):
         """ Sets the default position of the text_label to be on the front-left corner of the internal_shape
+
         :rtype: Point
         """
         return self.internal_shape.bbox.corners[0]
@@ -114,7 +124,7 @@ class ExternalBody(Component):
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'air.png')
 
     material_choice = Input('cfrp', validator=val.OneOf(['cfrp']))
-    ply_number = Input(1, val.Instance(int))
+    ply_number = Input(1, validator=val.Instance(int))
 
     @Attribute
     def weight(self):
@@ -132,17 +142,15 @@ class ExternalBody(Component):
     @Attribute
     def surface_type(self):
         """ An identifier to be able to lump areas together.
-
-        |
         Possible entries:
+        'wing'
+        'fuselage'
+        'vt'
+        'ht'
+        'ct'
+        'boom'
 
-        |   'wing'
-        |   'fuselage'
-        |   'vt'
-        |   'ht'
-        |   'ct'
-        |   'boom'
-        |
+        :return: Component Type
         """
 
         return self.component_type
@@ -165,7 +173,7 @@ class ExternalBody(Component):
 
     @Attribute
     def planform_area(self):
-        """ The projected area of an `external_shape` when looking at the XY plane in the nadir direction ('z_')
+        """ The projected area of an `external_shape` when looking at the XY plane in the nadir direction (z)
 
         :return: Projected Area on the XY plane in SI sq. meter
         :rtype: float
@@ -174,7 +182,11 @@ class ExternalBody(Component):
 
     @Part
     def external_shape(self):
-        """  The final shape of a ExternalSurface class which is to be exported THIS PART MUST BE OVERWRITTEN!!! """
+        """  The final shape of a ExternalSurface class which is to be exported THIS PART MUST BE OVERWRITTEN!!!
+
+        :return: External Shape
+        :rtype: Box
+        """
         return Box(0.5, 0.5, 0.5, transparency=0.8, centered=True, position=self.position)
 
         # TODO Not make this a fused part, be abld to extract area w/o fused operation

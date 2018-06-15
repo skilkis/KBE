@@ -14,33 +14,48 @@ __all__ = ["FlightController"]
 
 class FlightController(Component):
     """ This class will create the Navio2 flight controller geometry.
+
     :returns: ParaPy Geometry of the flight computer
     """
+
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'chip.png')
 
     #: Navio 2 Flight computer dimensions are below source: https://emlid.com/navio/
-    #:  The 65mm length is the longest dimension and is to be oriented parallel with the x axis.
     #: :type: float
     @Attribute
     def l_navio(self):
+        """ The 65mm length of the Flight Computer is the longest dimension and is to be oriented parallel with the x
+         axis. Dimensions are at https://emlid.com/navio/
+
+        :return: ParaPy Flight Controller Length
+        :rtype: float
+        """
         return 0.065
 
-    #:  The 55mm width is to be oriented parallel with the y axis.
     #: :type: float
     @Attribute
     def w_navio(self):
+        """ The 55mm width is to be oriented parallel with the y axis.
+
+        :return: ParaPy Flight Controller Width
+        :rtype: float
+        """
         return 0.055
 
-    #:  The 17mm height is assumed!!! It is to be oriented parallel with the y axis.
-    #: :type: float
     @Attribute
     def h_navio(self):
+        """ The flight controller height is to be oriented parallel with the y axis. This height was assumed
+
+        :return: ParaPy Flight Controller height
+        :rtype: float
+        """
         return 0.017
 
     @Part
     def flightcontroller_offset(self):
         """ This creates the geometry of the flight controller. FOR BOX FUNCTION: Width is x direction, length is
         y direction, height is z direction.
+
         :return: ParaPy Flight Controller Geometry
         :rtype: Box
         """
@@ -53,6 +68,7 @@ class FlightController(Component):
     @Part
     def solid(self):
         """ This shifts the shape to the correct place with respect to the local axis system.
+
         :return: ParaPy Flight Controller Geometry
         :rtype: TranslatedShape
         """
@@ -65,6 +81,7 @@ class FlightController(Component):
     def flight_controller_power(self):
         """ This attribute estimates the Navio2 flight computer power. It is found by multiplying the average voltage
         (5V), by the average current (150mA). Source: https://emlid.com/navio/
+
         :return: Flight Computer Power
         :rtype: float
         """
@@ -73,6 +90,7 @@ class FlightController(Component):
     @Attribute
     def component_type(self):
         """ This attribute names the component 'flightcontroller' for flight controller.
+
         :return: str
         :rtype: str
         """
@@ -81,6 +99,7 @@ class FlightController(Component):
     @Attribute
     def center_of_gravity(self):
         """ This attribute returns the COG of the flight controller.
+
         :return: ParaPy Point
         :rtype: Point
         """
@@ -89,6 +108,7 @@ class FlightController(Component):
     @Attribute
     def weight(self):
         """ The mass of the Navio2 flight computer is 23 grams.
+
         :return: Navio2 Mass
         :rtype: float
         """
@@ -97,15 +117,17 @@ class FlightController(Component):
     @Part
     def internal_shape(self):
         """ This obtains a bounding box of the flight controller to size the fuselage frames.
-    #     :return: Navio2 Mass
-    #     :rtype: float
-    #     """
+
+        :return: Navio2 Mass
+        :rtype: float
+        """
         return ScaledShape(shape_in=self.solid, reference_point=self.solid.cog, factor=1,
                            transparency=0.7, hidden=True)
 
     @Attribute
     def label(self):
         """ This labels the flight controller 'Avionics'
+
         :return: Navio2 Mass
         :rtype: float
         """

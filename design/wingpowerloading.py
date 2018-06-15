@@ -12,7 +12,7 @@ from components import EOIR, FlightController
 __author__ = ["Nelson Johnson", "Şan Kılkış"]
 __all__ = ["WingPowerLoading"]
 
-# TODO Fix aspect ratio choice, add validator also for max_lift_coeff
+# TODO Fix aspect ratio choice, add validator also for max_lift_coeff, stall_speed
 
 
 class WingPowerLoading(Base):

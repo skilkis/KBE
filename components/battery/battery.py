@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-""" battery.py is a file which automatically generates a battery part depending on parametric input of battery weight,
-or battery capacity. Utilize the parameter `show_primitives` for debugging.
-"""
 
 from parapy.geom import *  # \
 from parapy.core import *  # / Required ParaPy Modules
@@ -18,8 +15,11 @@ from directories import *
 __all__ = ["Battery", "show_primitives"]
 
 # TODO change show_primitives to be inside class definition and protected variable
+
 # TODO remove error message since it is already handled by a validator
+
 # TODO validate batteyr size
+
 # TODO Add power requirement
 
 # A parameter for debugging, turns the visibility of miscellaneous parts ON/OFF
@@ -27,12 +27,19 @@ show_primitives = False  # type: bool
 
 
 class Battery(Component):
+    """  Battery.py is a file which automatically generates a battery part depending on parametric input of battery weight,
+    or battery capacity. Utilize the parameter `show_primitives` for debugging.
+
+    :return: ParaPy Geometry of the Battery(s)
+
+    """
 
     __initargs__ = ["sizing_target", "sizing_value"]
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'batteryIII.png')
 
     sizing_target = Input('capacity', validator=val.OneOf(["capacity", "weight"]))
     # TODO link this to custom validator function
+
     sizing_value = Input(500, validator=val.Positive())
     max_width = Input(0.15, validator=val.Positive())
     max_height = Input(0.1, validator=val.Positive())  # Suggested to use a wider-battery, max_height = max_width / 2 for fuselage aerodynamics
@@ -41,6 +48,11 @@ class Battery(Component):
 
     @Attribute
     def component_type(self):
+        """ This attribute names the component 'battery' for Battery.
+
+        :return: str
+        :rtype: str
+        """
         return 'battery'
 
     @Attribute
@@ -63,6 +75,11 @@ class Battery(Component):
 
     @Attribute
     def constants(self):
+        """ This attribute contains the battery constants
+
+        :return: Dictionary With Battery Constants
+        :rtype: dict
+        """
         mydict = {
             'energy_density': 158.0,            # Wh/kg http://www.hardingenergy.com/lithium/
             'energy_volume': 220.0 * (10**3),   # Wh/m^3 http://www.hardingenergy.com/lithium/
@@ -73,6 +90,11 @@ class Battery(Component):
 
     @Attribute
     def total_energy(self):
+        """ This attribute calculates the required battery total energy.
+
+        :return: Battery Energy
+        :rtype: float
+        """
         if self.sizing_target == 'weight':
             e_bat = self.sizing_value * self.constants['energy_density']
             # Code to put a minimum weight to not break the code with div by zero
@@ -94,6 +116,11 @@ class Battery(Component):
 
     @Attribute
     def volume(self):
+        """ This attribute calculates the Battery Volume.
+
+        :return: Battery Volume
+        :rtype: float
+        """
         return self.total_energy / self.constants['energy_volume']
 
     @Attribute
