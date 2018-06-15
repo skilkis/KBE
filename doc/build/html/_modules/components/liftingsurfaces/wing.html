@@ -1,0 +1,650 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>components.liftingsurfaces.wing &mdash; KBE 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> KBE
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../definitions.html">Definitions Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../directories.html">Directories Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/index.html">Components Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/battery.html">Li-PO Battery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/electronics.html">Electronics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/liftingsurfaces/index.html">LiftingSurface Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/liftingsurfaceprim.html">LiftingSurface Documentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/wing.html">Wing Documentation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">KBE</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>components.liftingsurfaces.wing</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for components.liftingsurfaces.wing</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="c1">#  Import ParaPy math, numpy and matplotlib Modules.</span>
+<span class="kn">from</span> <span class="nn">parapy.core</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">parapy.geom</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">primitives</span> <span class="k">import</span> <span class="n">LiftingSurface</span>
+<span class="kn">from</span> <span class="nn">directories</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">definitions</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">user</span> <span class="k">import</span> <span class="n">MyColors</span>
+
+<span class="c1">#  Import AVL wrapper written by Reno El Mendorp. https://github.com/renoelmendorp/AVLWrapper</span>
+<span class="kn">from</span> <span class="nn">avl</span> <span class="k">import</span> <span class="n">Geometry</span><span class="p">,</span> <span class="n">Surface</span><span class="p">,</span> <span class="n">Section</span><span class="p">,</span> <span class="n">Point</span><span class="p">,</span> <span class="n">Spacing</span><span class="p">,</span> <span class="n">Session</span><span class="p">,</span> <span class="n">Case</span><span class="p">,</span> <span class="n">FileAirfoil</span>
+
+<span class="c1">#  TODO FIX BUG IN WING WETTED AREA CALCULATION, DUE TO WING MIRROR JUNCTION OF EXTERNAL SHAPE!!!!! see low AR wing.py</span>
+<span class="c1">#  TODO FIX show_avl_geom IF POSSIBLE</span>
+<span class="c1">#  TODO Compare CL_max with assumed as well as plot with LLT</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Nelson Johnson&quot;</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Wing&quot;</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="Wing"><a class="viewcode-back" href="../../../components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing">[docs]</a><span class="k">class</span> <span class="nc">Wing</span><span class="p">(</span><span class="n">ExternalBody</span><span class="p">,</span> <span class="n">LiftingSurface</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; This class will create the wing geometry based on the required:</span>
+<span class="sd">    Wing Area (class I output), Aspect Ratio (class I input), taper ratio (assumed),</span>
+<span class="sd">    dihedral angle (assumed), wing twist angle (assumed) and airfoil selection.</span>
+<span class="sd">    It also can perform an avl analysis on the wing to obtain the linear value of C_L vs alpha and the pitching moment</span>
+<span class="sd">    vs. angle of attack.</span>
+
+<span class="sd">    :returns: ParaPy Geometry of the Main Wing Surface</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">__icon__</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;ICON_DIR&#39;</span><span class="p">],</span> <span class="s1">&#39;liftingsurface.png&#39;</span><span class="p">)</span>
+
+<span class="c1">#   This block of code contains the inputs. ########--------------------------------------------------------------------</span>
+    <span class="c1">#: Below is the required wing loading from the class I weight estimation.</span>
+    <span class="c1">#: :type: float</span>
+    <span class="n">wing_loading</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">100.0</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">())</span>
+
+    <span class="c1">#: Below is the required MTOW from the class I weight estimation.</span>
+    <span class="c1">#: :type: float</span>
+    <span class="n">weight_mtow</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">25.0</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">())</span>
+
+    <span class="c1">#: The stall speed of the wing</span>
+    <span class="c1">#: :type: float</span>
+    <span class="n">stall_speed</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">8.0</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">())</span>
+
+    <span class="c1">#: Below is the ISA STD sea level density.</span>
+    <span class="c1">#: :type: float</span>
+    <span class="n">rho</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">1.225</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">())</span>
+
+    <span class="c1">#: Below is the assumed factor of the semi_span which the fuselage extends over the wing.</span>
+    <span class="c1">#: :type: float</span>
+    <span class="n">fuse_width_factor</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.07</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Range</span><span class="p">(</span><span class="mf">0.001</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">))</span>
+
+    <span class="c1">#: Below is the a switch to hide/show the bbox of the wing section within the fuselage.</span>
+    <span class="c1">#: :type: boolean</span>
+    <span class="n">hide_bbox</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">bool</span><span class="p">))</span>
+
+    <span class="c1">#: Overwrites input from LiftingSurface to hide the Mean Aerodynamic Chord part</span>
+    <span class="n">hide_mac</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">bool</span><span class="p">))</span>
+
+    <span class="c1">#: Below is the chosen mesh deflection. It&#39;s is an optimum point between a good quality render and performance</span>
+    <span class="c1">#: :type: float</span>
+    <span class="n">mesh_deflection</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.0001</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Range</span><span class="p">(</span><span class="mf">0.00001</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">))</span>
+
+    <span class="c1">#: Changes the color of the wing skin to the one defined in MyColors</span>
+    <span class="c1">#: :type: tuple</span>
+    <span class="n">color</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">MyColors</span><span class="o">.</span><span class="n">skin_color</span><span class="p">)</span>
+
+    <span class="c1"># THIS IS A TEST PARAMETER</span>
+    <span class="n">global_cg</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">float</span><span class="p">))</span>
+
+    <span class="c1">#: Changes the number of ply&#39;s of carbon fiber http://www.ijera.com/papers/Vol4_issue5/Version%202/J45025355.pdf</span>
+    <span class="c1">#: :type: tuple</span>
+    <span class="n">ply_number</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
+
+<span class="c1">#  This block of Attributes calculates the planform parameters. ########------------------------------------------------</span>
+
+    <span class="c1"># TODO make sure that the wing position is not settable, this doesn&#39;t work</span>
+    <span class="c1"># @Attribute(private=True)</span>
+    <span class="c1"># def position(self):</span>
+    <span class="c1">#     &quot;&quot;&quot; Overwrites the inherited position attribute, to make the wing-fixed at Point(0, 0, 0) &quot;&quot;&quot;</span>
+    <span class="c1">#     return Position(Point(0, 0, 0))</span>
+
+<div class="viewcode-block" id="Wing.component_type"><a class="viewcode-back" href="../../../components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing.component_type">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">component_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This attribute names the component &#39;wing&#39;.</span>
+
+<span class="sd">        :return: String with wing component name</span>
+<span class="sd">        :rtype: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s1">&#39;wing&#39;</span></div>
+
+<div class="viewcode-block" id="Wing.center_of_gravity"><a class="viewcode-back" href="../../../components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing.center_of_gravity">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">center_of_gravity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Location of the center of gravity w.r.t the origin (root airfoil leading edge).</span>
+
+<span class="sd">        :return: Location of CG w.r.t. Root LE in SI meter</span>
+<span class="sd">        :rtype: Point</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">pos</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">solid</span><span class="o">.</span><span class="n">cog</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">solid</span><span class="o">.</span><span class="n">cog</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">pos</span></div>
+
+<div class="viewcode-block" id="Wing.s_req"><a class="viewcode-back" href="../../../components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing.s_req">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">s_req</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This attribute contains the calculation of the required TOTAL wing area from the design point.</span>
+
+<span class="sd">        :return: float</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weight_mtow</span> <span class="o">*</span> <span class="mf">9.81</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">wing_loading</span></div>
+
+<div class="viewcode-block" id="Wing.planform_area"><a class="viewcode-back" href="../../../components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing.planform_area">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">planform_area</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Instantiating the required variable name for the class ExternalBody</span>
+
+<span class="sd">        :return: Wing planform area</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">s_req</span></div>
+
+<div class="viewcode-block" id="Wing.lift_coef_control"><a class="viewcode-back" href="../../../components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing.lift_coef_control">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">lift_coef_control</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This is the Required C_L from the lift equation at 1.2*stall_speed @ MTOW for the controllability curve of</span>
+<span class="sd">        the scissor plot.</span>
+
+<span class="sd">        :return: Lift Coefficient for Controllability Curve of Scissor Plot</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">clreq</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="mf">9.81</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_mtow</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rho</span> <span class="o">*</span> <span class="p">((</span><span class="mf">1.2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">stall_speed</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">s_req</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">clreq</span></div>
+
+<div class="viewcode-block" id="Wing.left_wing"><a class="viewcode-back" href="../../../components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing.left_wing">[docs]</a>    <span class="nd">@Part</span>
+    <span class="k">def</span> <span class="nf">left_wing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;&quot; This part mirrors the right wing across the X-Z plane to make the left wing.</span>
+
+<span class="sd">        :return: ParaPy Left Wing Geometry</span>
+<span class="sd">        :rtype: MirroredShape</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">MirroredShape</span><span class="p">(</span><span class="n">shape_in</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">solid</span><span class="p">,</span>
+                             <span class="n">reference_point</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">solid</span><span class="o">.</span><span class="n">position</span><span class="p">,</span>
+                             <span class="n">vector1</span><span class="o">=</span><span class="n">Vector</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                             <span class="n">vector2</span><span class="o">=</span><span class="n">Vector</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="Wing.wing_cut_loc"><a class="viewcode-back" href="../../../components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing.wing_cut_loc">[docs]</a>    <span class="nd">@Attribute</span><span class="p">(</span><span class="n">private</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">wing_cut_loc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;&quot; This calculates the spanwise distance of the cut, inside of which, the wing is inside the fuselage. This</span>
+<span class="sd">        location is where the wing bbox to size the fuselage frame(s) ends in the spanwise direction. The height of this</span>
+<span class="sd">        bbox is the maximum thickness of the wing at this cut location.</span>
+
+<span class="sd">        :return: Spanwise distance from root chord to cut location</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">semi_span</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">fuse_width_factor</span></div>
+
+<div class="viewcode-block" id="Wing.right_cut_plane"><a class="viewcode-back" href="../../../components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing.right_cut_plane">[docs]</a>    <span class="nd">@Part</span><span class="p">(</span><span class="n">private</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">right_cut_plane</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;&quot; This makes a plane at the right wing spanwise location where the fuselage is to end.</span>
+
+<span class="sd">        :return: Plane at spanwise distance from root chord to cut location.</span>
+<span class="sd">        :rtype: Plane</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Plane</span><span class="p">(</span><span class="n">reference</span><span class="o">=</span><span class="n">translate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">wing_cut_loc</span><span class="p">),</span>
+                     <span class="n">normal</span><span class="o">=</span><span class="n">Vector</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                     <span class="n">hidden</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Wing.get_wingfuse_bounds"><a class="viewcode-back" href="../../../components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing.get_wingfuse_bounds">[docs]</a>    <span class="nd">@Attribute</span><span class="p">(</span><span class="n">private</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">get_wingfuse_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;&quot; This attribute is obtaining (the dimensions of) a bounded box at a fuselage width factor of the semispan</span>
+<span class="sd">         which will be used to size the local fuselage frames. These frames drive the shape of the fuselage.</span>
+
+<span class="sd">        :return: HT center section bounding box</span>
+<span class="sd">        :rtype: bbox</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">inner_part</span> <span class="o">=</span> <span class="n">PartitionedSolid</span><span class="p">(</span><span class="n">solid_in</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">solid</span><span class="p">,</span>
+                                      <span class="n">tool</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">right_cut_plane</span><span class="p">)</span><span class="o">.</span><span class="n">solids</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">faces</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">wires</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="c1">#  Above obtains a cross section of the wing, at the specified fuselage width factor.</span>
+
+        <span class="n">mirrored_part</span> <span class="o">=</span> <span class="n">MirroredShape</span><span class="p">(</span><span class="n">shape_in</span><span class="o">=</span><span class="n">inner_part</span><span class="p">,</span>
+                                      <span class="n">reference_point</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">solid</span><span class="o">.</span><span class="n">position</span><span class="p">,</span>
+                                      <span class="n">vector1</span><span class="o">=</span><span class="n">Vector</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                                      <span class="n">vector2</span><span class="o">=</span><span class="n">Vector</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="c1">#  Above mirrors the cross section about the aircraft symmetry plane.</span>
+        <span class="n">root</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">solid</span><span class="o">.</span><span class="n">faces</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="n">cog</span><span class="o">.</span><span class="n">y</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="c1"># Above selects the inner-most (minimum y loc face of the lifting surface, and then the edges of that face)</span>
+        <span class="n">first_iter</span> <span class="o">=</span> <span class="n">Fused</span><span class="p">(</span><span class="n">inner_part</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+        <span class="c1">#  Fusion of the three wing cross sections done in 2 Fused operations to avoid ParaPy errors.</span>
+        <span class="n">second_iter</span> <span class="o">=</span> <span class="n">Fused</span><span class="p">(</span><span class="n">first_iter</span><span class="p">,</span> <span class="n">mirrored_part</span><span class="p">)</span>
+
+        <span class="n">bounds</span> <span class="o">=</span> <span class="n">second_iter</span><span class="o">.</span><span class="n">bbox</span>
+        <span class="c1">#  Above gets the bounds of the wing fuselage bounding box for return.</span>
+        <span class="k">return</span> <span class="n">bounds</span></div>
+
+<div class="viewcode-block" id="Wing.internal_shape"><a class="viewcode-back" href="../../../components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing.internal_shape">[docs]</a>    <span class="nd">@Part</span>
+    <span class="k">def</span> <span class="nf">internal_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;&quot;  This part creates the bounding box for the part of the wing within the fuselage.</span>
+
+<span class="sd">        :return: HT center section bounding box</span>
+<span class="sd">        :rtype: Box</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Box</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get_wingfuse_bounds</span><span class="o">.</span><span class="n">width</span><span class="p">,</span>
+                   <span class="n">height</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get_wingfuse_bounds</span><span class="o">.</span><span class="n">height</span><span class="p">,</span>
+                   <span class="n">length</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get_wingfuse_bounds</span><span class="o">.</span><span class="n">length</span><span class="p">,</span>
+                   <span class="n">position</span><span class="o">=</span><span class="n">Position</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_wingfuse_bounds</span><span class="o">.</span><span class="n">center</span><span class="p">),</span>
+                   <span class="n">centered</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                   <span class="n">color</span><span class="o">=</span><span class="n">MyColors</span><span class="o">.</span><span class="n">cool_blue</span><span class="p">,</span>
+                   <span class="n">transparency</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+                   <span class="n">hidden</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">hide_bbox</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Wing.external_shape"><a class="viewcode-back" href="../../../components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing.external_shape">[docs]</a>    <span class="nd">@Part</span>
+    <span class="k">def</span> <span class="nf">external_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This defines the external shape for the ExternalBody class in definitions.</span>
+
+<span class="sd">        :return: Wing ParaPy Geometry</span>
+<span class="sd">        :rtype: Fused</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Fused</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">solid</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">left_wing</span><span class="p">,</span> <span class="n">hidden</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">)</span></div>
+
+
+<span class="c1"># --- AVL Geometry &amp; Analysis: -----------------------------------------------------------------------------------------</span>
+<span class="c1">#  In this block, the AVL analysis is setup, run and C_Lalpha is extracted.</span>
+<div class="viewcode-block" id="Wing.root_section"><a class="viewcode-back" href="../../../components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing.root_section">[docs]</a>    <span class="nd">@Attribute</span><span class="p">(</span><span class="n">private</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">root_section</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;&quot;  This defines the root section with the chosen airfoil.</span>
+
+<span class="sd">         :return: AVL Root Section</span>
+<span class="sd">         :rtype: Section</span>
+<span class="sd">         &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Section</span><span class="p">(</span><span class="n">leading_edge_point</span><span class="o">=</span><span class="n">Point</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                       <span class="n">chord</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">root_chord</span><span class="p">,</span>
+                       <span class="n">airfoil</span><span class="o">=</span><span class="n">FileAirfoil</span><span class="p">(</span><span class="n">get_dir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;airfoils&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">airfoil_type</span><span class="p">,</span>
+                                                                <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">.dat&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">airfoil_choice</span><span class="p">))))</span></div>
+
+<div class="viewcode-block" id="Wing.tip_section"><a class="viewcode-back" href="../../../components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing.tip_section">[docs]</a>    <span class="nd">@Attribute</span><span class="p">(</span><span class="n">private</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">tip_section</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;&quot;  Here we define the tip AVL section with proper location and airfoil.</span>
+
+<span class="sd">         :return: AVL Tip Section</span>
+<span class="sd">         :rtype: Section</span>
+<span class="sd">         &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Section</span><span class="p">(</span><span class="n">leading_edge_point</span><span class="o">=</span><span class="n">Point</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">semi_span</span> <span class="o">*</span> <span class="n">tan</span><span class="p">(</span><span class="n">radians</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">le_sweep</span><span class="p">)),</span>
+                                                <span class="bp">self</span><span class="o">.</span><span class="n">semi_span</span><span class="p">,</span>
+                                                <span class="bp">self</span><span class="o">.</span><span class="n">semi_span</span> <span class="o">*</span> <span class="n">tan</span><span class="p">(</span><span class="n">radians</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dihedral</span><span class="p">))),</span>
+                       <span class="n">chord</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">root_chord</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">taper</span><span class="p">,</span>
+                       <span class="n">angle</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+                       <span class="n">airfoil</span><span class="o">=</span><span class="n">FileAirfoil</span><span class="p">(</span><span class="n">get_dir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;airfoils&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">airfoil_type</span><span class="p">,</span>
+                                                                <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">.dat&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">airfoil_choice</span><span class="p">))))</span></div>
+
+<div class="viewcode-block" id="Wing.wing_surface"><a class="viewcode-back" href="../../../components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing.wing_surface">[docs]</a>    <span class="nd">@Attribute</span><span class="p">(</span><span class="n">private</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">wing_surface</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;&quot; Here we define the wing surface using a symmetry plane at y=0. Here the number of vortecies and their</span>
+<span class="sd">         chordwise and spanwise spacing is also set.</span>
+
+<span class="sd">         :return: AVL Wing Surface</span>
+<span class="sd">         :rtype: Surface</span>
+<span class="sd">         &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Surface</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Wing&quot;</span><span class="p">,</span>
+                       <span class="n">n_chordwise</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span>
+                       <span class="n">chord_spacing</span><span class="o">=</span><span class="n">Spacing</span><span class="o">.</span><span class="n">cosine</span><span class="p">,</span>
+                       <span class="n">n_spanwise</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span>
+                       <span class="n">span_spacing</span><span class="o">=</span><span class="n">Spacing</span><span class="o">.</span><span class="n">neg_sine</span><span class="p">,</span>
+                       <span class="n">y_duplicate</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+                       <span class="n">sections</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">root_section</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tip_section</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="Wing.wing_geom"><a class="viewcode-back" href="../../../components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing.wing_geom">[docs]</a>    <span class="nd">@Attribute</span><span class="p">(</span><span class="n">private</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">wing_geom</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;&quot;  Here we define the AVL geometry.</span>
+
+<span class="sd">         :return: AVL Wing Geometry</span>
+<span class="sd">         :rtype: Geometry</span>
+<span class="sd">         &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Geometry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Main Wing&quot;</span><span class="p">,</span>
+                        <span class="n">reference_area</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">s_req</span><span class="p">,</span>
+                        <span class="n">reference_chord</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mac_length</span><span class="p">,</span>
+                        <span class="n">reference_span</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">semi_span</span> <span class="o">*</span> <span class="mf">2.0</span><span class="p">,</span>
+                        <span class="n">reference_point</span><span class="o">=</span><span class="n">Point</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span>
+                        <span class="n">surfaces</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">wing_surface</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="Wing.alpha_cases"><a class="viewcode-back" href="../../../components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing.alpha_cases">[docs]</a>    <span class="nd">@Attribute</span><span class="p">(</span><span class="n">private</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">alpha_cases</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;&quot;  Here we define the run cases for AVL. We are running input cases alpha from 0 to 10 with 25 data points at</span>
+<span class="sd">         the speed required for the controllability curve (1.2 x v_s).</span>
+
+<span class="sd">         :return: AVL List of RunCases</span>
+<span class="sd">         :rtype: Case</span>
+<span class="sd">         &quot;&quot;&quot;</span>
+        <span class="n">alphas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">25</span><span class="p">)</span>
+        <span class="n">alpha_case</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">alphas</span><span class="p">)):</span>
+            <span class="n">alpha_case</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Case</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;alpha</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">i</span><span class="p">,</span>
+                                   <span class="n">alpha</span><span class="o">=</span><span class="n">alphas</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                                   <span class="n">velocity</span><span class="o">=</span><span class="mf">1.2</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">stall_speed</span><span class="p">,</span>
+                                   <span class="n">X_cg</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">aerodynamic_center</span><span class="o">.</span><span class="n">x</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">alpha_case</span></div>
+
+<div class="viewcode-block" id="Wing.avl_session"><a class="viewcode-back" href="../../../components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing.avl_session">[docs]</a>    <span class="nd">@Attribute</span><span class="p">(</span><span class="n">private</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">avl_session</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;&quot;  Here we define the AVL session with the cases above.</span>
+
+<span class="sd">         :return: AVL Run Session</span>
+<span class="sd">         :rtype: Session</span>
+<span class="sd">         &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Session</span><span class="p">(</span><span class="n">geometry</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">wing_geom</span><span class="p">,</span> <span class="n">cases</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha_cases</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Wing.show_avlgeom"><a class="viewcode-back" href="../../../components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing.show_avlgeom">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">show_avlgeom</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;&quot;  Here we show the AVL geometry. NOTE: THERE IS A BUG HERE, IF DOUBLE CLICKED IN GUI, IT SHOWS BUT CAUSES</span>
+<span class="sd">         PYTHON TO FREEZE. THE CODE MUST BE STOPPED AND RESTARTED IF THE GEOMETRY IS SHOWN.</span>
+<span class="sd">         #  TODO FIX THIS</span>
+
+<span class="sd">         :return: AVL Geometry</span>
+<span class="sd">         :rtype: AVL PltLib Viewer</span>
+<span class="sd">         &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">avl_session</span><span class="o">.</span><span class="n">show_geometry</span><span class="p">()</span>
+        <span class="k">return</span> <span class="s1">&#39;Done&#39;</span></div>
+
+<div class="viewcode-block" id="Wing.avl_results"><a class="viewcode-back" href="../../../components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing.avl_results">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">avl_results</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;&quot;  Here, the results are extracted and stored in the memory of ParaPy.</span>
+
+<span class="sd">         :return: Dictionary with AVL Results</span>
+<span class="sd">         :rtype: dict</span>
+<span class="sd">         &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">avl_session</span><span class="o">.</span><span class="n">get_results</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Wing.avl_data_grabber"><a class="viewcode-back" href="../../../components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing.avl_data_grabber">[docs]</a>    <span class="nd">@Attribute</span><span class="p">(</span><span class="n">private</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">avl_data_grabber</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;  Here, we grab the data from</span>
+
+<span class="sd">        :return: Plot and float</span>
+<span class="sd">        :rtype: dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">grabbed_values</span> <span class="o">=</span> <span class="p">(</span><span class="nb">sorted</span><span class="p">([[</span><span class="bp">self</span><span class="o">.</span><span class="n">avl_results</span><span class="p">[</span><span class="n">alpha</span><span class="p">][</span><span class="s1">&#39;Totals&#39;</span><span class="p">][</span><span class="s1">&#39;Alpha&#39;</span><span class="p">],</span>
+                                   <span class="bp">self</span><span class="o">.</span><span class="n">avl_results</span><span class="p">[</span><span class="n">alpha</span><span class="p">][</span><span class="s1">&#39;Totals&#39;</span><span class="p">][</span><span class="s1">&#39;CLtot&#39;</span><span class="p">],</span>
+                                   <span class="bp">self</span><span class="o">.</span><span class="n">avl_results</span><span class="p">[</span><span class="n">alpha</span><span class="p">][</span><span class="s1">&#39;Totals&#39;</span><span class="p">][</span><span class="s1">&#39;CDtot&#39;</span><span class="p">],</span>
+                                   <span class="bp">self</span><span class="o">.</span><span class="n">avl_results</span><span class="p">[</span><span class="n">alpha</span><span class="p">][</span><span class="s1">&#39;Totals&#39;</span><span class="p">][</span><span class="s1">&#39;Cmtot&#39;</span><span class="p">]]</span>
+                                  <span class="k">for</span> <span class="n">alpha</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">avl_results</span><span class="p">],</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="mi">0</span><span class="p">])))</span>
+        <span class="c1">#  Above we extract the c_l and angle of attack values.</span>
+        <span class="n">alpha_deg</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">grabbed_values</span><span class="p">]</span>
+        <span class="n">alpha_rad</span> <span class="o">=</span> <span class="p">[</span><span class="n">radians</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">grabbed_values</span><span class="p">]</span>
+        <span class="c1">#  Conversion to radians.</span>
+        <span class="n">cl</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">grabbed_values</span><span class="p">]</span>
+        <span class="n">cdi</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">grabbed_values</span><span class="p">]</span>
+        <span class="n">cm</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">grabbed_values</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;lift_coefs&#39;</span><span class="p">:</span> <span class="n">cl</span><span class="p">,</span>
+                <span class="s1">&#39;moment_coefs&#39;</span><span class="p">:</span> <span class="n">cm</span><span class="p">,</span>
+                <span class="s1">&#39;drag_coefs&#39;</span><span class="p">:</span> <span class="n">cdi</span><span class="p">,</span>
+                <span class="s1">&#39;alpha_degrees&#39;</span><span class="p">:</span> <span class="n">alpha_deg</span><span class="p">,</span>
+                <span class="s1">&#39;alpha_radians&#39;</span><span class="p">:</span> <span class="n">alpha_rad</span><span class="p">}</span></div>
+
+<div class="viewcode-block" id="Wing.lift_coef_vs_alpha"><a class="viewcode-back" href="../../../components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing.lift_coef_vs_alpha">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">lift_coef_vs_alpha</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: Lift Coefficient Gradient [1/rad]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">avl_data_grabber</span><span class="p">[</span><span class="s1">&#39;lift_coefs&#39;</span><span class="p">]</span>
+        <span class="n">alpha_rad</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">avl_data_grabber</span><span class="p">[</span><span class="s1">&#39;alpha_radians&#39;</span><span class="p">]</span>
+        <span class="n">cl_alpha</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">([(</span><span class="n">cl</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">cl</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="n">alpha_rad</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">alpha_rad</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">alpha_rad</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)])</span>
+        <span class="k">return</span> <span class="n">cl_alpha</span></div>
+
+    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">plot_liftgradient</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Plotting</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;ggplot&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="s1">&#39;LiftCoefficientGradient&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">avl_data_grabber</span><span class="p">[</span><span class="s1">&#39;alpha_degrees&#39;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">avl_data_grabber</span><span class="p">[</span><span class="s1">&#39;lift_coefs&#39;</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Lift Coefficient Gradient&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Angle of Attack [deg]&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Lift Coefficient [-]&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        <span class="k">return</span> <span class="s1">&#39;Plot Made, See PyCharm&#39;</span>
+
+    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">plot_momentgradient</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Plotting</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;ggplot&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="s1">&#39;MomentCoefficientGradient&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">avl_data_grabber</span><span class="p">[</span><span class="s1">&#39;alpha_degrees&#39;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">avl_data_grabber</span><span class="p">[</span><span class="s1">&#39;moment_coefs&#39;</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Moment Coefficient Gradient&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Angle of Attack [deg]&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Moment Coefficient [-]&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        <span class="k">return</span> <span class="s1">&#39;Plot Made, See PyCharm&#39;</span>
+
+<div class="viewcode-block" id="Wing.lift_coef_control_index"><a class="viewcode-back" href="../../../components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing.lift_coef_control_index">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">lift_coef_control_index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;&quot;  This attribute returns the index of the AVL data corresponding to the case when C_L is closest to the</span>
+<span class="sd">         required lift_coef_control required by the lift equation for the controllability curve.</span>
+<span class="sd">         :return: index</span>
+<span class="sd">         :rtype: int</span>
+<span class="sd">         &quot;&quot;&quot;</span>
+        <span class="n">cll_array</span> <span class="o">=</span> <span class="p">(</span><span class="nb">sorted</span><span class="p">([[</span><span class="bp">self</span><span class="o">.</span><span class="n">avl_results</span><span class="p">[</span><span class="n">alpha</span><span class="p">][</span><span class="s1">&#39;Totals&#39;</span><span class="p">][</span><span class="s1">&#39;Alpha&#39;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">avl_results</span><span class="p">[</span><span class="n">alpha</span><span class="p">][</span><span class="s1">&#39;Totals&#39;</span><span class="p">][</span><span class="s1">&#39;CLtot&#39;</span><span class="p">]]</span>
+                             <span class="k">for</span> <span class="n">alpha</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">avl_results</span><span class="p">],</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="mi">1</span><span class="p">])))</span>
+        <span class="n">cll</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">cll_array</span><span class="p">]</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="p">[</span><span class="nb">abs</span><span class="p">(</span><span class="n">cll</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">lift_coef_control</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">cll</span><span class="p">))]</span>
+        <span class="n">cl_cont_index</span> <span class="o">=</span> <span class="n">error</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">error</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">cl_cont_index</span></div>
+
+<div class="viewcode-block" id="Wing.moment_coef_control"><a class="viewcode-back" href="../../../components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing.moment_coef_control">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">moment_coef_control</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;&quot;  This attribute gets the pitching moment of the wing about its aerodynamic center from avl corresponding to</span>
+<span class="sd">         lift_coef_cont derived above.</span>
+<span class="sd">         :return: C_mac</span>
+<span class="sd">         :rtype: float</span>
+<span class="sd">         &quot;&quot;&quot;</span>
+        <span class="n">case_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">avl_results</span><span class="p">[</span><span class="s1">&#39;alpha</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">lift_coef_control_index</span><span class="p">][</span><span class="s1">&#39;Totals&#39;</span><span class="p">][</span><span class="s1">&#39;Cmtot&#39;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">case_name</span></div>
+
+<div class="viewcode-block" id="Wing.write_results"><a class="viewcode-back" href="../../../components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing.write_results">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">write_results</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;&quot;  Here the results are written into a .json file</span>
+<span class="sd">         :return: AVL data file</span>
+<span class="sd">         :rtype: .json file</span>
+<span class="sd">         &quot;&quot;&quot;</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">avl_session</span><span class="o">.</span><span class="n">get_results</span><span class="p">()</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;USER_DIR&#39;</span><span class="p">],</span> <span class="s1">&#39;results&#39;</span><span class="p">,</span> <span class="s1">&#39;avl_wing_out.json&#39;</span><span class="p">),</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">results</span><span class="p">))</span>
+        <span class="k">return</span> <span class="s1">&#39;Done&#39;</span></div></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">parapy.gui</span> <span class="k">import</span> <span class="n">display</span>
+
+    <span class="n">obj</span> <span class="o">=</span> <span class="n">Wing</span><span class="p">()</span>
+    <span class="n">display</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, San Kilkis, Nelson Johnson.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'1.0',
+            LANGUAGE:'en',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

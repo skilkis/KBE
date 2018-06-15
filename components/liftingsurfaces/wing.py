@@ -28,12 +28,15 @@ class Wing(ExternalBody, LiftingSurface):
     """ This class will create the wing geometry based on the required:
     Wing Area (class I output), Aspect Ratio (class I input), taper ratio (assumed),
     dihedral angle (assumed), wing twist angle (assumed) and airfoil selection.
-    It also can perform an avl analysis on the wing to obtain the linear value of C_L vs alpha.
+    It also can perform an avl analysis on the wing to obtain the linear value of C_L vs alpha and the pitching moment
+    vs. angle of attack.
+
+    :returns: ParaPy Geometry of the Main Wing Surface
     """
 
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'liftingsurface.png')
 
-#  This block of code contains the inputs. ########---------------------------------------------------------------------
+#   This block of code contains the inputs. ########--------------------------------------------------------------------
     #: Below is the required wing loading from the class I weight estimation.
     #: :type: float
     wing_loading = Input(100.0, validator=val.Positive())
@@ -87,7 +90,8 @@ class Wing(ExternalBody, LiftingSurface):
     @Attribute
     def component_type(self):
         """ This attribute names the component 'wing'.
-        :return: str
+
+        :return: String with wing component name
         :rtype: str
         """
         return 'wing'
@@ -95,7 +99,8 @@ class Wing(ExternalBody, LiftingSurface):
     @Attribute
     def center_of_gravity(self):
         """ Location of the center of gravity w.r.t the origin (root airfoil leading edge).
-        :return: Location Tuple in SI meter
+
+        :return: Location of CG w.r.t. Root LE in SI meter
         :rtype: Point
         """
         y = 0
@@ -105,6 +110,7 @@ class Wing(ExternalBody, LiftingSurface):
     @Attribute
     def s_req(self):
         """ This attribute contains the calculation of the required TOTAL wing area from the design point.
+
         :return: float
         :rtype: float
         """
@@ -112,25 +118,31 @@ class Wing(ExternalBody, LiftingSurface):
 
     @Attribute
     def planform_area(self):
-        """ Instantiating the required variable name for the class `ExternalBody`"""
+        """ Instantiating the required variable name for the class ExternalBody
+
+        :return: Wing planform area
+        :rtype: float
+        """
         return self.s_req
 
     @Attribute
     def lift_coef_control(self):
-        """ This is the Required C_L from the lift equation at 1.2*stall_speed @ MTOW for the controllability curve of the
-         scissor plot.
-         :return: float
-         :rtype: float
-         """
+        """ This is the Required C_L from the lift equation at 1.2*stall_speed @ MTOW for the controllability curve of
+        the scissor plot.
+
+        :return: Lift Coefficient for Controllability Curve of Scissor Plot
+        :rtype: float
+        """
         clreq = 2 * 9.81 * self.weight_mtow / (self.rho * ((1.2 * self.stall_speed) ** 2) * self.s_req)
         return clreq
 
     @Part
     def left_wing(self):
         """" This part mirrors the right wing across the X-Z plane to make the left wing.
-         :return: ParaPy Geometry
-         :rtype: MirroredShape
-         """
+
+        :return: ParaPy Left Wing Geometry
+        :rtype: MirroredShape
+        """
         return MirroredShape(shape_in=self.solid,
                              reference_point=self.solid.position,
                              vector1=Vector(1, 0, 0),
@@ -138,18 +150,22 @@ class Wing(ExternalBody, LiftingSurface):
 
     @Attribute(private=True)
     def wing_cut_loc(self):
-        """" This calculates the spanwise distance of the cut, inside of which, the wing is inside the fuselage.
-         :return: Spanwise distance from root chord to cut location
-         :rtype: float
-         """
+        """" This calculates the spanwise distance of the cut, inside of which, the wing is inside the fuselage. This
+        location is where the wing bbox to size the fuselage frame(s) ends in the spanwise direction. The height of this
+        bbox is the maximum thickness of the wing at this cut location.
+
+        :return: Spanwise distance from root chord to cut location
+        :rtype: float
+        """
         return self.semi_span * self.fuse_width_factor
 
     @Part(private=True)
     def right_cut_plane(self):
         """" This makes a plane at the right wing spanwise location where the fuselage is to end.
-         :return: Plane at spanwise distance from root chord to cut location.
-         :rtype: Plane
-         """
+
+        :return: Plane at spanwise distance from root chord to cut location.
+        :rtype: Plane
+        """
         return Plane(reference=translate(self.position, 'y', self.wing_cut_loc),
                      normal=Vector(0, 1, 0),
                      hidden=True)
@@ -157,10 +173,11 @@ class Wing(ExternalBody, LiftingSurface):
     @Attribute(private=True)
     def get_wingfuse_bounds(self):
         """" This attribute is obtaining (the dimensions of) a bounded box at a fuselage width factor of the semispan
-         which will be used to size the local fuselage frames which drive the shape of the fuselage.
-         :return: HT center section bounding box
-         :rtype: bbox
-         """
+         which will be used to size the local fuselage frames. These frames drive the shape of the fuselage.
+
+        :return: HT center section bounding box
+        :rtype: bbox
+        """
         inner_part = PartitionedSolid(solid_in=self.solid,
                                       tool=self.right_cut_plane).solids[0].faces[1].wires[0]
         #  Above obtains a cross section of the wing, at the specified fuselage width factor.
@@ -183,9 +200,10 @@ class Wing(ExternalBody, LiftingSurface):
     @Part
     def internal_shape(self):
         """"  This part creates the bounding box for the part of the wing within the fuselage.
-         :return: HT center section bounding box
-         :rtype: Box
-         """
+
+        :return: HT center section bounding box
+        :rtype: Box
+        """
         return Box(width=self.get_wingfuse_bounds.width,
                    height=self.get_wingfuse_bounds.height,
                    length=self.get_wingfuse_bounds.length,
@@ -197,6 +215,11 @@ class Wing(ExternalBody, LiftingSurface):
 
     @Part
     def external_shape(self):
+        """ This defines the external shape for the ExternalBody class in definitions.
+
+        :return: Wing ParaPy Geometry
+        :rtype: Fused
+        """
         return Fused(self.solid, self.left_wing, hidden=True, label=self.label)
 
 
@@ -205,7 +228,8 @@ class Wing(ExternalBody, LiftingSurface):
     @Attribute(private=True)
     def root_section(self):
         """"  This defines the root section with the chosen airfoil.
-         :return: AVL Section
+
+         :return: AVL Root Section
          :rtype: Section
          """
         return Section(leading_edge_point=Point(0, 0, 0),
@@ -216,7 +240,8 @@ class Wing(ExternalBody, LiftingSurface):
     @Attribute(private=True)
     def tip_section(self):
         """"  Here we define the tip AVL section with proper location and airfoil.
-         :return: AVL Section
+
+         :return: AVL Tip Section
          :rtype: Section
          """
         return Section(leading_edge_point=Point(self.semi_span * tan(radians(self.le_sweep)),
@@ -231,7 +256,8 @@ class Wing(ExternalBody, LiftingSurface):
     def wing_surface(self):
         """" Here we define the wing surface using a symmetry plane at y=0. Here the number of vortecies and their
          chordwise and spanwise spacing is also set.
-         :return: AVL Surface
+
+         :return: AVL Wing Surface
          :rtype: Surface
          """
         return Surface(name="Wing",
@@ -245,7 +271,8 @@ class Wing(ExternalBody, LiftingSurface):
     @Attribute(private=True)
     def wing_geom(self):
         """"  Here we define the AVL geometry.
-         :return: AVL Geometry
+
+         :return: AVL Wing Geometry
          :rtype: Geometry
          """
         return Geometry(name="Main Wing",
@@ -257,8 +284,9 @@ class Wing(ExternalBody, LiftingSurface):
 
     @Attribute(private=True)
     def alpha_cases(self):
-        """"  Here we define the run cases for AVL. We are running input cases alpha from 0 to 10 with 25 data points, at
-         the speed required for the controllability curve (1.2*v_s).
+        """"  Here we define the run cases for AVL. We are running input cases alpha from 0 to 10 with 25 data points at
+         the speed required for the controllability curve (1.2 x v_s).
+
          :return: AVL List of RunCases
          :rtype: Case
          """
@@ -274,7 +302,8 @@ class Wing(ExternalBody, LiftingSurface):
     @Attribute(private=True)
     def avl_session(self):
         """"  Here we define the AVL session with the cases above.
-         :return: AVL Session
+
+         :return: AVL Run Session
          :rtype: Session
          """
         return Session(geometry=self.wing_geom, cases=self.alpha_cases)
@@ -283,6 +312,8 @@ class Wing(ExternalBody, LiftingSurface):
     def show_avlgeom(self):
         """"  Here we show the AVL geometry. NOTE: THERE IS A BUG HERE, IF DOUBLE CLICKED IN GUI, IT SHOWS BUT CAUSES
          PYTHON TO FREEZE. THE CODE MUST BE STOPPED AND RESTARTED IF THE GEOMETRY IS SHOWN.
+         #  TODO FIX THIS
+
          :return: AVL Geometry
          :rtype: AVL PltLib Viewer
          """
@@ -292,14 +323,16 @@ class Wing(ExternalBody, LiftingSurface):
     @Attribute
     def avl_results(self):
         """"  Here, the results are extracted and stored in the memory of ParaPy.
-         :return:
-         :rtype:
+
+         :return: Dictionary with AVL Results
+         :rtype: dict
          """
         return self.avl_session.get_results()
 
     @Attribute(private=True)
     def avl_data_grabber(self):
-        """  Here, the cl vs alpha plot is created and the constant C_L vs alpha value is found.
+        """  Here, we grab the data from
+
         :return: Plot and float
         :rtype: dict
         """

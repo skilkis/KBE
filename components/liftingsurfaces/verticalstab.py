@@ -207,9 +207,10 @@ class VerticalStabilizer(ExternalBody, LiftingSurface):
 
     @Part
     def external_shape(self):
-        """ This rotates the VT over a right angle to the correct orientation WRT the aircraft reference system.
+        """ This defines the external shape for the ExternalBody class in definitions.
+
         :return: VTP ParaPy Geometry
-        :rtype: RotatedShape
+        :rtype: Scaled
         """
         return ScaledShape(shape_in=self.solid, reference_point=self.position, factor=1, hidden=True)
 

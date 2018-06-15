@@ -1,0 +1,360 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>components.electronics.flightcontroller &mdash; KBE 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> KBE
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../definitions.html">Definitions Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../directories.html">Directories Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/index.html">Components Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/battery.html">Li-PO Battery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/electronics.html">Electronics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/liftingsurfaces/index.html">LiftingSurface Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/liftingsurfaceprim.html">LiftingSurface Documentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/wing.html">Wing Documentation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">KBE</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>components.electronics.flightcontroller</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for components.electronics.flightcontroller</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="c1">#  Required Modules</span>
+<span class="kn">from</span> <span class="nn">parapy.core</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">parapy.geom</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">definitions</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">directories</span> <span class="k">import</span> <span class="o">*</span>
+
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Nelson Johnson&quot;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;FlightController&quot;</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="FlightController"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.flightcontroller.FlightController">[docs]</a><span class="k">class</span> <span class="nc">FlightController</span><span class="p">(</span><span class="n">Component</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; This class will create the Navio2 flight controller geometry.</span>
+
+<span class="sd">    :returns: ParaPy Geometry of the flight computer</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">__icon__</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;ICON_DIR&#39;</span><span class="p">],</span> <span class="s1">&#39;chip.png&#39;</span><span class="p">)</span>
+
+    <span class="c1">#: Navio 2 Flight computer dimensions are below. Source: https://emlid.com/navio/</span>
+
+<div class="viewcode-block" id="FlightController.l_navio"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.flightcontroller.FlightController.l_navio">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">l_navio</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; The 65mm length of the Flight Computer is the longest dimension and is to be oriented parallel with the x</span>
+<span class="sd">         axis. Dimensions are at https://emlid.com/navio/</span>
+
+<span class="sd">        :return: ParaPy Flight Controller Length</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mf">0.065</span></div>
+
+    <span class="c1">#: :type: float</span>
+<div class="viewcode-block" id="FlightController.w_navio"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.flightcontroller.FlightController.w_navio">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">w_navio</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; The 55mm width is to be oriented parallel with the y axis.</span>
+
+<span class="sd">        :return: ParaPy Flight Controller Width</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mf">0.055</span></div>
+
+<div class="viewcode-block" id="FlightController.h_navio"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.flightcontroller.FlightController.h_navio">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">h_navio</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; The flight controller height is to be oriented parallel with the y axis. This height was assumed from their</span>
+<span class="sd">        figure.</span>
+
+<span class="sd">        :return: ParaPy Flight Controller height</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mf">0.017</span></div>
+
+<div class="viewcode-block" id="FlightController.flightcontroller_offset"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.flightcontroller.FlightController.flightcontroller_offset">[docs]</a>    <span class="nd">@Part</span>
+    <span class="k">def</span> <span class="nf">flightcontroller_offset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This creates the geometry of the flight controller. FOR BOX FUNCTION: Width is x direction, length is</span>
+<span class="sd">        y direction, height is z direction.</span>
+
+<span class="sd">        :return: ParaPy Flight Controller Geometry</span>
+<span class="sd">        :rtype: Box</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Box</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">l_navio</span><span class="p">,</span>
+                   <span class="n">length</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">w_navio</span><span class="p">,</span>
+                   <span class="n">height</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">h_navio</span><span class="p">,</span>
+                   <span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">,</span>
+                   <span class="n">hidden</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FlightController.solid"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.flightcontroller.FlightController.solid">[docs]</a>    <span class="nd">@Part</span>
+    <span class="k">def</span> <span class="nf">solid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This shifts the shape to the correct place with respect to the local axis system.</span>
+
+<span class="sd">        :return: ParaPy Flight Controller Geometry</span>
+<span class="sd">        :rtype: TranslatedShape</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">TranslatedShape</span><span class="p">(</span><span class="n">shape_in</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">flightcontroller_offset</span><span class="p">,</span>
+                               <span class="n">displacement</span><span class="o">=</span><span class="n">Vector</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">w_navio</span><span class="o">*</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                               <span class="n">transparency</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span>
+                               <span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FlightController.flight_controller_power"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.flightcontroller.FlightController.flight_controller_power">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">flight_controller_power</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This attribute estimates the Navio2 flight computer power. It is found by multiplying the average voltage</span>
+<span class="sd">        (5V), by the average current (150mA). Source: https://emlid.com/navio/</span>
+
+<span class="sd">        :return: Flight Computer Power</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mf">0.15</span><span class="o">*</span><span class="mi">5</span></div>
+
+<div class="viewcode-block" id="FlightController.component_type"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.flightcontroller.FlightController.component_type">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">component_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This attribute names the component &#39;flightcontroller&#39; for flight controller.</span>
+
+<span class="sd">        :return: String with flightcontroller&#39;s component name</span>
+<span class="sd">        :rtype: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s1">&#39;flightcontroller&#39;</span></div>
+
+<div class="viewcode-block" id="FlightController.center_of_gravity"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.flightcontroller.FlightController.center_of_gravity">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">center_of_gravity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This attribute returns the COG of the flight controller.</span>
+
+<span class="sd">        :return: ParaPy Point</span>
+<span class="sd">        :rtype: ParaPy Point</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">solid</span><span class="o">.</span><span class="n">cog</span></div>
+
+<div class="viewcode-block" id="FlightController.weight"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.flightcontroller.FlightController.weight">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">weight</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; The mass of the Navio2 flight computer is 23 grams.</span>
+
+<span class="sd">        :return: Navio2 Mass</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mf">0.023</span></div>
+
+<div class="viewcode-block" id="FlightController.internal_shape"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.flightcontroller.FlightController.internal_shape">[docs]</a>    <span class="nd">@Part</span>
+    <span class="k">def</span> <span class="nf">internal_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This obtains a bounding box of the flight controller to size the fuselage frames.</span>
+
+<span class="sd">        :return: Navio2 Shape</span>
+<span class="sd">        :rtype: ScaledShape</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">ScaledShape</span><span class="p">(</span><span class="n">shape_in</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">solid</span><span class="p">,</span> <span class="n">reference_point</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">solid</span><span class="o">.</span><span class="n">cog</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                           <span class="n">transparency</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">hidden</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FlightController.label"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.flightcontroller.FlightController.label">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">label</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This labels the flight controller &#39;Avionics&#39;</span>
+
+<span class="sd">        :return: Avionics Label</span>
+<span class="sd">        :rtype: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s1">&#39;Avionics&#39;</span></div></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">parapy.gui</span> <span class="k">import</span> <span class="n">display</span>
+
+    <span class="n">obj</span> <span class="o">=</span> <span class="n">FlightController</span><span class="p">()</span>
+    <span class="n">display</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, San Kilkis, Nelson Johnson.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'1.0',
+            LANGUAGE:'en',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

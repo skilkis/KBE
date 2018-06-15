@@ -1,0 +1,649 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>components.liftingsurfaces.primitives.liftingsurface &mdash; KBE 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+
+  
+  <script src="../../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> KBE
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../definitions.html">Definitions Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../directories.html">Directories Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../components/index.html">Components Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../components/battery.html">Li-PO Battery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../components/electronics.html">Electronics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../components/liftingsurfaces/index.html">LiftingSurface Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../components/liftingsurfaces/liftingsurfaceprim.html">LiftingSurface Documentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../components/liftingsurfaces/wing.html">Wing Documentation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">KBE</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>components.liftingsurfaces.primitives.liftingsurface</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for components.liftingsurfaces.primitives.liftingsurface</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="c1">#  TODO ADD VALIDATOR FOR AIRFOIL TYPE &amp; CHOICE, OFFSET. ALSO IN HORIZONTAL AND VERTICAL STAB!!!!!!!</span>
+
+
+<span class="kn">from</span> <span class="nn">parapy.core</span> <span class="k">import</span> <span class="o">*</span>           <span class="c1"># / Required ParaPy Module</span>
+<span class="kn">from</span> <span class="nn">parapy.geom</span> <span class="k">import</span> <span class="o">*</span>           <span class="c1"># / Required ParaPy Module</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="o">*</span>                  <span class="c1"># / Python math operations.</span>
+<span class="kn">from</span> <span class="nn">directories</span> <span class="k">import</span> <span class="o">*</span>           <span class="c1"># / Project Directory</span>
+<span class="c1"># from collections import namedtuple  # / Allows creation of named tuples similar to Point</span>
+<span class="kn">from</span> <span class="nn">Tkinter</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">tkFileDialog</span>
+<span class="kn">import</span> <span class="nn">tkMessageBox</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Nelson Johnson&quot;</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;LiftingSurface&quot;</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="LiftingSurface"><a class="viewcode-back" href="../../../../components/liftingsurfaces/liftingsurfaceprim.html#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface">[docs]</a><span class="k">class</span> <span class="nc">LiftingSurface</span><span class="p">(</span><span class="n">GeomBase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This script will generate a lifting surface primitive for the KBE app. The surface type can be straight, tapered and</span>
+<span class="sd">    swept. In the future, we would like to add functionality for elliptical wings.</span>
+<span class="sd">    The required inputs for each instantiation are the Wing Area, Aspect Ratio, Taper Ratio, TE offset , dihedral angle,</span>
+<span class="sd">    wing twist and airfoil DAT file. Possible airfoils are in the folder &#39;airfoils&#39;, then within another folder, either</span>
+<span class="sd">    &#39;cambered&#39;, &#39;reflexed&#39;, or &#39;symmetric&#39;. Feel free to add new airfoils. Also note, this primitive is instantiated in</span>
+<span class="sd">    &#39;wing.py&#39;, where you can perform an AVL analysis. The sign convention is +x pointing with direction of chord,</span>
+<span class="sd">    +y pointing toward right wingtip, +z up.</span>
+
+<span class="sd">    :returns: ParaPy Geometry of a Lifting Surface</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">__icon__</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;ICON_DIR&#39;</span><span class="p">],</span> <span class="s1">&#39;liftingsurface.png&#39;</span><span class="p">)</span>
+
+    <span class="c1"># --- Inputs: -----------------------------------------------------------------------------------------------------</span>
+
+    <span class="c1">#: Below is the Required Planfrom Area, if mirrored is true then this is the total wing area</span>
+    <span class="c1">#: :type: float</span>
+    <span class="n">planform_area</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">())</span>
+
+    <span class="c1">#: Below is the required Aspect Ratio of the Surface.</span>
+    <span class="c1">#: :type: float</span>
+    <span class="n">aspect_ratio</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">9.0</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Range</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">30.0</span><span class="p">))</span>
+
+    <span class="c1">#: Below is the Taper Ratio, which is chosen by the user.</span>
+    <span class="c1">#: :type: float</span>
+    <span class="n">taper</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Range</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">))</span>
+
+    <span class="c1">#: Below is the User chosen Dihedral Angle.</span>
+    <span class="c1">#: :type: float</span>
+    <span class="n">dihedral</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">5.0</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Range</span><span class="p">(</span><span class="o">-</span><span class="mf">10.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">))</span>
+
+    <span class="c1">#: Below is the twist of the tip section with respect to the root section. Positive twist is tip twisted up</span>
+    <span class="c1">#: with respect to the root.</span>
+    <span class="c1">#: :type: float</span>
+    <span class="n">twist</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="o">-</span><span class="mf">5.0</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Range</span><span class="p">(</span><span class="o">-</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">))</span>
+
+    <span class="c1">#: Below is the offset in the flow direction of the tip W.R.T. the root Leading Edge. The default input (None)</span>
+    <span class="c1">#: causes the TE to be unswept (offset = c_r-c_t), however, if the user inputs 0 in the GUI, then the leading</span>
+    <span class="c1">#: edge becomes unswept. In this case, with taper ratio &lt; 1, the TE becomes forward swept.</span>
+    <span class="c1">#: :type: NoneType or float</span>
+    <span class="n">offset</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+
+<div class="viewcode-block" id="LiftingSurface.browse_airfoils"><a class="viewcode-back" href="../../../../components/liftingsurfaces/liftingsurfaceprim.html#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.browse_airfoils">[docs]</a>    <span class="nd">@Input</span>
+    <span class="k">def</span> <span class="nf">browse_airfoils</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Allows the user to easily choose amongst available airfoils with a GUI File-Browser</span>
+
+<span class="sd">        :return: Sets the inputs `airfoil_type` and `airfoil_choice` above to the value chosen in the GUI Browser</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">root</span> <span class="o">=</span> <span class="n">Tk</span><span class="p">()</span>
+        <span class="n">root</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">tkFileDialog</span><span class="o">.</span><span class="n">askopenfilename</span><span class="p">(</span><span class="n">initialdir</span><span class="o">=</span><span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;AIRFOIL_DIR&#39;</span><span class="p">],</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Select Airfoil&quot;</span><span class="p">,</span>
+                                            <span class="n">filetypes</span><span class="o">=</span><span class="p">((</span><span class="s2">&quot;Airfoil Data Files&quot;</span><span class="p">,</span> <span class="s2">&quot;*.dat&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;All Files&quot;</span><span class="p">,</span> <span class="s2">&quot;*.*&quot;</span><span class="p">)))</span>
+        <span class="n">root</span><span class="o">.</span><span class="n">destroy</span><span class="p">()</span>
+
+        <span class="n">valid_dir</span> <span class="o">=</span> <span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;AIRFOIL_DIR&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">valid_dir</span><span class="p">)</span> <span class="ow">is</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">root</span> <span class="o">=</span> <span class="n">Tk</span><span class="p">()</span>
+            <span class="n">root</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+            <span class="n">tkMessageBox</span><span class="o">.</span><span class="n">showerror</span><span class="p">(</span><span class="s2">&quot;Directory Error&quot;</span><span class="p">,</span> <span class="s2">&quot;Custom airfoils must be placed in the pre-allocated directory&quot;</span><span class="p">)</span>
+            <span class="n">root</span><span class="o">.</span><span class="n">destroy</span><span class="p">()</span>
+            <span class="nb">print</span> <span class="s1">&#39;Test Failed&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">airfoil_choice</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>  <span class="c1"># Selects the airfoil name</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">airfoil_type</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span>  <span class="c1"># Selects the folder-name</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">airfoil_choice</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">airfoil_type</span></div>
+
+    <span class="c1">#: Boolean below allows the MAC curve to be shown on the wing when changed in the GUI to False.</span>
+    <span class="c1">#: :type: bool</span>
+    <span class="n">hide_mac</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">bool</span><span class="p">))</span>
+
+    <span class="c1">#: Boolean below allows the leading edge line to be shown (without dihedral).</span>
+    <span class="c1">#: :type: bool</span>
+    <span class="n">hide_leading_edge</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">bool</span><span class="p">))</span>
+
+    <span class="c1">#: A switch case that determines if the `planform_area` is half of the total required area</span>
+    <span class="c1">#: :type: bool</span>
+    <span class="n">is_half</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">bool</span><span class="p">))</span>
+
+    <span class="c1">#: The default value is an optimum between a good quality render and performance</span>
+    <span class="c1">#: :type: float</span>
+    <span class="n">mesh_deflection</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.0001</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Range</span><span class="p">(</span><span class="mf">0.00001</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">))</span>
+
+    <span class="c1">#: Below is the name of the folder within the &#39;airfoils&#39; folder. There are three options: &#39;cambered&#39;, &#39;reflexed&#39; and</span>
+    <span class="c1">#: &#39;symmetric&#39;.</span>
+    <span class="c1">#: :type: str</span>
+    <span class="n">airfoil_type</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;cambered&#39;</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">OneOf</span><span class="p">([</span><span class="s1">&#39;cambered&#39;</span><span class="p">,</span> <span class="s1">&#39;reflexed&#39;</span><span class="p">,</span> <span class="s1">&#39;symmetric&#39;</span><span class="p">]))</span>
+
+    <span class="c1">#: Below is the default airfoil. Please see the three folders to find the correct filename, if you wish to change</span>
+    <span class="c1">#: the airfoil.</span>
+    <span class="c1">#: :type: str</span>
+    <span class="n">airfoil_choice</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;SD7062&#39;</span><span class="p">)</span>
+
+<span class="c1">#  This block of Attributes calculates the planform parameters. ########------------------------------------------------</span>
+<div class="viewcode-block" id="LiftingSurface.span"><a class="viewcode-back" href="../../../../components/liftingsurfaces/liftingsurfaceprim.html#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.span">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">span</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This attribute calculates the required wingspan based on the wing area and Aspect Ratio.</span>
+
+<span class="sd">        :return: Wing Span in SI meter</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">aspect_ratio</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">planform_area</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LiftingSurface.semi_span"><a class="viewcode-back" href="../../../../components/liftingsurfaces/liftingsurfaceprim.html#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.semi_span">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">semi_span</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This attribute calculates the required semi-span based on the wing area and Aspect Ratio.</span>
+
+<span class="sd">        :return: Wing Semispan</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_half</span><span class="p">:</span>
+            <span class="n">semi_span</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">span</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">semi_span</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">span</span> <span class="o">/</span> <span class="mf">2.0</span>
+        <span class="k">return</span> <span class="n">semi_span</span></div>
+
+<div class="viewcode-block" id="LiftingSurface.root_chord"><a class="viewcode-back" href="../../../../components/liftingsurfaces/liftingsurfaceprim.html#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.root_chord">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">root_chord</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This attribute calculates the required root chord, with an assumed taper ratio.</span>
+
+<span class="sd">        :return: Wing Root Chord</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">planform_area</span> <span class="o">/</span> <span class="p">((</span><span class="mi">1</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">taper</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">span</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LiftingSurface.tip_chord"><a class="viewcode-back" href="../../../../components/liftingsurfaces/liftingsurfaceprim.html#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.tip_chord">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">tip_chord</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This attribute calculates the tip chord, with the assumed taper ratio and the root chord.</span>
+
+<span class="sd">        :return: Wing Tip Chord</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">root_chord</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">taper</span></div>
+
+<div class="viewcode-block" id="LiftingSurface.tip_offset"><a class="viewcode-back" href="../../../../components/liftingsurfaces/liftingsurfaceprim.html#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.tip_offset">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">tip_offset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;  Below is the offset in the flow direction of the tip W.R.T. the root Leading Edge. The default input (None)</span>
+<span class="sd">        causes the TE to be unswept (offset = cr - ct), however, if the user inputs 0 in the GUI, then the leading</span>
+<span class="sd">        edge becomes unswept. In this case, with taper ratio &lt; 1, the TE becomes forward swept.</span>
+
+<span class="sd">        :return: Offset between tip and root leading edges</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">tip_offset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">tip_offset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">root_chord</span><span class="o">-</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root_chord</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">taper</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">tip_offset</span></div>
+
+<div class="viewcode-block" id="LiftingSurface.le_sweep"><a class="viewcode-back" href="../../../../components/liftingsurfaces/liftingsurfaceprim.html#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.le_sweep">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">le_sweep</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This will calculate the leading edge sweep of the wing.</span>
+
+<span class="sd">        :return: Wing LE sweep</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">le_sweep</span> <span class="o">=</span> <span class="n">degrees</span><span class="p">(</span><span class="n">atan</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">tip_airfoil</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">x</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">root_airfoil</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">semi_span</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">le_sweep</span></div>
+
+<div class="viewcode-block" id="LiftingSurface.leading_edge"><a class="viewcode-back" href="../../../../components/liftingsurfaces/liftingsurfaceprim.html#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.leading_edge">[docs]</a>    <span class="nd">@Attribute</span><span class="p">(</span><span class="n">in_tree</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">leading_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This makes a line indicating the leading edge (for a wing without dihedral).</span>
+
+<span class="sd">        :return: Wing leading edge ParaPy Geometry</span>
+<span class="sd">        :rtype: LineSegment</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Sorts the faces based on minimum distance of their Attribute `cog` relative to the position</span>
+        <span class="n">faces</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">solid</span><span class="o">.</span><span class="n">faces</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">cog</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">))</span>
+        <span class="n">root_le</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">faces</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">sample_points</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">point</span><span class="p">:</span> <span class="n">point</span><span class="o">.</span><span class="n">x</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">tip_le</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">faces</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">sample_points</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">point</span><span class="p">:</span> <span class="n">point</span><span class="o">.</span><span class="n">x</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">LineSegment</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="n">root_le</span><span class="p">,</span>
+                           <span class="n">end</span><span class="o">=</span><span class="n">tip_le</span><span class="p">,</span>
+                           <span class="n">hidden</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">hide_leading_edge</span><span class="p">,</span>
+                           <span class="n">color</span><span class="o">=</span><span class="s1">&#39;yellow&#39;</span><span class="p">)</span></div>
+
+    <span class="c1"># --- Wing Geometry Creation: -------------------------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="LiftingSurface.airfoil_data"><a class="viewcode-back" href="../../../../components/liftingsurfaces/liftingsurfaceprim.html#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.airfoil_data">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">airfoil_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This reads and scans the user chosen Airfoil DAT file from the database and stores it as airfoil_data.</span>
+
+<span class="sd">        :return: Airfoil Data Points (Tuple List of Points)</span>
+<span class="sd">        :rtype: List</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">filepath</span> <span class="o">=</span> <span class="n">get_dir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;airfoils&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">airfoil_type</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">.dat&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">airfoil_choice</span><span class="p">))</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">pts</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">i</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="n">pts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Point</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">z</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">pts</span></div>
+
+<div class="viewcode-block" id="LiftingSurface.airfoil"><a class="viewcode-back" href="../../../../components/liftingsurfaces/liftingsurfaceprim.html#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.airfoil">[docs]</a>    <span class="nd">@Attribute</span><span class="p">(</span><span class="n">private</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">airfoil</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This creates an Airfoil from the DAT file.</span>
+
+<span class="sd">        :return: Airfoil fitted curve ParaPy Geometry</span>
+<span class="sd">        :rtype: FittedCurve</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">FittedCurve</span><span class="p">(</span><span class="n">points</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">airfoil_data</span><span class="p">,</span>
+                           <span class="n">hidden</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LiftingSurface.root_airfoil"><a class="viewcode-back" href="../../../../components/liftingsurfaces/liftingsurfaceprim.html#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.root_airfoil">[docs]</a>    <span class="nd">@Part</span>
+    <span class="k">def</span> <span class="nf">root_airfoil</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This scales the original airfoil to required root chord.</span>
+
+<span class="sd">        :return: Root Airfoil scaled curve ParaPy Geometry</span>
+<span class="sd">        :rtype: ScaledCurve</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">ScaledCurve</span><span class="p">(</span><span class="n">curve_in</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">airfoil</span><span class="p">,</span>
+                           <span class="n">reference_point</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">,</span>
+                           <span class="n">factor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">root_chord</span><span class="p">,</span>
+                           <span class="n">hidden</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LiftingSurface.scaled_tip"><a class="viewcode-back" href="../../../../components/liftingsurfaces/liftingsurfaceprim.html#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.scaled_tip">[docs]</a>    <span class="nd">@Attribute</span><span class="p">(</span><span class="n">private</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">scaled_tip</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;  This scales the original airfoil to the required tip chord.</span>
+
+<span class="sd">        :return: Tip Airfoil scaled curve ParaPy Geometry</span>
+<span class="sd">        :rtype: ScaledCurve</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">ScaledCurve</span><span class="p">(</span><span class="n">curve_in</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">airfoil</span><span class="p">,</span>
+                           <span class="n">reference_point</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">,</span>
+                           <span class="n">factor</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root_chord</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">taper</span><span class="p">),</span>
+                           <span class="n">hidden</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LiftingSurface.tip_airfoil_notwist"><a class="viewcode-back" href="../../../../components/liftingsurfaces/liftingsurfaceprim.html#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.tip_airfoil_notwist">[docs]</a>    <span class="nd">@Attribute</span><span class="p">(</span><span class="n">private</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">tip_airfoil_notwist</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This positions another tip airfoil with respect to the required semispan &amp; requested/standard offset.</span>
+<span class="sd">        It does not yet incorporate twist.</span>
+
+<span class="sd">        :return: Tip Airfoil in position without twist ParaPy Geometry</span>
+<span class="sd">        :rtype: TransformedCurve</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">TransformedCurve</span><span class="p">(</span><span class="n">curve_in</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scaled_tip</span><span class="p">,</span>
+                                <span class="n">from_position</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">,</span>
+                                <span class="n">to_position</span><span class="o">=</span><span class="n">translate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">,</span>
+                                                      <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">semi_span</span><span class="p">,</span>
+                                                      <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tip_offset</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="LiftingSurface.tip_airfoil"><a class="viewcode-back" href="../../../../components/liftingsurfaces/liftingsurfaceprim.html#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.tip_airfoil">[docs]</a>    <span class="nd">@Part</span>
+    <span class="k">def</span> <span class="nf">tip_airfoil</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This rotates the tip airfoil over the wing twist angle input. The rotation is about the leading edge.</span>
+
+<span class="sd">        :return: Tip Airfoil in position without twist ParaPy Geometry</span>
+<span class="sd">        :rtype: TransformedCurve</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">TransformedCurve</span><span class="p">(</span><span class="n">curve_in</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tip_airfoil_notwist</span><span class="p">,</span>
+                                <span class="n">from_position</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tip_airfoil_notwist</span><span class="o">.</span><span class="n">position</span><span class="p">,</span>
+                                <span class="n">to_position</span><span class="o">=</span><span class="n">rotate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tip_airfoil_notwist</span><span class="o">.</span><span class="n">position</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">radians</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">twist</span><span class="p">)),</span>
+                                <span class="n">hidden</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LiftingSurface.bottom_z_loc"><a class="viewcode-back" href="../../../../components/liftingsurfaces/liftingsurfaceprim.html#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.bottom_z_loc">[docs]</a>    <span class="nd">@Attribute</span><span class="p">(</span><span class="n">private</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">bottom_z_loc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This attribute computes the bottom surface of the root airfoil.</span>
+
+<span class="sd">        :return: Z-location of the root chord bottom surface</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">bottom_z</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root_airfoil</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">corners</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">point</span><span class="p">:</span> <span class="n">point</span><span class="o">.</span><span class="n">z</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">z</span>
+        <span class="k">return</span> <span class="n">bottom_z</span></div>
+
+<div class="viewcode-block" id="LiftingSurface.no_dihedral_solid"><a class="viewcode-back" href="../../../../components/liftingsurfaces/liftingsurfaceprim.html#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.no_dihedral_solid">[docs]</a>    <span class="nd">@Attribute</span><span class="p">(</span><span class="n">private</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">no_dihedral_solid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This generates a solid wing half with the sign convention mentioned above.</span>
+
+<span class="sd">        :return: ParaPy lofted solid wing geometry.</span>
+<span class="sd">        :rtype: LoftedSolid</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">LoftedSolid</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">root_airfoil</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tip_airfoil</span><span class="p">],</span> <span class="n">position</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">,</span> <span class="n">hidden</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LiftingSurface.dihedral_solid"><a class="viewcode-back" href="../../../../components/liftingsurfaces/liftingsurfaceprim.html#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.dihedral_solid">[docs]</a>    <span class="nd">@Part</span>
+    <span class="k">def</span> <span class="nf">dihedral_solid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This rotates the entire solid wing half over the dihedral angle.</span>
+
+<span class="sd">        :return: ParaPy rotated lofted solid wing geometry.</span>
+<span class="sd">        :rtype: RotatedShape</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">RotatedShape</span><span class="p">(</span><span class="n">shape_in</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">no_dihedral_solid</span><span class="p">,</span>
+                            <span class="n">rotation_point</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">,</span>
+                            <span class="n">vector</span><span class="o">=</span><span class="n">Vector</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                            <span class="n">angle</span><span class="o">=</span><span class="n">radians</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dihedral</span><span class="p">),</span>
+                            <span class="n">mesh_deflection</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mesh_deflection</span><span class="p">,</span>
+                            <span class="n">hidden</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LiftingSurface.solid"><a class="viewcode-back" href="../../../../components/liftingsurfaces/liftingsurfaceprim.html#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.solid">[docs]</a>    <span class="nd">@Part</span>
+    <span class="k">def</span> <span class="nf">solid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This translates the entire solid wing half to make the bottom surface flush with the origin</span>
+
+<span class="sd">        :return: ParaPy rotated lofted solid wing geometry.</span>
+<span class="sd">        :rtype: TranslatedShape</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">TranslatedShape</span><span class="p">(</span><span class="n">shape_in</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dihedral_solid</span><span class="p">,</span>
+                               <span class="n">displacement</span><span class="o">=</span><span class="n">Vector</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="o">*</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bottom_z_loc</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">z</span><span class="p">)))</span></div>
+
+    <span class="c1"># --- Mean Aerodynamic Chord: -------------------------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="LiftingSurface.mac_span_calc"><a class="viewcode-back" href="../../../../components/liftingsurfaces/liftingsurfaceprim.html#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.mac_span_calc">[docs]</a>    <span class="nd">@Attribute</span><span class="p">(</span><span class="n">private</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">mac_span_calc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This will determine the spanwise location of the Mean Aerodynamic Chord with respect to the root airfoil.</span>
+
+<span class="sd">        :return: Wing Spanwise MAC position</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">semi_span</span> <span class="o">/</span> <span class="mf">3.0</span><span class="p">)</span> <span class="o">*</span> <span class="p">((</span><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">taper</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">taper</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="LiftingSurface.mac_x"><a class="viewcode-back" href="../../../../components/liftingsurfaces/liftingsurfaceprim.html#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.mac_x">[docs]</a>    <span class="nd">@Attribute</span><span class="p">(</span><span class="n">private</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">mac_x</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This will determine the x relative position of the MAC WRT the wing root. Thus, it must be added to the</span>
+<span class="sd">        position of the wing root.</span>
+
+<span class="sd">        :return: Wing Flow direction MAC position</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">mac_span_calc</span> <span class="o">*</span> <span class="n">tan</span><span class="p">(</span><span class="n">radians</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">le_sweep</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="LiftingSurface.mac_z"><a class="viewcode-back" href="../../../../components/liftingsurfaces/liftingsurfaceprim.html#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.mac_z">[docs]</a>    <span class="nd">@Attribute</span><span class="p">(</span><span class="n">private</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">mac_z</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This will determine the z relative position of the MAC WRT the wing root. Thus, it must be added to the</span>
+<span class="sd">        position of the wing root.</span>
+
+<span class="sd">        :return: Wing z direction MAC position</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">mac_span_calc</span> <span class="o">*</span> <span class="n">tan</span><span class="p">(</span><span class="n">radians</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dihedral</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="LiftingSurface.lemac"><a class="viewcode-back" href="../../../../components/liftingsurfaces/liftingsurfaceprim.html#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.lemac">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">lemac</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Quickly calculates the Leading Edge Mean Aerodynamic Chord by sorting through all `sample_points` of the</span>
+<span class="sd">        part `mac_airfoil` and selects the one with the minimum x (thus closest to the flight direction which is x)</span>
+
+<span class="sd">        :return: Location of the Leading Edge Mean Aerodynamic Chord in SI meter</span>
+<span class="sd">        :rtype: Tuple</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">sample_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mac_airfoil</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">sample_points</span>
+        <span class="n">lemac</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">sample_points</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">point</span><span class="p">:</span> <span class="n">point</span><span class="o">.</span><span class="n">x</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">lemac</span></div>
+
+<div class="viewcode-block" id="LiftingSurface.mac_airfoil"><a class="viewcode-back" href="../../../../components/liftingsurfaces/liftingsurfaceprim.html#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.mac_airfoil">[docs]</a>    <span class="nd">@Attribute</span><span class="p">(</span><span class="n">in_tree</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">mac_airfoil</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This finds the mean aerodynamic chord wing section by using a plane intersecting the rotated wing half.</span>
+<span class="sd">        The location of this cut is found above. (Note: to see this on the wing, you must change hide_mac to True)</span>
+
+<span class="sd">        :return: ParaPy MAC airfoil.</span>
+<span class="sd">        :rtype: IntersectedShapes</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cut_plane</span> <span class="o">=</span> <span class="n">Plane</span><span class="p">(</span><span class="n">reference</span><span class="o">=</span><span class="n">translate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">solid</span><span class="o">.</span><span class="n">position</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mac_span_calc</span><span class="p">),</span>
+                          <span class="n">normal</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">solid</span><span class="o">.</span><span class="n">orientation</span><span class="o">.</span><span class="n">Vy</span><span class="p">,</span> <span class="n">hidden</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">mac</span> <span class="o">=</span> <span class="n">IntersectedShapes</span><span class="p">(</span><span class="n">shape_in</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">solid</span><span class="p">,</span>
+                                <span class="n">tool</span><span class="o">=</span><span class="n">cut_plane</span><span class="p">,</span>
+                                <span class="n">hidden</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">hide_mac</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">mac</span></div>
+
+<div class="viewcode-block" id="LiftingSurface.mac_length"><a class="viewcode-back" href="../../../../components/liftingsurfaces/liftingsurfaceprim.html#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.mac_length">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">mac_length</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This attribute finds the length of the MAC using the bbox of the intersected shape. This is used instead</span>
+<span class="sd">        of the normal equation for the MAC for a tapered wing.</span>
+
+<span class="sd">        :return: MAC length</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">mac_airfoil</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">width</span></div>
+
+<div class="viewcode-block" id="LiftingSurface.aerodynamic_center"><a class="viewcode-back" href="../../../../components/liftingsurfaces/liftingsurfaceprim.html#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.aerodynamic_center">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">aerodynamic_center</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This attribute finds the aerodynamic center assuming it lies at 0.25*MAC.</span>
+
+<span class="sd">        :return: Aerodynamic Center Position of wing component. ParaPy Point</span>
+<span class="sd">        :rtype: Point</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">mac_bbox</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mac_airfoil</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">bbox</span>
+        <span class="n">le_mac</span> <span class="o">=</span> <span class="n">mac_bbox</span><span class="o">.</span><span class="n">corners</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">ac_loc_x</span> <span class="o">=</span> <span class="mf">0.25</span> <span class="o">*</span> <span class="n">mac_bbox</span><span class="o">.</span><span class="n">width</span> <span class="o">+</span> <span class="n">le_mac</span><span class="o">.</span><span class="n">x</span>
+        <span class="n">ac_loc_y</span> <span class="o">=</span> <span class="n">mac_bbox</span><span class="o">.</span><span class="n">center</span><span class="o">.</span><span class="n">y</span>
+        <span class="n">ac_loc_z</span> <span class="o">=</span> <span class="n">mac_bbox</span><span class="o">.</span><span class="n">center</span><span class="o">.</span><span class="n">z</span>
+        <span class="k">return</span> <span class="n">Point</span><span class="p">(</span><span class="n">ac_loc_x</span><span class="p">,</span> <span class="n">ac_loc_y</span><span class="p">,</span> <span class="n">ac_loc_z</span><span class="p">)</span></div>
+
+    <span class="c1"># --- Front Spar Plane Creation: ----------------------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="LiftingSurface.front_spar_line"><a class="viewcode-back" href="../../../../components/liftingsurfaces/liftingsurfaceprim.html#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.front_spar_line">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">front_spar_line</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This attribute creates a spar line frm the root airfoils cog to the tip airfoils cog</span>
+
+<span class="sd">        :return: Spar Line</span>
+<span class="sd">        :rtype: LineSegment</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">sorted_faces</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">solid</span><span class="o">.</span><span class="n">faces</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="n">cog</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+        <span class="n">root_spar_point</span> <span class="o">=</span> <span class="n">sorted_faces</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">cog</span>
+        <span class="n">tip_spar_point</span> <span class="o">=</span> <span class="n">sorted_faces</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">cog</span>
+        <span class="c1"># faces = sorted(self.solid.faces, key=lambda x: x.cog.distance(self.position))</span>
+        <span class="c1"># root_le = sorted(faces[0].edges[0].sample_points, key=lambda point: point.x)[0]</span>
+        <span class="c1"># tip_le = sorted(faces[-1].edges[0].sample_points, key=lambda point: point.x)[0]</span>
+        <span class="c1">#</span>
+        <span class="c1"># root_spar_point = Point(root_le.x + self.front_spar_frac * self.root_chord, root_le.y, root_le.z)</span>
+        <span class="c1"># tip_spar_point = Point(tip_le.x + self.front_spar_frac * self.tip_chord, tip_le.y, tip_le.z)</span>
+
+        <span class="k">return</span> <span class="n">LineSegment</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="n">root_spar_point</span><span class="p">,</span>
+                           <span class="n">end</span><span class="o">=</span><span class="n">tip_spar_point</span><span class="p">,</span>
+                           <span class="n">color</span><span class="o">=</span><span class="s1">&#39;yellow&#39;</span><span class="p">)</span></div></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">parapy.gui</span> <span class="k">import</span> <span class="n">display</span>
+
+    <span class="n">obj</span> <span class="o">=</span> <span class="n">LiftingSurface</span><span class="p">()</span>
+    <span class="n">display</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, San Kilkis, Nelson Johnson.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../../',
+            VERSION:'1.0',
+            LANGUAGE:'en',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
