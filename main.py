@@ -435,22 +435,6 @@ class UAV(DesignInput):
 
         return area_dict
 
-    # def validate_geometry(self):
-    #     children = self.get_children()
-    #     x_loc_max = 0
-    #     x_loc_min = 0
-    #     index_first = 0
-    #     index_last = 0
-    #     for _child in children:
-    #         if hasattr(_child, 'internal_shape') and getslot(_child, 'component_type') != 'motor':
-    #             # Above is the identification of a Motor
-    #             current_corners = _child.internal_shape.bbox.corners
-    #             if current_corners[1].x > x_loc_max:
-    #                 x_loc_max = current_corners[1].x
-    #             elif current_corners[0].x < x_loc_min:
-    #                 x_loc_min = current_corners[0].x
-    #     return x_loc_min, x_loc_max
-
 
 if __name__ == '__main__':
     from parapy.gui import display

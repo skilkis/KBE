@@ -46,26 +46,27 @@ def get_dir(folder_name=None):
     return of get_dir will be absolute path to this sub directory [2]. Usage with file names inside a directory is also
     possible, see example below [3]
 
-        :param folder_name: The name of a folder, file, or relative path
-        :type folder_name: basestring
+    :param folder_name: The name of a folder, file, or relative path
+    :type folder_name: basestring
 
-        :return: The absolute path to the root directory or, if specified, to a sub directory within the root
-        :rtype: unicode
+    :return: The absolute path to the root directory or, if specified, to a sub directory within the root
+    :rtype: unicode
 
-        [1] Obtaining Root Directory:
 
-        >>> get_dir() # This will return the absolute path to root directory
-        C:/Python27/KBE
+    [1] Obtaining Root Directory:
 
-        [2] Obtaining a Sub-Directory:
+    >>> get_dir() # This will return the absolute path to root directory
+    C:/Python27/KBE
 
-        >>> get_dir('icons') # This will return the absolute path to the subdirectory /icons
-        C:/Python27/KBE\icons
+    [2] Obtaining a Sub-Directory:
 
-        [3] Obtaining File-Directory:
+    >>> get_dir('icons') # This will return the absolute path to the subdirectory /icons
+    C:/Python27/KBE\icons
 
-        >>> get_dir('user/userinput.xlsx') # This will return the absolute path to the file userinput.xlsx
-        C:/Python27/KBE\user\userinput.xlsx
+    [3] Obtaining File-Directory:
+
+    >>> get_dir('user/userinput.xlsx') # This will return the absolute path to the file userinput.xlsx
+    C:/Python27/KBE\user\userinput.xlsx
 
     """
 

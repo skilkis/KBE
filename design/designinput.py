@@ -27,9 +27,9 @@ sheetname = "export_ready_inputs"
 
 # Function which returns all valid payloads in the directory /components/payload
 def valid_payloads():
-    """ Returns all valid payloads in the payloads directory
+    """ Returns all valid payloads in the payloads directory for the field `payload_type`
 
-    :return: All valid entries for the field `payload_type`
+    :rtype: list
     """
     payloads = os.listdir(os.path.join(DIRS['COMPONENTS_DIR'], 'payload'))
     return [str(i.split('.')[0]) for i in payloads if i.endswith('.py') and i != '__init__.py']
@@ -39,6 +39,28 @@ class DesignInput(Base):
     """ designinput.py aims to instantiate all primitive classes of a parametric UAV based on user-input of
     configuration type. Other user-inputs cover global aircraft attributes and allow changes either through the use of
     the ParaPy GUI or through the use of the userinput.xlsx file.
+
+    :param performance_goal: The goal for which the UAV should be optimized (i.e. 'endurance or 'range')
+    :type performance_goal: str
+
+    :param goal_value: The value pertaining to the endurance goal in SI hour [h] or range in SI kilometer [km]
+    :type goal_value: float
+
+    :param weight_target: The target weight for which the Class I estimation should be run (i.e. 'payload' or 'mtow')
+    :type weight_target: str
+
+    :param target_value: The value pertaining to the target weight in SI kilogram [kg]
+    :type target_value: float
+
+    :param payload_type: Sets the payload type that will be instantiated in the UAV (currently only 'EOIR')
+    :type payload_type: str
+
+    :param configuration: Sets the base configuration for the UAV (currently only 'conventional' is supported)
+    :type configuration: str
+
+    :param configuration: Sets the base configuration for the UAV (currently only 'conventional' is supported)
+    :type configuration: str
+
     """
 
     __initargs__ = ["performance_goal",
@@ -53,11 +75,11 @@ class DesignInput(Base):
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'parameters.png')
 
     performance_goal = Input('endurance', validator=val.OneOf(['endurance', 'range']))
-    goal_value = Input(7200, validator=val.Positive())
+    goal_value = Input(2.0, validator=val.Positive())
     weight_target = Input('payload', validator=val.OneOf(['payload', 'mtow']))
     target_value = Input(0.25, validator=val.Positive())
     payload_type = Input('eoir', validator=val.OneOf(valid_payloads()))  #
-    configuration = Input('conventional', validator=val.OneOf(['conventional', 'canard', 'flyingwing']))
+    configuration = Input('conventional', validator=val.OneOf(['conventional']))
     handlaunch = Input(True, validator=val.Instance(bool))
     portable = Input(True, validator=val.Instance(bool))
     user_input_file = Input([filename, sheetname])
@@ -92,6 +114,7 @@ class DesignInput(Base):
 
     @Attribute
     def open_documentation(self):
+        """ Allows the user to open the documentation from within the GUI for reference or help """
         webbrowser.open('file://' + DIRS['DOC_DIR'])
         return 'Documentation Opened'
 
