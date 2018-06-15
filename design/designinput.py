@@ -13,6 +13,8 @@ import xlrd
 from weightestimator import *
 from directories import *
 
+# TODO Change icon for params
+#  TODO add validator on user_input_file
 
 __author__ = ["Şan Kılkış"]
 __all__ = ["DesignInput"]
@@ -47,7 +49,7 @@ class DesignInput(Base):
                     "handlaunch",
                     "portable"]
 
-    __icon__ = os.path.join(DIRS['ICON_DIR'], 'parameters.png') # TODO Change icon
+    __icon__ = os.path.join(DIRS['ICON_DIR'], 'parameters.png')
 
     performance_goal = Input('endurance', validator=val.OneOf(['endurance', 'range']))
     goal_value = Input(7200, validator=val.Positive())
@@ -55,8 +57,8 @@ class DesignInput(Base):
     target_value = Input(0.25, validator=val.Positive())
     payload_type = Input('eoir', validator=val.OneOf(valid_payloads()))  #
     configuration = Input('conventional', validator=val.OneOf(['conventional', 'canard', 'flyingwing']))
-    handlaunch = Input(True)
-    portable = Input(True)
+    handlaunch = Input(True, validator=val.Instance(bool))
+    portable = Input(True, validator=val.Instance(bool))
     user_input_file = Input([filename, sheetname])
 
     @Attribute

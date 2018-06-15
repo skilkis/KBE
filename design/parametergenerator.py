@@ -32,8 +32,8 @@ class ParameterGenerator(Base):
     target_value = Input(0.25, validator=val.Positive())
     payload_type = Input('eoir', validator=val.OneOf(valid_payloads()))  #
     configuration = Input('conventional', validator=val.OneOf(['conventional', 'canard', 'flyingwing']))
-    handlaunch = Input(True)
-    portable = Input(True)
+    handlaunch = Input(True, validator=val.Instance(bool))
+    portable = Input(True, validator=val.Instance(bool))
 
     @Attribute(private=True)
     def payload_checker(self):

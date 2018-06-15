@@ -12,7 +12,7 @@ from components import EOIR, FlightController
 __author__ = ["Nelson Johnson", "Şan Kılkış"]
 __all__ = ["WingPowerLoading"]
 
-# TODO Fix aspect ratio choice, add validator
+# TODO Fix aspect ratio choice, add validator also for max_lift_coeff
 
 
 class WingPowerLoading(Base):
@@ -24,17 +24,17 @@ class WingPowerLoading(Base):
 
 #: This block of code contains the inputs. ########---------------------------------------------------------------------
 
-    mtow = Input(5.0)  # used for to find S from design point!
-    mission = Input('range', validator=val.OneOf(['range', 'endurance']))  #  used to switch optimal flight condition.
-    range = Input(2500.0)     # this is used to determine the battery capacity required for range. units = m
-    endurance = Input(3600.0) #  this is used to det battery capacity for endurance requirement units = seconds
+    mtow = Input(5.0, validator=val.Positive())  # used for to find S from design point!
+    mission = Input('range', validator=val.OneOf(['range', 'endurance']))   #  used to switch optimal flight condition.
+    range = Input(2500.0, validator=val.Positive())     # this is used to determine the battery capacity required for range. units = m
+    endurance = Input(3600.0, validator=val.Positive()) #  this is used to det battery capacity for endurance requirement units = seconds
     pl_target_weight = Input(0.2, validator=val.Positive())
 
 
     #: Boolean operator to determine if the user requires the UAV to be hand launched
     #: This parameter changes the stall-speed used for the Wing Loading
     #: :type: Boolean
-    handlaunch = Input(True)
+    handlaunch = Input(True, validator=val.Instance(bool))
 
     #: This is a list of three C_lmax's that the wing is assumed to generate. This creates multiple lines on the plots.
     #: :type: List
@@ -50,19 +50,19 @@ class WingPowerLoading(Base):
 
     #: This is the assumed propeller efficiency.
     #: :type: float
-    eta_prop = Input(0.7)
+    eta_prop = Input(0.7, validator=val.Positive())
 
     #: This is the assumed motor efficiency.
     #: :type: float
-    eta_motor = Input(0.9)
+    eta_motor = Input(0.9, validator=val.Positive())
 
     #: This is the assumed Oswald Efficiency Factor.
     #: :type: float
-    e_factor = Input(0.8)
+    e_factor = Input(0.8, validator=val.Positive())
 
     #: Below is the STD ISA sea level density
     #: :type: float
-    rho = Input(1.225)
+    rho = Input(1.225, validator=val.Positive())
 
     #: Below is the ISA Density at 3km height for the climb rate power loading equation.
     #: :type: float
@@ -78,7 +78,7 @@ class WingPowerLoading(Base):
 
     #: Below is the assumed Value of Zero-Lift Drag Coefficient.
     #: :type: float
-    zero_lift_drag = Input(0.02)
+    zero_lift_drag = Input(0.02, validator=val.Positive())
 
     #: Below is the assumption for Required Climb Rate, Same as Sparta UAV 1.1.2.
     #: :type: float

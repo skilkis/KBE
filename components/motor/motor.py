@@ -16,6 +16,8 @@ from user import MyColors
 __author__ = ["Şan Kılkış"]
 __all__ = ["Motor"]
 
+#  TODO Validator on motor_name, position, database_path
+
 
 class Motor(Component):
 

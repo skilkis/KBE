@@ -9,6 +9,7 @@
 # TODO add database as input w/ custom validator function
 # TODO add custom file read class that opens a nice GUI
 # TODO make the geometry complicated to show robustness of code
+#  TODO add validator on camera_name and/or add the browser!!
 
 from parapy.geom import *  # \
 from parapy.core import *  # / Required ParaPy Modules

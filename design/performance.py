@@ -22,10 +22,10 @@ class Performance(Base):
     motor_in = Input(Motor(), validator=val.Instance(Motor))
     propeller_in = Input(Propeller(), validator=val.Instance(Propeller))
     battery_in = Input(Battery(), validator=val.Instance(Battery))
-    wing_in = Input(Wing())
-    weight_mtow = Input(5.0)
-    parasitic_drag = Input(0.02)
-    oswald_factor = Input(0.85)
+    wing_in = Input(Wing(), validator=val.Instance(Wing))
+    weight_mtow = Input(5.0, validator=val.Instance(float))
+    parasitic_drag = Input(0.02, validator=val.Instance(float))
+    oswald_factor = Input(0.85, validator=val.Instance(float))
     stall_buffer = Input(1.5, validator=val.Range(1.0, 1.5))
 
     @Attribute
