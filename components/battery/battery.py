@@ -27,11 +27,24 @@ show_primitives = False  # type: bool
 
 
 class Battery(Component):
-    """  Battery.py is a file which automatically generates a battery part depending on parametric input of battery weight,
-    or battery capacity. Utilize the parameter `show_primitives` for debugging.
+    """  Battery.py is a file which automatically generates a battery part depending on parametric input of battery
+    weight, or battery capacity. Also maximum allowed width and height of the battery can parameterized to enable the
+    typical use-case of setting the width and height to be equal to that of the payload module to obtain a coherent
+    inner fuselage structure.
 
     :return: ParaPy Geometry of the Battery(s)
 
+    :param sizing_target: Accepts either 'capacity' or 'weight' and sizes based on required capacity on the former
+    :type sizing_target: basestring
+
+    :param sizing_value: The sizing value corresponding to the current target
+    :type sizing_value: float
+
+    :param max_width: Sets the maximum allowed width of the battery in SI meter [m]
+    :type: max_width: float
+
+    :param max_height: Sets the maximum allowed height of the battery in SI meter [m]
+    :type max_width: float
     """
 
     __initargs__ = ["sizing_target", "sizing_value"]
@@ -179,7 +192,6 @@ class Battery(Component):
     @Part(in_tree=show_primitives)
     def battery_profile(self):
         return FilletedFace(built_from=self.rectangle, radius=self.radius)
-
 
     @Part(in_tree=show_primitives)
     def battery_import(self):
