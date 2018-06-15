@@ -78,10 +78,11 @@ class Wing(ExternalBody, LiftingSurface):
 
 #  This block of Attributes calculates the planform parameters. ########------------------------------------------------
 
-    @Attribute(private=True)
-    def position(self):
-        """ Overwrites the inherited position attribute, to make the wing-fixed at Point(0, 0, 0) """
-        return Position(Point(0, 0, 0))
+    # TODO make sure that the wing position is not settable, this doesn't work
+    # @Attribute(private=True)
+    # def position(self):
+    #     """ Overwrites the inherited position attribute, to make the wing-fixed at Point(0, 0, 0) """
+    #     return Position(Point(0, 0, 0))
 
     @Attribute
     def component_type(self):
