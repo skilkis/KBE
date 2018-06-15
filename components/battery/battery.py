@@ -14,12 +14,8 @@ from directories import *
 
 __all__ = ["Battery", "show_primitives"]
 
-# TODO change show_primitives to be inside class definition and protected variable
 
 # TODO remove error message since it is already handled by a validator
-
-# TODO validate batteyr size
-
 # TODO Add power requirement
 
 # A parameter for debugging, turns the visibility of miscellaneous parts ON/OFF
@@ -166,7 +162,6 @@ class Battery(Component):
         """
         min_dimension = min(self.width, self.height)
         return min_dimension / 2.0
-
 
     @Attribute(private=True)
     def type_errormsg(self):

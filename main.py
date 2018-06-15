@@ -53,8 +53,8 @@ import copy
 
 
 class UAV(DesignInput):
-    """  This class will generate UAV aircraft. It inherits from 'DesignInput.py' so that the input requirements are
-    all in the top level of the tree.
+    """  This class will generate UAV aircraft. It inherits from :class:`design.designinput.DesignInput`so that the
+    input requirements are all in the top level of the tree.
     """
 
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'plane.png')
