@@ -55,8 +55,10 @@ def read_csv(product_name=str, directory=DIRS['EOIR_DATA_DIR']):
 
 def has_number(any_string):
     """ Returns True/False depending on if the input string contains any numerical characters (i.e 0, 1, 2, 3...9)
+
     :param any_string: A user-input, any valid string is accepted
     :type any_string: str
+
     :rtype: bool
 
     >>> has_number('I do not contain any numbers')

@@ -26,8 +26,8 @@ class WingPowerLoading(Base):
 
     mtow = Input(5.0, validator=val.Positive())  # used for to find S from design point!
     mission = Input('range', validator=val.OneOf(['range', 'endurance']))   #  used to switch optimal flight condition.
-    range = Input(2500.0, validator=val.Positive())     # this is used to determine the battery capacity required for range. units = m
-    endurance = Input(3600.0, validator=val.Positive()) #  this is used to det battery capacity for endurance requirement units = seconds
+    range = Input(100, validator=val.Positive())     # this is used to determine the battery capacity required for range. units = km
+    endurance = Input(1.0, validator=val.Positive()) #  this is used to det battery capacity for endurance requirement units = hours
     pl_target_weight = Input(0.2, validator=val.Positive())
 
 
@@ -291,8 +291,8 @@ class WingPowerLoading(Base):
 
     @Attribute
     def cruise_parameters(self):
-        """ This attribute calculates the cruise parameters related to the requirement on range [m], or
-        endurance [s]. These relations are from the year 1 Intro to aeronautics flight mechanics module.
+        """ This attribute calculates the cruise parameters related to the requirement on range [km], or
+        endurance [h]. These relations are from the year 1 Intro to aeronautics flight mechanics module.
         :return: Required battery capacity due to plane drag.
         :rtype: dict
         """
@@ -303,7 +303,7 @@ class WingPowerLoading(Base):
             v_safe = 5.0 + self.stall_speed  # Safety factor to ensure optimal speed is not too close to stall
             s = self.mtow * 9.81 / self.designpoint['wing_loading']
             d_opt = cd_opt * 0.5 * self.rho * (v_opt ** 2) * s
-            t = (self.range / v_opt)
+            t = (self.range * 1000 / v_opt)
             p_req_drag = (d_opt * v_opt) / self.eta_tot
             capacity = p_req_drag * t
             out = {'cl_opt': cl_opt,
@@ -322,7 +322,7 @@ class WingPowerLoading(Base):
             v_safe = 5.0 + self.stall_speed  # Safety factor to ensure optimal speed is not too close to stall
             s = (self.mtow * 9.81) / self.designpoint['wing_loading']
             d_opt = cd_opt * 0.5 * self.rho * (v_opt ** 2) * s
-            t = self.endurance
+            t = self.endurance * 3600
             p_req_drag = (d_opt * v_opt) / self.eta_tot
             capacity = p_req_drag * t
             out = {'cl_opt': cl_opt,

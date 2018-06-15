@@ -1,6 +1,10 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 __all__ = ["MyColors"]
 
 #  TODO explanation/ docuemtation???
+
 
 class MyColors(object):
 

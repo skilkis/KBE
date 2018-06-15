@@ -50,6 +50,7 @@ from directories import *
 from definitions import *
 from math import sin, radians
 import copy
+import xlwt
 
 
 class UAV(DesignInput):
@@ -434,6 +435,27 @@ class UAV(DesignInput):
         area_dict['WETTED']['total'] = sum(areas)
 
         return area_dict
+
+    @Attribute
+    def write_excel(self):
+        book = xlwt.Workbook()
+        book.add_sheet('Inputs')
+
+        font0 = xlwt.Font()
+        font0.name = 'Times New Roman'
+        font0.struck_out = True
+        font0.bold = True
+
+        style0 = xlwt.XFStyle()
+        style0.font = font0
+
+        wb = xlwt.Workbook()
+        ws0 = wb.add_sheet('0')
+
+        ws0.write(1, 1, 'Test', style0)
+
+        book.save(os.path.join(DIRS['USER_DIR'], 'results', 'output.xlsx'))
+        return 'Performance data has been saved /user/results/output.xlsx'
 
 
 if __name__ == '__main__':

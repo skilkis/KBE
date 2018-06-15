@@ -72,31 +72,24 @@ class DesignInput(Base):
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'parameters.png')
 
     #: The goal for which the UAV should be optimized (i.e. 'endurance or 'range')
-    #: :type: str
     performance_goal = Input('endurance', validator=val.OneOf(['endurance', 'range']))
 
     #: The value pertaining to the endurance goal in SI hour [h] or range in SI kilometer [km]
-    #: :type: float
     goal_value = Input(2.0, validator=val.Positive())
 
     #: The target weight for which the Class I estimation should be run (i.e. 'payload' or 'mtow')
-    #: :type: str
     weight_target = Input('payload', validator=val.OneOf(['payload', 'mtow']))
 
     #: The value pertaining to the target weight in SI kilogram [kg]
-    #: :type: float
     target_value = Input(0.25, validator=val.Positive())
 
     #: Sets the payload type that will be instantiated in the UAV (currently only 'EOIR')
-    #: :type: str
     payload_type = Input('eoir', validator=val.OneOf(valid_payloads()))  #
 
     #: Sets the base configuration for the UAV (currently only 'conventional' is supported)
-    #: :type: str
     configuration = Input('conventional', validator=val.OneOf(['conventional']))
 
     #: Sets the design point of the UAV to be hand-launchable
-    #: :type: bool
     handlaunch = Input(True, validator=val.Instance(bool))
 
     @Attribute
