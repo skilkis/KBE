@@ -46,8 +46,8 @@ def get_dir(folder_name=None):
     return of get_dir will be absolute path to this sub directory [2]. Usage with file names inside a directory is also
     possible, see example below [3]
 
-        :param: folder_name: The name of a folder, file, or relative path
-        :type: folder_name: basestring
+        :param folder_name: The name of a folder, file, or relative path
+        :type folder_name: basestring
 
         :return: The absolute path to the root directory or, if specified, to a sub directory within the root
         :rtype: unicode
@@ -102,7 +102,8 @@ DIRS = {'ICON_DIR': get_dir('icons'),
         'EOIR_DATA_DIR': get_dir(os.path.join('components', 'payload', 'database', 'eoir')),
         'MOTOR_DATA_DIR': get_dir(os.path.join('components', 'motor', 'database')),
         'PROPELLER_DATA_DIR': get_dir(os.path.join('components', 'propeller', 'database')),
-        'AVL_DIR': get_dir(os.path.join('avl', 'avl.exe'))}
+        'AVL_DIR': get_dir(os.path.join('avl', 'avl.exe')),
+        'DOC_DIR': get_dir(os.path.join('doc', 'build', 'html', 'index.html'))}
 
 if __name__ == '__main__':
     print get_dir('user')

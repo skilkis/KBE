@@ -41,7 +41,7 @@ class Battery(Component):
     :type sizing_value: float
 
     :param max_width: Sets the maximum allowed width of the battery in SI meter [m]
-    :type: max_width: float
+    :type max_width: float
 
     :param max_height: Sets the maximum allowed height of the battery in SI meter [m]
     :type max_width: float

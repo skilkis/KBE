@@ -1,4 +1,4 @@
-Electronics Documentation
+Electronics
 ===============================
 
 .. automodule:: components.electronics.electronics
@@ -9,5 +9,3 @@ Electronics Documentation
 
 .. automodule:: components.electronics.speedcontroller
    :members:
-
-:q

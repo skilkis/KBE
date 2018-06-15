@@ -12,9 +12,7 @@ Welcome to KBE's documentation!
 
    definitions
    directories
-   battery
-   electronics
-
+   components/index
 
 
 Indices and Tables

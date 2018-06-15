@@ -10,8 +10,9 @@ from parapy.core import *
 import xlrd
 
 # Importing Necessary Classes
-from weightestimator import *
 from directories import *
+import webbrowser
+import os
 
 # TODO Change icon for params
 #  TODO add validator on user_input_file
@@ -35,9 +36,9 @@ def valid_payloads():
 
 
 class DesignInput(Base):
-    """ designinput.py aims to instantiate all primitive classes of a parametric UAV based on user-input of configuration type
-        Other user-inputs cover global aircraft attributes and allow changes either through the use of the ParaPy GUI or
-        through the use of the userinput.xlsx file.
+    """ designinput.py aims to instantiate all primitive classes of a parametric UAV based on user-input of
+    configuration type. Other user-inputs cover global aircraft attributes and allow changes either through the use of
+    the ParaPy GUI or through the use of the userinput.xlsx file.
     """
 
     __initargs__ = ["performance_goal",
@@ -89,29 +90,10 @@ class DesignInput(Base):
 
         return 'Inputs have been overwritten from the supplied Excel File'
 
-
-    # @Part
-    # def wingpowerloading(self):
-    #     return WingPowerLoading(pass_down="handlaunch", label="Wing & Thrust Loading")
-    #
-    # @Part
-    # def weightestimator(self):
-    #     return ClassOne(pass_down="weight_target, target_value", label="Weight Estimation")
-
-    # @Attribute
-    # def parameter_dict(self):
-    #     dict = {'INPUTS': {},
-    #             'OUTPUTS': {}}
-    #
-    #     dict['INPUTS']['performance_goal'] = self.performance_goal
-    #     dict['INPUTS']['goal_value'] = self.performance_goal
-    #     dict['INPUTS']['weight_target'] = self.performance_goal
-    #     dict['INPUTS']['target_value'] = self.performance_goal
-    #     dict['INPUTS']['payload_type'] = self.performance_goal
-    #     dict['INPUTS']['payload_type'] = self.performance_goal
-    #     dict['INPUTS']['payload_type'] = self.performance_goal
-    #     return dict
-
+    @Attribute
+    def open_documentation(self):
+        webbrowser.open('file://' + DIRS['DOC_DIR'])
+        return 'Documentation Opened'
 
 
 if __name__ == '__main__':
