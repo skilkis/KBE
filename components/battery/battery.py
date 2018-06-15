@@ -33,6 +33,7 @@ class Battery(Component):
     inner fuselage structure.
 
     :return: ParaPy Geometry of the Battery(s)
+    :param: xxx
 
     :param sizing_target: Accepts either 'capacity' or 'weight' and sizes based on required capacity on the former
     :type sizing_target: basestring

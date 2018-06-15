@@ -1,0 +1,456 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Definitions Documentation &mdash; KBE 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Directories Documentation" href="directories.html" />
+    <link rel="prev" title="Welcome to KBE’s documentation!" href="index.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> KBE
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Definitions Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="directories.html">Directories Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="components/index.html">Components Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="components/battery.html">Li-PO Battery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="components/electronics.html">Electronics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="components/liftingsurfaces/index.html">LiftingSurface Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="components/liftingsurfaces/liftingsurfaceprim.html">LiftingSurface Documentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="components/liftingsurfaces/wing.html">Wing Documentation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">KBE</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Definitions Documentation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/definitions.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-definitions">
+<span id="definitions-documentation"></span><h1>Definitions Documentation<a class="headerlink" href="#module-definitions" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="definitions.Component">
+<em class="property">class </em><code class="descclassname">definitions.</code><code class="descname">Component</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/definitions.html#Component"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#definitions.Component" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="attribute">
+<dt id="definitions.Component.center_of_gravity">
+<code class="descname">center_of_gravity</code><a class="reference internal" href="_modules/definitions.html#Component.center_of_gravity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#definitions.Component.center_of_gravity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Location of the center of gravity w.r.t the origin</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Location Tuple in SI meter</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">Point</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="definitions.Component.component_type">
+<code class="descname">component_type</code><a class="reference internal" href="_modules/definitions.html#Component.component_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#definitions.Component.component_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>An identifier to be able to lump masses together.
+Possible entries:
+‘wing’
+‘fuselage’
+‘vt’
+‘ht’
+‘ct’
+‘boom’
+‘payload’
+‘prop’
+‘battery’
+‘electronics’</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Component Type</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="definitions.Component.internal_shape">
+<code class="descname">internal_shape</code><a class="reference internal" href="_modules/definitions.html#Component.internal_shape"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#definitions.Component.internal_shape" title="Permalink to this definition">¶</a></dt>
+<dd><p>The geometry of the component that will be placed inside a structure, (i.e in a wing or fuselage)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">parapy.geom</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="definitions.Component.text_label">
+<code class="descname">text_label</code><a class="reference internal" href="_modules/definitions.html#Component.text_label"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#definitions.Component.text_label" title="Permalink to this definition">¶</a></dt>
+<dd><p>Automatically creates a text label that inherits whatever object is labelled as. This can be hidden
+through use of the Input parameter <cite>hide_labels</cite></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">TextLabel</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="definitions.Component.text_label_position">
+<code class="descname">text_label_position</code><a class="reference internal" href="_modules/definitions.html#Component.text_label_position"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#definitions.Component.text_label_position" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the default position of the text_label to be on the front-left corner of the internal_shape</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">Point</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="definitions.Component.weight">
+<code class="descname">weight</code><a class="reference internal" href="_modules/definitions.html#Component.weight"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#definitions.Component.weight" title="Permalink to this definition">¶</a></dt>
+<dd><p>Total mass of the component</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Mass in SI kilogram</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="definitions.ExternalBody">
+<em class="property">class </em><code class="descclassname">definitions.</code><code class="descname">ExternalBody</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/definitions.html#ExternalBody"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#definitions.ExternalBody" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="attribute">
+<dt id="definitions.ExternalBody.external_shape">
+<code class="descname">external_shape</code><a class="reference internal" href="_modules/definitions.html#ExternalBody.external_shape"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#definitions.ExternalBody.external_shape" title="Permalink to this definition">¶</a></dt>
+<dd><p>The final shape of a ExternalSurface class which is to be exported THIS PART MUST BE OVERWRITTEN!!!</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">External Shape</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">Box</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="definitions.ExternalBody.planform_area">
+<code class="descname">planform_area</code><a class="reference internal" href="_modules/definitions.html#ExternalBody.planform_area"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#definitions.ExternalBody.planform_area" title="Permalink to this definition">¶</a></dt>
+<dd><p>The projected area of an <cite>external_shape</cite> when looking at the XY plane in the nadir direction (z)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Projected Area on the XY plane in SI sq. meter</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="definitions.ExternalBody.surface_type">
+<code class="descname">surface_type</code><a class="reference internal" href="_modules/definitions.html#ExternalBody.surface_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#definitions.ExternalBody.surface_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>An identifier to be able to lump areas together.
+Possible entries:
+‘wing’
+‘fuselage’
+‘vt’
+‘ht’
+‘ct’
+‘boom’</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Component Type</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="definitions.ExternalBody.weight">
+<code class="descname">weight</code><a class="reference internal" href="_modules/definitions.html#ExternalBody.weight"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#definitions.ExternalBody.weight" title="Permalink to this definition">¶</a></dt>
+<dd><p>Total mass of the component</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Mass in SI kilogram</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="definitions.ExternalBody.wetted_area">
+<code class="descname">wetted_area</code><a class="reference internal" href="_modules/definitions.html#ExternalBody.wetted_area"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#definitions.ExternalBody.wetted_area" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the total wetted area of the external_part to be able to perform drag and weight estimations</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Total wetted area of the external_part in SI sq. meter</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="definitions.VisualCG">
+<em class="property">class </em><code class="descclassname">definitions.</code><code class="descname">VisualCG</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/definitions.html#VisualCG"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#definitions.VisualCG" title="Permalink to this definition">¶</a></dt>
+<dd><p>xxxx</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">xxx</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="definitions.VisualCG.visual_cg_location">
+<code class="descname">visual_cg_location</code><a class="reference internal" href="_modules/definitions.html#VisualCG.visual_cg_location"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#definitions.VisualCG.visual_cg_location" title="Permalink to this definition">¶</a></dt>
+<dd><p>xxxx</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">xxx</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="directories.html" class="btn btn-neutral float-right" title="Directories Documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral" title="Welcome to KBE’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, San Kilkis, Nelson Johnson.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.0',
+            LANGUAGE:'en',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

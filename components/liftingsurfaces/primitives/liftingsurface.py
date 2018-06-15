@@ -1,12 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""
-  This script will generate a lifting surface primitive for the KBE app.
-  The surface type can be straight, tapered and swept.
-  In the future, we would like to add functionality for elliptical wings.
-"""
-
 #  TODO ADD VALIDATOR FOR AIRFOIL TYPE & CHOICE, OFFSET. ALSO IN HORIZONTAL AND VERTICAL STAB!!!!!!!
 
 
@@ -24,12 +18,16 @@ __all__ = ["LiftingSurface"]
 
 
 class LiftingSurface(GeomBase):
-    """ The required inputs for each instantiation are Wing Area, Aspect Ratio, Taper Ratio, TE offset , dihedral angle,
+    """
+    This script will generate a lifting surface primitive for the KBE app. The surface type can be straight, tapered and
+    swept. In the future, we would like to add functionality for elliptical wings.
+    The required inputs for each instantiation are the Wing Area, Aspect Ratio, Taper Ratio, TE offset , dihedral angle,
     wing twist and airfoil DAT file. Possible airfoils are in the folder 'airfoils', then within another folder, either
     'cambered', 'reflexed', or 'symmetric'. Feel free to add new airfoils. Also note, this primitive is instantiated in
     'wing.py', where you can perform an AVL analysis. The sign convention is +x pointing with direction of chord,
     +y pointing toward right wingtip, +z up.
 
+    :returns: ParaPy Geometry of a Lifting Surface
     """
 
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'liftingsurface.png')
@@ -119,15 +117,16 @@ class LiftingSurface(GeomBase):
     @Attribute
     def span(self):
         """ This attribute calculates the required wingspan based on the wing area and Aspect Ratio.
-        :return: Wing Semispan
+
+        :return: Wing Span in SI meter
         :rtype: float
         """
         return sqrt(self.aspect_ratio * self.planform_area)
 
     @Attribute
     def semi_span(self):
-        """ This attribute calculates the required semi-span based on the wing area and Aspect Ratio. REMEMBER: The
-        wing area input for this primitive is the wing area for ONE WING!
+        """ This attribute calculates the required semi-span based on the wing area and Aspect Ratio.
+
         :return: Wing Semispan
         :rtype: float
         """
@@ -140,6 +139,7 @@ class LiftingSurface(GeomBase):
     @Attribute
     def root_chord(self):
         """ This attribute calculates the required root chord, with an assumed taper ratio.
+
         :return: Wing Root Chord
         :rtype: float
         """
@@ -148,6 +148,7 @@ class LiftingSurface(GeomBase):
     @Attribute
     def tip_chord(self):
         """ This attribute calculates the tip chord, with the assumed taper ratio and the root chord.
+
         :return: Wing Tip Chord
         :rtype: float
         """
@@ -156,8 +157,9 @@ class LiftingSurface(GeomBase):
     @Attribute
     def tip_offset(self):
         """  Below is the offset in the flow direction of the tip W.R.T. the root Leading Edge. The default input (None)
-        causes the TE to be unswept (offset = c_r-c_t), however, if the user inputs 0 in the GUI, then the leading
+        causes the TE to be unswept (offset = cr - ct), however, if the user inputs 0 in the GUI, then the leading
         edge becomes unswept. In this case, with taper ratio < 1, the TE becomes forward swept.
+
         :return: Offset between tip and root leading edges
         :rtype: float
         """
@@ -170,6 +172,7 @@ class LiftingSurface(GeomBase):
     @Attribute
     def le_sweep(self):
         """ This will calculate the leading edge sweep of the wing.
+
         :return: Wing LE sweep
         :rtype: float
         """
@@ -179,6 +182,7 @@ class LiftingSurface(GeomBase):
     @Attribute(in_tree=True)
     def leading_edge(self):
         """ This makes a line indicating the leading edge (for a wing without dihedral).
+
         :return: Wing leading edge ParaPy Geometry
         :rtype: LineSegment
         """
@@ -198,6 +202,7 @@ class LiftingSurface(GeomBase):
     @Attribute
     def airfoil_data(self):
         """ This reads and scans the user chosen Airfoil DAT file from the database and stores it as airfoil_data.
+
         :return: Airfoil Data Points (Tuple List of Points)
         :rtype: List
         """
@@ -212,6 +217,7 @@ class LiftingSurface(GeomBase):
     @Attribute(private=True)
     def airfoil(self):
         """ This creates an Airfoil from the DAT file.
+
         :return: Airfoil fitted curve ParaPy Geometry
         :rtype: FittedCurve
         """
@@ -221,6 +227,7 @@ class LiftingSurface(GeomBase):
     @Part
     def root_airfoil(self):
         """ This scales the original airfoil to required root chord.
+
         :return: Root Airfoil scaled curve ParaPy Geometry
         :rtype: ScaledCurve
         """
@@ -232,6 +239,7 @@ class LiftingSurface(GeomBase):
     @Attribute(private=True)
     def scaled_tip(self):
         """  This scales the original airfoil to the required tip chord.
+
         :return: Tip Airfoil scaled curve ParaPy Geometry
         :rtype: ScaledCurve
         """
@@ -244,6 +252,7 @@ class LiftingSurface(GeomBase):
     def tip_airfoil_notwist(self):
         """ This positions another tip airfoil with respect to the required semispan & requested/standard offset.
         It does not yet incorporate twist.
+
         :return: Tip Airfoil in position without twist ParaPy Geometry
         :rtype: TransformedCurve
         """
@@ -256,6 +265,7 @@ class LiftingSurface(GeomBase):
     @Part
     def tip_airfoil(self):
         """ This rotates the tip airfoil over the wing twist angle input. The rotation is about the leading edge.
+
         :return: Tip Airfoil in position without twist ParaPy Geometry
         :rtype: TransformedCurve
         """
@@ -266,7 +276,8 @@ class LiftingSurface(GeomBase):
 
     @Attribute(private=True)
     def bottom_z_loc(self):
-        """ This attribute computes the bottom surface of the root airfoil
+        """ This attribute computes the bottom surface of the root airfoil.
+
         :return: Z-location of the root chord bottom surface
         :rtype: float
         """
@@ -276,6 +287,7 @@ class LiftingSurface(GeomBase):
     @Attribute(private=True)
     def no_dihedral_solid(self):
         """ This generates a solid wing half with the sign convention mentioned above.
+
         :return: ParaPy lofted solid wing geometry.
         :rtype: LoftedSolid
         """
@@ -284,6 +296,7 @@ class LiftingSurface(GeomBase):
     @Part
     def dihedral_solid(self):
         """ This rotates the entire solid wing half over the dihedral angle.
+
         :return: ParaPy rotated lofted solid wing geometry.
         :rtype: RotatedShape
         """
@@ -297,8 +310,9 @@ class LiftingSurface(GeomBase):
     @Part
     def solid(self):
         """ This translates the entire solid wing half to make the bottom surface flush with the origin
+
         :return: ParaPy rotated lofted solid wing geometry.
-        :rtype: RotatedShape
+        :rtype: TranslatedShape
         """
         return TranslatedShape(shape_in=self.dihedral_solid,
                                displacement=Vector(0, 0, -1*(self.bottom_z_loc - self.position.z)))
@@ -307,7 +321,8 @@ class LiftingSurface(GeomBase):
 
     @Attribute(private=True)
     def mac_span_calc(self):
-        """ This will determine the spanwise location (y) of the Mean Aerodynamic Chord with respect to the root airfoil.
+        """ This will determine the spanwise location of the Mean Aerodynamic Chord with respect to the root airfoil.
+
         :return: Wing Spanwise MAC position
         :rtype: float
         """
@@ -317,6 +332,7 @@ class LiftingSurface(GeomBase):
     def mac_x(self):
         """ This will determine the x relative position of the MAC WRT the wing root. Thus, it must be added to the
         position of the wing root.
+
         :return: Wing Flow direction MAC position
         :rtype: float
         """
@@ -326,6 +342,7 @@ class LiftingSurface(GeomBase):
     def mac_z(self):
         """ This will determine the z relative position of the MAC WRT the wing root. Thus, it must be added to the
         position of the wing root.
+
         :return: Wing z direction MAC position
         :rtype: float
         """
@@ -334,7 +351,7 @@ class LiftingSurface(GeomBase):
     @Attribute
     def lemac(self):
         """ Quickly calculates the Leading Edge Mean Aerodynamic Chord by sorting through all `sample_points` of the
-        part `mac_airfoil` and selects the one with the minimum x (thus closest to the flight direction which is x_)
+        part `mac_airfoil` and selects the one with the minimum x (thus closest to the flight direction which is x)
 
         :return: Location of the Leading Edge Mean Aerodynamic Chord in SI meter
         :rtype: Tuple
@@ -347,6 +364,7 @@ class LiftingSurface(GeomBase):
     def mac_airfoil(self):
         """ This finds the mean aerodynamic chord wing section by using a plane intersecting the rotated wing half.
         The location of this cut is found above. (Note: to see this on the wing, you must change hide_mac to True)
+
         :return: ParaPy MAC airfoil.
         :rtype: IntersectedShapes
         """
@@ -361,7 +379,8 @@ class LiftingSurface(GeomBase):
     @Attribute
     def mac_length(self):
         """ This attribute finds the length of the MAC using the bbox of the intersected shape. This is used instead
-        of the normal equation for the equation
+        of the normal equation for the MAC for a tapered wing.
+
         :return: MAC length
         :rtype: float
         """
@@ -370,6 +389,7 @@ class LiftingSurface(GeomBase):
     @Attribute
     def aerodynamic_center(self):
         """ This attribute finds the aerodynamic center assuming it lies at 0.25*MAC.
+
         :return: Aerodynamic Center Position of wing component. ParaPy Point
         :rtype: Point
         """
@@ -384,6 +404,11 @@ class LiftingSurface(GeomBase):
 
     @Attribute
     def front_spar_line(self):
+        """ This attribute creates a spar line frm the root airfoils cog to the tip airfoils cog
+
+        :return: Spar Line
+        :rtype: LineSegment
+        """
         sorted_faces = sorted(self.solid.faces, key=lambda f: f.cog.y)
         root_spar_point = sorted_faces[0].cog
         tip_spar_point = sorted_faces[-1].cog

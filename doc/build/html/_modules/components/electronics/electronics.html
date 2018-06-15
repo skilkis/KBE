@@ -1,0 +1,374 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>components.electronics.electronics &mdash; KBE 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> KBE
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../definitions.html">Definitions Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../directories.html">Directories Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/index.html">Components Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/battery.html">Li-PO Battery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/electronics.html">Electronics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/liftingsurfaces/index.html">LiftingSurface Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/liftingsurfaceprim.html">LiftingSurface Documentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/wing.html">Wing Documentation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">KBE</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>components.electronics.electronics</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for components.electronics.electronics</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="c1">#  Required Modules</span>
+<span class="kn">from</span> <span class="nn">parapy.core</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">parapy.geom</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">definitions</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">directories</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">flightcontroller</span> <span class="k">import</span> <span class="n">FlightController</span>
+<span class="kn">from</span> <span class="nn">speedcontroller</span> <span class="k">import</span> <span class="n">SpeedController</span>
+<span class="kn">from</span> <span class="nn">components</span> <span class="k">import</span> <span class="n">Motor</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">Iterable</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Nelson Johnson&quot;</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Electronics&quot;</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="Electronics"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.electronics.Electronics">[docs]</a><span class="k">class</span> <span class="nc">Electronics</span><span class="p">(</span><span class="n">Component</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;  This class will instantiate the flight controller and speed_controller(s) and place them on top of one another.</span>
+
+<span class="sd">    :returns: ParaPy Geometry of the electronics</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">__icon__</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;ICON_DIR&#39;</span><span class="p">],</span> <span class="s1">&#39;electronics.png&#39;</span><span class="p">)</span>
+
+    <span class="c1">#  If multiple motors put in, give [] within input parentheses</span>
+    <span class="n">motor_in</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">Motor</span><span class="p">())</span>
+
+    <span class="n">label</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;Electronics&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Electronics.component_type"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.electronics.Electronics.component_type">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">component_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This attribute names the component &#39;electronics&#39; for electronics.</span>
+
+<span class="sd">        :return: String with electronics component name</span>
+<span class="sd">        :rtype: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s1">&#39;electronics&#39;</span></div>
+
+<div class="viewcode-block" id="Electronics.weight"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.electronics.Electronics.weight">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">weight</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Total mass of the electronics components</span>
+
+<span class="sd">        :return: Mass in SI kilograms</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">flight_controller</span><span class="o">.</span><span class="n">weight</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_controller</span><span class="o">.</span><span class="n">weight</span></div>
+
+<div class="viewcode-block" id="Electronics.amp_req"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.electronics.Electronics.amp_req">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">amp_req</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This is the required amperage for the engine(s).</span>
+
+<span class="sd">        :return: Complete Amp draw from the engine(s) in SI Amps</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">amp_req</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">number_engines</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">motor_in</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">):</span>
+            <span class="n">amp_req</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor_in</span><span class="o">.</span><span class="n">specs</span><span class="p">[</span><span class="s1">&#39;esc_recommendation&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor_in</span><span class="p">:</span>
+                <span class="n">amp_req</span> <span class="o">=</span> <span class="n">amp_req</span> <span class="o">+</span> <span class="n">i</span><span class="o">.</span><span class="n">specs</span><span class="p">[</span><span class="s1">&#39;esc_recommendation&#39;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">amp_req</span></div>
+
+<div class="viewcode-block" id="Electronics.number_engines"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.electronics.Electronics.number_engines">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">number_engines</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This is used to determine the number of engines from the input motor_in.</span>
+
+<span class="sd">        :return: Number of Engines</span>
+<span class="sd">        :rtype: int</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">length</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">motor_in</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">):</span>
+            <span class="n">length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">motor_in</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">length</span></div>
+
+<div class="viewcode-block" id="Electronics.flight_controller"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.electronics.Electronics.flight_controller">[docs]</a>    <span class="nd">@Part</span>
+    <span class="k">def</span> <span class="nf">flight_controller</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This an instantiation of the flight controller. It takes only the position input.</span>
+
+<span class="sd">        :return: Flight controller geometry</span>
+<span class="sd">        :rtype: TranslatedShape</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">FlightController</span><span class="p">(</span><span class="n">position</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Electronics.speed_controller"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.electronics.Electronics.speed_controller">[docs]</a>    <span class="nd">@Part</span>
+    <span class="k">def</span> <span class="nf">speed_controller</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This an instantiation of the speed controller class. It requires the amp draw and the number of engines and</span>
+<span class="sd">        position as input.</span>
+
+<span class="sd">        :return: Speed Controller(s) Geometry</span>
+<span class="sd">        :rtype: Box</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">SpeedController</span><span class="p">(</span><span class="n">position</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">,</span>
+                               <span class="n">amp_recc</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">amp_req</span><span class="p">,</span>
+                               <span class="n">num_engines</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">number_engines</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Electronics.box_length"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.electronics.Electronics.box_length">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">box_length</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This returns the length of the flight controller box for calculations.</span>
+
+<span class="sd">        :return: Flight Controller Length</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">flight_controller</span><span class="o">.</span><span class="n">l_navio</span></div>
+
+<div class="viewcode-block" id="Electronics.elec_joiner"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.electronics.Electronics.elec_joiner">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">elec_joiner</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This joins the ESC&#39;s together through a series of Fuse operations to be able to present a</span>
+<span class="sd">        single `internal_shape` required for the fuselage frame sizing.</span>
+
+<span class="sd">        :return: ParaPy Fused Boxes</span>
+<span class="sd">        :rtype: Fused</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">parts_in</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">speed_controller</span><span class="o">.</span><span class="n">esc_joiner</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">flight_controller</span><span class="o">.</span><span class="n">solid</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">number_engines</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">shape_in</span> <span class="o">=</span> <span class="n">parts_in</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">number_engines</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="n">new_part</span> <span class="o">=</span> <span class="n">Fused</span><span class="p">(</span><span class="n">shape_in</span><span class="o">=</span><span class="n">shape_in</span><span class="p">,</span> <span class="n">tool</span><span class="o">=</span><span class="n">parts_in</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span>
+                <span class="n">shape_in</span> <span class="o">=</span> <span class="n">new_part</span>
+            <span class="n">shape_out</span> <span class="o">=</span> <span class="n">shape_in</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">shape_out</span> <span class="o">=</span> <span class="n">parts_in</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">shape_out</span></div>
+
+<div class="viewcode-block" id="Electronics.center_of_gravity"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.electronics.Electronics.center_of_gravity">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">center_of_gravity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This attribute finds the center of gravities of the separate ESCs, then finds the combined C.G.</span>
+
+<span class="sd">          :return: ParaPy Point</span>
+<span class="sd">          :rtype: Point</span>
+<span class="sd">          &quot;&quot;&quot;</span>
+        <span class="n">cogs</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">speed_controller</span><span class="o">.</span><span class="n">center_of_gravity</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">flight_controller</span><span class="o">.</span><span class="n">center_of_gravity</span><span class="p">]</span>
+        <span class="n">weights</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">speed_controller</span><span class="o">.</span><span class="n">weight</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">flight_controller</span><span class="o">.</span><span class="n">weight</span><span class="p">]</span>
+
+        <span class="c1"># CG calculation through a weighted average utilizing list comprehension</span>
+        <span class="n">cg_x</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">cogs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">x</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">weights</span><span class="p">))])</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight</span>
+        <span class="n">cg_y</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">cogs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">y</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">weights</span><span class="p">))])</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight</span>
+        <span class="n">cg_z</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">cogs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">z</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">weights</span><span class="p">))])</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight</span>
+
+        <span class="k">return</span> <span class="n">Point</span><span class="p">(</span><span class="n">cg_x</span><span class="p">,</span> <span class="n">cg_y</span><span class="p">,</span> <span class="n">cg_z</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Electronics.internal_shape"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.electronics.Electronics.internal_shape">[docs]</a>    <span class="nd">@Part</span>
+    <span class="k">def</span> <span class="nf">internal_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This is creating a box for the fuselage frames. This is used to get around ParaPy errors.</span>
+
+<span class="sd">        :return: Speed Controller(s) bounded box</span>
+<span class="sd">        :rtype: ScaledShape</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">ScaledShape</span><span class="p">(</span><span class="n">shape_in</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">elec_joiner</span><span class="p">,</span> <span class="n">reference_point</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">speed_controller</span><span class="o">.</span><span class="n">center_of_gravity</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">transparency</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span></div></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">parapy.gui</span> <span class="k">import</span> <span class="n">display</span>
+
+    <span class="n">obj</span> <span class="o">=</span> <span class="n">Electronics</span><span class="p">()</span>
+    <span class="n">display</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, San Kilkis, Nelson Johnson.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'1.0',
+            LANGUAGE:'en',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

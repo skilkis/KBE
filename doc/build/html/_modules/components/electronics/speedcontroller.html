@@ -1,0 +1,509 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>components.electronics.speedcontroller &mdash; KBE 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> KBE
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../definitions.html">Definitions Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../directories.html">Directories Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/index.html">Components Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/battery.html">Li-PO Battery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/electronics.html">Electronics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/liftingsurfaces/index.html">LiftingSurface Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/liftingsurfaceprim.html">LiftingSurface Documentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/wing.html">Wing Documentation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">KBE</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>components.electronics.speedcontroller</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for components.electronics.speedcontroller</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="c1">#  Required Modules</span>
+<span class="kn">from</span> <span class="nn">parapy.core</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">parapy.geom</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">definitions</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">directories</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="k">import</span> <span class="n">stats</span>
+
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Nelson Johnson&quot;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;SpeedController&quot;</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="SpeedController"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.speedcontroller.SpeedController">[docs]</a><span class="k">class</span> <span class="nc">SpeedController</span><span class="p">(</span><span class="n">Component</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; This class will create the electronic speed controllers for the UAV. This is done based on the number of</span>
+<span class="sd">    engines (each requires its own ESC), and the engine choice (determines amp rating). This will return a number of</span>
+<span class="sd">    ESCs stacked vertically, and the COG displayed at the end is the combined COG of all ESCs. The ESC is sized (mass</span>
+<span class="sd">    and volume) my linear regression of reference ESC&#39;s found on HobbyKing.</span>
+
+<span class="sd">    :return: ParaPy Geometry of the ESC(s)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">__icon__</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;ICON_DIR&#39;</span><span class="p">],</span> <span class="s1">&#39;electricity.png&#39;</span><span class="p">)</span>
+
+    <span class="c1">#:  This is the recommended ESC amperage from the chosen motor(s). In the case of multiple motors, this is the total</span>
+    <span class="c1">#:  amperage.</span>
+    <span class="c1">#: :type: float</span>
+
+    <span class="n">amp_recc</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">40.0</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">())</span>
+
+    <span class="c1">#:  This is the number of engines.</span>
+    <span class="c1">#: :type: float</span>
+
+    <span class="n">num_engines</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">())</span>
+
+<div class="viewcode-block" id="SpeedController.amp_range"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.speedcontroller.SpeedController.amp_range">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">amp_range</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This attribute contains the amp rating for ESCs found on hobbyking covering our spectrum of motor options</span>
+<span class="sd">        in our motor database that will be used for regression.</span>
+
+<span class="sd">        :return: List of ECC amperage&#39;s in SI Amps</span>
+<span class="sd">        :rtype: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="mf">6.0</span><span class="p">,</span> <span class="mf">20.0</span><span class="p">,</span> <span class="mf">30.0</span><span class="p">,</span> <span class="mf">40.0</span><span class="p">,</span> <span class="mf">60.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">,</span> <span class="mf">120.0</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="SpeedController.weight_range"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.speedcontroller.SpeedController.weight_range">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">weight_range</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This attribute contains the corresponding weights of the ESCs found on hobbyking</span>
+
+<span class="sd">        :return: List of ECS Weights in SI kg</span>
+<span class="sd">        :rtype: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="mf">0.006</span><span class="p">,</span> <span class="mf">0.017</span><span class="p">,</span> <span class="mf">0.021</span><span class="p">,</span> <span class="mf">0.036</span><span class="p">,</span> <span class="mf">0.063</span><span class="p">,</span> <span class="mf">0.081</span><span class="p">,</span> <span class="mf">0.164</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="SpeedController.volume_range"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.speedcontroller.SpeedController.volume_range">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">volume_range</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This attribute contains the corresponding volumes of the ESCs found on hobbyking</span>
+
+<span class="sd">        :return: List of ECS Volumes in SI m^3</span>
+<span class="sd">        :rtype: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="mi">1728</span><span class="o">*</span><span class="mi">10</span><span class="o">**-</span><span class="mi">9</span><span class="p">,</span> <span class="mi">7560</span><span class="o">*</span><span class="mi">10</span><span class="o">**-</span><span class="mi">9</span><span class="p">,</span> <span class="mi">7560</span><span class="o">*</span><span class="mi">10</span><span class="o">**-</span><span class="mi">9</span><span class="p">,</span> <span class="mi">15444</span><span class="o">*</span><span class="mi">10</span><span class="o">**-</span><span class="mi">9</span><span class="p">,</span> <span class="mi">19200</span><span class="o">*</span><span class="mi">10</span><span class="o">**-</span><span class="mi">9</span><span class="p">,</span> <span class="mi">22400</span><span class="o">*</span><span class="mi">10</span><span class="o">**-</span><span class="mi">9</span><span class="p">,</span> <span class="mi">43428</span><span class="o">*</span><span class="mi">10</span><span class="o">**-</span><span class="mi">9</span><span class="p">]</span></div>
+
+    <span class="c1">#:  Below are the constant Navio 2 Flight computer dimensions</span>
+    <span class="c1">#:  The ESC is assumed have the same cross sectional dims (when looking perpendicular to x-y plane) as the flight</span>
+    <span class="c1">#:  controller and will change in height based on the required amperage (which changes the ESC volume).</span>
+    <span class="c1">#:  For box function: Width is x direction, length is y direction, height is z direction.</span>
+<div class="viewcode-block" id="SpeedController.l_navio"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.speedcontroller.SpeedController.l_navio">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">l_navio</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; The 65mm length of the Flight Computer is the longest dimension and is to be oriented parallel with the x</span>
+<span class="sd">         axis. Dimensions are at https://emlid.com/navio/</span>
+
+<span class="sd">        :return: ParaPy Flight Controller Length</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mf">0.065</span></div>
+
+<div class="viewcode-block" id="SpeedController.w_navio"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.speedcontroller.SpeedController.w_navio">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">w_navio</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; The 55mm width is to be oriented parallel with the y axis.</span>
+
+<span class="sd">        :return: ParaPy Flight Controller Width</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mf">0.055</span></div>
+
+<div class="viewcode-block" id="SpeedController.h_navio"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.speedcontroller.SpeedController.h_navio">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">h_navio</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; The flight controller height is to be oriented parallel with the y axis. This height was assumed from their</span>
+<span class="sd">        figure.</span>
+
+<span class="sd">        :return: ParaPy Flight Controller height</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mf">0.017</span></div>
+
+<div class="viewcode-block" id="SpeedController.component_type"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.speedcontroller.SpeedController.component_type">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">component_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This attribute names the component &#39;speedcontroller&#39; for speedcontroller.</span>
+
+<span class="sd">        :return: String with speedcontroller&#39;s component name</span>
+<span class="sd">        :rtype: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s1">&#39;speedcontroller&#39;</span></div>
+
+<div class="viewcode-block" id="SpeedController.esc_weight_plot"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.speedcontroller.SpeedController.esc_weight_plot">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">esc_weight_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This attribute creates a plot of the ESC weight vs. continuous amperage. It is saved in the path</span>
+<span class="sd">        &#39;user/plots&#39;.</span>
+
+<span class="sd">        :return: Plot of ESC weight vs. Amperage</span>
+<span class="sd">        :rtype: Plot</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="s1">&#39;ESC_Weight_vs_Amperage&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;ggplot&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;ESC Weight vs. Continuous Amperage&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">amp_range</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_range</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;ESC Weight&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Weight&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Amperage&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fname</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;USER_DIR&#39;</span><span class="p">],</span> <span class="s1">&#39;plots&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">.pdf&#39;</span> <span class="o">%</span> <span class="n">fig</span><span class="o">.</span><span class="n">get_label</span><span class="p">()),</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;pdf&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s1">&#39;Plot Made, See PyCharm&#39;</span></div>
+
+<div class="viewcode-block" id="SpeedController.esc_size_plot"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.speedcontroller.SpeedController.esc_size_plot">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">esc_size_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This attribute creates a plot of the ESC volume vs. continuous amperage. It is save in the path &#39;user/plots&#39;</span>
+
+<span class="sd">        :return: Plot of ESC volume vs. continuous amperage</span>
+<span class="sd">        :rtype: Plot</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="s1">&#39;ESC_Volume_vs_Amperage&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;ggplot&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;ESC Volume vs. Continuous Amperage&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">amp_range</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">volume_range</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;ESC Volume&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Volume [$\mathrm</span><span class="si">{m}</span><span class="s1">^3$]&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Amperage [$\mathrm</span><span class="si">{A}</span><span class="s1">$]&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fname</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;USER_DIR&#39;</span><span class="p">],</span> <span class="s1">&#39;plots&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">.pdf&#39;</span> <span class="o">%</span> <span class="n">fig</span><span class="o">.</span><span class="n">get_label</span><span class="p">()),</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;pdf&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s1">&#39;Plot Made, See PyCharm&#39;</span></div>
+
+<div class="viewcode-block" id="SpeedController.esc_weight"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.speedcontroller.SpeedController.esc_weight">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">esc_weight</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This attribute estimates the esc weight from the linear regression of the found ESC amperage&#39;s and</span>
+<span class="sd">        corresponding weights. If there are more than one motor, multiple ESCs are used and the complete weight is</span>
+<span class="sd">        calculated here</span>
+
+<span class="sd">        :return: Total ESC weight</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">gradientt</span><span class="p">,</span> <span class="n">interceptt</span><span class="p">,</span> <span class="n">r_valuee</span><span class="p">,</span> <span class="n">p_valuee</span><span class="p">,</span> <span class="n">std_errr</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">linregress</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">amp_range</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_range</span><span class="p">)</span>
+        <span class="c1">#  print &quot;Weight Regression Gradient and intercept&quot;, gradientt, interceptt</span>
+        <span class="c1">#  print &quot;Weight Regression R-squared&quot;, r_valuee ** 2</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_engines</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">esc_weight</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">amp_recc</span> <span class="o">*</span> <span class="n">gradientt</span> <span class="o">+</span> <span class="n">interceptt</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">amp_per_engine</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">amp_recc</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_engines</span> <span class="c1">#  This is why the input is total Amperage</span>
+            <span class="n">esc_weight</span> <span class="o">=</span> <span class="p">(</span><span class="n">amp_per_engine</span> <span class="o">*</span> <span class="n">gradientt</span> <span class="o">+</span> <span class="n">interceptt</span><span class="p">)</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">num_engines</span>
+
+        <span class="k">if</span> <span class="n">esc_weight</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">esc_weight</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_range</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">num_engines</span>
+            <span class="c1">#  This returns the minimum found ESC weight if a low required amperage is input and the linear regression</span>
+            <span class="c1">#  returns a negative weight.</span>
+        <span class="k">return</span> <span class="n">esc_weight</span></div>
+
+<div class="viewcode-block" id="SpeedController.esc_size"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.speedcontroller.SpeedController.esc_size">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">esc_size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This attribute estimates the esc size from the linear regression of the found ESC amperage&#39;s and</span>
+<span class="sd">        corresponding volumes. If there are more than one engine, there will be more than one ESC.</span>
+
+<span class="sd">        :return: Total ESC weight</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">gradient</span><span class="p">,</span> <span class="n">intercept</span><span class="p">,</span> <span class="n">r_value</span><span class="p">,</span> <span class="n">p_value</span><span class="p">,</span> <span class="n">std_err</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">linregress</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">amp_range</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">volume_range</span><span class="p">)</span>
+        <span class="c1">#  print &quot;Volume Regression Gradient and intercept&quot;, gradient, intercept</span>
+        <span class="c1">#  print &quot;Volume Regression R-squared&quot;, r_value ** 2</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_engines</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">esc_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">amp_recc</span> <span class="o">*</span> <span class="n">gradient</span> <span class="o">+</span> <span class="n">intercept</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">amp_per_engine</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">amp_recc</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_engines</span>
+            <span class="n">esc_size</span> <span class="o">=</span> <span class="n">amp_per_engine</span> <span class="o">*</span> <span class="n">gradient</span> <span class="o">+</span> <span class="n">intercept</span>
+
+        <span class="k">if</span> <span class="n">esc_size</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1">#  This returns the minimum found ESC volume if a low required amperage is input and the linear regression</span>
+            <span class="c1">#  returns a negative volume.</span>
+            <span class="n">esc_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">volume_range</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">esc_size</span></div>
+
+<div class="viewcode-block" id="SpeedController.esc_dims"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.speedcontroller.SpeedController.esc_dims">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">esc_dims</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This attribute creates the speed controller dimensions, with the same cross-section as the flight computer.</span>
+<span class="sd">        Their height can change, according to the required size.</span>
+
+<span class="sd">        :return: ESC Dimensions</span>
+<span class="sd">        :rtype: List</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">esc_width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">l_navio</span>
+        <span class="n">esc_length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">w_navio</span>
+        <span class="n">esc_height</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">esc_size</span><span class="o">/</span><span class="p">(</span><span class="n">esc_width</span><span class="o">*</span><span class="n">esc_length</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">esc_width</span><span class="p">,</span> <span class="n">esc_length</span><span class="p">,</span> <span class="n">esc_height</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="SpeedController.first_esc_pos"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.speedcontroller.SpeedController.first_esc_pos">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">first_esc_pos</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;   This is the first position of the bottom ESC, which is to be placed on top of the flight computer</span>
+
+<span class="sd">        :return: First ESC Position</span>
+<span class="sd">        :rtype: Position</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Position</span><span class="p">(</span><span class="n">Point</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">w_navio</span><span class="o">*</span><span class="mf">0.5</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">z</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">h_navio</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="SpeedController.speed_controllers"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.speedcontroller.SpeedController.speed_controllers">[docs]</a>    <span class="nd">@Part</span>
+    <span class="k">def</span> <span class="nf">speed_controllers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;   This creates the speed controller(s). If there are multiple, they are positioned relative to one another.</span>
+
+<span class="sd">         :return: ESC Geometries</span>
+<span class="sd">         :rtype: Box</span>
+<span class="sd">         &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Box</span><span class="p">(</span><span class="n">quantify</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">num_engines</span><span class="p">,</span>
+                   <span class="n">width</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">esc_dims</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">length</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">esc_dims</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">height</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">esc_dims</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+                   <span class="n">position</span><span class="o">=</span><span class="n">translate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">first_esc_pos</span> <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">index</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">child</span><span class="o">.</span><span class="n">previous</span><span class="o">.</span><span class="n">position</span><span class="p">,</span>
+                                      <span class="s1">&#39;z&#39;</span><span class="p">,</span>
+                                      <span class="mi">0</span> <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">index</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">esc_dims</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span>
+                   <span class="n">transparency</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SpeedController.center_of_gravity"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.speedcontroller.SpeedController.center_of_gravity">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">center_of_gravity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This attribute finds the center of gravities of the separate ESCs, then finds the combined C.G.</span>
+
+<span class="sd">          :return: ParaPy Point</span>
+<span class="sd">          :rtype: Point</span>
+<span class="sd">          &quot;&quot;&quot;</span>
+        <span class="n">cogs</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">speed_controllers</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">cog</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_engines</span><span class="p">)]</span>
+        <span class="n">avg_z</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">i</span><span class="o">.</span><span class="n">z</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">cogs</span><span class="p">])</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">num_engines</span>
+        <span class="k">return</span> <span class="n">Point</span><span class="p">(</span><span class="n">cogs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">cogs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">avg_z</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SpeedController.esc_joiner"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.speedcontroller.SpeedController.esc_joiner">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">esc_joiner</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This joins the ESC&#39;s together through a series of Fuse operations to be able to present a</span>
+<span class="sd">        single `internal_shape` required for the fuselage frame sizing.</span>
+
+<span class="sd">        :return: ParaPy Fused Boxes</span>
+<span class="sd">        :rtype: Fused</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">parts_in</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_controllers</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_engines</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">shape_in</span> <span class="o">=</span> <span class="n">parts_in</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_engines</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="n">new_part</span> <span class="o">=</span> <span class="n">Fused</span><span class="p">(</span><span class="n">shape_in</span><span class="o">=</span><span class="n">shape_in</span><span class="p">,</span> <span class="n">tool</span><span class="o">=</span><span class="n">parts_in</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span>
+                <span class="n">shape_in</span> <span class="o">=</span> <span class="n">new_part</span>
+            <span class="n">shape_out</span> <span class="o">=</span> <span class="n">shape_in</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">shape_out</span> <span class="o">=</span> <span class="n">parts_in</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">shape_out</span></div>
+
+<div class="viewcode-block" id="SpeedController.internal_shape"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.speedcontroller.SpeedController.internal_shape">[docs]</a>    <span class="nd">@Part</span>
+    <span class="k">def</span> <span class="nf">internal_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This is creating a box for the fuselage frames. This is used to get around ParaPy errors.</span>
+
+<span class="sd">        :return: Speed Controller(s) bounded box</span>
+<span class="sd">        :rtype: ScaledShape</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">ScaledShape</span><span class="p">(</span><span class="n">shape_in</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">esc_joiner</span><span class="p">,</span> <span class="n">reference_point</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">center_of_gravity</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">transparency</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span>
+                           <span class="n">hidden</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SpeedController.weight"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.speedcontroller.SpeedController.weight">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">weight</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; The mass of the speed controller(s)</span>
+
+<span class="sd">        :return: Speed Controller(s) Mass</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">esc_weight</span></div>
+
+<div class="viewcode-block" id="SpeedController.label"><a class="viewcode-back" href="../../../components/electronics.html#components.electronics.speedcontroller.SpeedController.label">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">label</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This labels the speed controller &#39;Speed Controller&#39;</span>
+
+<span class="sd">        :return: Navio2 Mass</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s1">&#39;Speed Controller&#39;</span></div></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">parapy.gui</span> <span class="k">import</span> <span class="n">display</span>
+    <span class="n">obj</span> <span class="o">=</span> <span class="n">SpeedController</span><span class="p">()</span>
+    <span class="n">display</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, San Kilkis, Nelson Johnson.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'1.0',
+            LANGUAGE:'en',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

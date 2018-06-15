@@ -20,8 +20,8 @@ class FlightController(Component):
 
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'chip.png')
 
-    #: Navio 2 Flight computer dimensions are below source: https://emlid.com/navio/
-    #: :type: float
+    #: Navio 2 Flight computer dimensions are below. Source: https://emlid.com/navio/
+
     @Attribute
     def l_navio(self):
         """ The 65mm length of the Flight Computer is the longest dimension and is to be oriented parallel with the x
@@ -44,7 +44,8 @@ class FlightController(Component):
 
     @Attribute
     def h_navio(self):
-        """ The flight controller height is to be oriented parallel with the y axis. This height was assumed
+        """ The flight controller height is to be oriented parallel with the y axis. This height was assumed from their
+        figure.
 
         :return: ParaPy Flight Controller height
         :rtype: float
@@ -91,7 +92,7 @@ class FlightController(Component):
     def component_type(self):
         """ This attribute names the component 'flightcontroller' for flight controller.
 
-        :return: str
+        :return: String with flightcontroller's component name
         :rtype: str
         """
         return 'flightcontroller'
@@ -101,7 +102,7 @@ class FlightController(Component):
         """ This attribute returns the COG of the flight controller.
 
         :return: ParaPy Point
-        :rtype: Point
+        :rtype: ParaPy Point
         """
         return self.solid.cog
 
@@ -118,8 +119,8 @@ class FlightController(Component):
     def internal_shape(self):
         """ This obtains a bounding box of the flight controller to size the fuselage frames.
 
-        :return: Navio2 Mass
-        :rtype: float
+        :return: Navio2 Shape
+        :rtype: ScaledShape
         """
         return ScaledShape(shape_in=self.solid, reference_point=self.solid.cog, factor=1,
                            transparency=0.7, hidden=True)
@@ -128,8 +129,8 @@ class FlightController(Component):
     def label(self):
         """ This labels the flight controller 'Avionics'
 
-        :return: Navio2 Mass
-        :rtype: float
+        :return: Avionics Label
+        :rtype: str
         """
         return 'Avionics'
 

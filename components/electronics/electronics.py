@@ -16,7 +16,7 @@ __all__ = ["Electronics"]
 
 
 class Electronics(Component):
-    """  This code will estimate the mass and create the geometry of the avionics.
+    """  This class will instantiate the flight controller and speed_controller(s) and place them on top of one another.
 
     :returns: ParaPy Geometry of the electronics
     """
@@ -32,16 +32,16 @@ class Electronics(Component):
     def component_type(self):
         """ This attribute names the component 'electronics' for electronics.
 
-        :return: str
+        :return: String with electronics component name
         :rtype: str
         """
         return 'electronics'
 
     @Attribute
     def weight(self):
-        """ Total mass of the component
+        """ Total mass of the electronics components
 
-        :return: Mass in SI kilogram
+        :return: Mass in SI kilograms
         :rtype: float
         """
         return self.flight_controller.weight + self.speed_controller.weight
@@ -50,7 +50,7 @@ class Electronics(Component):
     def amp_req(self):
         """ This is the required amperage for the engine(s).
 
-        :return: Complete Amp draw from the engine(s)
+        :return: Complete Amp draw from the engine(s) in SI Amps
         :rtype: float
         """
         amp_req = 0
@@ -63,7 +63,7 @@ class Electronics(Component):
 
     @Attribute
     def number_engines(self):
-        """ This is used to determine the number of engines.
+        """ This is used to determine the number of engines from the input motor_in.
 
         :return: Number of Engines
         :rtype: int
@@ -75,7 +75,7 @@ class Electronics(Component):
 
     @Part
     def flight_controller(self):
-        """ This an instantiation of the flight controller. It takes no inputs.
+        """ This an instantiation of the flight controller. It takes only the position input.
 
         :return: Flight controller geometry
         :rtype: TranslatedShape
@@ -84,8 +84,8 @@ class Electronics(Component):
 
     @Part
     def speed_controller(self):
-        """ This an instantiation of the speed controller class. It requires the amp draw and the number of engines as
-        input.
+        """ This an instantiation of the speed controller class. It requires the amp draw and the number of engines and
+        position as input.
 
         :return: Speed Controller(s) Geometry
         :rtype: Box
@@ -96,6 +96,11 @@ class Electronics(Component):
 
     @Attribute
     def box_length(self):
+        """ This returns the length of the flight controller box for calculations.
+
+        :return: Flight Controller Length
+        :rtype: float
+        """
         return self.flight_controller.l_navio
 
     @Attribute
