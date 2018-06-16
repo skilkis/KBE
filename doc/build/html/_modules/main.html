@@ -223,8 +223,6 @@
 <span class="c1"># TODO Add instance validator for each class input (check out performance.py for example)</span>
 <span class="c1"># TODO Make a nice visual CG representation of both c.g. before and after run</span>
 
-<span class="c1">#  TODO increase size of VT. They look too small when handlaunch = false</span>
-
 <span class="c1"># TODO change input endurance to be in hours instead of seconds (more convenient)</span>
 <span class="c1">#  TODO every class should have print statement saying that it has been instantiated into the console</span>
 
@@ -235,6 +233,8 @@
 <span class="c1"># TODO move everything except for main.py into a \bin folder to clean up directory</span>
 
 <span class="c1"># TODO Add UML in doc</span>
+
+<span class="c1"># TODO bug found in eletronics, number of engines messes up the Fuse Operation</span>
 
 <span class="kn">from</span> <span class="nn">design</span> <span class="k">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">parapy.core</span> <span class="k">import</span> <span class="o">*</span>
@@ -702,9 +702,6 @@
                     <span class="n">row</span> <span class="o">=</span> <span class="n">row</span> <span class="o">+</span> <span class="mi">1</span>
                     <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
                     <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-
-
-        <span class="c1"># row = row + 2  # Skipping two rows to write CD0</span>
 
         <span class="n">wb</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;USER_DIR&#39;</span><span class="p">],</span> <span class="s1">&#39;results&#39;</span><span class="p">,</span> <span class="s1">&#39;output.xls&#39;</span><span class="p">))</span>
         <span class="k">return</span> <span class="s1">&#39;Excel File Written&#39;</span></div>
