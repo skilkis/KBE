@@ -192,7 +192,8 @@ class ScissorPlot(Base):
         """
         if self.configuration is 'conventional':
             cl_h = -0.35*(self.AR_h**(1.0/3.0))
-        else:
+            print 'I am conventional'
+        elif self.configuration is 'canard':
             cl_h = 1
             # = 0.35 * (self.AR_h ** (1.0 / 3.0))
             #  Canard assumed to be full moving with Cl max = 1 in slow speed case.
@@ -233,7 +234,7 @@ class ScissorPlot(Base):
                            ((self.x_ac - self.SM) / ((self.cla_h / self.Cla_w) * (1 - self.downwash_a) * self.lhc *
                                                      (self.VhV_conv ** 2)))
                 shs_stab.append(shs_conv)
-            else:
+            elif self.configuration is 'canard':
                 shs_canard = (self.xcg_range[i] / ((self.cla_h / self.cla_w_canard) * self.lhc *
                                                    self.VhV_canard ** 2)) - \
                              ((self.x_ac - self.SM) / ((self.cla_h / self.cla_w_canard) * self.lhc *
@@ -257,7 +258,7 @@ class ScissorPlot(Base):
                            (((self.C_mac/self.Cl_w) - self.x_ac) / ((self.cl_h / self.Cl_w) * self.lhc *
                                                                     (self.VhV_conv ** 2)))
                 shs_c.append(shs_conv)
-            else:
+            elif self.configuration is 'canard':
                 shs_canard = (self.xcg_range[i] / ((self.cl_h / self.Cl_w) * self.lhc * self.VhV_canard ** 2))\
                              + (((self.C_mac / self.Cl_w) - self.x_ac) / ((self.cl_h / self.Cl_w) * self.lhc *
                                                                           (self.VhV_canard ** 2)))
