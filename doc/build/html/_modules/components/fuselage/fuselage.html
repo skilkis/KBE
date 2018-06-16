@@ -1,0 +1,734 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>components.fuselage.fuselage &mdash; KBE 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> KBE
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../definitions.html">Definitions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../directories.html">Directories</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/index.html">Components Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/battery.html">Li-PO Battery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/electronics/index.html">Electronics Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/electronics/electronics.html">Electronics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/electronics/flightcontroller.html">FlightController</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/electronics/speedcontroller.html">SpeedController</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/liftingsurfaces/index.html">LiftingSurface Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/liftingsurfaceprim.html">LiftingSurface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/wing.html">Wing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/scissorplot.html">ScissorPlot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/horizontalstab.html">HorizontalStabilizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/verticalstab.html">VerticalStablilizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/compoundstab.html">CompoundStabilizer</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/fuselage/index.html">Fuselage Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/fuselage/fframe.html">FFrame</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/fuselage/fcone.html">FCone</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/fuselage/mframe.html">MFrame</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/fuselage/fuselage.html">Fuselage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/fuselage/boom.html">Boom</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/motor.html">Electric Motor</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../main.html">Main UAV</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">KBE</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>components.fuselage.fuselage</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for components.fuselage.fuselage</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="kn">from</span> <span class="nn">parapy.geom</span> <span class="k">import</span> <span class="o">*</span>  <span class="c1"># \</span>
+<span class="kn">from</span> <span class="nn">parapy.core</span> <span class="k">import</span> <span class="o">*</span>  <span class="c1"># / Required ParaPy Modules</span>
+
+<span class="kn">from</span> <span class="nn">user</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">components.fuselage.primitives</span> <span class="k">import</span> <span class="o">*</span>
+<span class="c1"># from components import EOIR, Wing, Motor, Battery</span>
+<span class="kn">from</span> <span class="nn">definitions</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">directories</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="k">import</span> <span class="n">copy</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Şan Kılkış&quot;</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Fuselage&quot;</span><span class="p">]</span>
+
+<span class="c1"># TODO Figure out why tail cone does not appear instantly</span>
+<span class="c1"># TODO Add default sizing parts back in</span>
+
+<span class="c1"># http://www.dupont.com/content/dam/dupont/products-and-services/fabrics-fibers-and-nonwovens/fibers/documents/Kevlar_Technical_Guide.pdf</span>
+
+<span class="c1"># ^ Potential knowledge base for materials</span>
+
+<span class="c1"># TODO make the boundary condition spline more robust with sorting and lambda functions</span>
+<span class="c1"># TODO add a validator function for the fuselage promting user input if intersections occur</span>
+
+
+<div class="viewcode-block" id="Fuselage"><a class="viewcode-back" href="../../../components/fuselage/fuselage.html#components.fuselage.fuselage.Fuselage">[docs]</a><span class="k">class</span> <span class="nc">Fuselage</span><span class="p">(</span><span class="n">ExternalBody</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; This class will create a fuselage from frames created from desired internal components.</span>
+
+<span class="sd">    :returns: ParaPy Geometry of the Fuselage</span>
+
+<span class="sd">    :param compartment_type: Type of containers at each station, possible entries (nose, container, motor, tail)</span>
+<span class="sd">    :type compartment_type: str list</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1">#  TODO Commenting, it is in documentation</span>
+    <span class="c1"># TODO Class description and use cases</span>
+    <span class="c1"># TODO compartment_type and sizing_parts validators</span>
+
+    <span class="n">__initargs__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;compartment_type&quot;</span><span class="p">,</span> <span class="s2">&quot;sizing_parts&quot;</span><span class="p">]</span>
+    <span class="n">__icon__</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;ICON_DIR&#39;</span><span class="p">],</span> <span class="s1">&#39;fuselage.png&#39;</span><span class="p">)</span>
+
+    <span class="n">__framecache__</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="c1">#: Type of containers at each station, possible entries (nose, container, motor, tail)</span>
+    <span class="c1">#: :type: str list</span>
+    <span class="n">compartment_type</span> <span class="o">=</span> <span class="n">Input</span><span class="p">()</span>
+    <span class="c1"># compartment_type = Input()</span>
+
+    <span class="c1">#: Parts that the fuselage will be sized for, these must correspond to the entries given in `compartment_type`</span>
+    <span class="c1">#: :type: list</span>
+    <span class="c1"># sizing_parts = Input()</span>
+    <span class="n">sizing_parts</span> <span class="o">=</span> <span class="n">Input</span><span class="p">()</span>
+
+    <span class="c1">#: Sets the Padding Factor between Fuselage Sizing Parts</span>
+    <span class="c1">#: :type: bool</span>
+    <span class="n">pad_factor</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Between</span><span class="p">(</span><span class="mf">0.05</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+    <span class="c1">#: Initiates the automatic frame minimization WARNING: May lead to intersecting surfaces</span>
+    <span class="c1">#: :type: bool</span>
+    <span class="n">minimize_frames</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">bool</span><span class="p">))</span>
+
+    <span class="c1">#: Linearly joins the frames of the center fuselage WARNING: May lead to errors at the tail cone</span>
+    <span class="c1">#: :type: bool</span>
+    <span class="n">ruled</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">bool</span><span class="p">))</span>
+
+    <span class="c1">#: Toggles transparency of the fuselage</span>
+    <span class="c1">#: :type: bool</span>
+    <span class="n">make_transparent</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">bool</span><span class="p">))</span>
+
+    <span class="c1">#: Sets the color of the fuselage (Overwritten from the default yellow)</span>
+    <span class="c1">#: :type: str or Tuple</span>
+    <span class="n">color</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">MyColors</span><span class="o">.</span><span class="n">light_grey</span><span class="p">)</span>
+
+    <span class="c1">#: Changes the number of ply&#39;s of carbon fiber http://www.ijera.com/papers/Vol4_issue5/Version%202/J45025355.pdf</span>
+    <span class="c1">#: :type: tuple</span>
+    <span class="n">ply_number</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
+
+    <span class="c1">#: Disables Automatic Fuselage Frame (FFrame) Creation and allows instead manual user-input to set the shape</span>
+    <span class="c1">#: :type: bool</span>
+    <span class="n">auto_fuselage_disable</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="nd">@auto_fuselage_disable</span><span class="o">.</span><span class="n">on_slot_change</span>
+    <span class="k">def</span> <span class="nf">auto_disabler</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Pauses dependency tracking and automatic frame generation utilizing a simple caching mechanism. This is done</span>
+<span class="sd">        in order for the user to be able to make changes to the automatically generated fuselage frames without these</span>
+<span class="sd">        changes being overwritten by ParaPy due to the fuselage&#39;s dependence on the `internal_shapes` input. &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">auto_fuselage_disable</span><span class="p">:</span>
+            <span class="c1"># Utilizing a shallow-copy of the frames increases performance since dependency on sizing_parts is removed</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;__framecache__&#39;</span><span class="p">,</span> <span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">frames</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;__framecache__&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Fuselage.component_type"><a class="viewcode-back" href="../../../components/fuselage/fuselage.html#components.fuselage.fuselage.Fuselage.component_type">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">component_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;fuselage&#39;</span></div>
+
+<div class="viewcode-block" id="Fuselage.frame_builder"><a class="viewcode-back" href="../../../components/fuselage/fuselage.html#components.fuselage.fuselage.Fuselage.frame_builder">[docs]</a>    <span class="nd">@Attribute</span><span class="p">(</span><span class="n">private</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">frame_builder</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This attribute codifies the knowledge for the fuselage and automatically generates the required frames by</span>
+<span class="sd">        extracting the dimensions of the supplied `sizing_parts&#39; through the methods `bbox_extractor` and `bbox_2_frame`</span>
+<span class="sd">        This has proven to be a very robust method since it does not depend on the complexity of the input part. Since</span>
+<span class="sd">        these drones operate at very low mach numbers, the area rule which is commonly used for transonic aircraft</span>
+<span class="sd">        is not valid. Instead these small drones can benefit from a lifting fuselage which is accomplished through</span>
+<span class="sd">        having an airfoil like shape (thus a single location of maximum thickness). This location is</span>
+<span class="sd">        referred to as the fuselage apex and is obtained by comparing the current frame to its sequential neighbor</span>
+<span class="sd">        which links to a switch case, `apex_reached` and `build_loc`. A forward-chaining inference procedure is used</span>
+<span class="sd">        in a for loop that traverses the fuselage from nose to tail and fires all fire-able rules sequentially.</span>
+<span class="sd">        This procedure is preferred since multiple possibilities at each frame location exist (nose, container, motor,</span>
+<span class="sd">        or tail) along with the same number of possibilities existing at the nearest neighbor. Finally, the start</span>
+<span class="sd">        and end boundary conditions reject the creation of a nose or tail-cone before the fuselage is built, since both</span>
+<span class="sd">        of these classes require tangency conditions at the start and end of the fuselage. Thus, the requested class</span>
+<span class="sd">        is appended to a string array of `still_to_build` which is referenced later in the code.</span>
+
+<span class="sd">        :return: A collection of frame variables that are used later in the fuselage class</span>
+<span class="sd">        :rtype: dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compartment_type</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sizing_parts</span><span class="p">):</span>  <span class="c1"># Checking supplied inputs for concurrent dimensions</span>
+
+            <span class="n">frames</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">still_to_build</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># Special parts which require the fuselage to be completed before instantiation</span>
+            <span class="n">first_container</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># Boolean to determine if current instance is first occurrence of a container frame</span>
+            <span class="n">apex_reached</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># Boolean that indicates if a maxima in  fuselage thickness has been reached</span>
+            <span class="n">apex_index</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">build_loc</span> <span class="o">=</span> <span class="s1">&#39;start&#39;</span>  <span class="c1"># Switch case to determine frame placement</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compartment_type</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="n">_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compartment_type</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="n">_next_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compartment_type</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+
+                <span class="c1"># Start Boundary Condition</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">_type</span> <span class="o">==</span> <span class="s1">&#39;nose&#39;</span><span class="p">:</span>
+                        <span class="n">still_to_build</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="s1">&#39;nose&#39;</span><span class="p">,</span> <span class="n">i</span><span class="p">])</span>
+                    <span class="k">elif</span> <span class="n">_type</span> <span class="o">==</span> <span class="s1">&#39;boom&#39;</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;A boom has been requested with no supports. Please try again with a boom&#39;</span>
+                                        <span class="s1">&#39; instance surrounded by at least 2 frame containers&#39;</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">_type</span> <span class="o">==</span> <span class="s1">&#39;motor&#39;</span><span class="p">:</span>
+                        <span class="n">frames</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">MFrame</span><span class="p">(</span><span class="n">motor_diameter</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sizing_parts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">diameter</span><span class="p">,</span>
+                                              <span class="n">position</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sizing_parts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">position</span><span class="p">)])</span>
+
+                <span class="c1"># Container Logic</span>
+                <span class="k">if</span> <span class="n">_type</span> <span class="o">==</span> <span class="s1">&#39;container&#39;</span><span class="p">:</span>
+                    <span class="n">_bbox</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bbox_extractor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sizing_parts</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>  <span class="c1"># Fetching current bbox</span>
+                    <span class="k">if</span> <span class="n">first_container</span><span class="p">:</span>  <span class="c1"># If current container is the first container a frame is returned</span>
+                        <span class="n">frames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bbox_to_frame</span><span class="p">(</span><span class="n">_bbox</span><span class="p">,</span> <span class="n">build_loc</span><span class="p">))</span>
+                        <span class="n">first_container</span> <span class="o">=</span> <span class="kc">False</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">_next_type</span> <span class="o">==</span> <span class="s1">&#39;container&#39;</span><span class="p">:</span>
+                            <span class="n">_frame</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bbox_to_frame</span><span class="p">(</span><span class="n">_bbox</span><span class="p">,</span> <span class="n">build_loc</span><span class="p">)</span>
+                            <span class="n">_next_bbox</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bbox_extractor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sizing_parts</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span>
+                            <span class="n">_next_frame</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bbox_to_frame</span><span class="p">(</span><span class="n">_next_bbox</span><span class="p">,</span> <span class="n">build_loc</span><span class="p">)</span>
+
+                            <span class="c1"># True would mean that the next frame is larger than the current</span>
+                            <span class="n">_width_check</span> <span class="o">=</span> <span class="p">(</span><span class="kc">True</span>
+                                            <span class="k">if</span> <span class="n">_frame</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;width&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">_next_frame</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;width&#39;</span><span class="p">]</span>
+                                            <span class="k">else</span> <span class="kc">False</span><span class="p">)</span>
+                            <span class="n">_height_check</span> <span class="o">=</span> <span class="p">(</span><span class="kc">True</span>
+                                             <span class="k">if</span> <span class="n">_frame</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;height&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">_next_frame</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;height&#39;</span><span class="p">]</span>
+                                             <span class="k">else</span> <span class="kc">False</span><span class="p">)</span>
+
+                            <span class="k">if</span> <span class="n">_width_check</span> <span class="ow">and</span> <span class="n">_height_check</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+                                <span class="n">frames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bbox_to_frame</span><span class="p">(</span><span class="n">_bbox</span><span class="p">,</span> <span class="n">build_loc</span><span class="p">))</span>
+                            <span class="k">elif</span> <span class="n">_width_check</span> <span class="ow">is</span> <span class="kc">False</span> <span class="ow">and</span> <span class="n">_height_check</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+                                <span class="n">_height_increase</span> <span class="o">=</span> <span class="p">(</span><span class="n">_next_frame</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;height&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">_frame</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;height&#39;</span><span class="p">])</span> <span class="o">/</span> <span class="mf">2.0</span>
+                                <span class="n">_new_box</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">_frame</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;length&#39;</span><span class="p">],</span>
+                                               <span class="n">length</span><span class="o">=</span><span class="n">_frame</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;width&#39;</span><span class="p">],</span>
+                                               <span class="n">height</span><span class="o">=</span><span class="n">_next_frame</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;height&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">_height_increase</span><span class="p">,</span>
+                                               <span class="n">position</span><span class="o">=</span><span class="n">translate</span><span class="p">(</span><span class="n">_frame</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;position&#39;</span><span class="p">],</span>
+                                                                  <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">_frame</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;length&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">,</span>
+                                                                  <span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">_frame</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;height&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">),</span>
+                                               <span class="n">centered</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                                <span class="c1"># frames.append(self.bbox_to_frame(_bbox, &#39;start&#39;))</span>
+                                <span class="n">frames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bbox_to_frame</span><span class="p">(</span><span class="n">_new_box</span><span class="o">.</span><span class="n">bbox</span><span class="p">,</span> <span class="s1">&#39;mid&#39;</span><span class="p">))</span>
+                            <span class="k">elif</span> <span class="n">_width_check</span> <span class="ow">is</span> <span class="kc">True</span> <span class="ow">and</span> <span class="n">_height_check</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+                                <span class="n">_width_increase</span> <span class="o">=</span> <span class="p">(</span><span class="n">_next_frame</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;width&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">_frame</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;width&#39;</span><span class="p">])</span> <span class="o">/</span> <span class="mf">2.0</span>
+                                <span class="n">_new_box</span> <span class="o">=</span> <span class="n">Box</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">_frame</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;length&#39;</span><span class="p">],</span>
+                                               <span class="n">length</span><span class="o">=</span><span class="n">_frame</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;width&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">_width_increase</span><span class="p">,</span>  <span class="c1"># Uses next width</span>
+                                               <span class="n">height</span><span class="o">=</span><span class="n">_frame</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;height&#39;</span><span class="p">],</span>  <span class="c1"># But keeps current height</span>
+                                               <span class="n">position</span><span class="o">=</span><span class="n">translate</span><span class="p">(</span><span class="n">_frame</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;position&#39;</span><span class="p">],</span>
+                                                                  <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">_frame</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;length&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">,</span>
+                                                                  <span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">_frame</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;height&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">),</span>
+                                               <span class="n">centered</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                                <span class="c1"># frames.append(self.bbox_to_frame(_bbox, &#39;start&#39;))</span>
+                                <span class="n">frames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bbox_to_frame</span><span class="p">(</span><span class="n">_new_box</span><span class="o">.</span><span class="n">bbox</span><span class="p">,</span> <span class="s1">&#39;mid&#39;</span><span class="p">))</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="k">if</span> <span class="ow">not</span> <span class="n">apex_reached</span><span class="p">:</span>  <span class="c1"># Creates a frame in-front and behind the largest bbox (apex)</span>
+                                    <span class="n">frames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bbox_to_frame</span><span class="p">(</span><span class="n">_bbox</span><span class="p">,</span> <span class="n">build_loc</span><span class="p">))</span>
+                                    <span class="n">build_loc</span> <span class="o">=</span> <span class="s1">&#39;end&#39;</span>
+                                    <span class="n">frames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bbox_to_frame</span><span class="p">(</span><span class="n">_bbox</span><span class="p">,</span> <span class="n">build_loc</span><span class="p">))</span>
+                                    <span class="n">apex_reached</span> <span class="o">=</span> <span class="kc">True</span>
+                                    <span class="n">apex_index</span> <span class="o">=</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span>  <span class="c1"># Making up for i = 1 being the first frame</span>
+                                <span class="k">elif</span> <span class="n">apex_reached</span><span class="p">:</span>
+                                    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Only a fuselage with one apex (location of maximum area) is &#39;</span>
+                                                    <span class="s1">&#39;allowed. Please re-arrange internals so that maximum thickness&#39;</span>
+                                                    <span class="s1">&#39; occurs only once&#39;</span><span class="p">)</span>
+                        <span class="k">elif</span> <span class="n">_next_type</span> <span class="o">!=</span> <span class="s1">&#39;container&#39;</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="n">apex_reached</span><span class="p">:</span>
+                                <span class="n">frames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bbox_to_frame</span><span class="p">(</span><span class="n">_bbox</span><span class="p">,</span> <span class="n">build_loc</span><span class="p">))</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="n">frames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bbox_to_frame</span><span class="p">(</span><span class="n">_bbox</span><span class="p">,</span> <span class="s1">&#39;start&#39;</span><span class="p">))</span>
+                                <span class="n">frames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bbox_to_frame</span><span class="p">(</span><span class="n">_bbox</span><span class="p">,</span> <span class="s1">&#39;end&#39;</span><span class="p">))</span>
+                                <span class="n">apex_index</span> <span class="o">=</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span>
+
+                <span class="c1"># Boom Logic</span>
+                <span class="c1"># TODO (TBD) Currently not implemented, but would be nice to have in the future for RQ-11 type designs</span>
+                <span class="k">elif</span> <span class="n">_type</span> <span class="o">==</span> <span class="s1">&#39;boom&#39;</span><span class="p">:</span>
+                    <span class="n">still_to_build</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="s1">&#39;boom&#39;</span><span class="p">,</span> <span class="n">i</span><span class="p">])</span>
+
+                <span class="c1"># End Boundary Condition</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compartment_type</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">_next_type</span> <span class="o">==</span> <span class="s1">&#39;motor&#39;</span><span class="p">:</span>
+                        <span class="n">frames</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">MFrame</span><span class="p">(</span><span class="n">motor_diameter</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sizing_parts</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">diameter</span><span class="p">,</span>
+                                              <span class="n">position</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sizing_parts</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">position</span><span class="p">)])</span>
+                    <span class="k">elif</span> <span class="n">_next_type</span> <span class="o">==</span> <span class="s1">&#39;tail&#39;</span><span class="p">:</span>
+                        <span class="n">still_to_build</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="s1">&#39;tail&#39;</span><span class="p">,</span> <span class="n">i</span><span class="p">])</span>
+
+            <span class="n">fuselage_complete</span> <span class="o">=</span> <span class="p">(</span><span class="kc">True</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">still_to_build</span><span class="p">)</span> <span class="ow">is</span> <span class="mi">0</span> <span class="k">else</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="s1">&#39;The supplied inputs do not have the same dimension&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;built_frames&#39;</span><span class="p">:</span> <span class="n">frames</span><span class="p">,</span>  <span class="c1"># type: list</span>
+                <span class="s1">&#39;apex_index&#39;</span><span class="p">:</span> <span class="n">apex_index</span><span class="p">,</span>  <span class="c1"># type: int</span>
+                <span class="s1">&#39;still_to_build&#39;</span><span class="p">:</span> <span class="n">still_to_build</span><span class="p">,</span>  <span class="c1"># type: list</span>
+                <span class="s1">&#39;fuselage_complete&#39;</span><span class="p">:</span> <span class="n">fuselage_complete</span><span class="p">}</span>  <span class="c1"># type: bool</span></div>
+
+<div class="viewcode-block" id="Fuselage.frames"><a class="viewcode-back" href="../../../components/fuselage/fuselage.html#components.fuselage.fuselage.Fuselage.frames">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">frames</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Collection of all center-fuselage section frames (those that were built by `frame_builder`. Each frame has</span>
+<span class="sd">        an :attr: `frame` and :attr: `points`. If the user option `minimize_frames` is True then only the following</span>
+<span class="sd">        frames are kept: [start, apex_start, apex_end, end].</span>
+
+<span class="sd">        :return: List of center-fuselage section frames</span>
+<span class="sd">        :rtype: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">grabbed_frames</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame_builder</span><span class="p">[</span><span class="s1">&#39;built_frames&#39;</span><span class="p">]]</span>
+        <span class="n">apex_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame_builder</span><span class="p">[</span><span class="s1">&#39;apex_index&#39;</span><span class="p">]</span>
+
+        <span class="c1"># Frame-minimization algorithm, USE WITH CAUTION!</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">minimize_frames</span><span class="p">:</span>
+            <span class="n">index_to_keep</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">apex_index</span><span class="p">,</span> <span class="n">apex_index</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">grabbed_frames</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="n">grabbed_frames</span> <span class="o">=</span> <span class="p">[</span><span class="n">grabbed_frames</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">grabbed_frames</span><span class="p">))</span>
+                              <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">index_to_keep</span><span class="p">]</span>
+
+        <span class="c1"># Grabbing-cached frames if they exist</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__framecache__</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">grabbed_frames</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__framecache__</span>
+        <span class="k">return</span> <span class="n">grabbed_frames</span></div>
+
+<div class="viewcode-block" id="Fuselage.curves"><a class="viewcode-back" href="../../../components/fuselage/fuselage.html#components.fuselage.fuselage.Fuselage.curves">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">curves</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Grabs all curves out of the list `frames`</span>
+
+<span class="sd">        :return: List of curves</span>
+<span class="sd">        :rtype: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">curve</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">frames</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Fuselage.points"><a class="viewcode-back" href="../../../components/fuselage/fuselage.html#components.fuselage.fuselage.Fuselage.points">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">points</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Grabs all spline_points out of the list `frames`. Due to how the primitive class `Frame` is defined</span>
+<span class="sd">        the significance of the points in order is as follows: Point 0 = Bottom (start), Point 1 = Right Side,</span>
+<span class="sd">        Point 2 = Top (end), Point 3 = Left Side</span>
+
+<span class="sd">        :return: List of spline_points in</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">spline_points</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">frames</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Fuselage.side_bc"><a class="viewcode-back" href="../../../components/fuselage/fuselage.html#components.fuselage.fuselage.Fuselage.side_bc">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">side_bc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; The side tangency boundary condition required for the fuselage nose and tail. This is obtained by fitting</span>
+<span class="sd">        a curve through all side-points (Point 1 of Attribute `points`). Since, the fuselage shell is lofted from nose</span>
+<span class="sd">        to tail (toward positive `x`) the start tangent and end tangents, obtained from a `FittedCurve`</span>
+<span class="sd">        both face this direction. Thus, to create a nose cone, which has a build direction of `x_` the direction of the</span>
+<span class="sd">        start_tangent must be reversed. BC 0 = Start Tangent (Direction `x_`), BC 1 = End Tangent (Direction `x`).</span>
+
+<span class="sd">        :returns: List containing the start and end tangent vectors, and construction spline, included for debugging</span>
+<span class="sd">        :rtype: Vector</span>
+
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Point 0 = Bottom, Point 1 = Side, Point 2 = Top, Point 3 = Side Reflected</span>
+        <span class="n">points</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">points</span><span class="p">]</span>
+        <span class="n">spline</span> <span class="o">=</span> <span class="n">FittedCurve</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>  <span class="c1"># Fitted Curve best reproduces the algorithm present in LoftedShell</span>
+
+        <span class="n">start_tangent</span> <span class="o">=</span> <span class="n">spline</span><span class="o">.</span><span class="n">tangent1</span><span class="o">.</span><span class="n">reverse</span>  <span class="c1"># Opposite direction required due to sign convention in FFrame</span>
+        <span class="n">end_tangent</span> <span class="o">=</span> <span class="n">spline</span><span class="o">.</span><span class="n">tangent2</span>
+
+        <span class="k">return</span> <span class="n">start_tangent</span><span class="p">,</span> <span class="n">end_tangent</span><span class="p">,</span> <span class="n">spline</span></div>
+
+<div class="viewcode-block" id="Fuselage.top_bc"><a class="viewcode-back" href="../../../components/fuselage/fuselage.html#components.fuselage.fuselage.Fuselage.top_bc">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">top_bc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; The top tangency boundary condition required for the fuselage nose and tail. This is obtained by extracting</span>
+<span class="sd">        the start and end tangents of the inner top edge from the attribute `center_section_left`. Keeping in-line with</span>
+<span class="sd">        the definition of points in the frame primitives, the interpolated curve is conveniently constructed from the</span>
+<span class="sd">        bottom point (Point 0) to the top point (Point 2). However, due to this convention the direction of the end</span>
+<span class="sd">        tangent must be reversed.</span>
+
+<span class="sd">        :returns: List containing the start and end tangent vectors</span>
+<span class="sd">        :rtype: Vector</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Due to the build order edge 1 will always be the top curve</span>
+        <span class="n">spline</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">center_section_left</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="n">start_tangent</span> <span class="o">=</span> <span class="n">spline</span><span class="o">.</span><span class="n">tangent1</span>
+
+        <span class="c1"># TODO Make this more robust, currently the end_tangent does not produce good results when ruled mode is on</span>
+        <span class="n">end_tangent</span> <span class="o">=</span> <span class="n">spline</span><span class="o">.</span><span class="n">tangent2</span>  <span class="c1"># Not true when ruled mode is turned</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">end_tangent</span><span class="o">.</span><span class="n">x</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Forced to zero to avoid minute floating point errors</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">end_tangent</span><span class="o">.</span><span class="n">z</span>
+        <span class="n">end_tangent</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">-</span><span class="n">z</span><span class="p">)</span>  <span class="c1"># Opposite direction required due to the build convention in Frame</span>
+
+        <span class="k">return</span> <span class="n">start_tangent</span><span class="p">,</span> <span class="n">end_tangent</span></div>
+
+<div class="viewcode-block" id="Fuselage.center_of_gravity"><a class="viewcode-back" href="../../../components/fuselage/fuselage.html#components.fuselage.fuselage.Fuselage.center_of_gravity">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">center_of_gravity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Area weighted average of center of gravity</span>
+
+<span class="sd">        :return: Position of the center of gravity in 3D space (x, y, z) w.r.t the origin XOY in [SI Meter]</span>
+<span class="sd">        :rtype: Point</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Array Index 0 = Area, Array Index 1 = cog</span>
+        <span class="n">nose</span> <span class="o">=</span> <span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">nose</span><span class="o">.</span><span class="n">cone</span><span class="o">.</span><span class="n">area</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nose</span><span class="o">.</span><span class="n">cone</span><span class="o">.</span><span class="n">cog</span><span class="p">]</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_nose</span>
+                <span class="k">else</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">Point</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)])</span>
+        <span class="n">tail</span> <span class="o">=</span> <span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">tail</span><span class="o">.</span><span class="n">cone</span><span class="o">.</span><span class="n">area</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tail</span><span class="o">.</span><span class="n">cone</span><span class="o">.</span><span class="n">cog</span><span class="p">]</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_tail</span>
+                <span class="k">else</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">Point</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)])</span>
+        <span class="n">center</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">center_section</span><span class="o">.</span><span class="n">area</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">center_section</span><span class="o">.</span><span class="n">cog</span><span class="p">]</span>
+
+        <span class="n">total_area</span> <span class="o">=</span> <span class="n">nose</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">tail</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">center</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="n">x_loc</span> <span class="o">=</span> <span class="p">(</span><span class="n">nose</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">nose</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">tail</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">tail</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">center</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">center</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="n">total_area</span>
+        <span class="n">y_loc</span> <span class="o">=</span> <span class="p">(</span><span class="n">nose</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">nose</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">y</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">tail</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">tail</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">y</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">center</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">center</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">y</span><span class="p">)</span> <span class="o">/</span> <span class="n">total_area</span>
+        <span class="n">z_loc</span> <span class="o">=</span> <span class="p">(</span><span class="n">nose</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">nose</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">z</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">tail</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">tail</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">z</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">center</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">center</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">z</span><span class="p">)</span> <span class="o">/</span> <span class="n">total_area</span>
+
+        <span class="k">return</span> <span class="n">Point</span><span class="p">(</span><span class="n">x_loc</span><span class="p">,</span> <span class="n">y_loc</span><span class="p">,</span> <span class="n">z_loc</span><span class="p">)</span></div>
+
+    <span class="c1"># --- Output Shapes: ----------------------------------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="Fuselage.center_section"><a class="viewcode-back" href="../../../components/fuselage/fuselage.html#components.fuselage.fuselage.Fuselage.center_section">[docs]</a>    <span class="nd">@Attribute</span><span class="p">(</span><span class="n">in_tree</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">center_section</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; The main output shape of the class Fuselage, constructed from the Private Attributes below &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">SewnShell</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">center_section_left</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">center_section_right</span><span class="p">],</span>
+                         <span class="n">color</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">color</span><span class="p">,</span>
+                         <span class="n">transparency</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">transparency</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Fuselage.nose"><a class="viewcode-back" href="../../../components/fuselage/fuselage.html#components.fuselage.fuselage.Fuselage.nose">[docs]</a>    <span class="nd">@Attribute</span><span class="p">(</span><span class="n">in_tree</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">nose</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns the nose cone of the fuselage is asked, otherwise returns a hidden circle. NOTE: This workaround</span>
+<span class="sd">        was necessary to produce the parts in the tree, while still preserving lazy evaluation &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_nose</span><span class="p">:</span>
+            <span class="n">shape_out</span> <span class="o">=</span> <span class="n">FCone</span><span class="p">(</span><span class="n">support_frame</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">frames</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                              <span class="n">top_tangent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">top_bc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">side_tangent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">side_bc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">direction</span><span class="o">=</span><span class="s1">&#39;x_&#39;</span><span class="p">,</span>
+                              <span class="n">color</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">color</span><span class="p">,</span>
+                              <span class="n">transparency</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">transparency</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">shape_out</span> <span class="o">=</span> <span class="n">Circle</span><span class="p">(</span><span class="n">radius</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">hidden</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">shape_out</span></div>
+
+<div class="viewcode-block" id="Fuselage.tail"><a class="viewcode-back" href="../../../components/fuselage/fuselage.html#components.fuselage.fuselage.Fuselage.tail">[docs]</a>    <span class="nd">@Attribute</span><span class="p">(</span><span class="n">in_tree</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">tail</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns the tail cone of the fuselage is asked, otherwise returns a hidden circle. NOTE: This workaround</span>
+<span class="sd">         was necessary to produce the parts in the tree, while still preserving lazy evaluation &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_tail</span><span class="p">:</span>
+            <span class="n">shape_out</span> <span class="o">=</span> <span class="n">FCone</span><span class="p">(</span><span class="n">support_frame</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">frames</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+                              <span class="n">top_tangent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">top_bc</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">side_tangent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">side_bc</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">direction</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span>
+                              <span class="n">color</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">color</span><span class="p">,</span>
+                              <span class="n">transparency</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">transparency</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">shape_out</span> <span class="o">=</span> <span class="n">Circle</span><span class="p">(</span><span class="n">radius</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">hidden</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">shape_out</span></div>
+
+<div class="viewcode-block" id="Fuselage.internal_shape"><a class="viewcode-back" href="../../../components/fuselage/fuselage.html#components.fuselage.fuselage.Fuselage.internal_shape">[docs]</a>    <span class="nd">@Attribute</span><span class="p">(</span><span class="n">private</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">internal_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This overwrites the Part defined in the class `Component` an internal_shape w/ a Dummy Value&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="Fuselage.fuselage_joiner"><a class="viewcode-back" href="../../../components/fuselage/fuselage.html#components.fuselage.fuselage.Fuselage.fuselage_joiner">[docs]</a>    <span class="nd">@Attribute</span><span class="p">(</span><span class="n">private</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">fuselage_joiner</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Joines the current instantiated elements (nose/tail cone(s)) of the fuselage and outputs a single part&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_tail</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_nose</span><span class="p">:</span>
+            <span class="n">first_iter</span> <span class="o">=</span> <span class="n">Fused</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_section</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tail</span><span class="o">.</span><span class="n">cone</span><span class="p">)</span>
+            <span class="n">shape_out</span> <span class="o">=</span> <span class="n">Fused</span><span class="p">(</span><span class="n">first_iter</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nose</span><span class="o">.</span><span class="n">cone</span><span class="p">,</span> <span class="n">hidden</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_tail</span><span class="p">:</span>
+            <span class="n">shape_out</span> <span class="o">=</span> <span class="n">Fused</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_section</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tail</span><span class="o">.</span><span class="n">cone</span><span class="p">,</span> <span class="n">hidden</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_nose</span><span class="p">:</span>
+            <span class="n">shape_out</span> <span class="o">=</span> <span class="n">Fused</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">center_section</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nose</span><span class="o">.</span><span class="n">cone</span><span class="p">,</span> <span class="n">hidden</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> Fuselage construction failed&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">shape_out</span></div>
+
+<div class="viewcode-block" id="Fuselage.external_shape"><a class="viewcode-back" href="../../../components/fuselage/fuselage.html#components.fuselage.fuselage.Fuselage.external_shape">[docs]</a>    <span class="nd">@Part</span>
+    <span class="k">def</span> <span class="nf">external_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">ScaledShape</span><span class="p">(</span><span class="n">shape_in</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">fuselage_joiner</span><span class="p">,</span> <span class="n">reference_point</span><span class="o">=</span><span class="n">Point</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">factor</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">)</span></div>
+
+    <span class="c1"># --- Private Attributes: -----------------------------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="Fuselage.transparency"><a class="viewcode-back" href="../../../components/fuselage/fuselage.html#components.fuselage.fuselage.Fuselage.transparency">[docs]</a>    <span class="nd">@Attribute</span><span class="p">(</span><span class="n">private</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">transparency</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Switch case that returns the proper transparency value based on the status of `show_internals`</span>
+
+<span class="sd">        :return: Transparency value</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mf">0.5</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_transparent</span> <span class="k">else</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="Fuselage.center_section_left"><a class="viewcode-back" href="../../../components/fuselage/fuselage.html#components.fuselage.fuselage.Fuselage.center_section_left">[docs]</a>    <span class="nd">@Attribute</span><span class="p">(</span><span class="n">private</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">center_section_left</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; The main fuselage section excluding nose and tail &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">LoftedShell</span><span class="p">(</span><span class="n">profiles</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">curves</span><span class="p">,</span> <span class="n">check_compatibility</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ruled</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ruled</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Fuselage.center_section_right"><a class="viewcode-back" href="../../../components/fuselage/fuselage.html#components.fuselage.fuselage.Fuselage.center_section_right">[docs]</a>    <span class="nd">@Attribute</span><span class="p">(</span><span class="n">private</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">center_section_right</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; The mirror image of `center_section_left` since by definition half-frames are used &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">MirroredShape</span><span class="p">(</span><span class="n">shape_in</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">center_section_left</span><span class="p">,</span>
+                             <span class="n">reference_point</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">,</span>
+                             <span class="n">vector1</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">Vx_</span><span class="p">,</span>
+                             <span class="n">vector2</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">Vz</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Fuselage.build_nose"><a class="viewcode-back" href="../../../components/fuselage/fuselage.html#components.fuselage.fuselage.Fuselage.build_nose">[docs]</a>    <span class="nd">@Attribute</span><span class="p">(</span><span class="n">private</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">build_nose</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Switch case that that returns True/False if a nose is specified in `compartment_type`</span>
+
+<span class="sd">        :rtype: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">any</span><span class="p">(</span><span class="s1">&#39;nose&#39;</span> <span class="ow">in</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame_builder</span><span class="p">[</span><span class="s1">&#39;still_to_build&#39;</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="Fuselage.build_tail"><a class="viewcode-back" href="../../../components/fuselage/fuselage.html#components.fuselage.fuselage.Fuselage.build_tail">[docs]</a>    <span class="nd">@Attribute</span><span class="p">(</span><span class="n">private</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">build_tail</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Switch case that that returns True/False if a tail is specified in `compartment_type`</span>
+
+<span class="sd">        :rtype: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">any</span><span class="p">(</span><span class="s1">&#39;tail&#39;</span> <span class="ow">in</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame_builder</span><span class="p">[</span><span class="s1">&#39;still_to_build&#39;</span><span class="p">])</span></div>
+
+    <span class="c1"># --- Methods: ----------------------------------------------------------------------------------------------------</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="c1"># TODO Comment class methods</span>
+    <span class="k">def</span> <span class="nf">bbox_to_frame</span><span class="p">(</span><span class="n">bbox</span><span class="p">,</span> <span class="n">placement</span><span class="o">=</span><span class="s1">&#39;start&#39;</span><span class="p">):</span>
+
+        <span class="c1"># Extracting corners from bbox</span>
+        <span class="n">corners</span> <span class="o">=</span> <span class="n">bbox</span><span class="o">.</span><span class="n">corners</span>
+        <span class="n">point0</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">corners</span><span class="p">)</span>
+        <span class="n">point1</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">corners</span><span class="p">)</span>
+
+        <span class="c1"># Determining width, height, and length of each frame (More robust than calling ordered faces)</span>
+        <span class="n">width</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">point1</span><span class="o">.</span><span class="n">y</span><span class="o">-</span><span class="n">point0</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+        <span class="n">height</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">point1</span><span class="o">.</span><span class="n">z</span><span class="o">-</span><span class="n">point0</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+        <span class="n">length</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">point1</span><span class="o">.</span><span class="n">x</span><span class="o">-</span><span class="n">point0</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+
+        <span class="c1"># Determining frame placement</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">point0</span><span class="o">.</span><span class="n">x</span> <span class="k">if</span> <span class="n">placement</span> <span class="o">==</span> <span class="s1">&#39;start&#39;</span>
+             <span class="k">else</span> <span class="n">point0</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">length</span> <span class="k">if</span> <span class="n">placement</span> <span class="o">==</span> <span class="s1">&#39;end&#39;</span> <span class="k">else</span> <span class="n">point0</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">length</span> <span class="o">/</span> <span class="mf">2.0</span> <span class="k">if</span> <span class="n">placement</span> <span class="o">==</span> <span class="s1">&#39;mid&#39;</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">width</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span> <span class="o">+</span> <span class="n">point0</span><span class="o">.</span><span class="n">y</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">point0</span><span class="o">.</span><span class="n">z</span>
+        <span class="n">position</span> <span class="o">=</span> <span class="n">Position</span><span class="p">(</span><span class="n">Point</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">))</span>
+
+        <span class="c1"># Instantiating the frame</span>
+        <span class="n">frame</span> <span class="o">=</span> <span class="n">FFrame</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">position</span><span class="p">)</span>
+
+        <span class="c1"># Placing parameters used to create the frame into a dictionary for reference/debugging</span>
+        <span class="n">param_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;width&#39;</span><span class="p">:</span> <span class="n">width</span><span class="p">,</span>
+                      <span class="s1">&#39;height&#39;</span><span class="p">:</span> <span class="n">height</span><span class="p">,</span>
+                      <span class="s1">&#39;length&#39;</span><span class="p">:</span> <span class="n">length</span><span class="p">,</span>
+                      <span class="s1">&#39;position&#39;</span><span class="p">:</span> <span class="n">position</span><span class="p">}</span>
+
+        <span class="k">return</span> <span class="p">[</span><span class="n">frame</span><span class="p">,</span> <span class="n">param_dict</span><span class="p">]</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="c1"># TODO comment this class method</span>
+    <span class="k">def</span> <span class="nf">bbox_extractor</span><span class="p">(</span><span class="n">sizing_components</span><span class="p">):</span>
+        <span class="n">shape_out</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">sizing_components</span><span class="p">)</span> <span class="o">==</span> <span class="nb">list</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sizing_components</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">shape_in</span> <span class="o">=</span> <span class="n">sizing_components</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">internal_shape</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">sizing_components</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+                    <span class="n">new_part</span> <span class="o">=</span> <span class="n">Fused</span><span class="p">(</span><span class="n">shape_in</span><span class="o">=</span><span class="n">shape_in</span><span class="p">,</span> <span class="n">tool</span><span class="o">=</span><span class="n">sizing_components</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">internal_shape</span><span class="p">)</span>
+                    <span class="n">shape_in</span> <span class="o">=</span> <span class="n">new_part</span>
+                <span class="n">shape_out</span> <span class="o">=</span> <span class="n">shape_in</span>
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">sizing_components</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">shape_out</span> <span class="o">=</span> <span class="n">sizing_components</span><span class="o">.</span><span class="n">internal_shape</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">shape_out</span> <span class="o">=</span> <span class="n">sizing_components</span><span class="o">.</span><span class="n">internal_shape</span>
+        <span class="k">return</span> <span class="n">shape_out</span><span class="o">.</span><span class="n">bbox</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">parapy.gui</span> <span class="k">import</span> <span class="n">display</span>
+
+    <span class="n">obj</span> <span class="o">=</span> <span class="n">Fuselage</span><span class="p">()</span>
+    <span class="n">display</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, San Kilkis, Nelson Johnson.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'1.0',
+            LANGUAGE:'en',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

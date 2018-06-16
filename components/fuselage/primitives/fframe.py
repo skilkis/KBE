@@ -11,6 +11,7 @@ __author__ = "Şan Kılkış"
 __all__ = ["FFrame"]
 
 #  TODO add validator (x, validator=val.Instance(int)) on position input?
+#  TODO finish comments, it is in documentation.
 
 
 class FFrame(GeomBase):

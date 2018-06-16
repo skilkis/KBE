@@ -101,6 +101,15 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/compoundstab.html">CompoundStabilizer</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/fuselage/index.html">Fuselage Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/fuselage/fframe.html">FFrame</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/fuselage/fcone.html">FCone</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/fuselage/mframe.html">MFrame</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/fuselage/fuselage.html">Fuselage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/fuselage/boom.html">Boom</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/motor.html">Electric Motor</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../main.html">Main UAV</a></li>
@@ -306,15 +315,6 @@
                                   <span class="n">taper</span><span class="o">=</span><span class="mf">0.35</span><span class="p">,</span>
                                   <span class="n">twist</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="CompoundStabilizer.component_type"><a class="viewcode-back" href="../../../components/liftingsurfaces/compoundstab.html#components.liftingsurfaces.compoundstab.CompoundStabilizer.component_type">[docs]</a>    <span class="nd">@Attribute</span>
-    <span class="k">def</span> <span class="nf">component_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; This attribute names the component &#39;ct&#39; for compound stabilizer.</span>
-
-<span class="sd">        :return: Name of VT</span>
-<span class="sd">        :rtype: str</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="s1">&#39;ct&#39;</span></div>
-
 <div class="viewcode-block" id="CompoundStabilizer.weight"><a class="viewcode-back" href="../../../components/liftingsurfaces/compoundstab.html#components.liftingsurfaces.compoundstab.CompoundStabilizer.weight">[docs]</a>    <span class="nd">@Attribute</span>
     <span class="k">def</span> <span class="nf">weight</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Total mass of the compound tail.</span>
@@ -423,6 +423,15 @@
         <span class="k">return</span> <span class="n">MirroredShape</span><span class="p">(</span><span class="n">shape_in</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">connector_right</span><span class="p">,</span>
                              <span class="n">reference_point</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">,</span>
                              <span class="n">vector1</span><span class="o">=</span><span class="n">Vector</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">vector2</span><span class="o">=</span><span class="n">Vector</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="CompoundStabilizer.component_type"><a class="viewcode-back" href="../../../components/liftingsurfaces/compoundstab.html#components.liftingsurfaces.compoundstab.CompoundStabilizer.component_type">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">component_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This attribute names the component &#39;ct&#39; for compound stabilizer.</span>
+
+<span class="sd">        :return: Name of Compound Tail Configuration</span>
+<span class="sd">        :rtype: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s1">&#39;ct&#39;</span></div>
 
 <div class="viewcode-block" id="CompoundStabilizer.external_shape"><a class="viewcode-back" href="../../../components/liftingsurfaces/compoundstab.html#components.liftingsurfaces.compoundstab.CompoundStabilizer.external_shape">[docs]</a>    <span class="nd">@Part</span>
     <span class="k">def</span> <span class="nf">external_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

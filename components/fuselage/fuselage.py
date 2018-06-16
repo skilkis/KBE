@@ -26,7 +26,16 @@ __all__ = ["Fuselage"]
 
 
 class Fuselage(ExternalBody):
+    """ This class will create a fuselage from frames created from desired internal components.
 
+    :returns: ParaPy Geometry of the Fuselage
+
+    :param compartment_type: Type of containers at each station, possible entries (nose, container, motor, tail)
+    :type compartment_type: str list
+
+    """
+
+    #  TODO Commenting, it is in documentation
     # TODO Class description and use cases
     # TODO compartment_type and sizing_parts validators
 
@@ -265,7 +274,7 @@ class Fuselage(ExternalBody):
         a curve through all side-points (Point 1 of Attribute `points`). Since, the fuselage shell is lofted from nose
         to tail (toward positive `x`) the start tangent and end tangents, obtained from a `FittedCurve`
         both face this direction. Thus, to create a nose cone, which has a build direction of `x_` the direction of the
-        start_tangent must be reversed. BC 0 = Start Tangent (Direction x_), BC 1 = End Tangent (Direction x).
+        start_tangent must be reversed. BC 0 = Start Tangent (Direction `x_`), BC 1 = End Tangent (Direction `x`).
 
         :returns: List containing the start and end tangent vectors, and construction spline, included for debugging
         :rtype: Vector

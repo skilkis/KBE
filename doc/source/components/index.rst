@@ -7,3 +7,6 @@ Components Module
    battery
    electronics/index
    liftingsurfaces/index
+   fuselage/index
+   motor
+

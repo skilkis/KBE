@@ -7,6 +7,7 @@ from parapy.core import *
 
 #  TODO Allow this to work with any input position
 #  TODO add validator on position input?
+#  TODO finish comments, it is in documentation already.
 
 __author__ = ["Şan Kılkış"]
 __all__ = ["MFrame"]

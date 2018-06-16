@@ -1,0 +1,360 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>components.fuselage.primitives.fcone &mdash; KBE 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+
+  
+  <script src="../../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> KBE
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../definitions.html">Definitions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../directories.html">Directories</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../components/index.html">Components Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../components/battery.html">Li-PO Battery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../components/electronics/index.html">Electronics Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../components/electronics/electronics.html">Electronics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../components/electronics/flightcontroller.html">FlightController</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../components/electronics/speedcontroller.html">SpeedController</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../components/liftingsurfaces/index.html">LiftingSurface Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../components/liftingsurfaces/liftingsurfaceprim.html">LiftingSurface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../components/liftingsurfaces/wing.html">Wing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../components/liftingsurfaces/scissorplot.html">ScissorPlot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../components/liftingsurfaces/horizontalstab.html">HorizontalStabilizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../components/liftingsurfaces/verticalstab.html">VerticalStablilizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../components/liftingsurfaces/compoundstab.html">CompoundStabilizer</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../components/fuselage/index.html">Fuselage Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../components/fuselage/fframe.html">FFrame</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../components/fuselage/fcone.html">FCone</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../components/fuselage/mframe.html">MFrame</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../components/fuselage/fuselage.html">Fuselage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../components/fuselage/boom.html">Boom</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../components/motor.html">Electric Motor</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../main.html">Main UAV</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">KBE</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>components.fuselage.primitives.fcone</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for components.fuselage.primitives.fcone</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="c1"># Required ParaPy Modules</span>
+<span class="kn">from</span> <span class="nn">parapy.geom</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">parapy.core</span> <span class="k">import</span> <span class="o">*</span>
+
+<span class="c1"># Required Modules</span>
+<span class="kn">from</span> <span class="nn">fframe</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">directories</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="n">sqrt</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Şan Kılkış&quot;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;FCone&quot;</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="FCone"><a class="viewcode-back" href="../../../../components/fuselage/fcone.html#components.fuselage.primitives.fcone.FCone">[docs]</a><span class="k">class</span> <span class="nc">FCone</span><span class="p">(</span><span class="n">GeomBase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; This creates the nose or tailcone for the fuselage.</span>
+
+<span class="sd">    :returns: Nose and/or tailcone for fuselage</span>
+
+<span class="sd">    :param support_frame: This is an FFrame Class</span>
+<span class="sd">    :type support_frame: FFrame</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># TODO cleanup init args and inputs, write documentation(comments, it is already in documentation)</span>
+    <span class="c1"># TODO ADD VALIDATORS TO INPUTS!</span>
+    <span class="c1">#  TODO finish commenting, it is in documentation</span>
+
+    <span class="n">__initargs__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;support_frame&quot;</span><span class="p">,</span> <span class="s2">&quot;side_tangent&quot;</span><span class="p">,</span> <span class="s2">&quot;top_tangent&quot;</span><span class="p">,</span> <span class="s2">&quot;direction&quot;</span><span class="p">,</span> <span class="s2">&quot;tip_point_z&quot;</span><span class="p">]</span>
+    <span class="n">__icon__</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;ICON_DIR&#39;</span><span class="p">],</span> <span class="s1">&#39;cone.png&#39;</span><span class="p">)</span>
+
+    <span class="c1"># A parameter for debugging, turns the visibility of miscellaneous parts ON/OFF</span>
+    <span class="n">__show_primitives</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># type: bool</span>
+
+    <span class="n">support_frame</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">FFrame</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mf">0.5</span><span class="p">))</span>  <span class="c1">#</span>
+    <span class="n">side_tangent</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">Vector</span><span class="p">(</span><span class="o">-</span><span class="mf">0.88</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.65</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="n">top_tangent</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">Vector</span><span class="p">(</span><span class="mf">0.8851351164623547</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.46533410105554684</span><span class="p">))</span>
+    <span class="n">direction</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;x_&#39;</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">OneOf</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;x_&quot;</span><span class="p">]))</span>
+    <span class="n">slenderness_ratio</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">))</span>  <span class="c1"># Nose-cone length / frame diagonal</span>
+    <span class="n">transparency</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+
+    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">length</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">diagonal</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">support_frame</span><span class="o">.</span><span class="n">height</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">support_frame</span><span class="o">.</span><span class="n">width</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">slenderness_ratio</span> <span class="o">*</span> <span class="n">diagonal</span>
+
+    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">build_direction</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">direction</span> <span class="o">==</span> <span class="s1">&#39;x_&#39;</span> <span class="k">else</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">value</span>
+
+    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">side_tangent_reflected</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">side_tangent</span><span class="o">.</span><span class="n">x</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">side_tangent</span><span class="o">.</span><span class="n">y</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">side_tangent</span><span class="o">.</span><span class="n">z</span>
+        <span class="k">return</span> <span class="n">Vector</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">-</span><span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
+
+    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">tip_point</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">support_position</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">support_frame</span><span class="o">.</span><span class="n">position</span>
+        <span class="n">support_mid_point</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">support_frame</span><span class="o">.</span><span class="n">spline_points</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="c1"># delta_z = self.build_direction * (self.side_tangent.z / self.side_tangent.x) * self.length</span>
+        <span class="k">return</span> <span class="n">Point</span><span class="p">(</span><span class="n">support_position</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">build_direction</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">),</span>
+                     <span class="n">support_position</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">support_mid_point</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+
+    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">guides</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">start_frame</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">support_frame</span>
+        <span class="n">points</span> <span class="o">=</span> <span class="n">start_frame</span><span class="o">.</span><span class="n">spline_points</span>
+
+        <span class="n">frame_curve</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">support_frame</span><span class="o">.</span><span class="n">curve</span>
+        <span class="n">frame_curve_split</span> <span class="o">=</span> <span class="n">SplitCurve</span><span class="p">(</span><span class="n">curve_in</span><span class="o">=</span><span class="n">frame_curve</span><span class="p">,</span> <span class="n">tool</span><span class="o">=</span><span class="n">points</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">edges</span>
+
+        <span class="n">v_curve</span> <span class="o">=</span> <span class="n">InterpolatedCurve</span><span class="p">(</span><span class="n">points</span><span class="o">=</span><span class="p">[</span><span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">tip_point</span><span class="p">,</span> <span class="n">points</span><span class="p">[</span><span class="mi">2</span><span class="p">]],</span>
+                                    <span class="n">tangents</span><span class="o">=</span><span class="p">[</span><span class="n">Vector</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">build_direction</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>  <span class="c1"># Bottom forced Horizontal</span>
+                                              <span class="n">Vector</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>  <span class="c1"># Mid-Point Vector (Forced z+ from sign convention)</span>
+                                              <span class="bp">self</span><span class="o">.</span><span class="n">top_tangent</span><span class="p">])</span>
+        <span class="n">v_curve_split</span> <span class="o">=</span> <span class="n">SplitCurve</span><span class="p">(</span><span class="n">curve_in</span><span class="o">=</span><span class="n">v_curve</span><span class="p">,</span> <span class="n">tool</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tip_point</span><span class="p">)</span><span class="o">.</span><span class="n">edges</span>
+
+        <span class="n">h_curve</span> <span class="o">=</span> <span class="n">InterpolatedCurve</span><span class="p">(</span><span class="n">points</span><span class="o">=</span><span class="p">[</span><span class="n">points</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">tip_point</span><span class="p">,</span> <span class="n">points</span><span class="p">[</span><span class="mi">3</span><span class="p">]],</span>
+                                    <span class="n">tangents</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">side_tangent</span><span class="p">,</span>
+                                              <span class="n">Vector</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>  <span class="c1"># Mid-Point Vector (Forced y-)</span>
+                                              <span class="bp">self</span><span class="o">.</span><span class="n">side_tangent_reflected</span><span class="p">])</span>
+        <span class="n">h_curve_split</span> <span class="o">=</span> <span class="n">SplitCurve</span><span class="p">(</span><span class="n">curve_in</span><span class="o">=</span><span class="n">h_curve</span><span class="p">,</span> <span class="n">tool</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tip_point</span><span class="p">)</span><span class="o">.</span><span class="n">edges</span>
+
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;f_curve&#39;</span><span class="p">:</span> <span class="n">frame_curve_split</span><span class="p">,</span> <span class="s1">&#39;v_curve&#39;</span><span class="p">:</span> <span class="n">v_curve_split</span><span class="p">,</span> <span class="s1">&#39;h_curve&#39;</span><span class="p">:</span> <span class="n">h_curve_split</span><span class="p">}</span>
+
+    <span class="c1"># --- Output Surface: ---------------------------------------------------------------------------------------------</span>
+
+    <span class="nd">@Part</span>
+    <span class="k">def</span> <span class="nf">cone</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">SewnShell</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">cone_right</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cone_left</span><span class="p">],</span> <span class="n">transparency</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">transparency</span><span class="p">)</span>
+
+    <span class="c1"># --- Primitives: -------------------------------------------------------------------------------------------------</span>
+
+    <span class="nd">@Part</span><span class="p">(</span><span class="n">in_tree</span><span class="o">=</span><span class="n">__show_primitives</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">filled_top</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">FilledSurface</span><span class="p">(</span><span class="n">curves</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">guides</span><span class="p">[</span><span class="s1">&#39;f_curve&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">guides</span><span class="p">[</span><span class="s1">&#39;v_curve&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">reversed</span><span class="p">,</span>
+                                     <span class="bp">self</span><span class="o">.</span><span class="n">guides</span><span class="p">[</span><span class="s1">&#39;h_curve&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">reversed</span><span class="p">])</span>
+
+    <span class="nd">@Part</span><span class="p">(</span><span class="n">in_tree</span><span class="o">=</span><span class="n">__show_primitives</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">filled_bot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">FilledSurface</span><span class="p">(</span><span class="n">curves</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">guides</span><span class="p">[</span><span class="s1">&#39;h_curve&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">guides</span><span class="p">[</span><span class="s1">&#39;v_curve&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">reversed</span><span class="p">,</span>
+                                     <span class="bp">self</span><span class="o">.</span><span class="n">guides</span><span class="p">[</span><span class="s1">&#39;f_curve&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]])</span>
+    <span class="nd">@Part</span><span class="p">(</span><span class="n">in_tree</span><span class="o">=</span><span class="n">__show_primitives</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">cone_right</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">SewnShell</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">filled_top</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">filled_bot</span><span class="p">])</span>
+
+    <span class="nd">@Part</span><span class="p">(</span><span class="n">in_tree</span><span class="o">=</span><span class="n">__show_primitives</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">cone_left</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">MirroredShape</span><span class="p">(</span><span class="n">shape_in</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cone_right</span><span class="p">,</span>
+                             <span class="n">reference_point</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">,</span>
+                             <span class="n">vector1</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">Vx_</span><span class="p">,</span>
+                             <span class="n">vector2</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">Vz</span><span class="p">)</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">parapy.gui</span> <span class="k">import</span> <span class="n">display</span>
+
+    <span class="n">obj</span> <span class="o">=</span> <span class="n">FCone</span><span class="p">()</span>
+    <span class="n">display</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, San Kilkis, Nelson Johnson.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../../',
+            VERSION:'1.0',
+            LANGUAGE:'en',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

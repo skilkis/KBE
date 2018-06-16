@@ -11,17 +11,35 @@ from math import radians
 __author__ = ["Şan Kılkış", "Nelson Johnson"]
 __all__ = ["Boom"]
 
-#  TODO wing and tain _in validators
+#  TODO add validator in inputs?
+#  TODO Commenting, it is in documentation
 
 
 class Boom(ExternalBody):
+    """ This class will create a dual boom connection between the Main wing's spar line and the front face of the
+    connector described in 'CompoundStabilizer'.
+
+    :returns: ParaPy Geometry of the Booms
+
+    :param wing_in: This is the Wing instantiation to build the booms.
+    :type wing_in: Wing
+
+    :param tail_in: This is the CompoundStabilizer instantiation with connectors to build the booms.
+    :type tail_in: CompoundStabilizer
+
+    :param diameter_factor: This is a factor to scale the boom diameter to the connector diameter so they fit inside \
+    one another.
+    :type diameter_factor: float
+
+    :param ply_number: This is the number of carbon fiber pre-preg plys which the hollow booms are to be made of.
+    :type ply_number: int
+    """
 
     wing_in = Input(Wing())
     tail_in = Input(CompoundStabilizer())
     diameter_factor = Input(0.75, validator=val.Between(0.5, 1.0))
 
     #: Changes the number of ply's of carbon fiber http://www.ijera.com/papers/Vol4_issue5/Version%202/J45025355.pdf
-    #: :type: tuple
     ply_number = Input(3, validator=val.Instance(int))
 
     @Attribute
@@ -30,7 +48,11 @@ class Boom(ExternalBody):
 
     @Attribute
     def wing_end_point(self):
-        """ Defines the termination point of the boom-extrude """
+        """ Defines the termination point of the boom-extrude.
+
+        :return: Fused Shape
+        :rtype: Fused
+        """
         srf = self.tail_in.boom_plane
         line = self.wing_in.front_spar_line
         return srf.intersection_point(line)
@@ -73,6 +95,7 @@ class Boom(ExternalBody):
     @Part
     def external_shape(self):
         """ This part is the external shape of the boom.
+
         :return: Fused Shape
         :rtype: Fused
         """
@@ -81,7 +104,11 @@ class Boom(ExternalBody):
 
     @Attribute(private=True)
     def internal_shape(self):
-        """ This overwrites the Part defined in the class `Component` an internal_shape w/ a Dummy Value"""
+        """ This overwrites the Part defined in the class `Component` an internal_shape w/ a Dummy Value
+
+        :return: Fused Shape
+        :rtype: Fused
+        """
         return None
 
 

@@ -138,15 +138,6 @@ class CompoundStabilizer(ExternalBody):
                                   twist=0.0)
 
     @Attribute
-    def component_type(self):
-        """ This attribute names the component 'ct' for compound stabilizer.
-
-        :return: Name of VT
-        :rtype: str
-        """
-        return 'ct'
-
-    @Attribute
     def weight(self):
         """ Total mass of the compound tail.
 
@@ -254,6 +245,15 @@ class CompoundStabilizer(ExternalBody):
         return MirroredShape(shape_in=self.connector_right,
                              reference_point=self.position,
                              vector1=Vector(1, 0, 0), vector2=Vector(0, 0, 1))
+
+    @Attribute
+    def component_type(self):
+        """ This attribute names the component 'ct' for compound stabilizer.
+
+        :return: Name of Compound Tail Configuration
+        :rtype: str
+        """
+        return 'ct'
 
     @Part
     def external_shape(self):

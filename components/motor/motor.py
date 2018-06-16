@@ -17,14 +17,22 @@ __author__ = ["Şan Kılkış"]
 __all__ = ["Motor"]
 
 #  TODO Validator on motor_name, position, database_path
+#  TODO commenting, it is in documentation
 
 
 class Motor(Component):
+    """ This class will create an electric motor.
+
+    :returns: ParaPy Geometry of the Electric Motor
+
+    :param target_power: This is the motor target power.
+    :type target_power: float
+    """
 
     __initargs__ = ["target_power", "motor_name", "position"]
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'motor.png')
 
-    # A parameter for debugging, turns the visibility of miscellaneous parts ON/OFF
+    #: A parameter for debugging, turns the visibility of miscellaneous parts ON/OFF
     __show_primitives = False  # type: bool
 
     target_power = Input(100.0, validator=val.Positive())
@@ -35,7 +43,10 @@ class Motor(Component):
 
     @Input
     def label(self):
-        """Overwrites the inherited slot `label' with the chosen motor_name"""
+        """Overwrites the inherited slot `label' with the chosen motor_name
+
+        :rtype: str
+        """
         return self.specs['name']
 
     @Attribute
@@ -61,10 +72,10 @@ class Motor(Component):
 
     @Attribute
     def motor_selector(self):
-        """ An attribute which selects a motor based on input of target power. A tolerance of 10% is added to this value
-        in order to allow the algorithm to select a slightly under-powered motor and utilize it's burst power to meet
-        the requirement. This can be set to zero in the code if desired with the variable `tolerance` below. Finally,
-        a condition is added to select the lightest motor from the list of available motors.
+        """ An attribute which selects a motor based on input of target power. A tolerance of 10% is added to this \
+        value in order to allow the algorithm to select a slightly under-powered motor and utilize it's burst power \
+        to meet the requirement. This can be set to zero in the code if desired with the variable 'tolerance' below. \
+        Finally, a condition is added to select the lightest motor from the list of available motors.
 
         :return: Name of the selected motor
         :rtype: str
@@ -147,8 +158,8 @@ class Motor(Component):
 
     @Attribute
     def power(self):
-        """ Pulls the corresponding `field_names` `constant_power` and `burst_power` from the dictionary `specs`.
-        This is done to minimize the amount of characters necessary to call these parameters. Index 0 of the list is
+        """ Pulls the corresponding `field_names` `constant_power` and `burst_power` from the dictionary `specs`. \
+        This is done to minimize the amount of characters necessary to call these parameters. Index 0 of the list is \
         `constant_power` and Index 1 is `burst_power`.
 
         :rtype: list
@@ -157,14 +168,16 @@ class Motor(Component):
 
     @Attribute
     def efficiency(self):
-        """ Assumed motor efficiency is at the higher-end of typical values and equal to 90%
+        """ Assumed motor efficiency is at the higher-end of typical values and equal to 90% \
+        http://www.radiocontrolinfo.com/brushless-motor-efficiency/
 
-        http://www.radiocontrolinfo.com/brushless-motor-efficiency/ """
+        :rtype: float
+        """
         return 0.9
 
     @Attribute
     def extrude_direction(self):
-        """ Defines the extrude direction as a `vector` of the motor-body as well as the shaft. To access this dict
+        """ Defines the extrude direction as a `vector` of the motor-body as well as the shaft. To access this dict \
         use the `field_names`: `body` and `shaft` respectively.
 
         :rtype: dict
@@ -190,7 +203,11 @@ class Motor(Component):
 
     @Part
     def internal_shape(self):
-        """ Chamfers the edges of `motor_body_import` to better resemble the shape of RimFire engines """
+        """ Chamfers the edges of `motor_body_import` to better resemble the shape of RimFire engines
+
+        :return: Motor 'internal_shape'
+        :rtype: ChamferedSolid
+        """
         return ChamferedSolid(built_from=self.motor_body_import,
                               distance=self.shaft_diameter,
                               edge_table=self.chamfer_edges,  # Flagged as an error but works fine
@@ -198,7 +215,11 @@ class Motor(Component):
 
     @Part
     def shaft(self):
-        """ Creates the motor shaft as an `ExtrudedSolid` in the direction specified in `extrude_direction` """
+        """ Creates the motor shaft as an `ExtrudedSolid` in the direction specified in `extrude_direction`
+
+        :return: Motor Shaft
+        :rtype: ExtrudedSolid
+        """
         return ExtrudedSolid(island=self.shaft_circle,
                              distance=self.shaft_length,
                              direction=self.extrude_direction['shaft'],
@@ -208,7 +229,11 @@ class Motor(Component):
 
     @Part(in_tree=__show_primitives)
     def motor_circle(self):
-        """ Creates the circle that is used to extrude and form the motor body """
+        """ Creates the circle that is used to extrude and form the motor body
+
+        :return: Circle used for Motor Body Extrusion
+        :rtype: Circle
+        """
         return Circle(position=translate(YOZ, 'x', self.position.y,
                                          'y', self.position.z,
                                          'z', self.position.x),
@@ -216,13 +241,21 @@ class Motor(Component):
 
     @Part(in_tree=__show_primitives)
     def shaft_circle(self):
-        """ Creates the circle that is used to extrude and form the motor shaft """
+        """ Creates the circle that is used to extrude and form the motor shaft
+
+        :return: Circle used for Motor Shaft Extrusion
+        :rtype: Circle
+        """
         return Circle(position=translate(YOZ, 'x', self.position.y, 'y', self.position.z, 'z', self.position.x),
                       radius=self.shaft_diameter / 2.0)
 
     @Part(in_tree=__show_primitives)
     def motor_body_import(self):
-        """ Creates the motor body as an `ExtrudedSolid` in the direction specified in `extrude_direction` """
+        """ Creates the motor body as an `ExtrudedSolid` in the direction specified in `extrude_direction`
+
+        :return: Motor Body
+        :rtype: ExtrudedSolid
+        """
         return ExtrudedSolid(island=self.motor_circle,
                              distance=self.length,
                              direction=self.extrude_direction['body'])

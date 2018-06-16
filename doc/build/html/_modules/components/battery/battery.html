@@ -101,6 +101,15 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/compoundstab.html">CompoundStabilizer</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/fuselage/index.html">Fuselage Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/fuselage/fframe.html">FFrame</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/fuselage/fcone.html">FCone</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/fuselage/mframe.html">MFrame</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/fuselage/fuselage.html">Fuselage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/fuselage/boom.html">Boom</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/motor.html">Electric Motor</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../main.html">Main UAV</a></li>
@@ -187,6 +196,7 @@
 <span class="c1"># TODO remove error message since it is already handled by a validator</span>
 <span class="c1"># TODO Add power requirement</span>
 
+
 <span class="c1"># A parameter for debugging, turns the visibility of miscellaneous parts ON/OFF</span>
 <span class="n">show_primitives</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># type: bool</span>
 
@@ -228,14 +238,14 @@
     <span class="k">def</span> <span class="nf">component_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; This attribute names the component &#39;battery&#39; for Battery.</span>
 
-<span class="sd">        :return: str</span>
+<span class="sd">        :return: Name of the Battery</span>
 <span class="sd">        :rtype: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="s1">&#39;battery&#39;</span></div>
 
 <div class="viewcode-block" id="Battery.weight"><a class="viewcode-back" href="../../../components/battery.html#components.battery.Battery.weight">[docs]</a>    <span class="nd">@Attribute</span>
     <span class="k">def</span> <span class="nf">weight</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Total mass of the battery</span>
+        <span class="sd">&quot;&quot;&quot; Total mass of the battery.</span>
 
 <span class="sd">        :return: Mass in SI kilogram</span>
 <span class="sd">        :rtype: float</span>
@@ -244,7 +254,7 @@
 
 <div class="viewcode-block" id="Battery.center_of_gravity"><a class="viewcode-back" href="../../../components/battery.html#components.battery.Battery.center_of_gravity">[docs]</a>    <span class="nd">@Attribute</span>
     <span class="k">def</span> <span class="nf">center_of_gravity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Location of the battery center of gravity w.r.t the origin</span>
+        <span class="sd">&quot;&quot;&quot; Location of the battery center of gravity w.r.t the origin.</span>
 
 <span class="sd">        :return: Location Tuple in SI meter</span>
 <span class="sd">        :rtype: Point</span>
@@ -253,7 +263,7 @@
 
 <div class="viewcode-block" id="Battery.constants"><a class="viewcode-back" href="../../../components/battery.html#components.battery.Battery.constants">[docs]</a>    <span class="nd">@Attribute</span>
     <span class="k">def</span> <span class="nf">constants</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; This attribute contains the battery constants</span>
+        <span class="sd">&quot;&quot;&quot; This attribute contains the battery constants.</span>
 
 <span class="sd">        :return: Dictionary With Battery Constants</span>
 <span class="sd">        :rtype: dict</span>
@@ -270,7 +280,7 @@
     <span class="k">def</span> <span class="nf">total_energy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; This attribute calculates the required battery total energy.</span>
 
-<span class="sd">        :return: Battery Energy</span>
+<span class="sd">        :return: Battery Energy in Watt Hours</span>
 <span class="sd">        :rtype: float</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sizing_target</span> <span class="o">==</span> <span class="s1">&#39;weight&#39;</span><span class="p">:</span>

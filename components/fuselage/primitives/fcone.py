@@ -15,10 +15,17 @@ __all__ = ["FCone"]
 
 
 class FCone(GeomBase):
+    """ This creates the nose or tailcone for the fuselage.
 
+    :returns: Nose and/or tailcone for fuselage
 
-    # TODO cleanup init args and inputs, write documentation
+    :param support_frame: This is an FFrame Class
+    :type support_frame: FFrame
+    """
+
+    # TODO cleanup init args and inputs, write documentation(comments, it is already in documentation)
     # TODO ADD VALIDATORS TO INPUTS!
+    #  TODO finish commenting, it is in documentation
 
     __initargs__ = ["support_frame", "side_tangent", "top_tangent", "direction", "tip_point_z"]
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'cone.png')

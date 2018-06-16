@@ -18,6 +18,7 @@ __all__ = ["Battery", "show_primitives"]
 # TODO remove error message since it is already handled by a validator
 # TODO Add power requirement
 
+
 # A parameter for debugging, turns the visibility of miscellaneous parts ON/OFF
 show_primitives = False  # type: bool
 
@@ -59,14 +60,14 @@ class Battery(Component):
     def component_type(self):
         """ This attribute names the component 'battery' for Battery.
 
-        :return: str
+        :return: Name of the Battery
         :rtype: str
         """
         return 'battery'
 
     @Attribute
     def weight(self):
-        """ Total mass of the battery
+        """ Total mass of the battery.
 
         :return: Mass in SI kilogram
         :rtype: float
@@ -75,7 +76,7 @@ class Battery(Component):
 
     @Attribute
     def center_of_gravity(self):
-        """ Location of the battery center of gravity w.r.t the origin
+        """ Location of the battery center of gravity w.r.t the origin.
 
         :return: Location Tuple in SI meter
         :rtype: Point
@@ -84,7 +85,7 @@ class Battery(Component):
 
     @Attribute
     def constants(self):
-        """ This attribute contains the battery constants
+        """ This attribute contains the battery constants.
 
         :return: Dictionary With Battery Constants
         :rtype: dict
@@ -101,7 +102,7 @@ class Battery(Component):
     def total_energy(self):
         """ This attribute calculates the required battery total energy.
 
-        :return: Battery Energy
+        :return: Battery Energy in Watt Hours
         :rtype: float
         """
         if self.sizing_target == 'weight':
