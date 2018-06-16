@@ -111,8 +111,8 @@ class DesignInput(Base):
 
         self.performance_goal = [str(i[1]) for i in ws._cell_values if i[0] == 'performance_goal'][0]
         self.goal_value = [i[1] for i in ws._cell_values if i[0] == 'goal_value'][0]
-        self.weight_target = [str(i[1]) for i in ws._cell_values if i[0] == 'weight_target'][0]
         self.target_value = [i[1] for i in ws._cell_values if i[0] == 'target_value'][0]
+        self.weight_target = [str(i[1]) for i in ws._cell_values if i[0] == 'weight_target'][0]
         self.payload_type = [str(i[1]) for i in ws._cell_values if i[0] == 'payload_type'][0]
         self.configuration = [str(i[1]) for i in ws._cell_values if i[0] == 'configuration'][0]
         self.handlaunch = [True if str(i[1]) == 'True' else False for i in ws._cell_values if i[0] == 'handlaunch'][0]

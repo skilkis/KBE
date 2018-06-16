@@ -33,6 +33,14 @@ __show_primitives = False  # type: bool
 
 
 class EOIR(ExternalBody):
+    """  This script will generate the Electro-Optical Infra-Ied camera as a payload. There are 7 cameras which span
+    the entire payload range of 1 to 20 kg.
+
+    :returns: ParaPy Geometry of the Horizontal Tail Surface
+
+    :param planform_area: This is the Required Planfrom Area for the HT from the Scissor Plot in [m^2]
+    :type planform_area: float
+    """
 
     __initargs__ = ["target_weight", "camera_name", "position"]
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'camera.png')
