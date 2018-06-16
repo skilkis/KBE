@@ -109,13 +109,14 @@ class DesignInput(Base):
         # Extracts relevant inputs from user excel-file in which the variable order does not matter
         # if correct variable names are not present no inputs will be replaced in the GUI
 
-        self.performance_goal = [str(i[1]) for i in ws._cell_values if i[0] == 'performance_goal'][0]
-        self.goal_value = [i[1] for i in ws._cell_values if i[0] == 'goal_value'][0]
-        self.target_value = [i[1] for i in ws._cell_values if i[0] == 'target_value'][0]
-        self.weight_target = [str(i[1]) for i in ws._cell_values if i[0] == 'weight_target'][0]
-        self.payload_type = [str(i[1]) for i in ws._cell_values if i[0] == 'payload_type'][0]
-        self.configuration = [str(i[1]) for i in ws._cell_values if i[0] == 'configuration'][0]
-        self.handlaunch = [True if str(i[1]) == 'True' else False for i in ws._cell_values if i[0] == 'handlaunch'][0]
+        setattr(self, 'performance_goal',[str(i[1]) for i in ws._cell_values if i[0] == 'performance_goal'][0])
+        setattr(self, 'goal_value', [i[1] for i in ws._cell_values if i[0] == 'goal_value'][0])
+        setattr(self, 'target_value', [i[1] for i in ws._cell_values if i[0] == 'target_value'][0])
+        setattr(self, 'weight_target', [str(i[1]) for i in ws._cell_values if i[0] == 'weight_target'][0])
+        setattr(self, 'payload_type', [str(i[1]) for i in ws._cell_values if i[0] == 'payload_type'][0])
+        setattr(self, 'configuration', [str(i[1]) for i in ws._cell_values if i[0] == 'configuration'][0])
+        setattr(self, 'handlaunch', [True if str(i[1]) == 'True' else False for i in ws._cell_values
+                                     if i[0] == 'handlaunch'][0])
 
         return 'Inputs have been overwritten from the supplied Excel File'
 

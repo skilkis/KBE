@@ -30,8 +30,6 @@
 # TODO Add instance validator for each class input (check out performance.py for example)
 # TODO Make a nice visual CG representation of both c.g. before and after run
 
-#  TODO increase size of VT. They look too small when handlaunch = false
-
 # TODO change input endurance to be in hours instead of seconds (more convenient)
 #  TODO every class should have print statement saying that it has been instantiated into the console
 
@@ -42,6 +40,8 @@
 # TODO move everything except for main.py into a \bin folder to clean up directory
 
 # TODO Add UML in doc
+
+# TODO bug found in eletronics, number of engines messes up the Fuse Operation
 
 from design import *
 from parapy.core import *
@@ -509,9 +509,6 @@ class UAV(DesignInput):
                     row = row + 1
                     ws0.write(row, 11, key)
                     ws0.write(row, 12, value)
-
-
-        # row = row + 2  # Skipping two rows to write CD0
 
         wb.save(os.path.join(DIRS['USER_DIR'], 'results', 'output.xls'))
         return 'Excel File Written'
