@@ -36,7 +36,7 @@ class CompoundStabilizer(ExternalBody):
     :type lhc: float
 
     :param configuration: This is a switch to determine the configuration.
-    :type configuration: float
+    :type configuration: str
 
     :param aspect_ratio: This is the assumed Aspect Ratio of the HT Surface. The VT surface is a fixed AR of 1.4
     :type aspect_ratio: float

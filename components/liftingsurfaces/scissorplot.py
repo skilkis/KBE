@@ -14,6 +14,7 @@ __author__ = "Nelson Johnson"
 __all__ = ["ScissorPlot"]
 
 #  TODO MAKE SURE THAT THE ASPECT RATIO IS CONSISTENT WHEN CHANGED IN OTHER PLACES OF THE GUI. SEE TODO IN MAIN!!!!!!!!
+# TODO Make sure that the Input excel file passes the argument 'configuration' correctly
 
 
 class ScissorPlot(Base):
@@ -80,7 +81,7 @@ class ScissorPlot(Base):
     :type delta_xcg: float
 
     :param configuration: This is a switch to determine the configuration.
-    :type configuration: float
+    :type configuration: str
 
     :param lhc: Derived input of the non-dimensionalized tail arm based on configuration choice
     :type lhc: float

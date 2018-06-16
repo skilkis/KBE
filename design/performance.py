@@ -199,13 +199,21 @@ class Performance(Base):
         plt.style.use('ggplot')
         plt.title('Power Available and Required as a Function of True Airspeed')
 
-        # TODO add vertical lines for max speed, endurance speed, and cruise speed
         plt.plot(self.prop_speed_range, self.power_available_cont, label='Continuous Power')
         plt.plot(self.prop_speed_range, self.power_available_burst, label='Burst Power')
         plt.plot(self.speed_range, self.parasite_power, label='Parasitic')
         plt.plot(self.speed_range, self.induced_power, label='Induced')
         plt.plot(self.speed_range, self.power_required, label='Required')
-        plt.axvline(self.stall_speed)
+
+        # Plotting Velocities
+        plt.axvline(self.stall_speed, color='red', linestyle='-.',
+                    label=r'$V_{\mathrm{stall}}=%1.2f$' % self.stall_speed)
+        plt.axvline(self.endurance_velocity, color='green', linestyle='-.',
+                    label=r'$V_{\mathrm{end}}=%1.2f$' % self.endurance_velocity)
+
+        if self.cruise_velocity != self.endurance_velocity:
+            plt.axvline(self.cruise_velocity, color='blue', linestyle='-.',
+                        label=r'$V_{\mathrm{cruise}}=%1.2f$' % self.cruise_velocity)
 
         plt.xlabel(r'$V_{\mathrm{TAS}}$ [m/s]')
         plt.ylabel(r'Power [W]')
@@ -228,10 +236,6 @@ class Performance(Base):
         plt.show()
         fig.savefig(fname=os.path.join(DIRS['USER_DIR'], 'plots', '%s.pdf' % fig.get_label()), format='pdf')
         return 'Figure Plotted and Saved'
-    #
-    # # TODO Create L/D Plot, and Performance Squares
-    # Transparent rectangular prisms w/ Text on their sides, test enumerate function to deal w/ non array and be able to
-    # make any number of stacked bars next to each other in the GUI
 
 
 if __name__ == '__main__':
