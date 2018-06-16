@@ -29,25 +29,26 @@ class ParameterGenerator(Base):
     performance_goal = Input('endurance', validator=val.OneOf(['endurance', 'range']))
     goal_value = Input(1.0, validator=val.Positive())
     weight_target = Input('payload', validator=val.OneOf(['payload', 'mtow']))
-    target_value = Input(0.25, validator=val.Positive())
+    # target_value = Input(0.25, validator=val.Positive())
+    target_value = Input(0.25)
     payload_type = Input('eoir', validator=val.OneOf(valid_payloads()))  #
     configuration = Input('conventional', validator=val.OneOf(['conventional', 'canard', 'flyingwing']))
     handlaunch = Input(True, validator=val.Instance(bool))
     portable = Input(True, validator=val.Instance(bool))
 
-    @Attribute(private=True)
+    @target_value.on_slot_change
     def payload_checker(self):
         if self.weight_target is 'payload':
             actual_weight = EOIR(target_weight=self.target_value).weight
-            self.target_value = actual_weight
+            # setattr(self, 'target_value', actual_weight)
             # TODO Add custom dialog here
-        return self.target_value
+            print actual_weight
 
     @Part
     def weightestimator(self):
         # Here we instantiate the class I weight estimation using the inputs.
         return ClassOne(weight_target=self.weight_target,
-                        target_value=self.payload_checker if self.weight_target is 'payload' else self.target_value)
+                        target_value=self.target_value if self.weight_target is 'payload' else self.target_value)
 
     @Part
     def wingpowerloading(self):
