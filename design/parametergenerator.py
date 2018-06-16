@@ -113,7 +113,7 @@ class ParameterGenerator(Base):
 
     @Attribute
     def motor_power(self):
-        return (9.81 / self.wingpowerloading.eta_prop * self.power_loading) * self.weight_mtow
+        return ((9.81 / self.power_loading) * self.weight_mtow) / self.wingpowerloading.eta_prop
 
     @Attribute
     def rho(self):

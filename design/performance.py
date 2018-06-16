@@ -14,6 +14,7 @@ __author__ = ["San Kilkis"]
 __all__ = ["Performance"]
 
 # TODO Comment code, it is in documentation
+# TODO Make some attributes private
 
 
 class Performance(Base):
@@ -243,6 +244,8 @@ class Performance(Base):
         plt.show()
         fig.savefig(fname=os.path.join(DIRS['USER_DIR'], 'plots', '%s.pdf' % fig.get_label()), format='pdf')
         return 'Figure Plotted and Saved'
+
+    # TODO Add specific points to the L/D plot and add attributes
 
     @Attribute
     def plot_lift_to_drag(self):
