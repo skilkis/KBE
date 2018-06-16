@@ -339,10 +339,12 @@ class Session(object):
         process = self._get_avl_process()
 
         tk_root = tk.Tk()
+        tk_root.update()
         app = CloseWindow(on_open=lambda: process.stdin.write(run.encode()),
                           on_close=lambda: process.stdin.write("\n\nquit\n".encode()),
                           master=tk_root)
         app.mainloop()
+        tk_root.destroy()
 
 
 class OutputReader(object):

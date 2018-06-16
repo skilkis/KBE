@@ -116,7 +116,7 @@ class Performance(Base):
         """
         diff = [self.power_available_cont[i] - self.power_required[i] for i in range(0, len(self.speed_range))]
         idx_e = diff.index(max(diff))
-        safe_speed = self.stall_buffer * self.wing_in.stall_speed
+        safe_speed = self.stall_buffer * self.stall_speed
         calc_speed = self.speed_range[idx_e]
         if calc_speed >= safe_speed:
             safe = True
@@ -142,7 +142,7 @@ class Performance(Base):
                             (self.speed_range[i + 1] - self.speed_range[i])
             diff = diff + [(abs(tangent - local_tangent))]
         idx_c = diff.index(min(diff))
-        safe_speed = self.stall_buffer * self.wing_in.stall_speed
+        safe_speed = self.stall_buffer * self.stall_speed
         calc_speed = self.speed_range[idx_c]
         if calc_speed >= safe_speed:
             safe = True
@@ -199,7 +199,7 @@ class Performance(Base):
         plt.plot(self.speed_range, self.parasite_power, label='Parasitic')
         plt.plot(self.speed_range, self.induced_power, label='Induced')
         plt.plot(self.speed_range, self.power_required, label='Required')
-        plt.axvline(self.wing_in.stall_speed)
+        plt.axvline(self.stall_speed)
 
         plt.xlabel(r'$V_{\mathrm{TAS}}$ [m/s]')
         plt.ylabel(r'Power [W]')

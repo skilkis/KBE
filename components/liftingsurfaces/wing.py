@@ -18,7 +18,7 @@ from avl import Geometry, Surface, Section, Point, Spacing, Session, Case, FileA
 
 #  TODO FIX BUG IN WING WETTED AREA CALCULATION, DUE TO WING MIRROR JUNCTION OF EXTERNAL SHAPE!!!!! see low AR wing.py
 #  TODO FIX show_avl_geom IF POSSIBLE
-#  TODO Compare CL_max with assumed as well as plot with LLT
+#  TODO Fix
 
 __author__ = "Nelson Johnson"
 __all__ = ["Wing"]
@@ -100,10 +100,11 @@ class Wing(ExternalBody, LiftingSurface):
 #  This block of Attributes calculates the planform parameters. ########------------------------------------------------
 
     # TODO make sure that the wing position is not settable, this doesn't work
-    # @Attribute(private=True)
-    # def position(self):
-    #     """ Overwrites the inherited position attribute, to make the wing-fixed at Point(0, 0, 0) """
-    #     return Position(Point(0, 0, 0))
+    @Attribute(private=True)
+    def position(self):
+        """ Overwrites the inherited position attribute, to make the wing-fixed at Point(0, 0, 0), thus the
+        datum of the entire model is the leading edge of the wing-root """
+        return Position(XOY)
 
     @Attribute
     def component_type(self):
@@ -276,7 +277,7 @@ class Wing(ExternalBody, LiftingSurface):
                                                 self.semi_span,
                                                 self.semi_span * tan(radians(self.dihedral))),
                        chord=self.root_chord * self.taper,
-                       angle=0.0,
+                       angle=self.twist,
                        airfoil=FileAirfoil(get_dir(os.path.join('airfoils', self.airfoil_type,
                                                                 '%s.dat' % self.airfoil_choice))))
 
@@ -338,9 +339,7 @@ class Wing(ExternalBody, LiftingSurface):
 
     @Attribute
     def show_avlgeom(self):
-        """"  Here we show the AVL geometry. NOTE: THERE IS A BUG HERE, IF DOUBLE CLICKED IN GUI, IT SHOWS BUT CAUSES
-         PYTHON TO FREEZE. THE CODE MUST BE STOPPED AND RESTARTED IF THE GEOMETRY IS SHOWN.
-         #  TODO FIX THIS
+        """ Allows the user to view the AVL Geometry in a seperate Pop-up window
 
          :return: AVL Geometry
          :rtype: AVL PltLib Viewer
