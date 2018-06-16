@@ -232,7 +232,7 @@ class UAV(DesignInput):
     # TODO fix motor placement to be better looking
     @Part
     def motor(self):
-        return Motor(target_power=(9.81/self.params.power_loading) * self.params.weight_mtow,
+        return Motor(target_power=self.params.motor_power,
                      integration=self.motor_integration,
                      position=translate(self.wing.position,
                                         'x', 1.2 * self.wing.root_chord,

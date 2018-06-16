@@ -112,6 +112,10 @@ class ParameterGenerator(Base):
         return self.wingpowerloading.designpoint['wing_loading']
 
     @Attribute
+    def motor_power(self):
+        return (9.81 / self.wingpowerloading.eta_prop * self.power_loading) * self.weight_mtow
+
+    @Attribute
     def rho(self):
         return self.wingpowerloading.rho
 

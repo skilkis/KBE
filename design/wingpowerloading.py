@@ -400,13 +400,14 @@ class WingPowerLoading(Base):
     @Attribute
     def battery_capacity(self):
         """ This attribute calculates the required battery capacity, based on the payload mass, flight computer, and \
-         flight performance characteristics.
+         flight performance characteristics. Battery efficiency is assumed to be 100 percent.
 
          :return: Required Battery Capacity in SI Watt hour
          :rtype: float
          """
         t = self.cruise_parameters['t'] / 3600.0
-        capacity = (self.payload_power + self.cruise_parameters['p_req_drag'] + self.flight_controller_power) * t
+        flight_power_draw = self.cruise_parameters['p_req_drag'] / self.eta_prop
+        capacity = (self.payload_power + flight_power_draw + self.flight_controller_power) * t
         return capacity
 
 

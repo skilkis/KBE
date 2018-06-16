@@ -121,7 +121,7 @@ class Propeller(ExternalBody):
         """
         return self.motor.specs['prop_recommendation']
 
-    @Attribute(private=True)
+    @Attribute
     def allowed_props(self):
         """ An attribute which parses the string array provided by the attribute :attr:`propeller_recommendation` and  \
         uses this information to create a list containing all propellers that fit this recommendation. Typically, the \
@@ -135,10 +135,16 @@ class Propeller(ExternalBody):
         """
 
         # Parsing the str in `self.prop_recommendation` to obtain diameter range
-        diameter_range = [float(i.split('x')[0]) for i in self.propeller_recommendation]
+        if isinstance(self.propeller_recommendation, list):
+            diameter_range = [float(i.split('x')[0]) for i in self.propeller_recommendation]
+        else:
+            diameter_range = [float(self.propeller_recommendation.split('x')[0])]
 
         # Parsing the str in `self.prop_recommendation` to obtain pitch and type
-        pitch_entries = [i.split('x')[1] for i in self.propeller_recommendation]
+        if isinstance(self.propeller_recommendation, list):
+            pitch_entries = [i.split('x')[1] for i in self.propeller_recommendation]
+        else:
+            pitch_entries = [self.propeller_recommendation.split('x')[1]]
         pitch_range = []
         type_range = []
         for entry in pitch_entries:
