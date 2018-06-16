@@ -49,6 +49,9 @@
 
 # TODO Fix color of booms
 
+
+# TODO Check that all plots are actually output, and consider trigerring all plots with an attribute
+
 from design import *
 from parapy.core import *
 from parapy.geom import *
