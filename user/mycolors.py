@@ -1,19 +1,25 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-__all__ = ["MyColors"]
+from collections import namedtuple
+
+__all__ = ["MyColors", "rgb"]
 
 #  TODO explanation/ docuemtation???
 
-class RGB(object):
 
-    def __init__(self, R, G, B):
-
+def rgb(color):
+    """ Converts a RGB value from 0-255 to a value from 0-1 """
+    r = color[0] / 255.0
+    g = color[1] / 255.0
+    b = color[2] / 255.0
+    return r, g, b
 
 
 class MyColors(object):
 
     # Color Definitions
+
     light_grey = (128, 128, 128)
     deep_red = (128, 0, 0)
     deep_green = (0, 128, 0)
@@ -26,4 +32,6 @@ class MyColors(object):
     # <<<<<<< EDIT HERE >>>>>>>
     battery = deep_purple
     skin_color = light_grey
+
+
 

@@ -17,7 +17,7 @@
     # Although it is infinite bro it is simply flipping back and forth on the stability plot, that is why we stop it and
     # for now that is good enough behavior, most designs converge to a single value!
 
-#  TODO MAKE final_cg NON LAZY OR USER SEES WRONG TAIL!!!!!!!!!!!!!!!!!!
+#  TODO MAKE final_cg NON LAZY OR USER SEES WRONG TAIL!!!!!!!!!!!!!!!!!! (Add listener to input cg)
 #  TODO Make sure vt weight is correct in final weight for changes in the GUI ......
 #  TODO cont'd .....I tried changing # plys on right wing in GUI but cg stayed on x ax
 
@@ -44,6 +44,10 @@
 # TODO Add UML in doc
 
 # TODO bug found in eletronics, number of engines messes up the Fuse Operation
+
+# TODO Determine CL_max from the maximum lift coefficient from the XFOIL database
+
+# TODO Fix color of booms
 
 from design import *
 from parapy.core import *

@@ -77,7 +77,7 @@ class LiftingSurface(GeomBase):
     planform_area = Input(0.8, validator=val.Positive())
 
     #: Below is the required Aspect Ratio of the Surface.
-    aspect_ratio = Input(9.0, validator=val.Range(1.0, 30.0))
+    aspect_ratio = Input(10.0, validator=val.Range(1.0, 30.0))
 
     #: Below is the Taper Ratio, which is chosen by the user.
     taper = Input(0.3, validator=val.Range(0.1, 1.0))

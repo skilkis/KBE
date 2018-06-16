@@ -17,8 +17,6 @@ from user import MyColors
 from avl import Geometry, Surface, Section, Point, Spacing, Session, Case, FileAirfoil
 
 #  TODO FIX BUG IN WING WETTED AREA CALCULATION, DUE TO WING MIRROR JUNCTION OF EXTERNAL SHAPE!!!!! see low AR wing.py
-#  TODO FIX show_avl_geom IF POSSIBLE
-#  TODO Fix
 
 __author__ = "Nelson Johnson"
 __all__ = ["Wing"]
@@ -32,6 +30,7 @@ class Wing(ExternalBody, LiftingSurface):
     vs. angle of attack.
 
     :returns: ParaPy Geometry of the Main Wing Surface
+    :rtype: Wing
 
     :param wing_loading: This is the required wing loading from the class I weight estimation in [N/m^2]
     :type wing_loading: float
@@ -81,6 +80,8 @@ class Wing(ExternalBody, LiftingSurface):
 
     #: Below is the assumed factor of the semi_span which the fuselage extends over the wing.
     fuse_width_factor = Input(0.07, validator=val.Range(0.001, 0.1))
+
+    # TODO add getancestor attribute here is wing is not root that gets camera length
 
     #: Below is a switch to hide/show the bbox of the wing section within the fuselage.
     hide_bbox = Input(False, validator=val.Instance(bool))

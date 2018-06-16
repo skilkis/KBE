@@ -6,9 +6,6 @@
 # Required ParaPy Modules
 from parapy.core import *
 
-# Necessary package for importing Excel Files
-import xlrd
-
 # Importing Necessary Classes
 from wingpowerloading import WingPowerLoading
 from weightestimator import *
@@ -16,7 +13,7 @@ from directories import *
 from designinput import valid_payloads
 from components import EOIR
 
-__author__ = ["Şan Kılkış"]
+__author__ = ["Şan Kılkış", "Nelson Johnson"]
 __all__ = ["ParameterGenerator"]
 
 #  TODO comments, documentation complete
@@ -51,6 +48,7 @@ class ParameterGenerator(Base):
             # TODO Add custom dialog here
             print actual_weight
 
+    # TODO add icons and labels for weight_estimator as well as wingpowerloading
     @Part
     def weightestimator(self):
         # Here we instantiate the class I weight estimation using the inputs.

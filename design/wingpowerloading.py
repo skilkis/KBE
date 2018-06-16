@@ -43,8 +43,8 @@ class WingPowerLoading(Base):
     multiple lines on the thrust/wing loading plots.
     :type maximum_lift_coefficient: list
 
-    :param AR: A list of two potential aspect ratios for the design
-    :type AR: list
+    :param aspect_ratio_range: A list of two potential aspect ratios for the design
+    :type aspect_ratio_range: list
 
     :param eta_prop: This is the assumed propeller efficiency.
     :type eta_prop: float
@@ -94,8 +94,14 @@ class WingPowerLoading(Base):
     #: the plots.
     # TODO Make this a proper implementation of Iterable comprehension, add validator
     @Input
-    def AR(self):
-        return [6, 10] if self.handlaunch else [10, 20]
+    def aspect_ratio_range(self):
+        """ Derived input that handles defaulting of the aspect_ratio. These values are determined from reference images
+        for drones that are handlaunched vs those that are not.
+
+        :return: Bounds of Acceptable Aspect Ratios
+        :rtype: list
+        """
+        return [10, 12] if self.handlaunch else [12, 20]
 
     #: This is the assumed propeller efficiency.
     eta_prop = Input(0.7, validator=val.Positive())
@@ -169,17 +175,19 @@ class WingPowerLoading(Base):
         :rtype: dict
         """
         wp_cr = []
-        for i in range(len(self.AR)):
+        for i in range(len(self.aspect_ratio_range)):
             wp_cr.append([self.eta_prop / (self.climb_rate + sqrt(
                 num * (2.0 / self.rho_cr) * (sqrt(self.zero_lift_drag) / (1.81 *
-                                                                          ((self.AR[i] * e) ** (3.0 / 2.0))))))
+                                                                          ((self.aspect_ratio_range[i] * e) **
+                                                                           (3.0 / 2.0))))))
                           for num in self.ws_range])
             # evaluating all values of WS_range w/ list comprehension
         # Picks the first aspect ratio and proceeds since the climb-gradient requirement is not influenced heavily by AR
         wp_cg = []
         for i in range(len(self.maximum_lift_coefficient)):
             wp_cg.append([self.eta_prop / (sqrt(num * (2.0 / self.rho) * (1 / self.climbcoefs['lift'][i])) *
-                                           self.climb_gradient + (self.climbcoefs['drag'][0][i] / self.climbcoefs['lift'][i]))
+                                           self.climb_gradient + (self.climbcoefs['drag'][0][i] /
+                                                                  self.climbcoefs['lift'][i]))
                           for num in self.ws_range])
 
         return {'climb_rate': wp_cr,
@@ -200,10 +208,10 @@ class WingPowerLoading(Base):
             plt.plot([wing_loading, wing_loading], [0, 2.0],
                      label='C_Lmax%s = %.2f' % (self.wingloading['flag'], self.maximum_lift_coefficient[i]))
 
-        for i in range(len(self.AR)):
+        for i in range(len(self.aspect_ratio_range)):
             plt.plot(self.ws_range,
                      self.powerloading['climb_rate'][i], '--',
-                     label='CR, AR = %d' % self.AR[i])
+                     label='CR, AR = %d' % self.aspect_ratio_range[i])
 
         for i in range(len(self.maximum_lift_coefficient)):
             plt.plot(self.ws_range,
@@ -264,7 +272,7 @@ class WingPowerLoading(Base):
             optimal_ar = optimal_ars[1]
 
         #: Evaluation of the distance(error) between user-input aspect ratio and the optimal aspect ratio
-        error = [abs(num - optimal_ar) for num in self.AR]
+        error = [abs(num - optimal_ar) for num in self.aspect_ratio_range]
 
         #: idx3 corresponds to the index of the closest value within self.AR to the optimal_ar defined by the rule above
         idx3 = error.index(min(error))
@@ -277,7 +285,7 @@ class WingPowerLoading(Base):
             wp = wp_choices[0]
 
         return{'lift_coefficient': self.maximum_lift_coefficient[idx1],
-               'aspect_ratio': self.AR[idx3],
+               'aspect_ratio': self.aspect_ratio_range[idx3],
                'wing_loading': ws,
                'power_loading': wp}
 
@@ -292,8 +300,8 @@ class WingPowerLoading(Base):
         lift_coef_cg = [num - 0.2 for num in self.maximum_lift_coefficient]
         # Above we subtract 0.2 from climb gradient C_l to keep away from stall during climb out
         drag_coef_cg = []
-        for i in range(len(self.AR)):
-            drag_coef_cg.append([(self.zero_lift_drag + num ** 2 / (pi * self.AR[i] * self.e_factor))
+        for i in range(len(self.aspect_ratio_range)):
+            drag_coef_cg.append([(self.zero_lift_drag + num ** 2 / (pi * self.aspect_ratio_range[i] * self.e_factor))
                                  for num in self.maximum_lift_coefficient])
 
             # Due to how drag_coef_cg is defined, the first array dim is aspect ratios, the second dim is

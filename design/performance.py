@@ -8,7 +8,7 @@ import numpy as np
 from math import pi, sqrt
 from directories import *
 from scipy.interpolate import interp1d
-from user import MyColors
+from user import MyColors, rgb
 
 __author__ = ["San Kilkis"]
 __all__ = ["Performance"]
@@ -21,7 +21,7 @@ class Performance(Base):
     fulfill the mission requirements.
 
     :param wing_in: The Wing input instantiation.
-    :type wing_in: str
+    :type wing_in: Wing
     """
 
     __initargs__ = ["parasitic_drag"]
@@ -223,13 +223,13 @@ class Performance(Base):
         # Plotting Velocities
         plt.axvline(self.stall_speed, color='red', linestyle='-.',
                     label=r'$V_{\mathrm{stall}}=%1.2f$' % self.stall_speed)
-        plt.axvline(self.endurance_velocity, color=MyColors.deep_green, linestyle='-.',
+        plt.axvline(self.endurance_velocity, color=rgb(MyColors.deep_green), linestyle='-.',
                     label=r'$V_{\mathrm{end}}=%1.2f$' % self.endurance_velocity)
         if self.cruise_velocity != self.endurance_velocity:
-            plt.axvline(self.cruise_velocity, color=MyColors.cool_blue,linestyle='-.',
+            plt.axvline(self.cruise_velocity, color='blue', linestyle='-.',
                         label=r'$V_{\mathrm{cruise}}=%1.2f$' % self.cruise_velocity)
 
-        plt.axvline(self.maximum_velocity, linestyle='-.',
+        plt.axvline(self.maximum_velocity, color=rgb(MyColors.deep_purple), linestyle='-.',
                     label=r'$V_{\mathrm{max}}=%1.2f$' % self.maximum_velocity)
 
         ax = fig.gca()
