@@ -1,0 +1,554 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Thrust and Power Loading &mdash; KBE 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Performance Verification" href="performance.html" />
+    <link rel="prev" title="Class I and II Weight Estimation" href="weightestimator.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> KBE
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../main.html">Main UAV</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../definitions.html">Definitions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../directories.html">Directories</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components/index.html">Components Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../components/battery.html">Li-PO Battery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../components/electronics/index.html">Electronics Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../components/electronics/electronics.html">Electronics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../components/electronics/flightcontroller.html">FlightController</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../components/electronics/speedcontroller.html">SpeedController</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../components/liftingsurfaces/index.html">LiftingSurface Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../components/liftingsurfaces/liftingsurfaceprim.html">LiftingSurface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../components/liftingsurfaces/wing.html">Wing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../components/liftingsurfaces/scissorplot.html">ScissorPlot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../components/liftingsurfaces/horizontalstab.html">HorizontalStabilizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../components/liftingsurfaces/verticalstab.html">VerticalStablilizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../components/liftingsurfaces/compoundstab.html">CompoundStabilizer</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../components/fuselage/index.html">Fuselage Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../components/fuselage/fframe.html">Fuselage Frame (FFrame)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../components/fuselage/fcone.html">Fuselage Nose/Tail Cone (FCone)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../components/fuselage/mframe.html">Motor Frame (MFrame)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../components/fuselage/fuselage.html">Automatic Fuselage Generator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../components/fuselage/boom.html">Boom</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../components/motor.html">Electric Motor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../components/propeller/index.html">Propeller Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../components/propeller/propparser.html">Propeller Parser</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../components/propeller/propeller.html">Propeller</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../components/eoir.html">Electro-Optical Infra-Red Camera</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Design Module</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="designinput.html">Design Input</a></li>
+<li class="toctree-l2"><a class="reference internal" href="paramgen.html">Parameter Generator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="weightestimator.html">Class I and II Weight Estimation</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Thrust and Power Loading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="performance.html">Performance Verification</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../mycsv2dict.html">My CSV Dictionary</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">KBE</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Design Module</a> &raquo;</li>
+        
+      <li>Thrust and Power Loading</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/design/wingpowerloading.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-design.wingpowerloading">
+<span id="thrust-and-power-loading"></span><h1>Thrust and Power Loading<a class="headerlink" href="#module-design.wingpowerloading" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="design.wingpowerloading.WingPowerLoading">
+<em class="property">class </em><code class="descclassname">design.wingpowerloading.</code><code class="descname">WingPowerLoading</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/design/wingpowerloading.html#WingPowerLoading"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#design.wingpowerloading.WingPowerLoading" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class will construct the wing and power loading plot for the fixed wing UAV based on the input MTOW. The
+requirements are the climb rate and climb gradient. There are assumed values for:  C_lmax, Stall speed,
+propeller efficiency, zero-lift drag coefficient, Aspect Ratio and Oswald Efficiency Factor. All Values are in
+SI Units unless stated.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>mtow</strong> (<em>float</em>) – The MTOW from class I</li>
+<li><strong>mission</strong> (<em>str</em>) – The UAV performance goal</li>
+<li><strong>range</strong> (<em>float</em>) – The UAV design range in km</li>
+<li><strong>endurance</strong> (<em>float</em>) – The UAV design endurance in hrs</li>
+<li><strong>pl_target_weight</strong> (<em>float</em>) – The UAV design payload weight in kg</li>
+<li><strong>handlaunch</strong> (<em>bool</em>) – Whether the user requires the UAV to be hand launched</li>
+<li><strong>maximum_lift_coefficient</strong> (<em>list</em>) – A list of three C_lmax’s that the wing is assumed to generate which create     multiple lines on the thrust/wing loading plots.</li>
+<li><strong>AR</strong> (<em>list</em>) – A list of two potential aspect ratios for the design</li>
+<li><strong>eta_prop</strong> (<em>float</em>) – This is the assumed propeller efficiency.</li>
+<li><strong>eta_motor</strong> (<em>float</em>) – This is the assumed motor efficiency.</li>
+<li><strong>e_factor</strong> (<em>float</em>) – This is the assumed oswald efficiency factor.</li>
+<li><strong>rho</strong> (<em>float</em>) – This is the STD ISA sea level density</li>
+<li><strong>rho_cr</strong> (<em>float</em>) – This is the ISA Density at 3km height for the climb rate power loading equation.</li>
+<li><strong>zero_lift_drag</strong> (<em>float</em>) – This is the assumed Value of Zero-Lift Drag Coefficient.</li>
+<li><strong>climb_rate</strong> (<em>float</em>) – This is the assumption for Required Climb Rate in m/s, Same as Sparta UAV 1.1.2.</li>
+<li><strong>climb_gradient</strong> (<em>float</em>) – This is the assumed Climb Gradient to clear 10m object 17m away.</li>
+<li><strong>stall_speed</strong> (<em>float</em>) – This is the assumed stall speed for the UAV.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="design.wingpowerloading.WingPowerLoading.battery_capacity">
+<code class="descname">battery_capacity</code><a class="reference internal" href="../_modules/design/wingpowerloading.html#WingPowerLoading.battery_capacity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#design.wingpowerloading.WingPowerLoading.battery_capacity" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute calculates the required battery capacity, based on the payload mass, flight computer, and          flight performance characteristics.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Required Battery Capacity in SI Watt hour</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="design.wingpowerloading.WingPowerLoading.climb_gradient">
+<code class="descname">climb_gradient</code><em class="property"> = 0.507</em><a class="headerlink" href="#design.wingpowerloading.WingPowerLoading.climb_gradient" title="Permalink to this definition">¶</a></dt>
+<dd><p>Below is the assumed Climb Gradient to clear 10m object 17m away.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="design.wingpowerloading.WingPowerLoading.climb_rate">
+<code class="descname">climb_rate</code><em class="property"> = 1.524</em><a class="headerlink" href="#design.wingpowerloading.WingPowerLoading.climb_rate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Below is the assumption for Required Climb Rate, Same as Sparta UAV 1.1.2.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="design.wingpowerloading.WingPowerLoading.climbcoefs">
+<code class="descname">climbcoefs</code><a class="reference internal" href="../_modules/design/wingpowerloading.html#WingPowerLoading.climbcoefs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#design.wingpowerloading.WingPowerLoading.climbcoefs" title="Permalink to this definition">¶</a></dt>
+<dd><p>An attribute which adds a safety factor to the lift coefficient in order to not stall out
+during climb-out. Modifying the lift coefficient changes drag coefficients as well due to induced drag
+the latter part of this code computes the new drag coefficients.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Dictionary containing modified lift coefficients (‘climb_lift’) and drag coefficients (‘climb_drag’)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="design.wingpowerloading.WingPowerLoading.cruise_parameters">
+<code class="descname">cruise_parameters</code><a class="reference internal" href="../_modules/design/wingpowerloading.html#WingPowerLoading.cruise_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#design.wingpowerloading.WingPowerLoading.cruise_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute calculates the cruise parameters related to the requirement on range [km], or         endurance [h]. These relations are from the year 1 Intro to aeronautics flight mechanics module.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Required battery capacity due to plane drag.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="design.wingpowerloading.WingPowerLoading.designpoint">
+<code class="descname">designpoint</code><a class="reference internal" href="../_modules/design/wingpowerloading.html#WingPowerLoading.designpoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#design.wingpowerloading.WingPowerLoading.designpoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>An attribute which adds a safety factor to the lift coefficient in order to not stall out         during climb-out. Modifying the lift coefficient changes drag coefficients as well due to induced drag,         the latter part of this code computes the new drag coefficients.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Dictionary containing design_point variables (‘lift_coefficient’) and drag coefficients (‘climb_drag’)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="design.wingpowerloading.WingPowerLoading.e_factor">
+<code class="descname">e_factor</code><a class="headerlink" href="#design.wingpowerloading.WingPowerLoading.e_factor" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the assumed Oswald Efficiency Factor.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="design.wingpowerloading.WingPowerLoading.eta_motor">
+<code class="descname">eta_motor</code><a class="headerlink" href="#design.wingpowerloading.WingPowerLoading.eta_motor" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the assumed motor efficiency.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="design.wingpowerloading.WingPowerLoading.eta_prop">
+<code class="descname">eta_prop</code><a class="headerlink" href="#design.wingpowerloading.WingPowerLoading.eta_prop" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the assumed propeller efficiency.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="design.wingpowerloading.WingPowerLoading.eta_tot">
+<code class="descname">eta_tot</code><a class="reference internal" href="../_modules/design/wingpowerloading.html#WingPowerLoading.eta_tot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#design.wingpowerloading.WingPowerLoading.eta_tot" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute estimates the propulsive efficiency. This is done by multiplying the propeller and the         motor efficiencies</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Propulsive Efficiency</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="design.wingpowerloading.WingPowerLoading.flight_controller_power">
+<code class="descname">flight_controller_power</code><a class="reference internal" href="../_modules/design/wingpowerloading.html#WingPowerLoading.flight_controller_power"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#design.wingpowerloading.WingPowerLoading.flight_controller_power" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute gets the required power of the flight computer.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Required flight computer power.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="design.wingpowerloading.WingPowerLoading.handlaunch">
+<code class="descname">handlaunch</code><a class="headerlink" href="#design.wingpowerloading.WingPowerLoading.handlaunch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Boolean operator to determine if the user requires the UAV to be hand launched
+This parameter changes the stall-speed used for the Wing Loading</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="design.wingpowerloading.WingPowerLoading.loadingdiagram">
+<code class="descname">loadingdiagram</code><a class="reference internal" href="../_modules/design/wingpowerloading.html#WingPowerLoading.loadingdiagram"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#design.wingpowerloading.WingPowerLoading.loadingdiagram" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute plots the loading diagram.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Plot</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="design.wingpowerloading.WingPowerLoading.maximum_lift_coefficient">
+<code class="descname">maximum_lift_coefficient</code><a class="headerlink" href="#design.wingpowerloading.WingPowerLoading.maximum_lift_coefficient" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is a list of three C_lmax’s that the wing is assumed to generate. This creates multiple lines on the plots.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="design.wingpowerloading.WingPowerLoading.payload_power">
+<code class="descname">payload_power</code><a class="reference internal" href="../_modules/design/wingpowerloading.html#WingPowerLoading.payload_power"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#design.wingpowerloading.WingPowerLoading.payload_power" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute gets the required power of the EOIR payload w/ Lazy Evaluation, using the payload weight.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Required battery power due to payload SI Watt</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="design.wingpowerloading.WingPowerLoading.powerloading">
+<code class="descname">powerloading</code><a class="reference internal" href="../_modules/design/wingpowerloading.html#WingPowerLoading.powerloading"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#design.wingpowerloading.WingPowerLoading.powerloading" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lazy-evaluation of Power Loading due to a Climb Rate Requirement at 3000m for various Aspect Ratios</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Stacked-Array where first dimension corresponds to Aspect Ratio, and sub-dimension contains         an array of floats in order of smallest Wing Loading to Largest. This range is set w/ parameter ‘WS_range’</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="design.wingpowerloading.WingPowerLoading.rho">
+<code class="descname">rho</code><a class="headerlink" href="#design.wingpowerloading.WingPowerLoading.rho" title="Permalink to this definition">¶</a></dt>
+<dd><p>Below is the STD ISA sea level density</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="design.wingpowerloading.WingPowerLoading.rho_cr">
+<code class="descname">rho_cr</code><em class="property"> = 0.9091</em><a class="headerlink" href="#design.wingpowerloading.WingPowerLoading.rho_cr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Below is the ISA Density at 3km height for the climb rate power loading equation.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="design.wingpowerloading.WingPowerLoading.stall_speed">
+<code class="descname">stall_speed</code><a class="reference internal" href="../_modules/design/wingpowerloading.html#WingPowerLoading.stall_speed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#design.wingpowerloading.WingPowerLoading.stall_speed" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute calculates the stall speed for the UAV depending on whether it will be hand launched or         not. If hand launched, the stall speed is to be 8 m/s and if not, it is 12 m/s.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="design.wingpowerloading.WingPowerLoading.wingloading">
+<code class="descname">wingloading</code><a class="reference internal" href="../_modules/design/wingpowerloading.html#WingPowerLoading.wingloading"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#design.wingpowerloading.WingPowerLoading.wingloading" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute calculates the 3 required wing loadings from the lift equation, using the stall speed         and the three assumed C_lmax’s. If the UAV is to be hand launched, a lower stall speed is used. At this moment,        this is the only requirement on the wing loading.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Required wing loading for 3 different C_lmax’s</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="design.wingpowerloading.WingPowerLoading.ws_range">
+<code class="descname">ws_range</code><a class="reference internal" href="../_modules/design/wingpowerloading.html#WingPowerLoading.ws_range"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#design.wingpowerloading.WingPowerLoading.ws_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is a dummy list of wing loadings for iterating in the Power Loading Equations.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">List of wing loadings</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">List</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="design.wingpowerloading.WingPowerLoading.zero_lift_drag">
+<code class="descname">zero_lift_drag</code><a class="headerlink" href="#design.wingpowerloading.WingPowerLoading.zero_lift_drag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Below is the assumed Value of Zero-Lift Drag Coefficient.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="performance.html" class="btn btn-neutral float-right" title="Performance Verification" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="weightestimator.html" class="btn btn-neutral" title="Class I and II Weight Estimation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, San Kilkis, Nelson Johnson.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.0',
+            LANGUAGE:'en',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -19,10 +19,17 @@ from components import EOIR
 __author__ = ["Şan Kılkış"]
 __all__ = ["ParameterGenerator"]
 
+#  TODO comments, documentation complete
 
 # Function which returns all valid payloads in the directory /components/payload
 
+
 class ParameterGenerator(Base):
+    """ This class contains all the global design variables.
+
+    :param performance_goal: The goal for which the UAV should be optimized (i.e. 'endurance or 'range')
+    :type performance_goal: str
+    """
 
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'parameters.png')
 

@@ -4,11 +4,6 @@
 # TODO Fix comments here
 # TODO create csv 2 dict syntax document
 
-""" my_csv2dict.py is a file containing the function read_csv which allows the user to quickly call a directory within
-the project folder, also for convenience the packages os and sys are imported when directories.py is imported with
-the * specifier. Finally the dictionary DIRS contains common directories so as to avoid multiple calls to get_dir.
-Finally since the entries in DIRS are outputs of get_dir the inherent directory checking is also present. Thus an
-invalid directory will raise errors"""
 
 from directories import *
 import io
@@ -17,11 +12,15 @@ __all__ = ["read_csv"]
 
 
 def read_csv(product_name=str, directory=DIRS['EOIR_DATA_DIR']):
-    """
-    :param product_name:
-    :param directory:
-    :return:
-    :rtype: dict
+    """ my_csv2dict.py is a file containing the function read_csv which allows the user to quickly call a directory \
+    within the project folder, also for convenience the packages os and sys are imported when directories.py is \
+    imported with the * specifier. Finally the dictionary DIRS contains common directories so as to avoid multiple \
+    calls to get_dir. Finally since the entries in DIRS are outputs of get_dir the inherent directory checking is \
+    also present. Thus an invalid directory will raise errors.
+
+    :param path: This is the path to the filename.
+    :type path: str
+
     """
     filename = ('%s.csv' % product_name)
     path = get_dir(os.path.join(directory, filename))

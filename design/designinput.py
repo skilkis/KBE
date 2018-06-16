@@ -121,7 +121,10 @@ class DesignInput(Base):
 
     @Attribute
     def open_documentation(self):
-        """ Allows the user to open the documentation from within the GUI for reference or help """
+        """ Allows the user to open the documentation from within the GUI for reference or help.
+
+        :return: KBE App Documentation
+        """
         webbrowser.open('file://' + os.path.join(DIRS['DOC_DIR'], 'index.html'))
         return 'Documentation Opened'
 

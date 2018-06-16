@@ -1,10 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-""" eoir.py is a file which automatically generates an EO/IR Imaging system on parametric input of battery weight,
- """
 
-# TODO Comment the whole code
+# TODO Comment the whole code, it is in documentation
 # TODO add attributes necessary for fuselage class
 # TODO add database as input w/ custom validator function
 # TODO add custom file read class that opens a nice GUI
@@ -28,24 +26,24 @@ from user import *
 __all__ = ["EOIR"]
 __author__ = "Şan Kılkış"
 
-# A parameter for debugging, turns the visibility of miscellaneous parts ON/OFF
+#: A parameter for debugging, turns the visibility of miscellaneous parts ON/OFF
 __show_primitives = False  # type: bool
 
 
 class EOIR(ExternalBody):
-    """  This script will generate the Electro-Optical Infra-Ied camera as a payload. There are 7 cameras which span
-    the entire payload range of 1 to 20 kg.
+    """  This script will generate the parametric Electro-Optical Infra-Ied camera as a payload. There are 7 cameras
+    which span the entire payload range of 1 to 20 kg.
 
     :returns: ParaPy Geometry of the Horizontal Tail Surface
 
-    :param planform_area: This is the Required Planfrom Area for the HT from the Scissor Plot in [m^2]
-    :type planform_area: float
+    :param target_weight: This is the target payload weight.
+    :type target_weight: float
     """
 
     __initargs__ = ["target_weight", "camera_name", "position"]
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'camera.png')
 
-    # A parameter for debugging, turns the visibility of miscellaneous parts ON/OFF
+    #: A parameter for debugging, turns the visibility of miscellaneous parts ON/OFF
     __show_primitives = False  # type: bool
 
     target_weight = Input(0.2, validator=val.Positive())
@@ -53,7 +51,11 @@ class EOIR(ExternalBody):
 
     @Input
     def label(self):
-        """Overwrites the inherited slot `label` with the chosen camera_name"""
+        """Overwrites the inherited slot `label` with the chosen camera_name
+
+        :return: Name of Camera
+        :rtype: str
+        """
         return self.specs['name']
 
     @Attribute
@@ -125,12 +127,19 @@ class EOIR(ExternalBody):
 
     @Attribute
     def center_of_gravity(self):
-        """ The center of gravity of the EOIR sensor is assumed to be the center of the bottom face"""
+        """ The center of gravity of the EOIR sensor is assumed to be the center of the bottom face
+
+        :return: EOIR Center of gravity
+        :rtype: Point
+        """
         return self.internal_shape.faces[4].cog
 
     @Attribute
     def text_label_position(self):
-        """ Overwrites the default text_label position to put it closer to the gimbal """
+        """ Overwrites the default text_label position to put it closer to the gimbal
+
+        :rtype: Point
+        """
         return self.gimbal.edges[0].midpoint
 
     # --- Output Solids: ----------------------------------------------------------------------------------------------
@@ -145,7 +154,6 @@ class EOIR(ExternalBody):
                                                       'z', self.position.z),
                                 color=MyColors.deep_red,
                                 transparency=0.23)
-
 
     @Part
     def gimbal(self):

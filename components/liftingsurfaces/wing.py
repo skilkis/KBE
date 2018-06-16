@@ -146,7 +146,7 @@ class Wing(ExternalBody, LiftingSurface):
 
     @Attribute
     def lift_coef_max(self):
-        """ This attribute computes the C_L from the lift equation at the provided :param:`stall_speed` to be used in
+        """ This attribute computes the C_L from the lift equation at the provided :attr:`stall_speed` to be used in \
         later performance estimations.
 
         :return: Lift Coefficient at Stall (C_L_max)

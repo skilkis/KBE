@@ -9,4 +9,6 @@ Components Module
    liftingsurfaces/index
    fuselage/index
    motor
+   propeller/index
+   eoir
 

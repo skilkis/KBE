@@ -10,10 +10,13 @@ Welcome to KBE's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   main
    definitions
    directories
    components/index
-   main
+   design/index
+   mycsv2dict
+
 
 Indices and Tables
 ==================

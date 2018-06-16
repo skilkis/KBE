@@ -82,6 +82,7 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../main.html">Main UAV</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../definitions.html">Definitions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../directories.html">Directories</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../components/index.html">Components Module</a><ul>
@@ -110,9 +111,23 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../components/motor.html">Electric Motor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/propeller/index.html">Propeller Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/propeller/propparser.html">Propeller Parser</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/propeller/propeller.html">Propeller</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../../main.html">Main UAV</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/eoir.html">Electro-Optical Infra-Red Camera</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../design/index.html">Design Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../design/designinput.html">Design Input</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../design/paramgen.html">Parameter Generator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../design/weightestimator.html">Class I and II Weight Estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../design/wingpowerloading.html">Thrust and Power Loading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../design/performance.html">Performance Verification</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../mycsv2dict.html">My CSV Dictionary</a></li>
 </ul>
 
             
@@ -370,7 +385,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">configuration</span> <span class="ow">is</span> <span class="s1">&#39;conventional&#39;</span><span class="p">:</span>
             <span class="n">cl_h</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.35</span><span class="o">*</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">AR_h</span><span class="o">**</span><span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="mf">3.0</span><span class="p">))</span>
-        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span> <span class="s1">&#39;I am conventional&#39;</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">configuration</span> <span class="ow">is</span> <span class="s1">&#39;canard&#39;</span><span class="p">:</span>
             <span class="n">cl_h</span> <span class="o">=</span> <span class="mi">1</span>
             <span class="c1"># = 0.35 * (self.AR_h ** (1.0 / 3.0))</span>
             <span class="c1">#  Canard assumed to be full moving with Cl max = 1 in slow speed case.</span>
@@ -411,7 +427,7 @@
                            <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">x_ac</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">SM</span><span class="p">)</span> <span class="o">/</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">cla_h</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">Cla_w</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">downwash_a</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">lhc</span> <span class="o">*</span>
                                                      <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">VhV_conv</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)))</span>
                 <span class="n">shs_stab</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">shs_conv</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">configuration</span> <span class="ow">is</span> <span class="s1">&#39;canard&#39;</span><span class="p">:</span>
                 <span class="n">shs_canard</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xcg_range</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">cla_h</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">cla_w_canard</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">lhc</span> <span class="o">*</span>
                                                    <span class="bp">self</span><span class="o">.</span><span class="n">VhV_canard</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span> <span class="o">-</span> \
                              <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">x_ac</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">SM</span><span class="p">)</span> <span class="o">/</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">cla_h</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">cla_w_canard</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">lhc</span> <span class="o">*</span>
@@ -435,7 +451,7 @@
                            <span class="p">(((</span><span class="bp">self</span><span class="o">.</span><span class="n">C_mac</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">Cl_w</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_ac</span><span class="p">)</span> <span class="o">/</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">cl_h</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">Cl_w</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">lhc</span> <span class="o">*</span>
                                                                     <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">VhV_conv</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)))</span>
                 <span class="n">shs_c</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">shs_conv</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">configuration</span> <span class="ow">is</span> <span class="s1">&#39;canard&#39;</span><span class="p">:</span>
                 <span class="n">shs_canard</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xcg_range</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">cl_h</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">Cl_w</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">lhc</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">VhV_canard</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>\
                              <span class="o">+</span> <span class="p">(((</span><span class="bp">self</span><span class="o">.</span><span class="n">C_mac</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">Cl_w</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">x_ac</span><span class="p">)</span> <span class="o">/</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">cl_h</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">Cl_w</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">lhc</span> <span class="o">*</span>
                                                                           <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">VhV_canard</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)))</span>

@@ -83,6 +83,7 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="main.html">Main UAV</a></li>
 <li class="toctree-l1"><a class="reference internal" href="definitions.html">Definitions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="directories.html">Directories</a></li>
 <li class="toctree-l1"><a class="reference internal" href="components/index.html">Components Module</a><ul>
@@ -111,9 +112,23 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="components/motor.html">Electric Motor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="components/propeller/index.html">Propeller Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="components/propeller/propparser.html">Propeller Parser</a></li>
+<li class="toctree-l3"><a class="reference internal" href="components/propeller/propeller.html">Propeller</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="main.html">Main UAV</a></li>
+<li class="toctree-l2"><a class="reference internal" href="components/eoir.html">Electro-Optical Infra-Red Camera</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="design/index.html">Design Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="design/designinput.html">Design Input</a></li>
+<li class="toctree-l2"><a class="reference internal" href="design/paramgen.html">Parameter Generator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="design/weightestimator.html">Class I and II Weight Estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="design/wingpowerloading.html">Thrust and Power Loading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="design/performance.html">Performance Verification</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="mycsv2dict.html">My CSV Dictionary</a></li>
 </ul>
 
             
@@ -203,13 +218,20 @@
  | <a href="#V"><strong>V</strong></a>
  | <a href="#W"><strong>W</strong></a>
  | <a href="#X"><strong>X</strong></a>
+ | <a href="#Z"><strong>Z</strong></a>
  
 </div>
 <h2 id="_">_</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="components/motor.html#components.motor.Motor.__show_primitives">__show_primitives (components.motor.Motor attribute)</a>
+
+      <ul>
+        <li><a href="components/eoir.html#components.payload.eoir.EOIR.__show_primitives">(components.payload.eoir.EOIR attribute)</a>
 </li>
+        <li><a href="components/propeller/propeller.html#components.propeller.propeller.Propeller.__show_primitives">(components.propeller.propeller.Propeller attribute)</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -222,6 +244,8 @@
 </li>
       <li><a href="components/liftingsurfaces/liftingsurfaceprim.html#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.airfoil">airfoil (components.liftingsurfaces.primitives.liftingsurface.LiftingSurface attribute)</a>
 </li>
+      <li><a href="components/propeller/propeller.html#components.propeller.propeller.Propeller.airfoil_builder">airfoil_builder (components.propeller.propeller.Propeller attribute)</a>
+</li>
       <li><a href="components/liftingsurfaces/horizontalstab.html#components.liftingsurfaces.horizontalstab.HorizontalStabilizer.airfoil_choice">airfoil_choice (components.liftingsurfaces.horizontalstab.HorizontalStabilizer attribute)</a>
 
       <ul>
@@ -231,7 +255,11 @@
 </li>
       </ul></li>
       <li><a href="components/liftingsurfaces/liftingsurfaceprim.html#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.airfoil_data">airfoil_data (components.liftingsurfaces.primitives.liftingsurface.LiftingSurface attribute)</a>
+
+      <ul>
+        <li><a href="components/propeller/propeller.html#components.propeller.propeller.Propeller.airfoil_data">(components.propeller.propeller.Propeller attribute)</a>
 </li>
+      </ul></li>
       <li><a href="components/liftingsurfaces/horizontalstab.html#components.liftingsurfaces.horizontalstab.HorizontalStabilizer.airfoil_type">airfoil_type (components.liftingsurfaces.horizontalstab.HorizontalStabilizer attribute)</a>
 
       <ul>
@@ -240,12 +268,16 @@
         <li><a href="components/liftingsurfaces/verticalstab.html#components.liftingsurfaces.verticalstab.VerticalStabilizer.airfoil_type">(components.liftingsurfaces.verticalstab.VerticalStabilizer attribute)</a>
 </li>
       </ul></li>
+      <li><a href="components/propeller/propeller.html#components.propeller.propeller.Propeller.airfoil_unit_curve">airfoil_unit_curve (components.propeller.propeller.Propeller attribute)</a>
+</li>
+      <li><a href="components/propeller/propeller.html#components.propeller.propeller.Propeller.allowed_props">allowed_props (components.propeller.propeller.Propeller attribute)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing.alpha_cases">alpha_cases (components.liftingsurfaces.wing.Wing attribute)</a>
 </li>
       <li><a href="components/electronics/speedcontroller.html#components.electronics.speedcontroller.SpeedController.amp_range">amp_range (components.electronics.speedcontroller.SpeedController attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="components/electronics/speedcontroller.html#components.electronics.speedcontroller.SpeedController.amp_recc">amp_recc (components.electronics.speedcontroller.SpeedController attribute)</a>
 </li>
       <li><a href="components/electronics/electronics.html#components.electronics.electronics.Electronics.amp_req">amp_req (components.electronics.electronics.Electronics attribute)</a>
@@ -280,6 +312,8 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="components/battery.html#components.battery.Battery">Battery (class in components.battery)</a>
 </li>
+      <li><a href="design/wingpowerloading.html#design.wingpowerloading.WingPowerLoading.battery_capacity">battery_capacity (design.wingpowerloading.WingPowerLoading attribute)</a>
+</li>
       <li><a href="components/fuselage/boom.html#components.fuselage.boom.Boom">Boom (class in components.fuselage.boom)</a>
 </li>
       <li><a href="components/liftingsurfaces/compoundstab.html#components.liftingsurfaces.compoundstab.CompoundStabilizer.boom_plane">boom_plane (components.liftingsurfaces.compoundstab.CompoundStabilizer attribute)</a>
@@ -291,6 +325,8 @@
       <li><a href="components/electronics/electronics.html#components.electronics.electronics.Electronics.box_length">box_length (components.electronics.electronics.Electronics attribute)</a>
 </li>
       <li><a href="components/liftingsurfaces/liftingsurfaceprim.html#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.browse_airfoils">browse_airfoils (components.liftingsurfaces.primitives.liftingsurface.LiftingSurface attribute)</a>
+</li>
+      <li><a href="components/propeller/propeller.html#components.propeller.propeller.Propeller.build_direction">build_direction (components.propeller.propeller.Propeller attribute)</a>
 </li>
       <li><a href="components/fuselage/fuselage.html#components.fuselage.fuselage.Fuselage.build_nose">build_nose (components.fuselage.fuselage.Fuselage attribute)</a>
 </li>
@@ -327,6 +363,10 @@
 </li>
         <li><a href="components/motor.html#components.motor.Motor.center_of_gravity">(components.motor.Motor attribute)</a>
 </li>
+        <li><a href="components/eoir.html#components.payload.eoir.EOIR.center_of_gravity">(components.payload.eoir.EOIR attribute)</a>
+</li>
+        <li><a href="components/propeller/propeller.html#components.propeller.propeller.Propeller.center_of_gravity">(components.propeller.propeller.Propeller attribute)</a>
+</li>
         <li><a href="definitions.html#definitions.Component.center_of_gravity">(definitions.Component attribute)</a>
 </li>
       </ul></li>
@@ -349,6 +389,16 @@
       <li><a href="components/liftingsurfaces/scissorplot.html#components.liftingsurfaces.scissorplot.ScissorPlot.Cla_w">Cla_w (components.liftingsurfaces.scissorplot.ScissorPlot attribute)</a>
 </li>
       <li><a href="components/liftingsurfaces/scissorplot.html#components.liftingsurfaces.scissorplot.ScissorPlot.cla_w_canard">cla_w_canard (components.liftingsurfaces.scissorplot.ScissorPlot attribute)</a>
+</li>
+      <li><a href="design/weightestimator.html#design.weightestimator.ClassOne">ClassOne (class in design.weightestimator)</a>
+</li>
+      <li><a href="design/weightestimator.html#design.weightestimator.ClassTwo">ClassTwo (class in design.weightestimator)</a>
+</li>
+      <li><a href="design/wingpowerloading.html#design.wingpowerloading.WingPowerLoading.climb_gradient">climb_gradient (design.wingpowerloading.WingPowerLoading attribute)</a>
+</li>
+      <li><a href="design/wingpowerloading.html#design.wingpowerloading.WingPowerLoading.climb_rate">climb_rate (design.wingpowerloading.WingPowerLoading attribute)</a>
+</li>
+      <li><a href="design/wingpowerloading.html#design.wingpowerloading.WingPowerLoading.climbcoefs">climbcoefs (design.wingpowerloading.WingPowerLoading attribute)</a>
 </li>
       <li><a href="components/fuselage/fuselage.html#components.fuselage.fuselage.Fuselage.color">color (components.fuselage.fuselage.Fuselage attribute)</a>
 
@@ -387,6 +437,10 @@
 </li>
         <li><a href="components/motor.html#components.motor.Motor.component_type">(components.motor.Motor attribute)</a>
 </li>
+        <li><a href="components/eoir.html#components.payload.eoir.EOIR.component_type">(components.payload.eoir.EOIR attribute)</a>
+</li>
+        <li><a href="components/propeller/propeller.html#components.propeller.propeller.Propeller.component_type">(components.propeller.propeller.Propeller attribute)</a>
+</li>
         <li><a href="definitions.html#definitions.Component.component_type">(definitions.Component attribute)</a>
 </li>
       </ul></li>
@@ -420,6 +474,12 @@
 </li>
       <li><a href="components/liftingsurfaces/wing.html#module-components.liftingsurfaces.wing">components.liftingsurfaces.wing (module)</a>
 </li>
+      <li><a href="components/eoir.html#module-components.payload.eoir">components.payload.eoir (module)</a>
+</li>
+      <li><a href="components/propeller/propparser.html#module-components.propeller.prop_data_parser">components.propeller.prop_data_parser (module)</a>
+</li>
+      <li><a href="components/propeller/propeller.html#module-components.propeller.propeller">components.propeller.propeller (module)</a>
+</li>
       <li><a href="components/liftingsurfaces/compoundstab.html#components.liftingsurfaces.compoundstab.CompoundStabilizer">CompoundStabilizer (class in components.liftingsurfaces.compoundstab)</a>
 </li>
       <li><a href="components/liftingsurfaces/compoundstab.html#components.liftingsurfaces.compoundstab.CompoundStabilizer.configuration">configuration (components.liftingsurfaces.compoundstab.CompoundStabilizer attribute)</a>
@@ -429,6 +489,8 @@
 </li>
         <li><a href="components/liftingsurfaces/verticalstab.html#components.liftingsurfaces.verticalstab.VerticalStabilizer.configuration">(components.liftingsurfaces.verticalstab.VerticalStabilizer attribute)</a>
 </li>
+        <li><a href="design/designinput.html#design.designinput.DesignInput.configuration">(design.designinput.DesignInput attribute)</a>
+</li>
       </ul></li>
       <li><a href="components/liftingsurfaces/compoundstab.html#components.liftingsurfaces.compoundstab.CompoundStabilizer.connector_left">connector_left (components.liftingsurfaces.compoundstab.CompoundStabilizer attribute)</a>
 </li>
@@ -437,6 +499,10 @@
       <li><a href="components/battery.html#components.battery.Battery.constants">constants (components.battery.Battery attribute)</a>
 </li>
       <li><a href="components/liftingsurfaces/compoundstab.html#components.liftingsurfaces.compoundstab.CompoundStabilizer.critical_thickness">critical_thickness (components.liftingsurfaces.compoundstab.CompoundStabilizer attribute)</a>
+</li>
+      <li><a href="design/wingpowerloading.html#design.wingpowerloading.WingPowerLoading.cruise_parameters">cruise_parameters (design.wingpowerloading.WingPowerLoading attribute)</a>
+</li>
+      <li><a href="design/performance.html#design.performance.Performance.cruise_velocity">cruise_velocity (design.performance.Performance attribute)</a>
 </li>
       <li><a href="components/fuselage/fframe.html#components.fuselage.primitives.fframe.FFrame.curvepoints">curvepoints (components.fuselage.primitives.fframe.FFrame attribute)</a>
 
@@ -452,9 +518,27 @@
 <h2 id="D">D</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="components/propeller/propeller.html#components.propeller.propeller.Propeller.database_path">database_path (components.propeller.propeller.Propeller attribute)</a>
+</li>
       <li><a href="definitions.html#module-definitions">definitions (module)</a>
 </li>
       <li><a href="components/liftingsurfaces/scissorplot.html#components.liftingsurfaces.scissorplot.ScissorPlot.delta_xcg">delta_xcg (components.liftingsurfaces.scissorplot.ScissorPlot attribute)</a>
+</li>
+      <li><a href="design/designinput.html#module-design.designinput">design.designinput (module)</a>
+</li>
+      <li><a href="design/paramgen.html#module-design.parametergenerator">design.parametergenerator (module)</a>
+</li>
+      <li><a href="design/performance.html#module-design.performance">design.performance (module)</a>
+</li>
+      <li><a href="design/weightestimator.html#module-design.weightestimator">design.weightestimator (module)</a>
+</li>
+      <li><a href="design/wingpowerloading.html#module-design.wingpowerloading">design.wingpowerloading (module)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="design/designinput.html#design.designinput.DesignInput">DesignInput (class in design.designinput)</a>
+</li>
+      <li><a href="design/wingpowerloading.html#design.wingpowerloading.WingPowerLoading.designpoint">designpoint (design.wingpowerloading.WingPowerLoading attribute)</a>
 </li>
       <li><a href="components/motor.html#components.motor.Motor.diameter">diameter (components.motor.Motor attribute)</a>
 </li>
@@ -464,8 +548,6 @@
         <li><a href="components/liftingsurfaces/liftingsurfaceprim.html#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.dihedral">(components.liftingsurfaces.primitives.liftingsurface.LiftingSurface attribute)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="components/liftingsurfaces/liftingsurfaceprim.html#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.dihedral_solid">dihedral_solid (components.liftingsurfaces.primitives.liftingsurface.LiftingSurface attribute)</a>
 </li>
       <li><a href="directories.html#module-directories">directories (module)</a>
@@ -480,13 +562,25 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="components/liftingsurfaces/scissorplot.html#components.liftingsurfaces.scissorplot.ScissorPlot.e">e (components.liftingsurfaces.scissorplot.ScissorPlot attribute)</a>
 </li>
+      <li><a href="design/wingpowerloading.html#design.wingpowerloading.WingPowerLoading.e_factor">e_factor (design.wingpowerloading.WingPowerLoading attribute)</a>
+</li>
       <li><a href="components/liftingsurfaces/scissorplot.html#components.liftingsurfaces.scissorplot.ScissorPlot.e_h">e_h (components.liftingsurfaces.scissorplot.ScissorPlot attribute)</a>
 </li>
       <li><a href="components/motor.html#components.motor.Motor.efficiency">efficiency (components.motor.Motor attribute)</a>
+
+      <ul>
+        <li><a href="components/propeller/propeller.html#components.propeller.propeller.Propeller.efficiency">(components.propeller.propeller.Propeller attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="components/propeller/propeller.html#components.propeller.propeller.Propeller.efficiency_plotter">efficiency_plotter (components.propeller.propeller.Propeller attribute)</a>
 </li>
       <li><a href="components/electronics/electronics.html#components.electronics.electronics.Electronics.elec_joiner">elec_joiner (components.electronics.electronics.Electronics attribute)</a>
 </li>
       <li><a href="components/electronics/electronics.html#components.electronics.electronics.Electronics">Electronics (class in components.electronics.electronics)</a>
+</li>
+      <li><a href="design/performance.html#design.performance.Performance.endurance_velocity">endurance_velocity (design.performance.Performance attribute)</a>
+</li>
+      <li><a href="components/eoir.html#components.payload.eoir.EOIR">EOIR (class in components.payload.eoir)</a>
 </li>
       <li><a href="components/electronics/speedcontroller.html#components.electronics.speedcontroller.SpeedController.esc_dims">esc_dims (components.electronics.speedcontroller.SpeedController attribute)</a>
 </li>
@@ -502,6 +596,14 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="components/electronics/speedcontroller.html#components.electronics.speedcontroller.SpeedController.esc_weight_plot">esc_weight_plot (components.electronics.speedcontroller.SpeedController attribute)</a>
 </li>
+      <li><a href="design/performance.html#design.performance.Performance.eta_curve_bounds">eta_curve_bounds (design.performance.Performance attribute)</a>
+</li>
+      <li><a href="design/wingpowerloading.html#design.wingpowerloading.WingPowerLoading.eta_motor">eta_motor (design.wingpowerloading.WingPowerLoading attribute)</a>
+</li>
+      <li><a href="design/wingpowerloading.html#design.wingpowerloading.WingPowerLoading.eta_prop">eta_prop (design.wingpowerloading.WingPowerLoading attribute)</a>
+</li>
+      <li><a href="design/wingpowerloading.html#design.wingpowerloading.WingPowerLoading.eta_tot">eta_tot (design.wingpowerloading.WingPowerLoading attribute)</a>
+</li>
       <li><a href="components/fuselage/boom.html#components.fuselage.boom.Boom.external_shape">external_shape (components.fuselage.boom.Boom attribute)</a>
 
       <ul>
@@ -514,6 +616,10 @@
         <li><a href="components/liftingsurfaces/verticalstab.html#components.liftingsurfaces.verticalstab.VerticalStabilizer.external_shape">(components.liftingsurfaces.verticalstab.VerticalStabilizer attribute)</a>
 </li>
         <li><a href="components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing.external_shape">(components.liftingsurfaces.wing.Wing attribute)</a>
+</li>
+        <li><a href="components/eoir.html#components.payload.eoir.EOIR.external_shape">(components.payload.eoir.EOIR attribute)</a>
+</li>
+        <li><a href="components/propeller/propeller.html#components.propeller.propeller.Propeller.external_shape">(components.propeller.propeller.Propeller attribute)</a>
 </li>
         <li><a href="definitions.html#definitions.ExternalBody.external_shape">(definitions.ExternalBody attribute)</a>
 </li>
@@ -528,6 +634,10 @@
 <h2 id="F">F</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="components/propeller/propeller.html#components.propeller.propeller.Propeller.fairing_curve">fairing_curve (components.propeller.propeller.Propeller attribute)</a>
+</li>
+      <li><a href="components/propeller/propeller.html#components.propeller.propeller.Propeller.fairing_length">fairing_length (components.propeller.propeller.Propeller attribute)</a>
+</li>
       <li><a href="components/fuselage/fcone.html#components.fuselage.primitives.fcone.FCone">FCone (class in components.fuselage.primitives.fcone)</a>
 </li>
       <li><a href="components/fuselage/fframe.html#components.fuselage.primitives.fframe.FFrame">FFrame (class in components.fuselage.primitives.fframe)</a>
@@ -539,13 +649,17 @@
       <li><a href="components/electronics/electronics.html#components.electronics.electronics.Electronics.flight_controller">flight_controller (components.electronics.electronics.Electronics attribute)</a>
 </li>
       <li><a href="components/electronics/flightcontroller.html#components.electronics.flightcontroller.FlightController.flight_controller_power">flight_controller_power (components.electronics.flightcontroller.FlightController attribute)</a>
+
+      <ul>
+        <li><a href="design/wingpowerloading.html#design.wingpowerloading.WingPowerLoading.flight_controller_power">(design.wingpowerloading.WingPowerLoading attribute)</a>
 </li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="components/electronics/flightcontroller.html#components.electronics.flightcontroller.FlightController">FlightController (class in components.electronics.flightcontroller)</a>
 </li>
       <li><a href="components/electronics/flightcontroller.html#components.electronics.flightcontroller.FlightController.flightcontroller_offset">flightcontroller_offset (components.electronics.flightcontroller.FlightController attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="components/fuselage/fuselage.html#components.fuselage.fuselage.Fuselage.frame_builder">frame_builder (components.fuselage.fuselage.Fuselage attribute)</a>
 </li>
       <li><a href="components/fuselage/fuselage.html#components.fuselage.fuselage.Fuselage.frames">frames (components.fuselage.fuselage.Fuselage attribute)</a>
@@ -574,11 +688,15 @@
 </li>
       <li><a href="components/liftingsurfaces/horizontalstab.html#components.liftingsurfaces.horizontalstab.HorizontalStabilizer.get_htfuse_bounds">get_htfuse_bounds (components.liftingsurfaces.horizontalstab.HorizontalStabilizer attribute)</a>
 </li>
+      <li><a href="design/designinput.html#design.designinput.DesignInput.get_userinput">get_userinput (design.designinput.DesignInput attribute)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="components/liftingsurfaces/verticalstab.html#components.liftingsurfaces.verticalstab.VerticalStabilizer.get_vtfuse_bounds">get_vtfuse_bounds (components.liftingsurfaces.verticalstab.VerticalStabilizer attribute)</a>
 </li>
       <li><a href="components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing.get_wingfuse_bounds">get_wingfuse_bounds (components.liftingsurfaces.wing.Wing attribute)</a>
+</li>
+      <li><a href="design/designinput.html#design.designinput.DesignInput.goal_value">goal_value (design.designinput.DesignInput attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -592,18 +710,24 @@
         <li><a href="components/electronics/speedcontroller.html#components.electronics.speedcontroller.SpeedController.h_navio">(components.electronics.speedcontroller.SpeedController attribute)</a>
 </li>
       </ul></li>
+      <li><a href="design/designinput.html#design.designinput.DesignInput.handlaunch">handlaunch (design.designinput.DesignInput attribute)</a>
+
+      <ul>
+        <li><a href="design/wingpowerloading.html#design.wingpowerloading.WingPowerLoading.handlaunch">(design.wingpowerloading.WingPowerLoading attribute)</a>
+</li>
+      </ul></li>
       <li><a href="components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing.hide_bbox">hide_bbox (components.liftingsurfaces.wing.Wing attribute)</a>
 </li>
       <li><a href="components/liftingsurfaces/liftingsurfaceprim.html#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.hide_leading_edge">hide_leading_edge (components.liftingsurfaces.primitives.liftingsurface.LiftingSurface attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="components/liftingsurfaces/liftingsurfaceprim.html#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.hide_mac">hide_mac (components.liftingsurfaces.primitives.liftingsurface.LiftingSurface attribute)</a>
 
       <ul>
         <li><a href="components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing.hide_mac">(components.liftingsurfaces.wing.Wing attribute)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="components/liftingsurfaces/horizontalstab.html#components.liftingsurfaces.horizontalstab.HorizontalStabilizer">HorizontalStabilizer (class in components.liftingsurfaces.horizontalstab)</a>
 </li>
       <li><a href="components/liftingsurfaces/horizontalstab.html#components.liftingsurfaces.horizontalstab.HorizontalStabilizer.ht_mirror">ht_mirror (components.liftingsurfaces.horizontalstab.HorizontalStabilizer attribute)</a>
@@ -640,6 +764,10 @@
         <li><a href="components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing.internal_shape">(components.liftingsurfaces.wing.Wing attribute)</a>
 </li>
         <li><a href="components/motor.html#components.motor.Motor.internal_shape">(components.motor.Motor attribute)</a>
+</li>
+        <li><a href="components/eoir.html#components.payload.eoir.EOIR.internal_shape">(components.payload.eoir.EOIR attribute)</a>
+</li>
+        <li><a href="components/propeller/propeller.html#components.propeller.propeller.Propeller.internal_shape">(components.propeller.propeller.Propeller attribute)</a>
 </li>
         <li><a href="definitions.html#definitions.Component.internal_shape">(definitions.Component attribute)</a>
 </li>
@@ -679,6 +807,8 @@
 </li>
         <li><a href="components/motor.html#components.motor.Motor.label">(components.motor.Motor attribute)</a>
 </li>
+        <li><a href="components/eoir.html#components.payload.eoir.EOIR.label">(components.payload.eoir.EOIR attribute)</a>
+</li>
       </ul></li>
       <li><a href="components/liftingsurfaces/liftingsurfaceprim.html#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.le_sweep">le_sweep (components.liftingsurfaces.primitives.liftingsurface.LiftingSurface attribute)</a>
 </li>
@@ -686,10 +816,10 @@
 </li>
       <li><a href="components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing.left_wing">left_wing (components.liftingsurfaces.wing.Wing attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="components/liftingsurfaces/liftingsurfaceprim.html#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.lemac">lemac (components.liftingsurfaces.primitives.liftingsurface.LiftingSurface attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="components/motor.html#components.motor.Motor.length">length (components.motor.Motor attribute)</a>
 </li>
       <li><a href="components/liftingsurfaces/compoundstab.html#components.liftingsurfaces.compoundstab.CompoundStabilizer.lhc">lhc (components.liftingsurfaces.compoundstab.CompoundStabilizer attribute)</a>
@@ -702,9 +832,13 @@
 </li>
       <li><a href="components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing.lift_coef_control_index">lift_coef_control_index (components.liftingsurfaces.wing.Wing attribute)</a>
 </li>
+      <li><a href="components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing.lift_coef_max">lift_coef_max (components.liftingsurfaces.wing.Wing attribute)</a>
+</li>
       <li><a href="components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing.lift_coef_vs_alpha">lift_coef_vs_alpha (components.liftingsurfaces.wing.Wing attribute)</a>
 </li>
       <li><a href="components/liftingsurfaces/liftingsurfaceprim.html#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface">LiftingSurface (class in components.liftingsurfaces.primitives.liftingsurface)</a>
+</li>
+      <li><a href="design/wingpowerloading.html#design.wingpowerloading.WingPowerLoading.loadingdiagram">loadingdiagram (design.wingpowerloading.WingPowerLoading attribute)</a>
 </li>
       <li><a href="components/liftingsurfaces/verticalstab.html#components.liftingsurfaces.verticalstab.VerticalStabilizer.lvc">lvc (components.liftingsurfaces.verticalstab.VerticalStabilizer attribute)</a>
 </li>
@@ -730,6 +864,8 @@
 </li>
       <li><a href="components/fuselage/fuselage.html#components.fuselage.fuselage.Fuselage.make_transparent">make_transparent (components.fuselage.fuselage.Fuselage attribute)</a>
 </li>
+      <li><a href="design/wingpowerloading.html#design.wingpowerloading.WingPowerLoading.maximum_lift_coefficient">maximum_lift_coefficient (design.wingpowerloading.WingPowerLoading attribute)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="components/liftingsurfaces/liftingsurfaceprim.html#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.mesh_deflection">mesh_deflection (components.liftingsurfaces.primitives.liftingsurface.LiftingSurface attribute)</a>
@@ -751,6 +887,8 @@
       <li><a href="components/motor.html#components.motor.Motor.motor_circle">motor_circle (components.motor.Motor attribute)</a>
 </li>
       <li><a href="components/motor.html#components.motor.Motor.motor_selector">motor_selector (components.motor.Motor attribute)</a>
+</li>
+      <li><a href="mycsv2dict.html#module-my_csv2dict">my_csv2dict (module)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -783,6 +921,10 @@
 </li>
       </ul></li>
   </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="design/designinput.html#design.designinput.DesignInput.open_documentation">open_documentation (design.designinput.DesignInput attribute)</a>
+</li>
+  </ul></td>
 </tr></table>
 
 <h2 id="P">P</h2>
@@ -790,7 +932,17 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="components/fuselage/fuselage.html#components.fuselage.fuselage.Fuselage.pad_factor">pad_factor (components.fuselage.fuselage.Fuselage attribute)</a>
 </li>
+      <li><a href="design/paramgen.html#design.parametergenerator.ParameterGenerator">ParameterGenerator (class in design.parametergenerator)</a>
+</li>
       <li><a href="main.html#main.UAV.parasite_drag">parasite_drag (main.UAV attribute)</a>
+</li>
+      <li><a href="design/wingpowerloading.html#design.wingpowerloading.WingPowerLoading.payload_power">payload_power (design.wingpowerloading.WingPowerLoading attribute)</a>
+</li>
+      <li><a href="design/designinput.html#design.designinput.DesignInput.payload_type">payload_type (design.designinput.DesignInput attribute)</a>
+</li>
+      <li><a href="design/performance.html#design.performance.Performance">Performance (class in design.performance)</a>
+</li>
+      <li><a href="design/designinput.html#design.designinput.DesignInput.performance_goal">performance_goal (design.designinput.DesignInput attribute)</a>
 </li>
       <li><a href="components/liftingsurfaces/horizontalstab.html#components.liftingsurfaces.horizontalstab.HorizontalStabilizer.planform_area">planform_area (components.liftingsurfaces.horizontalstab.HorizontalStabilizer attribute)</a>
 
@@ -806,8 +958,6 @@
       </ul></li>
       <li><a href="components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing.plot_liftgradient">plot_liftgradient (components.liftingsurfaces.wing.Wing attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing.plot_momentgradient">plot_momentgradient (components.liftingsurfaces.wing.Wing attribute)</a>
 </li>
       <li><a href="components/liftingsurfaces/scissorplot.html#components.liftingsurfaces.scissorplot.ScissorPlot.plot_scissordiagram">plot_scissordiagram (components.liftingsurfaces.scissorplot.ScissorPlot attribute)</a>
@@ -824,9 +974,47 @@
         <li><a href="components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing.ply_number">(components.liftingsurfaces.wing.Wing attribute)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="components/fuselage/fuselage.html#components.fuselage.fuselage.Fuselage.points">points (components.fuselage.fuselage.Fuselage attribute)</a>
 </li>
+      <li><a href="components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing.position">position (components.liftingsurfaces.wing.Wing attribute)</a>
+
+      <ul>
+        <li><a href="components/propeller/propeller.html#components.propeller.propeller.Propeller.position">(components.propeller.propeller.Propeller attribute)</a>
+</li>
+      </ul></li>
       <li><a href="components/motor.html#components.motor.Motor.power">power (components.motor.Motor attribute)</a>
+</li>
+      <li><a href="design/performance.html#design.performance.Performance.power_available">power_available (design.performance.Performance attribute)</a>
+</li>
+      <li><a href="design/performance.html#design.performance.Performance.power_spline">power_spline (design.performance.Performance attribute)</a>
+</li>
+      <li><a href="design/wingpowerloading.html#design.wingpowerloading.WingPowerLoading.powerloading">powerloading (design.wingpowerloading.WingPowerLoading attribute)</a>
+</li>
+      <li><a href="components/propeller/propparser.html#components.propeller.prop_data_parser.prop_data_parser">prop_data_parser() (in module components.propeller.prop_data_parser)</a>
+</li>
+      <li><a href="design/performance.html#design.performance.Performance.prop_speed_range">prop_speed_range (design.performance.Performance attribute)</a>
+</li>
+      <li><a href="components/propeller/propeller.html#components.propeller.propeller.Propeller">Propeller (class in components.propeller.propeller)</a>
+</li>
+      <li><a href="components/propeller/propeller.html#components.propeller.propeller.Propeller.propeller">propeller (components.propeller.propeller.Propeller attribute)</a>
+</li>
+      <li><a href="components/propeller/propeller.html#components.propeller.propeller.Propeller.propeller_builder">propeller_builder (components.propeller.propeller.Propeller attribute)</a>
+</li>
+      <li><a href="components/propeller/propeller.html#components.propeller.propeller.Propeller.propeller_database">propeller_database (components.propeller.propeller.Propeller attribute)</a>
+</li>
+      <li><a href="components/propeller/propeller.html#components.propeller.propeller.Propeller.propeller_diameter">propeller_diameter (components.propeller.propeller.Propeller attribute)</a>
+</li>
+      <li><a href="design/performance.html#design.performance.Performance.propeller_eta_curve">propeller_eta_curve (design.performance.Performance attribute)</a>
+</li>
+      <li><a href="components/propeller/propeller.html#components.propeller.propeller.Propeller.propeller_fairing">propeller_fairing (components.propeller.propeller.Propeller attribute)</a>
+</li>
+      <li><a href="components/propeller/propeller.html#components.propeller.propeller.Propeller.propeller_geometry">propeller_geometry (components.propeller.propeller.Propeller attribute)</a>
+</li>
+      <li><a href="components/propeller/propeller.html#components.propeller.propeller.Propeller.propeller_recommendation">propeller_recommendation (components.propeller.propeller.Propeller attribute)</a>
+</li>
+      <li><a href="components/propeller/propeller.html#components.propeller.propeller.Propeller.propeller_selector">propeller_selector (components.propeller.propeller.Propeller attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -836,14 +1024,22 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="components/battery.html#components.battery.Battery.radius">radius (components.battery.Battery attribute)</a>
 </li>
+      <li><a href="mycsv2dict.html#my_csv2dict.read_csv">read_csv() (in module my_csv2dict)</a>
+</li>
       <li><a href="components/liftingsurfaces/compoundstab.html#components.liftingsurfaces.compoundstab.CompoundStabilizer.required_planform_area">required_planform_area (components.liftingsurfaces.compoundstab.CompoundStabilizer attribute)</a>
 </li>
       <li><a href="components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing.rho">rho (components.liftingsurfaces.wing.Wing attribute)</a>
+
+      <ul>
+        <li><a href="design/wingpowerloading.html#design.wingpowerloading.WingPowerLoading.rho">(design.wingpowerloading.WingPowerLoading attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="design/wingpowerloading.html#design.wingpowerloading.WingPowerLoading.rho_cr">rho_cr (design.wingpowerloading.WingPowerLoading attribute)</a>
 </li>
       <li><a href="components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing.right_cut_plane">right_cut_plane (components.liftingsurfaces.wing.Wing attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="components/liftingsurfaces/liftingsurfaceprim.html#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.root_airfoil">root_airfoil (components.liftingsurfaces.primitives.liftingsurface.LiftingSurface attribute)</a>
 </li>
       <li><a href="components/liftingsurfaces/liftingsurfaceprim.html#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.root_chord">root_chord (components.liftingsurfaces.primitives.liftingsurface.LiftingSurface attribute)</a>
@@ -858,7 +1054,17 @@
 <h2 id="S">S</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="design/weightestimator.html#design.weightestimator.ClassTwo.S">S (design.weightestimator.ClassTwo attribute)</a>
+</li>
+      <li><a href="design/weightestimator.html#design.weightestimator.ClassTwo.S_f">S_f (design.weightestimator.ClassTwo attribute)</a>
+</li>
+      <li><a href="design/weightestimator.html#design.weightestimator.ClassTwo.S_h">S_h (design.weightestimator.ClassTwo attribute)</a>
+</li>
       <li><a href="components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing.s_req">s_req (components.liftingsurfaces.wing.Wing attribute)</a>
+</li>
+      <li><a href="design/weightestimator.html#design.weightestimator.ClassTwo.S_v">S_v (design.weightestimator.ClassTwo attribute)</a>
+</li>
+      <li><a href="components/propeller/propeller.html#components.propeller.propeller.Propeller.scaled_airfoil">scaled_airfoil (components.propeller.propeller.Propeller attribute)</a>
 </li>
       <li><a href="components/liftingsurfaces/liftingsurfaceprim.html#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.scaled_tip">scaled_tip (components.liftingsurfaces.primitives.liftingsurface.LiftingSurface attribute)</a>
 </li>
@@ -886,10 +1092,10 @@
 </li>
       <li><a href="components/fuselage/fuselage.html#components.fuselage.fuselage.Fuselage.side_bc">side_bc (components.fuselage.fuselage.Fuselage attribute)</a>
 </li>
-      <li><a href="components/liftingsurfaces/scissorplot.html#components.liftingsurfaces.scissorplot.ScissorPlot.SM">SM (components.liftingsurfaces.scissorplot.ScissorPlot attribute)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="components/liftingsurfaces/scissorplot.html#components.liftingsurfaces.scissorplot.ScissorPlot.SM">SM (components.liftingsurfaces.scissorplot.ScissorPlot attribute)</a>
+</li>
       <li><a href="components/electronics/flightcontroller.html#components.electronics.flightcontroller.FlightController.solid">solid (components.electronics.flightcontroller.FlightController attribute)</a>
 
       <ul>
@@ -921,6 +1127,14 @@
       <li><a href="components/liftingsurfaces/compoundstab.html#components.liftingsurfaces.compoundstab.CompoundStabilizer.stabilizer_vright">stabilizer_vright (components.liftingsurfaces.compoundstab.CompoundStabilizer attribute)</a>
 </li>
       <li><a href="components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing.stall_speed">stall_speed (components.liftingsurfaces.wing.Wing attribute)</a>
+
+      <ul>
+        <li><a href="design/performance.html#design.performance.Performance.stall_speed">(design.performance.Performance attribute)</a>
+</li>
+        <li><a href="design/wingpowerloading.html#design.wingpowerloading.WingPowerLoading.stall_speed">(design.wingpowerloading.WingPowerLoading attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="design/weightestimator.html#design.weightestimator.ClassTwo.structural_weight_per_area">structural_weight_per_area (design.weightestimator.ClassTwo attribute)</a>
 </li>
       <li><a href="main.html#main.UAV.sum_area">sum_area() (main.UAV method)</a>
 </li>
@@ -948,14 +1162,22 @@
         <li><a href="components/liftingsurfaces/verticalstab.html#components.liftingsurfaces.verticalstab.VerticalStabilizer.taper">(components.liftingsurfaces.verticalstab.VerticalStabilizer attribute)</a>
 </li>
       </ul></li>
+      <li><a href="design/designinput.html#design.designinput.DesignInput.target_value">target_value (design.designinput.DesignInput attribute)</a>
+</li>
       <li><a href="definitions.html#definitions.Component.text_label">text_label (definitions.Component attribute)</a>
 </li>
-      <li><a href="definitions.html#definitions.Component.text_label_position">text_label_position (definitions.Component attribute)</a>
+      <li><a href="components/eoir.html#components.payload.eoir.EOIR.text_label_position">text_label_position (components.payload.eoir.EOIR attribute)</a>
+
+      <ul>
+        <li><a href="components/propeller/propeller.html#components.propeller.propeller.Propeller.text_label_position">(components.propeller.propeller.Propeller attribute)</a>
 </li>
-      <li><a href="components/liftingsurfaces/liftingsurfaceprim.html#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.tip_airfoil">tip_airfoil (components.liftingsurfaces.primitives.liftingsurface.LiftingSurface attribute)</a>
+        <li><a href="definitions.html#definitions.Component.text_label_position">(definitions.Component attribute)</a>
 </li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="components/liftingsurfaces/liftingsurfaceprim.html#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.tip_airfoil">tip_airfoil (components.liftingsurfaces.primitives.liftingsurface.LiftingSurface attribute)</a>
+</li>
       <li><a href="components/liftingsurfaces/liftingsurfaceprim.html#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.tip_airfoil_notwist">tip_airfoil_notwist (components.liftingsurfaces.primitives.liftingsurface.LiftingSurface attribute)</a>
 </li>
       <li><a href="components/liftingsurfaces/liftingsurfaceprim.html#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.tip_chord">tip_chord (components.liftingsurfaces.primitives.liftingsurface.LiftingSurface attribute)</a>
@@ -1043,6 +1265,10 @@
 </li>
         <li><a href="components/motor.html#components.motor.Motor.weight">(components.motor.Motor attribute)</a>
 </li>
+        <li><a href="components/eoir.html#components.payload.eoir.EOIR.weight">(components.payload.eoir.EOIR attribute)</a>
+</li>
+        <li><a href="components/propeller/propeller.html#components.propeller.propeller.Propeller.weight">(components.propeller.propeller.Propeller attribute)</a>
+</li>
         <li><a href="definitions.html#definitions.Component.weight">(definitions.Component attribute)</a>
 </li>
         <li><a href="definitions.html#definitions.ExternalBody.weight">(definitions.ExternalBody attribute)</a>
@@ -1050,12 +1276,42 @@
       </ul></li>
       <li><a href="main.html#main.UAV.weight_and_balance">weight_and_balance() (main.UAV method)</a>
 </li>
+      <li><a href="design/weightestimator.html#design.weightestimator.ClassTwo.weight_batt">weight_batt (design.weightestimator.ClassTwo attribute)</a>
+</li>
+      <li><a href="design/weightestimator.html#design.weightestimator.ClassTwo.weight_electronics">weight_electronics (design.weightestimator.ClassTwo attribute)</a>
+</li>
+      <li><a href="design/weightestimator.html#design.weightestimator.ClassTwo.weight_fuselage">weight_fuselage (design.weightestimator.ClassTwo attribute)</a>
+</li>
+      <li><a href="design/weightestimator.html#design.weightestimator.ClassTwo.weight_ht">weight_ht (design.weightestimator.ClassTwo attribute)</a>
+</li>
       <li><a href="components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing.weight_mtow">weight_mtow (components.liftingsurfaces.wing.Wing attribute)</a>
+
+      <ul>
+        <li><a href="design/weightestimator.html#design.weightestimator.ClassOne.weight_mtow">(design.weightestimator.ClassOne attribute)</a>
+</li>
+        <li><a href="design/weightestimator.html#design.weightestimator.ClassTwo.weight_mtow">(design.weightestimator.ClassTwo attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="design/weightestimator.html#design.weightestimator.ClassOne.weight_payload">weight_payload (design.weightestimator.ClassOne attribute)</a>
+
+      <ul>
+        <li><a href="design/weightestimator.html#design.weightestimator.ClassTwo.weight_payload">(design.weightestimator.ClassTwo attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="design/weightestimator.html#design.weightestimator.ClassTwo.weight_prop">weight_prop (design.weightestimator.ClassTwo attribute)</a>
 </li>
       <li><a href="components/electronics/speedcontroller.html#components.electronics.speedcontroller.SpeedController.weight_range">weight_range (components.electronics.speedcontroller.SpeedController attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="design/weightestimator.html#design.weightestimator.ClassTwo.weight_structural">weight_structural (design.weightestimator.ClassTwo attribute)</a>
+</li>
+      <li><a href="design/designinput.html#design.designinput.DesignInput.weight_target">weight_target (design.designinput.DesignInput attribute)</a>
+</li>
+      <li><a href="design/weightestimator.html#design.weightestimator.ClassTwo.weight_vt">weight_vt (design.weightestimator.ClassTwo attribute)</a>
+</li>
+      <li><a href="design/weightestimator.html#design.weightestimator.ClassTwo.weight_wing">weight_wing (design.weightestimator.ClassTwo attribute)</a>
+</li>
       <li><a href="definitions.html#definitions.ExternalBody.wetted_area">wetted_area (definitions.ExternalBody attribute)</a>
 </li>
       <li><a href="components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing">Wing (class in components.liftingsurfaces.wing)</a>
@@ -1088,7 +1344,13 @@
       </ul></li>
       <li><a href="components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing.wing_surface">wing_surface (components.liftingsurfaces.wing.Wing attribute)</a>
 </li>
+      <li><a href="design/wingpowerloading.html#design.wingpowerloading.WingPowerLoading.wingloading">wingloading (design.wingpowerloading.WingPowerLoading attribute)</a>
+</li>
+      <li><a href="design/wingpowerloading.html#design.wingpowerloading.WingPowerLoading">WingPowerLoading (class in design.wingpowerloading)</a>
+</li>
       <li><a href="components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing.write_results">write_results (components.liftingsurfaces.wing.Wing attribute)</a>
+</li>
+      <li><a href="design/wingpowerloading.html#design.wingpowerloading.WingPowerLoading.ws_range">ws_range (design.wingpowerloading.WingPowerLoading attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -1107,6 +1369,14 @@
       <li><a href="components/liftingsurfaces/scissorplot.html#components.liftingsurfaces.scissorplot.ScissorPlot.x_lemac">x_lemac (components.liftingsurfaces.scissorplot.ScissorPlot attribute)</a>
 </li>
       <li><a href="components/liftingsurfaces/scissorplot.html#components.liftingsurfaces.scissorplot.ScissorPlot.xcg_range">xcg_range (components.liftingsurfaces.scissorplot.ScissorPlot attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="Z">Z</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="design/wingpowerloading.html#design.wingpowerloading.WingPowerLoading.zero_lift_drag">zero_lift_drag (design.wingpowerloading.WingPowerLoading attribute)</a>
 </li>
   </ul></td>
 </tr></table>

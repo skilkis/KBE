@@ -84,6 +84,7 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../main.html">Main UAV</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../definitions.html">Definitions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../directories.html">Directories</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../index.html">Components Module</a><ul class="current">
@@ -112,9 +113,23 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../motor.html">Electric Motor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../propeller/index.html">Propeller Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../propeller/propparser.html">Propeller Parser</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../propeller/propeller.html">Propeller</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../main.html">Main UAV</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../eoir.html">Electro-Optical Infra-Red Camera</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../design/index.html">Design Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../design/designinput.html">Design Input</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../design/paramgen.html">Parameter Generator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../design/weightestimator.html">Class I and II Weight Estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../design/wingpowerloading.html">Thrust and Power Loading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../design/performance.html">Performance Verification</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../mycsv2dict.html">My CSV Dictionary</a></li>
 </ul>
 
             
@@ -439,6 +454,22 @@ required C_L by the lift equation at 1.2 * V_s for the controllability curve in 
 </dd></dl>
 
 <dl class="attribute">
+<dt id="components.liftingsurfaces.wing.Wing.lift_coef_max">
+<code class="descname">lift_coef_max</code><a class="reference internal" href="../../_modules/components/liftingsurfaces/wing.html#Wing.lift_coef_max"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.liftingsurfaces.wing.Wing.lift_coef_max" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute computes the C_L from the lift equation at the provided <a class="reference internal" href="#components.liftingsurfaces.wing.Wing.stall_speed" title="components.liftingsurfaces.wing.Wing.stall_speed"><code class="xref py py-attr docutils literal notranslate"><span class="pre">stall_speed</span></code></a> to be used in         later performance estimations.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Lift Coefficient at Stall (C_L_max)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="components.liftingsurfaces.wing.Wing.lift_coef_vs_alpha">
 <code class="descname">lift_coef_vs_alpha</code><a class="reference internal" href="../../_modules/components/liftingsurfaces/wing.html#Wing.lift_coef_vs_alpha"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.liftingsurfaces.wing.Wing.lift_coef_vs_alpha" title="Permalink to this definition">¶</a></dt>
 <dd><p>This estimates the lift curve slope.</p>
@@ -528,6 +559,13 @@ index found from the above lift coefficient at 1.2* V_s.</p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="components.liftingsurfaces.wing.Wing.position">
+<code class="descname">position</code><a class="reference internal" href="../../_modules/components/liftingsurfaces/wing.html#Wing.position"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.liftingsurfaces.wing.Wing.position" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overwrites the inherited position attribute, to make the wing-fixed at Point(0, 0, 0), thus the
+datum of the entire model is the leading edge of the wing-root</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="components.liftingsurfaces.wing.Wing.rho">
 <code class="descname">rho</code><a class="headerlink" href="#components.liftingsurfaces.wing.Wing.rho" title="Permalink to this definition">¶</a></dt>
 <dd><p>Below is the ISA STD sea level density in kg/m^3.</p>
@@ -584,9 +622,7 @@ index found from the above lift coefficient at 1.2* V_s.</p>
 <dl class="attribute">
 <dt id="components.liftingsurfaces.wing.Wing.show_avlgeom">
 <code class="descname">show_avlgeom</code><a class="reference internal" href="../../_modules/components/liftingsurfaces/wing.html#Wing.show_avlgeom"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.liftingsurfaces.wing.Wing.show_avlgeom" title="Permalink to this definition">¶</a></dt>
-<dd><p>”  Here we show the AVL geometry. NOTE: THERE IS A BUG HERE, IF DOUBLE CLICKED IN GUI, IT SHOWS BUT CAUSES
-PYTHON TO FREEZE. THE CODE MUST BE STOPPED AND RESTARTED IF THE GEOMETRY IS SHOWN.
-#  TODO FIX THIS</p>
+<dd><p>Allows the user to view the AVL Geometry in a seperate Pop-up window</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />

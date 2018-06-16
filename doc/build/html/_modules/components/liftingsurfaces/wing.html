@@ -82,6 +82,7 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../main.html">Main UAV</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../definitions.html">Definitions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../directories.html">Directories</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../components/index.html">Components Module</a><ul>
@@ -110,9 +111,23 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../components/motor.html">Electric Motor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/propeller/index.html">Propeller Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/propeller/propparser.html">Propeller Parser</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/propeller/propeller.html">Propeller</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../../main.html">Main UAV</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/eoir.html">Electro-Optical Infra-Red Camera</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../design/index.html">Design Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../design/designinput.html">Design Input</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../design/paramgen.html">Parameter Generator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../design/weightestimator.html">Class I and II Weight Estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../design/wingpowerloading.html">Thrust and Power Loading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../design/performance.html">Performance Verification</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../mycsv2dict.html">My CSV Dictionary</a></li>
 </ul>
 
             
@@ -196,7 +211,7 @@
 
 <span class="c1">#  TODO FIX BUG IN WING WETTED AREA CALCULATION, DUE TO WING MIRROR JUNCTION OF EXTERNAL SHAPE!!!!! see low AR wing.py</span>
 <span class="c1">#  TODO FIX show_avl_geom IF POSSIBLE</span>
-<span class="c1">#  TODO Compare CL_max with assumed as well as plot with LLT</span>
+<span class="c1">#  TODO Fix</span>
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Nelson Johnson&quot;</span>
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Wing&quot;</span><span class="p">]</span>
@@ -278,10 +293,11 @@
 <span class="c1">#  This block of Attributes calculates the planform parameters. ########------------------------------------------------</span>
 
     <span class="c1"># TODO make sure that the wing position is not settable, this doesn&#39;t work</span>
-    <span class="c1"># @Attribute(private=True)</span>
-    <span class="c1"># def position(self):</span>
-    <span class="c1">#     &quot;&quot;&quot; Overwrites the inherited position attribute, to make the wing-fixed at Point(0, 0, 0) &quot;&quot;&quot;</span>
-    <span class="c1">#     return Position(Point(0, 0, 0))</span>
+<div class="viewcode-block" id="Wing.position"><a class="viewcode-back" href="../../../components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing.position">[docs]</a>    <span class="nd">@Attribute</span><span class="p">(</span><span class="n">private</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">position</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Overwrites the inherited position attribute, to make the wing-fixed at Point(0, 0, 0), thus the</span>
+<span class="sd">        datum of the entire model is the leading edge of the wing-root &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Position</span><span class="p">(</span><span class="n">XOY</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Wing.component_type"><a class="viewcode-back" href="../../../components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing.component_type">[docs]</a>    <span class="nd">@Attribute</span>
     <span class="k">def</span> <span class="nf">component_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -320,6 +336,16 @@
 <span class="sd">        :rtype: float</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">s_req</span></div>
+
+<div class="viewcode-block" id="Wing.lift_coef_max"><a class="viewcode-back" href="../../../components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing.lift_coef_max">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">lift_coef_max</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This attribute computes the C_L from the lift equation at the provided :attr:`stall_speed` to be used in \</span>
+<span class="sd">        later performance estimations.</span>
+
+<span class="sd">        :return: Lift Coefficient at Stall (C_L_max)</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mi">2</span> <span class="o">*</span> <span class="mf">9.81</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_mtow</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rho</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stall_speed</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">s_req</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Wing.lift_coef_control"><a class="viewcode-back" href="../../../components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing.lift_coef_control">[docs]</a>    <span class="nd">@Attribute</span>
     <span class="k">def</span> <span class="nf">lift_coef_control</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -444,7 +470,7 @@
                                                 <span class="bp">self</span><span class="o">.</span><span class="n">semi_span</span><span class="p">,</span>
                                                 <span class="bp">self</span><span class="o">.</span><span class="n">semi_span</span> <span class="o">*</span> <span class="n">tan</span><span class="p">(</span><span class="n">radians</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dihedral</span><span class="p">))),</span>
                        <span class="n">chord</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">root_chord</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">taper</span><span class="p">,</span>
-                       <span class="n">angle</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+                       <span class="n">angle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">twist</span><span class="p">,</span>
                        <span class="n">airfoil</span><span class="o">=</span><span class="n">FileAirfoil</span><span class="p">(</span><span class="n">get_dir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;airfoils&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">airfoil_type</span><span class="p">,</span>
                                                                 <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">.dat&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">airfoil_choice</span><span class="p">))))</span></div>
 
@@ -506,9 +532,7 @@
 
 <div class="viewcode-block" id="Wing.show_avlgeom"><a class="viewcode-back" href="../../../components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing.show_avlgeom">[docs]</a>    <span class="nd">@Attribute</span>
     <span class="k">def</span> <span class="nf">show_avlgeom</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;&quot;  Here we show the AVL geometry. NOTE: THERE IS A BUG HERE, IF DOUBLE CLICKED IN GUI, IT SHOWS BUT CAUSES</span>
-<span class="sd">         PYTHON TO FREEZE. THE CODE MUST BE STOPPED AND RESTARTED IF THE GEOMETRY IS SHOWN.</span>
-<span class="sd">         #  TODO FIX THIS</span>
+        <span class="sd">&quot;&quot;&quot; Allows the user to view the AVL Geometry in a seperate Pop-up window</span>
 
 <span class="sd">         :return: AVL Geometry</span>
 <span class="sd">         :rtype: AVL PltLib Viewer</span>

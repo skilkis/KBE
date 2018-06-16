@@ -20,6 +20,58 @@ class WingPowerLoading(Base):
     requirements are the climb rate and climb gradient. There are assumed values for:  C_lmax, Stall speed,
     propeller efficiency, zero-lift drag coefficient, Aspect Ratio and Oswald Efficiency Factor. All Values are in
     SI Units unless stated.
+
+    :param mtow: The MTOW from class I
+    :type mtow: float
+
+    :param mission: The UAV performance goal
+    :type mission: str
+
+    :param range: The UAV design range in km
+    :type range: float
+
+    :param endurance: The UAV design endurance in hrs
+    :type endurance: float
+
+    :param pl_target_weight: The UAV design payload weight in kg
+    :type pl_target_weight: float
+
+    :param handlaunch: Whether the user requires the UAV to be hand launched
+    :type handlaunch: bool
+
+    :param maximum_lift_coefficient: A list of three C_lmax's that the wing is assumed to generate which create \
+    multiple lines on the thrust/wing loading plots.
+    :type maximum_lift_coefficient: list
+
+    :param AR: A list of two potential aspect ratios for the design
+    :type AR: list
+
+    :param eta_prop: This is the assumed propeller efficiency.
+    :type eta_prop: float
+
+    :param eta_motor: This is the assumed motor efficiency.
+    :type eta_motor: float
+
+    :param e_factor: This is the assumed oswald efficiency factor.
+    :type e_factor: float
+
+    :param rho: This is the STD ISA sea level density
+    :type rho: float
+
+    :param rho_cr: This is the ISA Density at 3km height for the climb rate power loading equation.
+    :type rho_cr: float
+
+    :param zero_lift_drag: This is the assumed Value of Zero-Lift Drag Coefficient.
+    :type zero_lift_drag: float
+
+    :param climb_rate: This is the assumption for Required Climb Rate in m/s, Same as Sparta UAV 1.1.2.
+    :type climb_rate: float
+
+    :param climb_gradient: This is the assumed Climb Gradient to clear 10m object 17m away.
+    :type climb_gradient: float
+
+    :param stall_speed: This is the assumed stall speed for the UAV.
+    :type stall_speed: float
     """
 
 #: This block of code contains the inputs. ########---------------------------------------------------------------------
@@ -33,64 +85,55 @@ class WingPowerLoading(Base):
 
     #: Boolean operator to determine if the user requires the UAV to be hand launched
     #: This parameter changes the stall-speed used for the Wing Loading
-    #: :type: Boolean
     handlaunch = Input(True, validator=val.Instance(bool))
 
     #: This is a list of three C_lmax's that the wing is assumed to generate. This creates multiple lines on the plots.
-    #: :type: List
     maximum_lift_coefficient = Input([1.0, 1.25, 1.5])
 
     #: This is a list of three Aspect Ratios that the wing is assumed to generate. This creates multiple lines on
     #: the plots.
-    #: :type: List
     # TODO Make this a proper implementation of Iterable comprehension, add validator
     @Input
     def AR(self):
         return [6, 10] if self.handlaunch else [10, 20]
 
     #: This is the assumed propeller efficiency.
-    #: :type: float
     eta_prop = Input(0.7, validator=val.Positive())
 
     #: This is the assumed motor efficiency.
-    #: :type: float
     eta_motor = Input(0.9, validator=val.Positive())
 
     #: This is the assumed Oswald Efficiency Factor.
-    #: :type: float
     e_factor = Input(0.8, validator=val.Positive())
 
     #: Below is the STD ISA sea level density
-    #: :type: float
     rho = Input(1.225, validator=val.Positive())
 
     #: Below is the ISA Density at 3km height for the climb rate power loading equation.
-    #: :type: float
     rho_cr = 0.9091
 
     # #: Below is the assumed throwing speed of a hand launched UAV
-    # #: :type: float
     # stall_speed_handlaunch = 8.0
-    #
+
     # #: Below is assumed launch speed at the end of a catapult or runway.
-    # #: :type: float
     # stall_speed = 12.0
 
     #: Below is the assumed Value of Zero-Lift Drag Coefficient.
-    #: :type: float
     zero_lift_drag = Input(0.02, validator=val.Positive())
 
     #: Below is the assumption for Required Climb Rate, Same as Sparta UAV 1.1.2.
-    #: :type: float
     climb_rate = 1.524
 
     #: Below is the assumed Climb Gradient to clear 10m object 17m away.
-    #: :type: float
     climb_gradient = 0.507
 
     @Input
     def stall_speed(self):
-        #  Here we make the stall speed an attribute, to use it in other parts of the code.
+        """ This attribute calculates the stall speed for the UAV depending on whether it will be hand launched or \
+        not. If hand launched, the stall speed is to be 8 m/s and if not, it is 12 m/s.
+
+        :rtype: float
+        """
         if self.handlaunch is True:
             stall_speed = 8.0
         else:
@@ -101,9 +144,10 @@ class WingPowerLoading(Base):
 #  This block of Attributes calculates the wing and thrust loading parameters and generates the plot. ########----------
     @Attribute
     def wingloading(self):
-        """ This attribute calculates the 3 required wing loadings from the lift equation, using the stall speed
-        and the three assumed C_lmax's. If the UAV is to be hand launched, a lower stall speed is used. At this moment,
+        """ This attribute calculates the 3 required wing loadings from the lift equation, using the stall speed \
+        and the three assumed C_lmax's. If the UAV is to be hand launched, a lower stall speed is used. At this moment,\
         this is the only requirement on the wing loading.
+
         :return: Required wing loading for 3 different C_lmax's
         :rtype: dict
         """
@@ -119,8 +163,10 @@ class WingPowerLoading(Base):
     @Attribute
     def powerloading(self):
         """ Lazy-evaluation of Power Loading due to a Climb Rate Requirement at 3000m for various Aspect Ratios
-        :return: Stacked-Array where first dimension corresponds to Aspect Ratio, and sub-dimension contains
+
+        :return: Stacked-Array where first dimension corresponds to Aspect Ratio, and sub-dimension contains \
         an array of floats in order of smallest Wing Loading to Largest. This range is set w/ parameter 'WS_range'
+        :rtype: dict
         """
         wp_cr = []
         for i in range(len(self.AR)):
@@ -142,7 +188,8 @@ class WingPowerLoading(Base):
     @Attribute
     # TODO Make this plot appear on top of GUI & Be Eager (This can be accomplished by making it a part)
     def loadingdiagram(self):
-        """ This attribute creates the loading diagram
+        """ This attribute plots the loading diagram.
+
          :return: Plot
          """
         fig = plt.figure('LoadingDiagram')
@@ -181,35 +228,31 @@ class WingPowerLoading(Base):
 
     @Attribute
     def designpoint(self):
-        """ An attribute which adds a safety factor to the lift coefficient in order to not stall out
-        during climb-out. Modifying the lift coefficient changes drag coefficients as well due to induced drag,
+        """ An attribute which adds a safety factor to the lift coefficient in order to not stall out \
+        during climb-out. Modifying the lift coefficient changes drag coefficients as well due to induced drag, \
         the latter part of this code computes the new drag coefficients.
+
         :return: Dictionary containing design_point variables ('lift_coefficient') and drag coefficients ('climb_drag')
+        :rtype: dict
         """
 
         #: This value is based on the typical maximum lift that an airfoil generated by a clean airfoil
-        #: :type: float
         lift_coef_realistic = 1.2
 
         #: Evaluation of the distance between lift_coef_realistic and user-inputed values for C_L
-        #: :type: float array
         error = [abs(num - lift_coef_realistic) for num in self.maximum_lift_coefficient]
 
         #: idx1 is the index corresponding to the minimum value within the array 'error'
         #: in other words idx1 is the index corresponding to the closest user-input value to lift_coef_realistic
-        #: :type: integer
         idx1 = error.index(min(error))
 
         #: ws is the chosen Wing Loading based on idx1
-        #: :type: float
         ws = self.wingloading['values'][idx1]
 
         #: Evaluation of the distance (error) between the chosen wing-loading and all values in WS_range
-        # :type: float array
         error = [abs(num - ws) for num in self.ws_range]
 
         #: idx2 is the index corresponding to the closest value in WS_range to the chosen design wing-loading
-        #: :type: integer
         idx2 = error.index(min(error))
 
         # TODO Add knowledge base assumption for best aspect ratio
@@ -224,7 +267,6 @@ class WingPowerLoading(Base):
         error = [abs(num - optimal_ar) for num in self.AR]
 
         #: idx3 corresponds to the index of the closest value within self.AR to the optimal_ar defined by the rule above
-        #: :type: integer
         idx3 = error.index(min(error))
 
         wp_choices = [self.powerloading['climb_rate'][idx3][idx2],
@@ -262,6 +304,7 @@ class WingPowerLoading(Base):
     @Attribute
     def ws_range(self):
         """ This is a dummy list of wing loadings for iterating in the Power Loading Equations.
+
         :return: List of wing loadings
         :rtype: List
         """
@@ -269,21 +312,13 @@ class WingPowerLoading(Base):
         values = [float(i) for i in range(1, int(ceil(ws_limit / 100.0)) * 100)]
         return values
 
-    # @Attribute
-    # def stall_speedd(self):
-    #     #  Here we make the stall speed an attribute, to use it in other parts of the code.
-    #     if self.handlaunch is True:
-    #         stall_speedd = self.stall_speed_handlaunch
-    #     else:
-    #         stall_speedd = self.stall_speed
-    #     return stall_speedd
-
 #  The Block below will estimate the required power from the battery depending on the range or endurance goal.
 
     @Attribute
     def eta_tot(self):
-        """ This attribute estimates the propulsive efficiency. This is done by multiplying the propellor and the motor
-        efficiencies
+        """ This attribute estimates the propulsive efficiency. This is done by multiplying the propeller and the \
+        motor efficiencies
+
         :return: Propulsive Efficiency
         :rtype: float
         """
@@ -291,8 +326,9 @@ class WingPowerLoading(Base):
 
     @Attribute
     def cruise_parameters(self):
-        """ This attribute calculates the cruise parameters related to the requirement on range [km], or
+        """ This attribute calculates the cruise parameters related to the requirement on range [km], or \
         endurance [h]. These relations are from the year 1 Intro to aeronautics flight mechanics module.
+
         :return: Required battery capacity due to plane drag.
         :rtype: dict
         """
@@ -337,15 +373,17 @@ class WingPowerLoading(Base):
 
     @Attribute
     def payload_power(self):
-        """ This attribute gets the required power of the EOIR payload w/ Lazy Evaluation, using the payload weight
-        :rtype: float
+        """ This attribute gets the required power of the EOIR payload w/ Lazy Evaluation, using the payload weight.
+
         :return: Required battery power due to payload SI Watt
+        :rtype: float
         """
         return EOIR(target_weight=self.pl_target_weight).specs['power']
 
     @Attribute
     def flight_controller_power(self):
-        """ This attribute gets the required power of the flight computer
+        """ This attribute gets the required power of the flight computer.
+
         :return: Required flight computer power.
         :rtype: float
         """
@@ -353,8 +391,9 @@ class WingPowerLoading(Base):
 
     @Attribute
     def battery_capacity(self):
-        """ This attribute calculates the required battery capacity, based on the payload mass, flight computer, and
+        """ This attribute calculates the required battery capacity, based on the payload mass, flight computer, and \
          flight performance characteristics.
+
          :return: Required Battery Capacity in SI Watt hour
          :rtype: float
          """

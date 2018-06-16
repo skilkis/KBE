@@ -11,10 +11,16 @@ from scipy.interpolate import interp1d
 __author__ = ["San Kilkis"]
 __all__ = ["Performance"]
 
-# TODO Comment code
+# TODO Comment code, it is in documentation
 
 
 class Performance(Base):
+    """ This class calculates the end performance of the UAV created in the KBE GUI. This verifies that the UAV will
+    fulfill the mission requirements.
+
+    :param wing_in: The Wing input instantiation.
+    :type wing_in: str
+    """
 
     __initargs__ = ["parasitic_drag"]
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'performance.png')
@@ -30,7 +36,7 @@ class Performance(Base):
 
     @Attribute
     def stall_speed(self):
-        """ Computes the new stall speed caused by change in MTOW in Class II (bottoms-up) as compared to the initial
+        """ Computes the new stall speed caused by change in MTOW in Class II (bottoms-up) as compared to the initial \
         estimate from Class I
 
         :return: Stall Speed in SI meter per second [m/s]
@@ -41,7 +47,7 @@ class Performance(Base):
 
     @Attribute
     def power_available(self):
-        """ Grabs the available shaft power of the engine from the provided motor. Index 0 refers to continuous power
+        """ Grabs the available shaft power of the engine from the provided motor. Index 0 refers to continuous power \
         and Index 1 refers to the burst power of the engine
 
         :rtype: list
@@ -58,7 +64,7 @@ class Performance(Base):
 
     @Attribute
     def eta_curve_bounds(self):
-        """ Defines the bounds of the propeller curve to not address values that are not covered by the propeller data
+        """ Defines the bounds of the propeller curve to not address values that are not covered by the propeller data \
         index 0 refers to the minimum velocity and index 1 refers to the maximum velocity
 
         :rtype: list
@@ -67,7 +73,7 @@ class Performance(Base):
 
     @Attribute
     def prop_speed_range(self):
-        """ Defines the True Airspeed (TAS) range used for the analysis through use of the minimum and maximum values
+        """ Defines the True Airspeed (TAS) range used for the analysis through use of the minimum and maximum values \
         available in propeller data so as to not force data extrapolation.
 
         :return: Range of True Airspeeds (TAS) in SI meter per second [m/s]
@@ -107,9 +113,9 @@ class Performance(Base):
 
     @Attribute
     def endurance_velocity(self):
-        """ Computes the optimum endurance velocity utilizing the maximum positive difference between the power
-        available and required curves. If this value is too close to the stall speed (which is determined by the input
-        `stall_buffer`, then the non-optimum but safe value is returned instead.
+        """ Computes the optimum endurance velocity utilizing the maximum positive difference between the power \
+        available and required curves. If this value is too close to the stall speed (which is determined by the input \
+        'stall_buffer', then the non-optimum but safe value is returned instead.
 
         :return: Optimum endurance velocity in SI meter per second [m/s]
         :rtype: float
@@ -122,15 +128,15 @@ class Performance(Base):
             safe = True
         else:
             safe = False
-            print 'Computed optimum endurance velocity of %1.2f [m/s] is too close to the stall speed! Instead a value' \
+            print 'Computed optimum endurance velocity of %1.2f [m/s] is too close to the stall speed! Instead a value'\
                   ' safety factor has been added to the stall speed and returned' % calc_speed
         return calc_speed if safe else safe_speed
 
     @Attribute
     def cruise_velocity(self):
-        """ Computes the optimum cruise velocity utilizing the maximum tangent between velocity axis and the power
-        required curves. If this value is too close to the stall speed (which is determined by the input `stall_buffer`,
-        then the non-optimum but safe value is returned instead.
+        """ Computes the optimum cruise velocity utilizing the maximum tangent between velocity axis and the power \
+        required curves. If this value is too close to the stall speed (which is determined by the input \
+        'stall_buffer', then the non-optimum but safe value is returned instead.
 
         :return: Optimum cruise velocity in SI meter per second [m/s]
         :rtype: float
@@ -154,7 +160,7 @@ class Performance(Base):
 
     @Attribute
     def power_spline(self):
-        """ Creates a linear-spline of the power required curve to be able to call any velocity value
+        """ Creates a linear-spline of the power required curve to be able to call any velocity value.
 
         :rtype: interp1d
         """

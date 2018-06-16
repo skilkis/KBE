@@ -1,0 +1,691 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Propeller &mdash; KBE 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Electro-Optical Infra-Red Camera" href="../eoir.html" />
+    <link rel="prev" title="Propeller Parser" href="propparser.html" /> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> KBE
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../main.html">Main UAV</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../definitions.html">Definitions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../directories.html">Directories</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Components Module</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../battery.html">Li-PO Battery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../electronics/index.html">Electronics Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../electronics/electronics.html">Electronics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../electronics/flightcontroller.html">FlightController</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../electronics/speedcontroller.html">SpeedController</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../liftingsurfaces/index.html">LiftingSurface Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../liftingsurfaces/liftingsurfaceprim.html">LiftingSurface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../liftingsurfaces/wing.html">Wing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../liftingsurfaces/scissorplot.html">ScissorPlot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../liftingsurfaces/horizontalstab.html">HorizontalStabilizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../liftingsurfaces/verticalstab.html">VerticalStablilizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../liftingsurfaces/compoundstab.html">CompoundStabilizer</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../fuselage/index.html">Fuselage Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../fuselage/fframe.html">Fuselage Frame (FFrame)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../fuselage/fcone.html">Fuselage Nose/Tail Cone (FCone)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../fuselage/mframe.html">Motor Frame (MFrame)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../fuselage/fuselage.html">Automatic Fuselage Generator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../fuselage/boom.html">Boom</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../motor.html">Electric Motor</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Propeller Module</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="propparser.html">Propeller Parser</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Propeller</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../eoir.html">Electro-Optical Infra-Red Camera</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../design/index.html">Design Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../design/designinput.html">Design Input</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../design/paramgen.html">Parameter Generator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../design/weightestimator.html">Class I and II Weight Estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../design/wingpowerloading.html">Thrust and Power Loading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../design/performance.html">Performance Verification</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../mycsv2dict.html">My CSV Dictionary</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">KBE</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Components Module</a> &raquo;</li>
+        
+          <li><a href="index.html">Propeller Module</a> &raquo;</li>
+        
+      <li>Propeller</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/components/propeller/propeller.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-components.propeller.propeller">
+<span id="propeller"></span><h1>Propeller<a class="headerlink" href="#module-components.propeller.propeller" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="components.propeller.propeller.Propeller">
+<em class="property">class </em><code class="descclassname">components.propeller.propeller.</code><code class="descname">Propeller</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/components/propeller/propeller.html#Propeller"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.propeller.propeller.Propeller" title="Permalink to this definition">¶</a></dt>
+<dd><p>Always spins in motor direction</p>
+<p>Propeller Nomenclature
+APC propellers are (by default) assumed to be of a standard type (sport) unless modified for specific
+characteristics or purpose. Sport propellers are intended for use with internal combustion engines.
+Types:
+E   = Electric
+F   = Folding Blade (electric only)
+MR  = Multi-Rotor (electric only)
+SF  = Slow Fly (electric only)
+R   = Reversible ESC (electric only)
+‘Modifiers’:
+B4  = Bundle (2CW and 2 CCW propellers)
+W   = Wide (Chord)
+N   = Narrow (Chord)
+NN  = Very Narrow
+PN  = Pattern
+P   = Pusher (and reverse rotation for electrics)
+C   = Carbon
+( ) = Reserved for Special Notes</p>
+<dl class="attribute">
+<dt id="components.propeller.propeller.Propeller.__show_primitives">
+<code class="descname">__show_primitives</code><em class="property"> = None</em><a class="headerlink" href="#components.propeller.propeller.Propeller.__show_primitives" title="Permalink to this definition">¶</a></dt>
+<dd><p>A parameter for debugging, turns the visibility of miscellaneous parts ON/OFF</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.propeller.propeller.Propeller.airfoil_builder">
+<code class="descname">airfoil_builder</code><a class="reference internal" href="../../_modules/components/propeller/propeller.html#Propeller.airfoil_builder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.propeller.propeller.Propeller.airfoil_builder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Instantiates the airfoils used to create the LoftedSolid in :attr:<a href="#id1"><span class="problematic" id="id2">`</span></a>propeller_builder’</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.propeller.propeller.Propeller.airfoil_data">
+<code class="descname">airfoil_data</code><a class="reference internal" href="../../_modules/components/propeller/propeller.html#Propeller.airfoil_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.propeller.propeller.Propeller.airfoil_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Imports airfoil data, this code borrowed from LiftingSurface.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">List of airfoil points on the YX plane</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.propeller.propeller.Propeller.airfoil_unit_curve">
+<code class="descname">airfoil_unit_curve</code><a class="reference internal" href="../../_modules/components/propeller/propeller.html#Propeller.airfoil_unit_curve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.propeller.propeller.Propeller.airfoil_unit_curve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a <cite>FittedCurve</cite> through the points in <cite>airfoil_data</cite> with a chord-length of 1 SI meter.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">FittedCurve</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.propeller.propeller.Propeller.allowed_props">
+<code class="descname">allowed_props</code><a class="reference internal" href="../../_modules/components/propeller/propeller.html#Propeller.allowed_props"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.propeller.propeller.Propeller.allowed_props" title="Permalink to this definition">¶</a></dt>
+<dd><p>An attribute which parses the string array provided by the attribute <a class="reference internal" href="#components.propeller.propeller.Propeller.propeller_recommendation" title="components.propeller.propeller.Propeller.propeller_recommendation"><code class="xref py py-attr docutils literal notranslate"><span class="pre">propeller_recommendation</span></code></a> and          uses this information to create a list containing all propellers that fit this recommendation. Typically, the         string list provided by ‘propeller_recommendation’ specifies a minimum and maximum value of diameter. However,         there are some cases where the motor only provides a single value. The selection algorithm can cope with both         of these cases. Furthermore, to preserve lazy-evaluation as much as possible and increase performance, only         the header of each propeller data file is read to verify if the propeller is compliant in diameter and type.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">List of allowed propeller dictionaries with their corresponding ‘Name’, ‘Filename’, and ‘Diameter’</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">List</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.propeller.propeller.Propeller.build_direction">
+<code class="descname">build_direction</code><a class="reference internal" href="../../_modules/components/propeller/propeller.html#Propeller.build_direction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.propeller.propeller.Propeller.build_direction" title="Permalink to this definition">¶</a></dt>
+<dd><p>A switch case that determines which direction the propeller assembly is facing (value 1 is for the positive
+‘x’ direction, value -1 is for ‘<a href="#id3"><span class="problematic" id="id4">x_</span></a>’ direction</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.propeller.propeller.Propeller.center_of_gravity">
+<code class="descname">center_of_gravity</code><a class="reference internal" href="../../_modules/components/propeller/propeller.html#Propeller.center_of_gravity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.propeller.propeller.Propeller.center_of_gravity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Location of the center of gravity w.r.t the origin</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Location Tuple in SI meter</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">Point</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.propeller.propeller.Propeller.component_type">
+<code class="descname">component_type</code><a class="reference internal" href="../../_modules/components/propeller/propeller.html#Propeller.component_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.propeller.propeller.Propeller.component_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>An identifier to be able to lump masses together.
+Possible entries:
+‘wing’
+‘fuselage’
+‘vt’
+‘ht’
+‘ct’
+‘boom’
+‘payload’
+‘prop’
+‘battery’
+‘electronics’</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Component Type</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.propeller.propeller.Propeller.database_path">
+<code class="descname">database_path</code><em class="property"> = u'C:\\Users\\nlsnj\\Documents\\TU Delft Master Flight Performance\\Period 4\\AE4204 Knowledge Based Engineering\\Assignment\\Python Files\\KBE\\components\\propeller\\database'</em><a class="headerlink" href="#components.propeller.propeller.Propeller.database_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>position = Input(Position(Point(0, 0, 0)))</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.propeller.propeller.Propeller.efficiency">
+<code class="descname">efficiency</code><a class="reference internal" href="../../_modules/components/propeller/propeller.html#Propeller.efficiency"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.propeller.propeller.Propeller.efficiency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetches the efficiency of the selected propeller at the ‘design_speed’</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Propeller Efficiency</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.propeller.propeller.Propeller.efficiency_plotter">
+<code class="descname">efficiency_plotter</code><a class="reference internal" href="../../_modules/components/propeller/propeller.html#Propeller.efficiency_plotter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.propeller.propeller.Propeller.efficiency_plotter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots all efficiencies of the gathered propeller data as a function of true airspeed for the user to be         able to visualize how the efficiency changes. This allows for more logical choices when it comes to changing         the design if necessary.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Plot of Propeller Efficiency as a function of True Airspeed</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.propeller.propeller.Propeller.external_shape">
+<code class="descname">external_shape</code><a class="reference internal" href="../../_modules/components/propeller/propeller.html#Propeller.external_shape"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.propeller.propeller.Propeller.external_shape" title="Permalink to this definition">¶</a></dt>
+<dd><p>Presents the complete outer propeller shape for wetted area calculation as well as STEP output.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">Compound</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.propeller.propeller.Propeller.fairing_curve">
+<code class="descname">fairing_curve</code><a class="reference internal" href="../../_modules/components/propeller/propeller.html#Propeller.fairing_curve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.propeller.propeller.Propeller.fairing_curve" title="Permalink to this definition">¶</a></dt>
+<dd><p>The curve utilized to create the fairing. It would have been easier to revolve at one go around the x-axis
+but ParaPy does not allow this, thus that is why the curve is defined on the YZ plane.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">InterpolatedCurve</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.propeller.propeller.Propeller.fairing_length">
+<code class="descname">fairing_length</code><a class="reference internal" href="../../_modules/components/propeller/propeller.html#Propeller.fairing_length"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.propeller.propeller.Propeller.fairing_length" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>This fairing length provides a realistic proportion w.r.t the motor diameter. This ratio was determined</dt>
+<dd>through use of Adobe Photoshop along with reference images.</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.propeller.propeller.Propeller.internal_shape">
+<code class="descname">internal_shape</code><a class="reference internal" href="../../_modules/components/propeller/propeller.html#Propeller.internal_shape"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.propeller.propeller.Propeller.internal_shape" title="Permalink to this definition">¶</a></dt>
+<dd><p>The propeller does not have an internal part, thus this part is overwritten upon inheritance.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">NoneType</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.propeller.propeller.Propeller.position">
+<code class="descname">position</code><a class="reference internal" href="../../_modules/components/propeller/propeller.html#Propeller.position"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.propeller.propeller.Propeller.position" title="Permalink to this definition">¶</a></dt>
+<dd><p>Automatically snaps the propeller to the specified motor from the input ‘motor’. If a user-input is         provided the propeller will become detached. In this case please invalidate this slot</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Propeller Position</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">Point</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.propeller.propeller.Propeller.propeller">
+<code class="descname">propeller</code><a class="reference internal" href="../../_modules/components/propeller/propeller.html#Propeller.propeller"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.propeller.propeller.Propeller.propeller" title="Permalink to this definition">¶</a></dt>
+<dd><p>The propeller geometry which is visible in the GUI. The attributes used to construct it are below.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">TranslatedShape</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.propeller.propeller.Propeller.propeller_builder">
+<code class="descname">propeller_builder</code><a class="reference internal" href="../../_modules/components/propeller/propeller.html#Propeller.propeller_builder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.propeller.propeller.Propeller.propeller_builder" title="Permalink to this definition">¶</a></dt>
+<dd><p>The un-translated version of the main ‘propeller’ part constructed from a Compound between a LoftedSolid         and its MirroredShape.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A scale representation of the propeller geometry at the origin</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.propeller.propeller.Propeller.propeller_database">
+<code class="descname">propeller_database</code><a class="reference internal" href="../../_modules/components/propeller/propeller.html#Propeller.propeller_database"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.propeller.propeller.Propeller.propeller_database" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gathers all relevant data for the propellers listed in the attribute <a class="reference internal" href="#components.propeller.propeller.Propeller.allowed_props" title="components.propeller.propeller.Propeller.allowed_props"><code class="xref py py-attr docutils literal notranslate"><span class="pre">allowed_props</span></code></a> and builds a         dict to neatly store the data.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Dictionary containing the arrays ‘RPM’, ‘ETA’, ‘V’ for each propeller in <a class="reference internal" href="#components.propeller.propeller.Propeller.allowed_props" title="components.propeller.propeller.Propeller.allowed_props"><code class="xref py py-attr docutils literal notranslate"><span class="pre">allowed_props</span></code></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">Dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.propeller.propeller.Propeller.propeller_diameter">
+<code class="descname">propeller_diameter</code><a class="reference internal" href="../../_modules/components/propeller/propeller.html#Propeller.propeller_diameter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.propeller.propeller.Propeller.propeller_diameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetches the string value of the selected propeller from <a class="reference internal" href="#components.propeller.propeller.Propeller.propeller_selector" title="components.propeller.propeller.Propeller.propeller_selector"><code class="xref py py-attr docutils literal notranslate"><span class="pre">propeller_selector</span></code></a> and cross-references it         with the ‘Filename’ field of each entry in the attribute <a class="reference internal" href="#components.propeller.propeller.Propeller.allowed_props" title="components.propeller.propeller.Propeller.allowed_props"><code class="xref py py-attr docutils literal notranslate"><span class="pre">allowed_props</span></code></a> to obtain the proper diameter.         This is done to not have to parse the propeller name multiple times.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Diameter of the propeller blades in SI meter</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.propeller.propeller.Propeller.propeller_fairing">
+<code class="descname">propeller_fairing</code><a class="reference internal" href="../../_modules/components/propeller/propeller.html#Propeller.propeller_fairing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.propeller.propeller.Propeller.propeller_fairing" title="Permalink to this definition">¶</a></dt>
+<dd><p>The propeller fairing which is visible in the GUI. The attributes used to construct it are below.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">TranslatedShape</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.propeller.propeller.Propeller.propeller_geometry">
+<code class="descname">propeller_geometry</code><a class="reference internal" href="../../_modules/components/propeller/propeller.html#Propeller.propeller_geometry"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.propeller.propeller.Propeller.propeller_geometry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the geometry parameters necessary to instantiate a propeller with <a class="reference internal" href="#components.propeller.propeller.Propeller.airfoil_builder" title="components.propeller.propeller.Propeller.airfoil_builder"><code class="xref py py-attr docutils literal notranslate"><span class="pre">airfoil_builder</span></code></a>         NOTE: Propeller geometry is only for visualization purposes. Constructing a proper propeller would         take too much time and would be out of the scope of our project.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A dictionary containing geometry parameters [‘spanwise_loc’, ‘chord_dist’, ‘twist_dist’]</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.propeller.propeller.Propeller.propeller_recommendation">
+<code class="descname">propeller_recommendation</code><a class="reference internal" href="../../_modules/components/propeller/propeller.html#Propeller.propeller_recommendation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.propeller.propeller.Propeller.propeller_recommendation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Grabs the ‘prop_recommendation’ field from the dictionary ‘motor.specs’ for easy reference in the GUI.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.propeller.propeller.Propeller.propeller_selector">
+<code class="descname">propeller_selector</code><a class="reference internal" href="../../_modules/components/propeller/propeller.html#Propeller.propeller_selector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.propeller.propeller.Propeller.propeller_selector" title="Permalink to this definition">¶</a></dt>
+<dd><p>The main selection algorithm which iterates through all propellers in the attribute         <a class="reference internal" href="#components.propeller.propeller.Propeller.propeller_database" title="components.propeller.propeller.Propeller.propeller_database"><code class="xref py py-attr docutils literal notranslate"><span class="pre">propeller_database</span></code></a>. For each propeller the algorithm logs the maximum propulsive efficiency at each         RPM as well as the true-airspeed (TAS) of this local maxima. A linear-spline is fitted through the data and         the efficiency at the input ‘design_speed’ is evaluated. These values are appended to the private list         ‘_design_etas’ and the propeller with the maximum efficiency at the ‘design_speed’ is selected from this list         at the end of the iteration. If no data can be obtained at the ‘design_speed’ a ValueError is raised warning         the user.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Filename of the selected prop [0], propeller efficiency at the user-input ‘design_speed’ [1],                   Fitted linear spline of efficiency vs true airspeed [2]</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.propeller.propeller.Propeller.scaled_airfoil">
+<code class="descname">scaled_airfoil</code><a class="reference internal" href="../../_modules/components/propeller/propeller.html#Propeller.scaled_airfoil"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.propeller.propeller.Propeller.scaled_airfoil" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scales the <cite>FittedCurve</cite> defined by <a class="reference internal" href="#components.propeller.propeller.Propeller.airfoil_unit_curve" title="components.propeller.propeller.Propeller.airfoil_unit_curve"><code class="xref py py-attr docutils literal notranslate"><span class="pre">airfoil_unit_curve</span></code></a> to be the same width as the motor diameter.         This eliminates the risk of the propeller chord being larger than the fairing diameter.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">ScaledCurve</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.propeller.propeller.Propeller.text_label_position">
+<code class="descname">text_label_position</code><a class="reference internal" href="../../_modules/components/propeller/propeller.html#Propeller.text_label_position"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.propeller.propeller.Propeller.text_label_position" title="Permalink to this definition">¶</a></dt>
+<dd><p>Redefines the default ‘text_label_position’ to be at the tip of the propeller blade.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">Point</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.propeller.propeller.Propeller.weight">
+<code class="descname">weight</code><a class="reference internal" href="../../_modules/components/propeller/propeller.html#Propeller.weight"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.propeller.propeller.Propeller.weight" title="Permalink to this definition">¶</a></dt>
+<dd><p>No reliable source of information could be obtained for propeller weight, thus it is neglected</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../eoir.html" class="btn btn-neutral float-right" title="Electro-Optical Infra-Red Camera" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="propparser.html" class="btn btn-neutral" title="Propeller Parser" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, San Kilkis, Nelson Johnson.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'1.0',
+            LANGUAGE:'en',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

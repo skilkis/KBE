@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# Required ParaPy Modules
+#:  Required ParaPy Modules
 from parapy.geom import *
 from parapy.core import *
 
 from definitions import *
 
-# Required Modules
+#:  Required Modules
 from my_csv2dict import *
 from directories import *
 from os import listdir
@@ -23,7 +23,7 @@ __all__ = ["Motor"]
 class Motor(Component):
     """ This class will create an electric motor.
 
-    :returns: ParaPy Geometry of the Electric Motor
+    :return: ParaPy Geometry of the Electric Motor
 
     :param target_power: This is the motor target power.
     :type target_power: float
@@ -33,7 +33,7 @@ class Motor(Component):
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'motor.png')
 
     #: A parameter for debugging, turns the visibility of miscellaneous parts ON/OFF
-    __show_primitives = False  # type: bool
+    __show_primitives = False
 
     target_power = Input(100.0, validator=val.Positive())
     motor_name = Input('Not Specified')
@@ -92,9 +92,9 @@ class Motor(Component):
         else:
             error_list = [i[1] for i in allowed_motors]
             weight_list = [i[2] for i in allowed_motors]
-            idx1 = error_list.index(min(error_list))  # Index of minimum error (provided power - desired)
-            idx2 = weight_list.index(min(weight_list))  # Index of minimum weight
-            if idx1 != idx2:  # Code to prefer minimum error over minimum weight
+            idx1 = error_list.index(min(error_list))  #: Index of minimum error (provided power - desired)
+            idx2 = weight_list.index(min(weight_list))  #: Index of minimum weight
+            if idx1 != idx2:  #: Code to prefer minimum error over minimum weight
                 selected_index = idx1
             else:
                 selected_index = idx2
@@ -210,7 +210,7 @@ class Motor(Component):
         """
         return ChamferedSolid(built_from=self.motor_body_import,
                               distance=self.shaft_diameter,
-                              edge_table=self.chamfer_edges,  # Flagged as an error but works fine
+                              edge_table=self.chamfer_edges,  #: Flagged as an error but works fine
                               color=MyColors.gold)
 
     @Part
@@ -225,7 +225,7 @@ class Motor(Component):
                              direction=self.extrude_direction['shaft'],
                              color=MyColors.dark_grey)
 
-    # --- Primitives: -------------------------------------------------------------------------------------------------
+    #: --- Primitives: -------------------------------------------------------------------------------------------------
 
     @Part(in_tree=__show_primitives)
     def motor_circle(self):

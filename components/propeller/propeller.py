@@ -33,24 +33,21 @@ class Propeller(ExternalBody):
     Propeller Nomenclature
     APC propellers are (by default) assumed to be of a standard type (sport) unless modified for specific
     characteristics or purpose. Sport propellers are intended for use with internal combustion engines.
-
-    |
-    |   `Types`:
-    |   E   = Electric
-    |   F   = Folding Blade (electric only)
-    |   MR  = Multi-Rotor (electric only)
-    |   SF  = Slow Fly (electric only)
-    |   R   = Reversible ESC (electric only)
-    |
-    |   `Modifiers`:
-    |   B4  = Bundle (2CW and 2 CCW propellers)
-    |   W   = Wide (Chord)
-    |   N   = Narrow (Chord)
-    |   NN  = Very Narrow
-    |   PN  = Pattern
-    |   P   = Pusher (and reverse rotation for electrics)
-    |   C   = Carbon
-    |   ( ) = Reserved for Special Notes
+    Types:
+    E   = Electric
+    F   = Folding Blade (electric only)
+    MR  = Multi-Rotor (electric only)
+    SF  = Slow Fly (electric only)
+    R   = Reversible ESC (electric only)
+    'Modifiers':
+    B4  = Bundle (2CW and 2 CCW propellers)
+    W   = Wide (Chord)
+    N   = Narrow (Chord)
+    NN  = Very Narrow
+    PN  = Pattern
+    P   = Pusher (and reverse rotation for electrics)
+    C   = Carbon
+    ( ) = Reserved for Special Notes
     """
 
     # TODO (TBD) Make user selection of a propeller possible in the future
@@ -59,26 +56,30 @@ class Propeller(ExternalBody):
     __initargs__ = ["motor", "design_speed"]
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'propeller.png')
 
-    # A parameter for debugging, turns the visibility of miscellaneous parts ON/OFF
+    #:  A parameter for debugging, turns the visibility of miscellaneous parts ON/OFF
     __show_primitives = False  # type: bool # TODO rename this parameter
 
     # TODO Validate this instance
     motor = Input(Motor(integration='puller'))
     design_speed = Input(15, validator=val.Range(0, 50))
-    # position = Input(Position(Point(0, 0, 0)))
+    #:  position = Input(Position(Point(0, 0, 0)))
     database_path = DIRS['PROPELLER_DATA_DIR']
 
     @Input
     def position(self):
-        """ Automatically snaps the propeller to the specified motor from the input `motor`. If a user-input is provided
-        the propeller will become detached. In this case please invalidate this slot """
+        """ Automatically snaps the propeller to the specified motor from the input 'motor'. If a user-input is \
+        provided the propeller will become detached. In this case please invalidate this slot
+
+        :return: Propeller Position
+        :rtype: Point
+        """
         return self.motor.position
 
     @Attribute
     def propeller_diameter(self):
-        """ Fetches the string value of the selected propeller from `propeller_selector` and cross-references it
-        with the 'Filename" field of each entry in the attribute `allowed_props` to obtain the proper diameter. This is
-        done to not have to parse the propeller name multiple times.
+        """ Fetches the string value of the selected propeller from :attr:`propeller_selector` and cross-references it \
+        with the 'Filename' field of each entry in the attribute :attr:`allowed_props` to obtain the proper diameter. \
+        This is done to not have to parse the propeller name multiple times.
 
         :return: Diameter of the propeller blades in SI meter
         :rtype: float
@@ -93,8 +94,11 @@ class Propeller(ExternalBody):
 
     @Attribute
     def weight(self):
-        """ No reliable source of information could be obtained for propeller weight, thus it is neglected """
-        return 0
+        """ No reliable source of information could be obtained for propeller weight, thus it is neglected
+
+        :rtype: float
+        """
+        return 0.0
 
     @Attribute
     def center_of_gravity(self):
@@ -102,12 +106,16 @@ class Propeller(ExternalBody):
 
     @Attribute
     def efficiency(self):
-        """ Fetches the efficiency of the selected propeller at the `design_speed` """
+        """ Fetches the efficiency of the selected propeller at the 'design_speed'
+
+        :return: Propeller Efficiency
+        :rtype: float
+        """
         return self.propeller_selector[1]
 
     @Attribute
     def propeller_recommendation(self):
-        """ Grabs the `prop_recommendation` field from the dictionary `motor.specs` for easy reference in the GUI
+        """ Grabs the 'prop_recommendation' field from the dictionary 'motor.specs' for easy reference in the GUI.
 
         :rtype: str
         """
@@ -115,14 +123,14 @@ class Propeller(ExternalBody):
 
     @Attribute(private=True)
     def allowed_props(self):
-        """ An attribute which parses the string array provided by the attribute `propeller_recommendation` and uses
-        this information to create a list containing all propellers that fit this recommendation. Typically, the string
-        list provided by `propeller_recommendation` specifies a minimum and maximum value of diameter. However, there
-        are some cases where the motor only provides a single value. The selection algorithm can cope with both of these
-        cases. Furthermore, to preserve lazy-evaluation as much as possible and increase performance, only the header of
-        each propeller data file is read to verify if the propeller is compliant in diameter and type.
+        """ An attribute which parses the string array provided by the attribute :attr:`propeller_recommendation` and  \
+        uses this information to create a list containing all propellers that fit this recommendation. Typically, the \
+        string list provided by 'propeller_recommendation' specifies a minimum and maximum value of diameter. However, \
+        there are some cases where the motor only provides a single value. The selection algorithm can cope with both \
+        of these cases. Furthermore, to preserve lazy-evaluation as much as possible and increase performance, only \
+        the header of each propeller data file is read to verify if the propeller is compliant in diameter and type.
 
-        :return: List of allowed propeller dictionaries with their corresponding `Name`, `Filename`, and `Diameter`
+        :return: List of allowed propeller dictionaries with their corresponding 'Name', 'Filename', and 'Diameter'
         :rtype: List
         """
 
@@ -186,10 +194,10 @@ class Propeller(ExternalBody):
 
     @Attribute
     def propeller_database(self):
-        """ Gathers all relevant data for the propellers listed in the attribute `allowed_props` and builds a dict to
-        neatly store the data.
+        """ Gathers all relevant data for the propellers listed in the attribute :attr:`allowed_props` and builds a \
+        dict to neatly store the data.
 
-        :return: Dictionary containing the arrays `RPM`, `ETA`, `V` for each propeller in the attribute `allowed_props`
+        :return: Dictionary containing the arrays 'RPM', 'ETA', 'V' for each propeller in :attr:`allowed_props`
         :rtype: Dict
         """
         selected_prop_files = [i['Filename'] for i in self.allowed_props]
@@ -214,14 +222,15 @@ class Propeller(ExternalBody):
 
     @Attribute
     def propeller_selector(self):
-        """ The main selection algorithm which iterates through all propellers in the attribute `propeller_database`.
-        For each propeller the algorithm logs the maximum propulsive efficiency at each RPM as well as the true-airspeed
-        (TAS) of this local maxima. A linear-spline is fitted through the data and the efficiency at the input
-        `design_speed` is evaluated. These values are appended to the private list `_design_etas` and the propeller with
-        the maximum efficiency at the `design_speed` is selected from this list at the end of the iteration. If no data
-        can be obtained at the `design_speed` a ValueError is raised warning the user.
+        """ The main selection algorithm which iterates through all propellers in the attribute \
+        :attr:`propeller_database`. For each propeller the algorithm logs the maximum propulsive efficiency at each \
+        RPM as well as the true-airspeed (TAS) of this local maxima. A linear-spline is fitted through the data and \
+        the efficiency at the input 'design_speed' is evaluated. These values are appended to the private list \
+        '_design_etas' and the propeller with the maximum efficiency at the 'design_speed' is selected from this list \
+        at the end of the iteration. If no data can be obtained at the 'design_speed' a ValueError is raised warning \
+        the user.
 
-        :returns: Filename of the selected prop [0], propeller efficiency at the user-input `design_speed` [1],
+        :returns: Filename of the selected prop [0], propeller efficiency at the user-input 'design_speed' [1], \
                   Fitted linear spline of efficiency vs true airspeed [2]
         :rtype: list
         """
@@ -262,9 +271,9 @@ class Propeller(ExternalBody):
 
     @Attribute
     def efficiency_plotter(self):
-        """ Plots all efficiencies of the gathered propeller data as a function of true airspeed for the user to be able
-        to visualize how the efficiency changes. This allows for more logical choices when it comes to changing the
-        design if necessary.
+        """ Plots all efficiencies of the gathered propeller data as a function of true airspeed for the user to be \
+        able to visualize how the efficiency changes. This allows for more logical choices when it comes to changing \
+        the design if necessary.
 
         :return: Plot of Propeller Efficiency as a function of True Airspeed
         :rtype: str
@@ -310,7 +319,10 @@ class Propeller(ExternalBody):
 
     @Part
     def propeller(self):
-        """ The propeller geometry which is visible in the GUI. The attributes used to construct it are below """
+        """ The propeller geometry which is visible in the GUI. The attributes used to construct it are below.
+
+        :rtype: TranslatedShape
+        """
         return TranslatedShape(shape_in=self.propeller_builder,
                                displacement=Vector(self.position.x + self.build_direction * (self.fairing_length * (0.1
                                                                                              if self.motor.integration
@@ -322,7 +334,10 @@ class Propeller(ExternalBody):
 
     @Part
     def propeller_fairing(self):
-        """ The propeller fairing which is visible in the GUI. The attributes used to construct it are below """
+        """ The propeller fairing which is visible in the GUI. The attributes used to construct it are below.
+
+        :rtype: TranslatedShape
+        """
         return TranslatedShape(shape_in=self.propeller_fairing_thrust_aligned,
                                displacement=Vector(self.position.x,
                                                    self.position.y,
@@ -331,7 +346,10 @@ class Propeller(ExternalBody):
 
     @Part
     def external_shape(self):
-        """ Presents the complete outer propeller shape for wetted area calculation as well as STEP output """
+        """ Presents the complete outer propeller shape for wetted area calculation as well as STEP output.
+
+        :rtype: Compound
+        """
         return Compound(built_from=[self.propeller], mesh_deflection=10 ** -4, hidden=True,
                         label=self.label)
 
@@ -339,8 +357,8 @@ class Propeller(ExternalBody):
 
     @Attribute
     def propeller_geometry(self):
-        """ Defines the geometry parameters necessary to instantiate a propeller with the Attribute `airfoil_builder`
-        NOTE: Propeller geometry is only for visualization purposes. Constructing a proper propeller would
+        """ Defines the geometry parameters necessary to instantiate a propeller with :attr:`airfoil_builder` \
+        NOTE: Propeller geometry is only for visualization purposes. Constructing a proper propeller would \
         take too much time and would be out of the scope of our project.
 
         :return: A dictionary containing geometry parameters ['spanwise_loc', 'chord_dist', 'twist_dist']
@@ -364,7 +382,7 @@ class Propeller(ExternalBody):
 
     @Attribute(private=True)
     def airfoil_data(self):
-        """ Imports airfoil data, this code borrowed from LiftingSurface
+        """ Imports airfoil data, this code borrowed from LiftingSurface.
 
         :return: List of airfoil points on the YX plane
         """
@@ -382,18 +400,27 @@ class Propeller(ExternalBody):
 
     @Attribute(private=True)
     def airfoil_unit_curve(self):
-        """ Returns a `FittedCurve` through the points in `airfoil_data` with a chord-length of 1 SI meter """
+        """ Returns a `FittedCurve` through the points in `airfoil_data` with a chord-length of 1 SI meter.
+
+        :rtype: FittedCurve
+        """
         return FittedCurve(self.airfoil_data)
 
     @Attribute(private=True)
     def scaled_airfoil(self):
-        """ Scales the `FittedCurve` defined by `airfoil_unit_curve` to be the same width as the motor diameter.
-        This eliminates the risk of the propeller chord being larger than the fairing diameter """
+        """ Scales the `FittedCurve` defined by :attr:`airfoil_unit_curve` to be the same width as the motor diameter. \
+        This eliminates the risk of the propeller chord being larger than the fairing diameter.
+
+        :rtype: ScaledCurve
+        """
         return ScaledCurve(curve_in=self.airfoil_unit_curve, reference_point=XOY, factor=self.motor.diameter)
 
     @Attribute(private=True)
     def airfoil_builder(self):
-        """ Instantiates the airfoils used to create the LoftedSolid in attribute `propeller_builder' """
+        """ Instantiates the airfoils used to create the LoftedSolid in :attr:`propeller_builder'
+
+        :rtype: list
+        """
         airfoils = []
         geom = self.propeller_geometry
         for i in range(1, len(geom['spanwise_loc'])):
@@ -420,8 +447,8 @@ class Propeller(ExternalBody):
 
     @Attribute(private=True)
     def propeller_builder(self):
-        """ The un-translated version of the main part `propeller` constructed from a Compound between a LoftedSolid
-        and its MirroredShape
+        """ The un-translated version of the main 'propeller' part constructed from a Compound between a LoftedSolid \
+        and its MirroredShape.
 
         :return: A scale representation of the propeller geometry at the origin
         """
@@ -433,7 +460,10 @@ class Propeller(ExternalBody):
 
     @Attribute(private=True)
     def text_label_position(self):
-        """ Redefines the default text_label_position to be at the tip of the propeller blade """
+        """ Redefines the default 'text_label_position' to be at the tip of the propeller blade.
+
+        :rtype: Point
+        """
         tip_airfoil_pos = self.propeller.bbox.corners[1]
         return tip_airfoil_pos
 
@@ -442,7 +472,7 @@ class Propeller(ExternalBody):
     @Attribute(private=True)
     def build_direction(self):
         """ A switch case that determines which direction the propeller assembly is facing (value 1 is for the positive
-        `x` direction, value -1 is for 'x_' direction
+        'x' direction, value -1 is for 'x_' direction
 
         :rtype: int
         """
@@ -452,13 +482,19 @@ class Propeller(ExternalBody):
     def fairing_length(self):
         # TODO add this into the knowledge base
         """ This fairing length provides a realistic proportion w.r.t the motor diameter. This ratio was determined
-         through use of Adobe Photoshop along with reference images """
+         through use of Adobe Photoshop along with reference images.
+
+        :rtype: float
+        """
         return self.motor.diameter * 1.5
 
     @Attribute(private=True)
     def fairing_curve(self):
         """ The curve utilized to create the fairing. It would have been easier to revolve at one go around the x-axis
-        but ParaPy does not allow this, thus that is why the curve is defined on the YZ plane """
+        but ParaPy does not allow this, thus that is why the curve is defined on the YZ plane.
+
+        :rtype: InterpolatedCurve
+        """
         points = [Point(0, - (self.motor.diameter / 2.0), XOY.z),
                   Point(0, 0, self.fairing_length)]
         crv = InterpolatedCurve(points=points, tangents=[XOY.Vz, None])
@@ -476,7 +512,10 @@ class Propeller(ExternalBody):
 
     @Attribute(private=True)
     def internal_shape(self):
-        """ The propeller does not have an internal part, thus this part is overwritten upon inheritance """
+        """ The propeller does not have an internal part, thus this part is overwritten upon inheritance.
+
+        :rtype: NoneType
+        """
         return None
 
 
