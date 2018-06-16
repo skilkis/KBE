@@ -21,6 +21,8 @@
 #  TODO Make sure vt weight is correct in final weight for changes in the GUI ......
 #  TODO cont'd .....I tried changing # plys on right wing in GUI but cg stayed on x ax
 
+# TODO Add high-sweep warning as per the assignment description
+
 
 #  TODO FIX PLAYLOAD MASS IN FINAL MTOW TO CORRESPOND WITH WING/ TAIL SIZING & CLASS I!!!!!!!!!!!
 

@@ -39,7 +39,7 @@ class VerticalStabilizer(ExternalBody, LiftingSurface):
     :type lvc_canard: float
 
     :param configuration: This is a switch to determine the configuration.
-    :type configuration: float
+    :type configuration: str
 
     :param aspect_ratio: This is the assumed Aspect Ratio of the VT Surface.
     :type aspect_ratio: float

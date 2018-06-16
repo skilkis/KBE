@@ -229,7 +229,7 @@
 <span class="sd">    :type lhc: float</span>
 
 <span class="sd">    :param configuration: This is a switch to determine the configuration.</span>
-<span class="sd">    :type configuration: float</span>
+<span class="sd">    :type configuration: str</span>
 
 <span class="sd">    :param aspect_ratio: This is the assumed Aspect Ratio of the HT Surface. The VT surface is a fixed AR of 1.4</span>
 <span class="sd">    :type aspect_ratio: float</span>
@@ -276,8 +276,8 @@
 
 <div class="viewcode-block" id="CompoundStabilizer.stabilizer_h"><a class="viewcode-back" href="../../../components/liftingsurfaces/compoundstab.html#components.liftingsurfaces.compoundstab.CompoundStabilizer.stabilizer_h">[docs]</a>    <span class="nd">@Part</span>
     <span class="k">def</span> <span class="nf">stabilizer_h</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; This is an instantiation of the HorizontalStabilizer class with the required planform area from the scissor</span>
-<span class="sd">        plot.</span>
+        <span class="sd">&quot;&quot;&quot; This is an instantiation of the :class:`HorizontalStabilizer` class with the required planform area from the</span>
+<span class="sd">        scissor plot.</span>
 
 <span class="sd">        :return: Horizontal Tail Object</span>
 <span class="sd">        :rtype: Fused</span>
@@ -288,8 +288,8 @@
 
 <div class="viewcode-block" id="CompoundStabilizer.stabilizer_vright"><a class="viewcode-back" href="../../../components/liftingsurfaces/compoundstab.html#components.liftingsurfaces.compoundstab.CompoundStabilizer.stabilizer_vright">[docs]</a>    <span class="nd">@Part</span>
     <span class="k">def</span> <span class="nf">stabilizer_vright</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; This is an instantiation of the VerticalStablilizer class with the current aircraft dimensions for the right</span>
-<span class="sd">        VT.</span>
+        <span class="sd">&quot;&quot;&quot; This is an instantiation of the :class:`VerticalStabilizer` class with the current aircraft dimensions for</span>
+<span class="sd">        the right VT.</span>
 
 <span class="sd">        :return: Right Vertical Tail Object</span>
 <span class="sd">        :rtype: Fused</span>
@@ -310,11 +310,11 @@
 
 <div class="viewcode-block" id="CompoundStabilizer.stabilizer_vleft"><a class="viewcode-back" href="../../../components/liftingsurfaces/compoundstab.html#components.liftingsurfaces.compoundstab.CompoundStabilizer.stabilizer_vleft">[docs]</a>    <span class="nd">@Part</span>
     <span class="k">def</span> <span class="nf">stabilizer_vleft</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; This is an instantiation of the VerticalStablilizer class with the current aircraft dimensions for the left</span>
-<span class="sd">        VT.</span>
+        <span class="sd">&quot;&quot;&quot; This is an instantiation of the :class:`VerticalStabilizer` with the current aircraft dimensions for the \</span>
+<span class="sd">        left VT.</span>
 
 <span class="sd">        :return: Left Vertical Tail Object</span>
-<span class="sd">        :rtype: Fused</span>
+<span class="sd">        :rtype: VerticalStabilizer</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">VerticalStabilizer</span><span class="p">(</span><span class="n">position</span><span class="o">=</span><span class="n">translate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">,</span>
                                                      <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">stabilizer_h</span><span class="o">.</span><span class="n">semi_span</span><span class="p">,</span>
@@ -405,6 +405,24 @@
         <span class="n">_extrude</span> <span class="o">=</span> <span class="n">ExtrudedSolid</span><span class="p">(</span><span class="n">island</span><span class="o">=</span><span class="n">_profile</span><span class="p">,</span> <span class="n">distance</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stabilizer_h</span><span class="o">.</span><span class="n">root_chord</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">_profile</span><span class="p">,</span> <span class="n">_extrude</span></div>
 
+<div class="viewcode-block" id="CompoundStabilizer.internal_shape"><a class="viewcode-back" href="../../../components/liftingsurfaces/compoundstab.html#components.liftingsurfaces.compoundstab.CompoundStabilizer.internal_shape">[docs]</a>    <span class="nd">@Attribute</span><span class="p">(</span><span class="n">private</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">internal_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This is the internal shape of the compound stabilizer. It is None because the current app uses a boom tail\</span>
+<span class="sd">        structure instead of a single fuselage, and thus there is no shape to present for the fuselage builder.</span>
+
+<span class="sd">        :rtype: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="CompoundStabilizer.ply_number"><a class="viewcode-back" href="../../../components/liftingsurfaces/compoundstab.html#components.liftingsurfaces.compoundstab.CompoundStabilizer.ply_number">[docs]</a>    <span class="nd">@Attribute</span><span class="p">(</span><span class="n">private</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">ply_number</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This overwrites the input defined by the :class:`ExternalBody` since the ply-number should only be \</span>
+<span class="sd">        controlled from the respective stabilizers themselves.</span>
+
+<span class="sd">        :rtype: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
 <div class="viewcode-block" id="CompoundStabilizer.boom_plane"><a class="viewcode-back" href="../../../components/liftingsurfaces/compoundstab.html#components.liftingsurfaces.compoundstab.CompoundStabilizer.boom_plane">[docs]</a>    <span class="nd">@Attribute</span>
     <span class="k">def</span> <span class="nf">boom_plane</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Defines the XZ-plane that is coincident with the boom connector.</span>
@@ -455,17 +473,7 @@
 <span class="sd">        :return: CompoundStabilizer External Geometry</span>
 <span class="sd">        :rtype: ScaledShape</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">ScaledShape</span><span class="p">(</span><span class="n">shape_in</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tail_joiner</span><span class="p">,</span> <span class="n">reference_point</span><span class="o">=</span><span class="n">Point</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">factor</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">hidden</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="CompoundStabilizer.internal_shape"><a class="viewcode-back" href="../../../components/liftingsurfaces/compoundstab.html#components.liftingsurfaces.compoundstab.CompoundStabilizer.internal_shape">[docs]</a>    <span class="nd">@Attribute</span><span class="p">(</span><span class="n">private</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">internal_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; This is the internal shape of the compound stabilizer. It is None because the current app uses a boom tail</span>
-<span class="sd">        structure instead of a single fuselage.</span>
-
-<span class="sd">        :return: VTP fuselage section bounding box</span>
-<span class="sd">        :rtype: NoneType</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="kc">None</span></div></div>
+        <span class="k">return</span> <span class="n">ScaledShape</span><span class="p">(</span><span class="n">shape_in</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tail_joiner</span><span class="p">,</span> <span class="n">reference_point</span><span class="o">=</span><span class="n">Point</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">factor</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">hidden</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div></div>
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>

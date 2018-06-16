@@ -3,10 +3,12 @@
 from parapy.core import *
 from components import Motor, Propeller, Wing, Battery
 import matplotlib.pyplot as plt
+import matplotlib.patches as ptch
 import numpy as np
 from math import pi, sqrt
 from directories import *
 from scipy.interpolate import interp1d
+from user import MyColors
 
 __author__ = ["San Kilkis"]
 __all__ = ["Performance"]
@@ -159,6 +161,19 @@ class Performance(Base):
         return calc_speed if safe else safe_speed
 
     @Attribute
+    def maximum_velocity(self):
+        """ Computes the maximum flight velocity utilizing the burst-power curve of the motor.
+
+        :return: Maximum velocity in SI meter per second [m/s]
+        :rtype: float
+        """
+
+        diff = [abs(self.power_available_burst[i] - self.power_required[i]) for i in range(0, len(self.speed_range))]
+        idx_m = diff.index(min(diff))
+
+        return self.speed_range[idx_m]
+
+    @Attribute
     def power_spline(self):
         """ Creates a linear-spline of the power required curve to be able to call any velocity value.
 
@@ -208,12 +223,18 @@ class Performance(Base):
         # Plotting Velocities
         plt.axvline(self.stall_speed, color='red', linestyle='-.',
                     label=r'$V_{\mathrm{stall}}=%1.2f$' % self.stall_speed)
-        plt.axvline(self.endurance_velocity, color='green', linestyle='-.',
+        plt.axvline(self.endurance_velocity, color=MyColors.deep_green, linestyle='-.',
                     label=r'$V_{\mathrm{end}}=%1.2f$' % self.endurance_velocity)
-
         if self.cruise_velocity != self.endurance_velocity:
-            plt.axvline(self.cruise_velocity, color='blue', linestyle='-.',
+            plt.axvline(self.cruise_velocity, color=MyColors.cool_blue,linestyle='-.',
                         label=r'$V_{\mathrm{cruise}}=%1.2f$' % self.cruise_velocity)
+
+        plt.axvline(self.maximum_velocity, linestyle='-.',
+                    label=r'$V_{\mathrm{max}}=%1.2f$' % self.maximum_velocity)
+
+        ax = fig.gca()
+        stall_zone = ptch.Rectangle((0, 0), self.stall_speed, self.motor_in.power[1], color='red', alpha=0.2)
+        ax.add_patch(stall_zone)
 
         plt.xlabel(r'$V_{\mathrm{TAS}}$ [m/s]')
         plt.ylabel(r'Power [W]')

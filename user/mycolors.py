@@ -5,6 +5,11 @@ __all__ = ["MyColors"]
 
 #  TODO explanation/ docuemtation???
 
+class RGB(object):
+
+    def __init__(self, R, G, B):
+
+
 
 class MyColors(object):
 

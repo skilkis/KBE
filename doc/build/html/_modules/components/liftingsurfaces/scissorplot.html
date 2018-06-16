@@ -207,6 +207,7 @@
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ScissorPlot&quot;</span><span class="p">]</span>
 
 <span class="c1">#  TODO MAKE SURE THAT THE ASPECT RATIO IS CONSISTENT WHEN CHANGED IN OTHER PLACES OF THE GUI. SEE TODO IN MAIN!!!!!!!!</span>
+<span class="c1"># TODO Make sure that the Input excel file passes the argument &#39;configuration&#39; correctly</span>
 
 
 <div class="viewcode-block" id="ScissorPlot"><a class="viewcode-back" href="../../../components/liftingsurfaces/scissorplot.html#components.liftingsurfaces.scissorplot.ScissorPlot">[docs]</a><span class="k">class</span> <span class="nc">ScissorPlot</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
@@ -273,7 +274,7 @@
 <span class="sd">    :type delta_xcg: float</span>
 
 <span class="sd">    :param configuration: This is a switch to determine the configuration.</span>
-<span class="sd">    :type configuration: float</span>
+<span class="sd">    :type configuration: str</span>
 
 <span class="sd">    :param lhc: Derived input of the non-dimensionalized tail arm based on configuration choice</span>
 <span class="sd">    :type lhc: float</span>

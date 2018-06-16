@@ -83,8 +83,8 @@ class CompoundStabilizer(ExternalBody):
 
     @Part
     def stabilizer_h(self):
-        """ This is an instantiation of the HorizontalStabilizer class with the required planform area from the scissor
-        plot.
+        """ This is an instantiation of the :class:`HorizontalStabilizer` class with the required planform area from the
+        scissor plot.
 
         :return: Horizontal Tail Object
         :rtype: Fused
@@ -95,8 +95,8 @@ class CompoundStabilizer(ExternalBody):
 
     @Part
     def stabilizer_vright(self):
-        """ This is an instantiation of the VerticalStablilizer class with the current aircraft dimensions for the right
-        VT.
+        """ This is an instantiation of the :class:`VerticalStabilizer` class with the current aircraft dimensions for
+        the right VT.
 
         :return: Right Vertical Tail Object
         :rtype: Fused
@@ -117,11 +117,11 @@ class CompoundStabilizer(ExternalBody):
 
     @Part
     def stabilizer_vleft(self):
-        """ This is an instantiation of the VerticalStablilizer class with the current aircraft dimensions for the left
-        VT.
+        """ This is an instantiation of the :class:`VerticalStabilizer` with the current aircraft dimensions for the \
+        left VT.
 
         :return: Left Vertical Tail Object
-        :rtype: Fused
+        :rtype: VerticalStabilizer
         """
         return VerticalStabilizer(position=translate(self.position,
                                                      'y', -1 * self.stabilizer_h.semi_span,
@@ -212,6 +212,24 @@ class CompoundStabilizer(ExternalBody):
         _extrude = ExtrudedSolid(island=_profile, distance=self.stabilizer_h.root_chord)
         return _profile, _extrude
 
+    @Attribute(private=True)
+    def internal_shape(self):
+        """ This is the internal shape of the compound stabilizer. It is None because the current app uses a boom tail\
+        structure instead of a single fuselage, and thus there is no shape to present for the fuselage builder.
+
+        :rtype: None
+        """
+        return None
+
+    @Attribute(private=True)
+    def ply_number(self):
+        """ This overwrites the input defined by the :class:`ExternalBody` since the ply-number should only be \
+        controlled from the respective stabilizers themselves.
+
+        :rtype: None
+        """
+        return None
+
     @Attribute
     def boom_plane(self):
         """ Defines the XZ-plane that is coincident with the boom connector.
@@ -263,16 +281,6 @@ class CompoundStabilizer(ExternalBody):
         :rtype: ScaledShape
         """
         return ScaledShape(shape_in=self.tail_joiner, reference_point=Point(0, 0, 0), factor=1, hidden=True)
-
-    @Attribute(private=True)
-    def internal_shape(self):
-        """ This is the internal shape of the compound stabilizer. It is None because the current app uses a boom tail
-        structure instead of a single fuselage.
-
-        :return: VTP fuselage section bounding box
-        :rtype: NoneType
-        """
-        return None
 
 
 if __name__ == '__main__':
