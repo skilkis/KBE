@@ -144,6 +144,16 @@ class Wing(ExternalBody, LiftingSurface):
         return self.s_req
 
     @Attribute
+    def lift_coef_max(self):
+        """ This attribute computes the C_L from the lift equation at the provided :param:`stall_speed` to be used in
+        later performance estimations.
+
+        :return: Lift Coefficient at Stall (C_L_max)
+        :rtype: float
+        """
+        return 2 * 9.81 * self.weight_mtow / (self.rho * (self.stall_speed ** 2) * self.s_req)
+
+    @Attribute
     def lift_coef_control(self):
         """ This is the Required C_L from the lift equation at 1.2*stall_speed @ MTOW for the controllability curve of
         the scissor plot.

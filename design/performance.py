@@ -4,7 +4,7 @@ from parapy.core import *
 from components import Motor, Propeller, Wing, Battery
 import matplotlib.pyplot as plt
 import numpy as np
-from math import pi
+from math import pi, sqrt
 from directories import *
 from scipy.interpolate import interp1d
 
@@ -30,14 +30,30 @@ class Performance(Base):
 
     @Attribute
     def stall_speed(self):
-        return self.wing_in
+        """ Computes the new stall speed caused by change in MTOW in Class II (bottoms-up) as compared to the initial
+        estimate from Class I
+
+        :return: Stall Speed in SI meter per second [m/s]
+        :rtype: float
+        """
+        return sqrt((2 * 9.81 * self.weight_mtow) /
+                    (self.wing_in.rho * self.wing_in.lift_coef_max * self.wing_in.planform_area))
 
     @Attribute
     def power_available(self):
+        """ Grabs the available shaft power of the engine from the provided motor. Index 0 refers to continuous power
+        and Index 1 refers to the burst power of the engine
+
+        :rtype: list
+        """
         return self.motor_in.power[0], self.motor_in.power[1]
 
     @Attribute
     def propeller_eta_curve(self):
+        """ Fetches the propeller efficiency curve as a function of airspeed from the provided propeller
+
+        :rtype: interpld
+        """
         return self.propeller_in.propeller_selector[2]
 
     @Attribute
@@ -51,6 +67,12 @@ class Performance(Base):
 
     @Attribute
     def prop_speed_range(self):
+        """ Defines the True Airspeed (TAS) range used for the analysis through use of the minimum and maximum values
+        available in propeller data so as to not force data extrapolation.
+
+        :return: Range of True Airspeeds (TAS) in SI meter per second [m/s]
+        :rtype: numpy array
+        """
         return np.linspace(self.eta_curve_bounds[0], self.eta_curve_bounds[1], 100)
 
     @Attribute
