@@ -29,6 +29,10 @@ class Performance(Base):
     stall_buffer = Input(1.5, validator=val.Range(1.0, 1.5))
 
     @Attribute
+    def stall_speed(self):
+        return self.wing_in
+
+    @Attribute
     def power_available(self):
         return self.motor_in.power[0], self.motor_in.power[1]
 
@@ -173,6 +177,7 @@ class Performance(Base):
         plt.plot(self.speed_range, self.parasite_power, label='Parasitic')
         plt.plot(self.speed_range, self.induced_power, label='Induced')
         plt.plot(self.speed_range, self.power_required, label='Required')
+        plt.axvline(self.wing_in.stall_speed)
 
         plt.xlabel(r'$V_{\mathrm{TAS}}$ [m/s]')
         plt.ylabel(r'Power [W]')

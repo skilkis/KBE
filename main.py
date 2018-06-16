@@ -69,6 +69,7 @@ class UAV(DesignInput):
     def cg(self):
         """ Computes an initial-guess for the Center of Gravity Location at Run-Time utilizing 'weight_and_balance'
 
+        :return: Initial Estimate C.G. location (x, y, z) in SI meter [m]
         :rtype: Point """
         return self.weight_and_balance()['CG']
 
@@ -99,7 +100,7 @@ class UAV(DesignInput):
         #  TODO Make Function for AR_h, e_h
         return ScissorPlot(x_cg=self.cg.x,
                            x_ac=self.wing.aerodynamic_center.x,
-                           x_lemac=self.wing.lemac,
+                           x_lemac=self.wing.lemac.x,
                            mac=self.wing.mac_length,
                            AR=self.params.aspect_ratio,
                            e=self.params.wingpowerloading.e_factor,
@@ -441,6 +442,8 @@ class UAV(DesignInput):
 
     @Attribute
     def write_excel(self):
+
+        ignore_list = ['children', 'mesh_deflection', 'browse_airfoils', '_local_bbox_bounds', '_bbox_bounds', 'hidden']
         hdr_font = xlwt.Font()
         hdr_font.name = 'Times New Roman'
         hdr_font.bold = True
@@ -449,18 +452,66 @@ class UAV(DesignInput):
         hdr_style.font = hdr_font
 
         wb = xlwt.Workbook()
-        ws0 = wb.add_sheet('Dimensions')
+        ws0 = wb.add_sheet('Weight & Balance')
 
         headers = ['Parameter', 'Value', 'Units']
         for i in range(0, len(headers)):
             ws0.write(1, i+1, headers[i], hdr_style)
 
-        row = 1
+        row = 3  # Filling in data for the weights w/ skip
+        ws0.write(row, 1, 'Weights', hdr_style)
         for key, value in self.weights.items():
             row = row + 1
-            ws0.write(row, i + 1, key)
-                # ws0.write(i + 2, i + 2, value)
-                # ws0.write(i + 2, i + 3, '[kg]')
+            ws0.write(row, 1, key)
+            ws0.write(row, 2, value)
+            ws0.write(row, 3, '[kg]')
+
+        row = row + 2  # Skipping two rows to have a row seperating Weights and C.G
+        ws0.write(row, 1, 'C.G. Location (X, Y, Z)', hdr_style)
+        ws0.write(row, 2, '(%1.2f, %1.2f, %1.2f)' % (self.cg.x, self.cg.y, self.cg.z))
+        ws0.write(row, 3, '[m]')
+
+        row = row + 2
+        ws0.write(row, 1, 'Areas', hdr_style)
+        for key, value in self.areas['WETTED'].items():
+            row = row + 1
+            ws0.write(row, 1, key)
+            ws0.write(row, 2, value)
+            ws0.write(row, 3, '[m^2]')
+
+        row = 1
+        ws0.write(row, 5, 'Wing', hdr_style)
+        ws0.write(row, 6, self.wing.airfoil_choice)
+        for key in self.wing._slots:
+            if key not in ignore_list and key.find('plot') == -1 and key.find('avl') == -1:
+                value = getattr(self.wing, key)
+                if isinstance(value, float) or isinstance(value, int) and not isinstance(value, basestring):
+                    row = row + 1
+                    ws0.write(row, 5, key)
+                    ws0.write(row, 6, value)
+
+        row = 1
+        ws0.write(row, 8, 'Stability', hdr_style)
+        for key in self.stability._slots:
+            if key not in ignore_list and key.find('plot') == -1 and key.find('avl') == -1:
+                value = getattr(self.stability, key)
+                if isinstance(value, float) or isinstance(value, int):
+                    row = row + 1
+                    ws0.write(row, 8, key)
+                    ws0.write(row, 9, value)
+
+        row = 1
+        ws0.write(row, 11, 'Stabilizer', hdr_style)
+        for key in self.stabilizer._slots:
+            if key not in ignore_list and key.find('plot') == -1 and key.find('avl') == -1:
+                value = getattr(self.stabilizer, key)
+                if isinstance(value, float) or isinstance(value, int):
+                    row = row + 1
+                    ws0.write(row, 11, key)
+                    ws0.write(row, 12, value)
+
+
+        # row = row + 2  # Skipping two rows to write CD0
 
         wb.save(os.path.join(DIRS['USER_DIR'], 'results', 'output.xls'))
         return 'Excel File Written'
