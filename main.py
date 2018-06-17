@@ -43,6 +43,8 @@
 
 # TODO fix flying booms when wing is very large MTOW = 20 kg
 
+# TODO Change fuselage fit-width to actual dimension to be able to be a certain fraction of camera size
+
 from design import *
 from parapy.core import *
 from parapy.geom import *
@@ -108,7 +110,7 @@ class UAV(DesignInput):
                            Cl_w=self.wing.lift_coef_control,
                            C_mac=self.wing.moment_coef_control,
                            Cla_w=self.wing.lift_coef_vs_alpha,
-                           delta_xcg=0.1,
+                           delta_xcg=0.1,  # Decreasing for a slightly smaller tail
                            configuration=self.configuration,
                            label='Stability Parameters')
 

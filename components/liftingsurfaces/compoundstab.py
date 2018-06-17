@@ -7,6 +7,7 @@ from components.liftingsurfaces import VerticalStabilizer, HorizontalStabilizer
 from math import radians
 from user import MyColors
 from definitions import ExternalBody
+from directories import *
 
 __author__ = ["Nelson Johnson", "San Kilkis"]
 __all__ = ["CompoundStabilizer"]
@@ -52,6 +53,8 @@ class CompoundStabilizer(ExternalBody):
     :param color: Changes the color of the wing skin to the one defined in MyColors
     :type color: tuple
     """
+
+    __icon__ = os.path.join(DIRS['ICON_DIR'], 'ctail.png')
 
     #: Below is the required horizontal tail area of the main wings from the stability analysis.
     required_planform_area = Input(0.8, settable=False)

@@ -4,9 +4,9 @@
 from parapy.core import *
 from parapy.geom import *
 from primitives import LiftingSurface
-from scissorplot import ScissorPlot
 from definitions import *
 from user import MyColors
+from directories import *
 
 #  TODO ADD VALIDATOR FOR AIRFOIL TYPE & CHOICE, OFFSET. ALSO IN LIFTING SURF AND VERTICAL STAB!!!!!!!
 
@@ -56,6 +56,8 @@ class HorizontalStabilizer(ExternalBody, LiftingSurface):
     :type ply_number: int
     """
 
+    __icon__ = os.path.join(DIRS['ICON_DIR'], 'htail.png')
+
     #: Below is the required tail surface area from the scissor plot.
     planform_area = Input(0.8, validator=val.Positive())
 
@@ -88,6 +90,14 @@ class HorizontalStabilizer(ExternalBody, LiftingSurface):
 
     #: Changes the number of ply's of carbon fiber http://www.ijera.com/papers/Vol4_issue5/Version%202/J45025355.pdf
     ply_number = Input(4, validator=val.Instance(int))
+
+    @offset.on_slot_change
+    def sweep_validator(self):
+        """ Simple listener to validate the offset parameter """
+        if abs(self.le_sweep) >= 0.0 and self.offset is not None:
+            error_window('Currently adding sweep to the horizontal tail is not implemented')
+            setattr(self, 'offset', None)
+        return None
 
 
 #  Attributes ########--------------------------------------------------------------------------------------------------

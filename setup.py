@@ -16,5 +16,6 @@ setup(name='KBE',
           'math',
           'json',
           'matplotlib',
+          'scipy',
       ],
       zip_safe=False)

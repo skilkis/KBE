@@ -547,7 +547,7 @@ class Propeller(ExternalBody):
     def internal_shape(self):
         """ The propeller does not have an internal part, thus this part is overwritten upon inheritance.
 
-        :rtype: NoneType
+        :rtype: None
         """
         return None
 

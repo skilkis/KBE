@@ -8,6 +8,7 @@ from definitions import *
 from components.liftingsurfaces import CompoundStabilizer, Wing
 from math import radians
 from user import MyColors
+from directories import *
 
 __author__ = ["Şan Kılkış", "Nelson Johnson"]
 __all__ = ["Boom"]
@@ -36,8 +37,12 @@ class Boom(ExternalBody):
     :type ply_number: int
     """
 
+    __icon__ = os.path.join(DIRS['ICON_DIR'], 'booms.png')
+
     wing_in = Input(Wing(), validator=val.Instance(Wing))
+
     tail_in = Input(CompoundStabilizer(), validator=val.Instance(CompoundStabilizer))
+
     diameter_factor = Input(0.75, validator=val.Between(0.5, 1.0))
 
     #: Changes the number of ply's of carbon fiber http://www.ijera.com/papers/Vol4_issue5/Version%202/J45025355.pdf

@@ -8,6 +8,7 @@ from math import *
 from primitives import LiftingSurface
 from definitions import *
 from user import MyColors
+from directories import *
 
 #  TODO ADD VALIDATOR FOR AIRFOIL TYPE & CHOICE, OFFSET. ALSO IN LIFTING SURF AND HORIZONTAL STAB!!!!!!!
 
@@ -70,6 +71,8 @@ class VerticalStabilizer(ExternalBody, LiftingSurface):
     :param ply_number: Changes the number of ply's of carbon fiber pre-preg.
     :type ply_number: int
     """
+
+    __icon__ = os.path.join(DIRS['ICON_DIR'], 'vtail.png')
 
     #: Below is the required TOTAL wing area of the main wings.
     wing_planform_area = Input(0.8, validator=val.Positive())

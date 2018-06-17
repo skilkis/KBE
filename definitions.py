@@ -9,6 +9,8 @@ from collections import Iterable
 from Tkinter import *
 import tkMessageBox
 
+""" Contains all """
+
 
 __author__ = "Şan Kılkış"
 __all__ = ["Component", "ExternalBody", "VisualCG", "error_window", "warn_window"]
@@ -64,6 +66,7 @@ class VisualCG(GeomBase):
 
 
 class Component(GeomBase):
+    # TODO Comment here
 
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'gear.png')
 
@@ -144,6 +147,7 @@ class Component(GeomBase):
 
 
 class ExternalBody(Component):
+    # TODO Comment here
 
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'air.png')
 

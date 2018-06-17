@@ -28,6 +28,8 @@ __author__ = "Şan Kılkış"
 #: A parameter for debugging, turns the visibility of miscellaneous parts ON/OFF
 __show_primitives = False  # type: bool
 
+# TODO comments here
+
 
 class EOIR(ExternalBody):
     """  This script will generate the parametric Electro-Optical Infra-Ied camera as a payload. There are 7 cameras

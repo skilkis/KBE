@@ -3,7 +3,6 @@
 
 #  Required Modules
 from parapy.core import *
-from parapy.geom import *
 from math import *
 import numpy as np
 import matplotlib.pyplot as plt
@@ -13,9 +12,6 @@ from directories import *
 __author__ = "Nelson Johnson"
 __all__ = ["ScissorPlot"]
 __settable__ = (True if __name__ == '__main__' else False)
-
-#  TODO MAKE SURE THAT THE ASPECT RATIO IS CONSISTENT WHEN CHANGED IN OTHER PLACES OF THE GUI. SEE TODO IN MAIN!!!!!!!!
-# TODO Make sure that the Input excel file passes the argument 'configuration' correctly
 
 
 class ScissorPlot(Base):
@@ -88,27 +84,29 @@ class ScissorPlot(Base):
     :type lhc: float
     """
 
+    __icon__ = os.path.join(DIRS['ICON_DIR'], 'stability.png')
+
 #  This block of code contains the inputs. ########---------------------------------------------------------------------
     #: Below is the current COG position
-    x_cg = Input(0.3, validator=val.Instance(float))
+    x_cg = Input(0.3, validator=val.Instance(float), settable=__settable__)
 
     #: Below is the current Aerodynamic Center position
-    x_ac = Input(0.1, validator=val.Instance(float))
+    x_ac = Input(0.1, validator=val.Instance(float), settable=__settable__)
 
     #: Below is the current leading edge of the MAC position
-    x_lemac = Input(0.0, validator=val.Instance(float))
+    x_lemac = Input(0.0, validator=val.Instance(float), settable=__settable__)
 
     #: Below is the MAC length
-    mac = Input(1.0, validator=val.Instance(float))
+    mac = Input(1.0, validator=val.Instance(float), settable=__settable__)
 
     #: Below is the wing aspect ratio.
-    AR = Input(9.0, validator=val.Range(1.0, 30.0))
+    AR = Input(9.0, validator=val.Range(1.0, 30.0), settable=__settable__)
 
     #: Below is the wing span efficiency factor
-    e = Input(0.8, validator=val.Positive())
+    e = Input(0.8, validator=val.Positive(), settable=__settable__)
 
     #: Below is the assumed zero lift drag coefficient
-    CD0 = Input(0.02, validator=val.Positive())
+    CD0 = Input(0.02, validator=val.Positive(), settable=__settable__)
 
     #: Below is the k factor to correct the canard main wing C_Lalpha due to canard downwash.
     k_factor = Input(1.0, validator=val.Positive())
@@ -123,10 +121,6 @@ class ScissorPlot(Base):
          the main-wing """
         return self.AR / 20.0 + 4.0
 
-    #: Below is the assumed HT span efficiency factor.
-    # @Input
-    # def e_h(self):
-    #     return
     e_h = Input(0.8, validator=val.Positive())
 
     #: Below is the speed ratio for a conventional tail aircraft.
@@ -139,13 +133,13 @@ class ScissorPlot(Base):
     a_0 = 2*pi
 
     #: Below is the controllability lift coefficient of the wing at 1.2*V_s imported from wing.
-    Cl_w = Input(0.5, validator=val.Positive())
+    Cl_w = Input(0.5, validator=val.Positive(), settable=__settable__)
 
     #: Below is the pitching moment about the aerodynamic center of the wing. This is calculated with AVL in 'wing.py'.
-    C_mac = Input(-0.32, validator=val.Range(-2.0, 2.0))
+    C_mac = Input(-0.32, validator=val.Range(-2.0, 2.0), settable=__settable__)
 
     #: Below is the lift curve slope of the wing. This is calculated with AVL in 'wing.py'.
-    Cla_w = Input(5.14, validator=val.Positive())
+    Cla_w = Input(5.14, validator=val.Positive(), settable=__settable__)
 
     #: Below is the assumed change in the cg location.
     delta_xcg = Input(0.3, validator=val.Positive())
