@@ -33,7 +33,7 @@ class FCone(GeomBase):
     # A parameter for debugging, turns the visibility of miscellaneous parts ON/OFF
     __show_primitives = False  # type: bool
 
-    support_frame = Input(FFrame(width=1.0, height=0.5), validator=val.InstanceList((FFrame, MFrame)))  #
+    support_frame = Input(FFrame(width=1.0, height=0.5), val.InstanceList(FFrame, MFrame))  #
     side_tangent = Input(Vector(-0.88, -0.65, 0), validator=val.Instance(Vector))
     top_tangent = Input(Vector(0.8851351164623547, 0, 0.46533410105554684), validator=val.Instance(Vector))
     direction = Input('x_', validator=val.OneOf(["x", "x_"]))
