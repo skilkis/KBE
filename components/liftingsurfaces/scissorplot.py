@@ -310,7 +310,7 @@ class ScissorPlot(Base):
                     stability_criteria.append([i, _cont_pnt, _stab_pnt, _current_margin, error])
 
         if len(stability_criteria) != 0:
-            stability_criteria = sorted(stability_criteria, key=lambda x: x[3])
+            stability_criteria = sorted(stability_criteria, key=lambda x: x[3])  # use Index 4 to sort based on midpoint
             shs_cg = stability_criteria[0][0]
             if shs_cg >= self.shs_sm:
                 shs_req = shs_cg
@@ -332,15 +332,14 @@ class ScissorPlot(Base):
         plt.plot(self.xcg_range, self.shs_stability, 'b', label='Stability')
         plt.plot(self.xcg_range, self.shs_control, 'g', label='Controllablility')
         plt.axhline(y=self.shs_req, color='r', linestyle='-.', label='Required Sh/S')
-        # plt.axhline(y=self.test[1])
         plt.scatter(x=self.x_cg_vs_mac, y=self.shs_req, label='CG Location')
         plt.ylabel(r'$\frac{S_{h}}{S}$')
         plt.xlabel(r'$\frac{X_{cg}-X_{ac}}{c}$')
         plt.axis([-2, 2, 0, 2])
         plt.legend(loc=0)
-        fig.savefig(fname=os.path.join(DIRS['USER_DIR'], 'plots', '%s.pdf' % fig.get_label()), format='pdf')
         plt.show()
-        return 'Plot Made, See PyCharm'
+        fig.savefig(fname=os.path.join(DIRS['USER_DIR'], 'plots', '%s.pdf' % fig.get_label()), format='pdf')
+        return 'Figure Plotted and Saved'
 
 
 if __name__ == '__main__':

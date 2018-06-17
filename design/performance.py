@@ -172,7 +172,7 @@ class Performance(Base):
         diff = [abs(self.power_available_burst[i] - self.power_required[i]) for i in range(0, len(self.speed_range))]
         idx_m = diff.index(min(diff))
 
-        return self.speed_range[idx_m]
+        return self.speed_range[idx_m] if idx_m is not -1 else self.speed_range[-1]
 
     @Attribute
     def power_spline(self):

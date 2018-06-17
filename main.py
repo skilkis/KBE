@@ -13,10 +13,6 @@
 #  TODO !!!!!! IF AR (for example) CHANGED IN Main Wing INSTANTIATION, SCISSOR PLOT IS NOT UPDATED WITH CORRESP. VALUE!
 #  TODO .... we must update the values in params, and change them ONLY there in the GUI!!!!!!!!!!!!!!!!
 
-#  TODO CHECK THE CG LOOP CONVERGENCE. SEE OLD CG AND NEW CG SIMPLY CHANGE SPOTS, IT IS INFINITE!!!!!
-    # Although it is infinite bro it is simply flipping back and forth on the stability plot, that is why we stop it and
-    # for now that is good enough behavior, most designs converge to a single value!
-
 #  TODO MAKE final_cg NON LAZY OR USER SEES WRONG TAIL!!!!!!!!!!!!!!!!!! (Add listener to input cg)
 #  TODO Make sure vt weight is correct in final weight for changes in the GUI ......
 #  TODO cont'd .....I tried changing # plys on right wing in GUI but cg stayed on x ax
@@ -56,6 +52,8 @@
 
 # TODO Re-organize main folder add icons
 
+# TODO fix flying booms when wing is very large MTOW = 20 kg
+
 from design import *
 from parapy.core import *
 from parapy.geom import *
@@ -67,6 +65,7 @@ from math import sin, radians
 from collections import Iterable
 import copy
 import xlwt
+import matplotlib.pyplot as plt
 
 
 class UAV(DesignInput):
@@ -135,16 +134,34 @@ class UAV(DesignInput):
         print 'Run-Time CG = %1.4f' % old_cg.x
         new_cg = self.weight_and_balance()['CG']
         loop = 0
-        while abs(old_cg.x - new_cg.x) > 0.005 and loop < 20:
-            loop = loop + 1
+        xcg_cache = []
+        while abs(old_cg.x - new_cg.x) > 0.0005 and loop < 50:
+            loop += 1
             print 'Current Iteration: ' + str(loop)
+
             new_uav_object = copy.copy(self)  # Large Performance improvement from making a copy of the current object!
             old_cg = new_uav_object.cg
-            print 'Old CG = %1.4f' % old_cg.x
+            print 'Old CG = %1.6f' % old_cg.x
+
             new_cg = new_uav_object.weight_and_balance()['CG']
-            print 'New CG = %1.4f' % new_cg.x
+            print 'New CG = %1.6f' % new_cg.x
+
+            # Adding rounded c.g.x values to cache and cross-referencing to see if convergence behavior is oscillating
+            if round(old_cg.x, 4) and round(new_cg.x, 4) in xcg_cache:
+                new_cg = Point((new_cg.x + old_cg.x)/2.0, new_cg.y, new_cg.z)
             setattr(self, 'cg', new_cg)
-        return new_cg
+            xcg_cache = xcg_cache + [round(old_cg.x, 4)] + [round(new_cg.x, 4)]
+
+        fig = plt.figure('Convergence Behavior')
+        plt.style.use('ggplot')
+        plt.plot(xcg_cache)
+        plt.title('Congergence History of the Center of Gravity')
+        plt.xlabel(r'Iterations [-]')
+        plt.ylabel(r'Longitudinal Center of Gravity Location [m]')
+        plt.show()
+        fig.savefig(fname=os.path.join(DIRS['USER_DIR'], 'plots', '%s.pdf' % fig.get_label()), format='pdf')
+
+        return 'Converged after %d Iterations, Figure Plotted and Saved!' % loop
 
     @Attribute
     def write_step(self):
@@ -156,7 +173,7 @@ class UAV(DesignInput):
         """
 
         def part_fetcher(external_shape, label):
-            """ Collects all 'TopoDS_Shapes' from the fed external_shape and returns in a list
+            """ Collects all entities with 'TopoDS_Shapes' from the input external_shape and returns them in a list
 
             :param external_shape: The current external shape in the loop
             :param label: The label currently assigned to the child, this is used to name the part in the .stp file
