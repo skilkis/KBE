@@ -199,16 +199,12 @@
 
 <span class="kn">from</span> <span class="nn">user</span> <span class="k">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">components.fuselage.primitives</span> <span class="k">import</span> <span class="o">*</span>
-<span class="c1"># from components import EOIR, Wing, Motor, Battery</span>
 <span class="kn">from</span> <span class="nn">definitions</span> <span class="k">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">directories</span> <span class="k">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">copy</span> <span class="k">import</span> <span class="n">copy</span>
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Şan Kılkış&quot;</span>
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Fuselage&quot;</span><span class="p">]</span>
-
-<span class="c1"># TODO Figure out why tail cone does not appear instantly</span>
-<span class="c1"># TODO Add default sizing parts back in</span>
 
 <span class="c1"># http://www.dupont.com/content/dam/dupont/products-and-services/fabrics-fibers-and-nonwovens/fibers/documents/Kevlar_Technical_Guide.pdf</span>
 
@@ -230,7 +226,6 @@
 
     <span class="c1">#  TODO Commenting, it is in documentation</span>
     <span class="c1"># TODO Class description and use cases</span>
-    <span class="c1"># TODO compartment_type and sizing_parts validators</span>
 
     <span class="n">__initargs__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;compartment_type&quot;</span><span class="p">,</span> <span class="s2">&quot;sizing_parts&quot;</span><span class="p">]</span>
     <span class="n">__icon__</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;ICON_DIR&#39;</span><span class="p">],</span> <span class="s1">&#39;fuselage.png&#39;</span><span class="p">)</span>
@@ -239,13 +234,17 @@
 
     <span class="c1">#: Type of containers at each station, possible entries (nose, container, motor, tail)</span>
     <span class="c1">#: :type: str list</span>
-    <span class="n">compartment_type</span> <span class="o">=</span> <span class="n">Input</span><span class="p">()</span>
+    <span class="n">compartment_type</span> <span class="o">=</span> <span class="n">Input</span><span class="p">([</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">list</span><span class="p">))</span>
     <span class="c1"># compartment_type = Input()</span>
 
     <span class="c1">#: Parts that the fuselage will be sized for, these must correspond to the entries given in `compartment_type`</span>
     <span class="c1">#: :type: list</span>
     <span class="c1"># sizing_parts = Input()</span>
-    <span class="n">sizing_parts</span> <span class="o">=</span> <span class="n">Input</span><span class="p">()</span>
+    <span class="n">sizing_parts</span> <span class="o">=</span> <span class="n">Input</span><span class="p">([</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">list</span><span class="p">))</span>
+
+    <span class="c1">#: Disables Automatic Fuselage Frame (FFrame) Creation and allows instead manual user-input to set the shape</span>
+    <span class="c1">#: :type: bool</span>
+    <span class="n">auto_fuselage_disable</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">bool</span><span class="p">))</span>
 
     <span class="c1">#: Sets the Padding Factor between Fuselage Sizing Parts</span>
     <span class="c1">#: :type: bool</span>
@@ -271,9 +270,29 @@
     <span class="c1">#: :type: tuple</span>
     <span class="n">ply_number</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
 
-    <span class="c1">#: Disables Automatic Fuselage Frame (FFrame) Creation and allows instead manual user-input to set the shape</span>
-    <span class="c1">#: :type: bool</span>
-    <span class="n">auto_fuselage_disable</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="nd">@compartment_type</span><span class="o">.</span><span class="n">on_slot_change</span>
+    <span class="k">def</span> <span class="nf">compartment_validator</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Validator for the compartment_type &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compartment_type</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">_part</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">compartment_type</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">_part</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;nose&#39;</span><span class="p">,</span> <span class="s1">&#39;container&#39;</span><span class="p">,</span> <span class="s1">&#39;motor&#39;</span><span class="p">,</span> <span class="s1">&#39;tail&#39;</span><span class="p">]:</span>
+                    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> is not a valid component type, please restrict input to &quot;nose&quot;, &quot;container&quot;, &#39;</span>
+                                    <span class="s1">&#39;&quot;motor&quot; or &quot;tail&quot;&#39;</span> <span class="o">%</span> <span class="n">_part</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">_part</span><span class="p">,</span> <span class="n">basestring</span><span class="p">):</span>
+                    <span class="k">raise</span> <span class="ne">TypeError</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;The provided input into :param:`sizing_parts` is not valid&#39;</span><span class="p">)</span>
+
+    <span class="nd">@sizing_parts</span><span class="o">.</span><span class="n">on_slot_change</span>
+    <span class="k">def</span> <span class="nf">sizing_part_validator</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Validator for the sizing_parts &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sizing_parts</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">_part</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sizing_parts</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">_part</span><span class="p">,</span> <span class="n">Component</span><span class="p">):</span>
+                    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> is not a valid component, please check :class:`Component` syntax&#39;</span>
+                                    <span class="o">%</span> <span class="n">_part</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;The provided input into :param:`sizing_parts` is not valid&#39;</span><span class="p">)</span>
 
     <span class="nd">@auto_fuselage_disable</span><span class="o">.</span><span class="n">on_slot_change</span>
     <span class="k">def</span> <span class="nf">auto_disabler</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

@@ -198,6 +198,7 @@
 <span class="kn">from</span> <span class="nn">parapy.core</span> <span class="k">import</span> <span class="o">*</span>  <span class="c1"># / Required ParaPy Modules</span>
 
 <span class="kn">from</span> <span class="nn">directories</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">Iterable</span>
 
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Şan Kılkış&quot;</span>
@@ -353,17 +354,37 @@
 <div class="viewcode-block" id="ExternalBody.wetted_area"><a class="viewcode-back" href="../definitions.html#definitions.ExternalBody.wetted_area">[docs]</a>    <span class="nd">@Attribute</span>
     <span class="k">def</span> <span class="nf">wetted_area</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Returns the total wetted area of the external_part to be able to perform drag and weight estimations</span>
+<span class="sd">        accurate to 3 decimal places. This is accomplished by subtracting the total shell area from the area of the</span>
+<span class="sd">        intersected faces to obtain a fairly accurate wetted area.</span>
 
-<span class="sd">        :return: Total wetted area of the external_part in SI sq. meter</span>
+<span class="sd">        :return: Total wetted area of the external_part in SI sq. meter [m^2]</span>
 <span class="sd">        :rtype: float</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">area</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">external_shape</span><span class="p">,</span> <span class="s1">&#39;shells&#39;</span><span class="p">):</span>
-            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">external_shape</span><span class="o">.</span><span class="n">shells</span><span class="p">:</span>
-                <span class="n">area</span> <span class="o">=</span> <span class="n">area</span> <span class="o">+</span> <span class="n">i</span><span class="o">.</span><span class="n">area</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> has no solids/shells to find wetted_area from, please create a fused operation &#39;</span>
-                            <span class="s1">&#39;to resolve&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">external_shape</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">external_shape</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">):</span>
+            <span class="n">total_area</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">common_areas</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">body</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">external_shape</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="s1">&#39;shells&#39;</span><span class="p">):</span>
+                    <span class="k">for</span> <span class="n">_shell</span> <span class="ow">in</span> <span class="n">body</span><span class="o">.</span><span class="n">shells</span><span class="p">:</span>
+                        <span class="n">total_area</span> <span class="o">=</span> <span class="n">total_area</span> <span class="o">+</span> <span class="n">_shell</span><span class="o">.</span><span class="n">area</span>
+                <span class="k">for</span> <span class="n">second_body</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">external_shape</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">body</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">second_body</span><span class="p">:</span>
+                        <span class="n">_common_faces</span> <span class="o">=</span> <span class="n">Common</span><span class="p">(</span><span class="n">shape_in</span><span class="o">=</span><span class="n">body</span><span class="p">,</span> <span class="n">tool</span><span class="o">=</span><span class="n">second_body</span><span class="p">)</span><span class="o">.</span><span class="n">faces</span>
+                        <span class="k">for</span> <span class="n">_face</span> <span class="ow">in</span> <span class="n">_common_faces</span><span class="p">:</span>
+                            <span class="n">_calc_area</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">_face</span><span class="o">.</span><span class="n">area</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+                            <span class="k">if</span> <span class="n">_calc_area</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">common_areas</span><span class="p">:</span>
+                                <span class="n">common_areas</span> <span class="o">=</span> <span class="n">common_areas</span> <span class="o">+</span> <span class="p">[</span><span class="n">_calc_area</span><span class="p">]</span>
+
+            <span class="n">area</span> <span class="o">=</span> <span class="n">total_area</span> <span class="o">-</span> <span class="nb">sum</span><span class="p">(</span><span class="n">common_areas</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># Opted to keep this funcionality in-case of old Fused class defintion is still used somewhere</span>
+            <span class="n">area</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">external_shape</span><span class="p">,</span> <span class="s1">&#39;shells&#39;</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">external_shape</span><span class="o">.</span><span class="n">shells</span><span class="p">:</span>
+                    <span class="n">area</span> <span class="o">=</span> <span class="n">area</span> <span class="o">+</span> <span class="n">i</span><span class="o">.</span><span class="n">area</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> has no solids/shells to find wetted_area from, please create a fused operation &#39;</span>
+                                <span class="s1">&#39;to resolve&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">external_shape</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">area</span></div>
 
 <div class="viewcode-block" id="ExternalBody.planform_area"><a class="viewcode-back" href="../definitions.html#definitions.ExternalBody.planform_area">[docs]</a>    <span class="nd">@Attribute</span>
@@ -383,8 +404,6 @@
 <span class="sd">        :rtype: Box</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">Box</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">transparency</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">centered</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">)</span></div></div>
-
-        <span class="c1"># TODO Not make this a fused part, be abld to extract area w/o fused operation</span>
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>

@@ -236,8 +236,8 @@
 <span class="sd">    multiple lines on the thrust/wing loading plots.</span>
 <span class="sd">    :type maximum_lift_coefficient: list</span>
 
-<span class="sd">    :param AR: A list of two potential aspect ratios for the design</span>
-<span class="sd">    :type AR: list</span>
+<span class="sd">    :param aspect_ratio_range: A list of two potential aspect ratios for the design</span>
+<span class="sd">    :type aspect_ratio_range: list</span>
 
 <span class="sd">    :param eta_prop: This is the assumed propeller efficiency.</span>
 <span class="sd">    :type eta_prop: float</span>
@@ -281,14 +281,20 @@
     <span class="n">handlaunch</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">bool</span><span class="p">))</span>
 
     <span class="c1">#: This is a list of three C_lmax&#39;s that the wing is assumed to generate. This creates multiple lines on the plots.</span>
-    <span class="n">maximum_lift_coefficient</span> <span class="o">=</span> <span class="n">Input</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.25</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">])</span>
+    <span class="n">maximum_lift_coefficient</span> <span class="o">=</span> <span class="n">Input</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.25</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">],</span> <span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">list</span><span class="p">))</span>
 
     <span class="c1">#: This is a list of three Aspect Ratios that the wing is assumed to generate. This creates multiple lines on</span>
     <span class="c1">#: the plots.</span>
     <span class="c1"># TODO Make this a proper implementation of Iterable comprehension, add validator</span>
-    <span class="nd">@Input</span>
-    <span class="k">def</span> <span class="nf">AR</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">10</span><span class="p">]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">handlaunch</span> <span class="k">else</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">]</span>
+<div class="viewcode-block" id="WingPowerLoading.aspect_ratio_range"><a class="viewcode-back" href="../../design/wingpowerloading.html#design.wingpowerloading.WingPowerLoading.aspect_ratio_range">[docs]</a>    <span class="nd">@Input</span>
+    <span class="k">def</span> <span class="nf">aspect_ratio_range</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Derived input that handles defaulting of the aspect_ratio. These values are determined from reference images</span>
+<span class="sd">        for drones that are handlaunched vs those that are not.</span>
+
+<span class="sd">        :return: Bounds of Acceptable Aspect Ratios</span>
+<span class="sd">        :rtype: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">12</span><span class="p">]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">handlaunch</span> <span class="k">else</span> <span class="p">[</span><span class="mi">12</span><span class="p">,</span> <span class="mi">20</span><span class="p">]</span></div>
 
     <span class="c1">#: This is the assumed propeller efficiency.</span>
     <span class="n">eta_prop</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">())</span>
@@ -362,17 +368,19 @@
 <span class="sd">        :rtype: dict</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">wp_cr</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">AR</span><span class="p">)):</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">aspect_ratio_range</span><span class="p">)):</span>
             <span class="n">wp_cr</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">eta_prop</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">climb_rate</span> <span class="o">+</span> <span class="n">sqrt</span><span class="p">(</span>
                 <span class="n">num</span> <span class="o">*</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">rho_cr</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">zero_lift_drag</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.81</span> <span class="o">*</span>
-                                                                          <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">AR</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">e</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="mf">3.0</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">))))))</span>
+                                                                          <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">aspect_ratio_range</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">e</span><span class="p">)</span> <span class="o">**</span>
+                                                                           <span class="p">(</span><span class="mf">3.0</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">))))))</span>
                           <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ws_range</span><span class="p">])</span>
             <span class="c1"># evaluating all values of WS_range w/ list comprehension</span>
         <span class="c1"># Picks the first aspect ratio and proceeds since the climb-gradient requirement is not influenced heavily by AR</span>
         <span class="n">wp_cg</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">maximum_lift_coefficient</span><span class="p">)):</span>
             <span class="n">wp_cg</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">eta_prop</span> <span class="o">/</span> <span class="p">(</span><span class="n">sqrt</span><span class="p">(</span><span class="n">num</span> <span class="o">*</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">rho</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">climbcoefs</span><span class="p">[</span><span class="s1">&#39;lift&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">]))</span> <span class="o">*</span>
-                                           <span class="bp">self</span><span class="o">.</span><span class="n">climb_gradient</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">climbcoefs</span><span class="p">[</span><span class="s1">&#39;drag&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">climbcoefs</span><span class="p">[</span><span class="s1">&#39;lift&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">]))</span>
+                                           <span class="bp">self</span><span class="o">.</span><span class="n">climb_gradient</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">climbcoefs</span><span class="p">[</span><span class="s1">&#39;drag&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span>
+                                                                  <span class="bp">self</span><span class="o">.</span><span class="n">climbcoefs</span><span class="p">[</span><span class="s1">&#39;lift&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">]))</span>
                           <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ws_range</span><span class="p">])</span>
 
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;climb_rate&#39;</span><span class="p">:</span> <span class="n">wp_cr</span><span class="p">,</span>
@@ -393,10 +401,10 @@
             <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">wing_loading</span><span class="p">,</span> <span class="n">wing_loading</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">],</span>
                      <span class="n">label</span><span class="o">=</span><span class="s1">&#39;C_Lmax</span><span class="si">%s</span><span class="s1"> = </span><span class="si">%.2f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wingloading</span><span class="p">[</span><span class="s1">&#39;flag&#39;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">maximum_lift_coefficient</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
 
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">AR</span><span class="p">)):</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">aspect_ratio_range</span><span class="p">)):</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ws_range</span><span class="p">,</span>
                      <span class="bp">self</span><span class="o">.</span><span class="n">powerloading</span><span class="p">[</span><span class="s1">&#39;climb_rate&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">],</span> <span class="s1">&#39;--&#39;</span><span class="p">,</span>
-                     <span class="n">label</span><span class="o">=</span><span class="s1">&#39;CR, AR = </span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">AR</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                     <span class="n">label</span><span class="o">=</span><span class="s1">&#39;CR, AR = </span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">aspect_ratio_range</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
 
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">maximum_lift_coefficient</span><span class="p">)):</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ws_range</span><span class="p">,</span>
@@ -450,14 +458,14 @@
 
         <span class="c1"># TODO Add knowledge base assumption for best aspect ratio</span>
         <span class="c1"># TODO Find a better way to select optimum aspect ratio</span>
-        <span class="n">optimal_ars</span> <span class="o">=</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">15</span><span class="p">]</span>
+        <span class="n">optimal_ars</span> <span class="o">=</span> <span class="p">[</span><span class="mi">11</span><span class="p">,</span> <span class="mi">20</span><span class="p">]</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">handlaunch</span><span class="p">:</span>
             <span class="n">optimal_ar</span> <span class="o">=</span> <span class="n">optimal_ars</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">optimal_ar</span> <span class="o">=</span> <span class="n">optimal_ars</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
         <span class="c1">#: Evaluation of the distance(error) between user-input aspect ratio and the optimal aspect ratio</span>
-        <span class="n">error</span> <span class="o">=</span> <span class="p">[</span><span class="nb">abs</span><span class="p">(</span><span class="n">num</span> <span class="o">-</span> <span class="n">optimal_ar</span><span class="p">)</span> <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">AR</span><span class="p">]</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="p">[</span><span class="nb">abs</span><span class="p">(</span><span class="n">num</span> <span class="o">-</span> <span class="n">optimal_ar</span><span class="p">)</span> <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">aspect_ratio_range</span><span class="p">]</span>
 
         <span class="c1">#: idx3 corresponds to the index of the closest value within self.AR to the optimal_ar defined by the rule above</span>
         <span class="n">idx3</span> <span class="o">=</span> <span class="n">error</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">error</span><span class="p">))</span>
@@ -470,7 +478,7 @@
             <span class="n">wp</span> <span class="o">=</span> <span class="n">wp_choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
         <span class="k">return</span><span class="p">{</span><span class="s1">&#39;lift_coefficient&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">maximum_lift_coefficient</span><span class="p">[</span><span class="n">idx1</span><span class="p">],</span>
-               <span class="s1">&#39;aspect_ratio&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">AR</span><span class="p">[</span><span class="n">idx3</span><span class="p">],</span>
+               <span class="s1">&#39;aspect_ratio&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">aspect_ratio_range</span><span class="p">[</span><span class="n">idx3</span><span class="p">],</span>
                <span class="s1">&#39;wing_loading&#39;</span><span class="p">:</span> <span class="n">ws</span><span class="p">,</span>
                <span class="s1">&#39;power_loading&#39;</span><span class="p">:</span> <span class="n">wp</span><span class="p">}</span></div>
 
@@ -485,8 +493,8 @@
         <span class="n">lift_coef_cg</span> <span class="o">=</span> <span class="p">[</span><span class="n">num</span> <span class="o">-</span> <span class="mf">0.2</span> <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">maximum_lift_coefficient</span><span class="p">]</span>
         <span class="c1"># Above we subtract 0.2 from climb gradient C_l to keep away from stall during climb out</span>
         <span class="n">drag_coef_cg</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">AR</span><span class="p">)):</span>
-            <span class="n">drag_coef_cg</span><span class="o">.</span><span class="n">append</span><span class="p">([(</span><span class="bp">self</span><span class="o">.</span><span class="n">zero_lift_drag</span> <span class="o">+</span> <span class="n">num</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">pi</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">AR</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">e_factor</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">aspect_ratio_range</span><span class="p">)):</span>
+            <span class="n">drag_coef_cg</span><span class="o">.</span><span class="n">append</span><span class="p">([(</span><span class="bp">self</span><span class="o">.</span><span class="n">zero_lift_drag</span> <span class="o">+</span> <span class="n">num</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">pi</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">aspect_ratio_range</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">e_factor</span><span class="p">))</span>
                                  <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">maximum_lift_coefficient</span><span class="p">])</span>
 
             <span class="c1"># Due to how drag_coef_cg is defined, the first array dim is aspect ratios, the second dim is</span>
@@ -585,13 +593,14 @@
 <div class="viewcode-block" id="WingPowerLoading.battery_capacity"><a class="viewcode-back" href="../../design/wingpowerloading.html#design.wingpowerloading.WingPowerLoading.battery_capacity">[docs]</a>    <span class="nd">@Attribute</span>
     <span class="k">def</span> <span class="nf">battery_capacity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; This attribute calculates the required battery capacity, based on the payload mass, flight computer, and \</span>
-<span class="sd">         flight performance characteristics.</span>
+<span class="sd">         flight performance characteristics. Battery efficiency is assumed to be 100 percent.</span>
 
 <span class="sd">         :return: Required Battery Capacity in SI Watt hour</span>
 <span class="sd">         :rtype: float</span>
 <span class="sd">         &quot;&quot;&quot;</span>
         <span class="n">t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cruise_parameters</span><span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="mf">3600.0</span>
-        <span class="n">capacity</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">payload_power</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">cruise_parameters</span><span class="p">[</span><span class="s1">&#39;p_req_drag&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">flight_controller_power</span><span class="p">)</span> <span class="o">*</span> <span class="n">t</span>
+        <span class="n">flight_power_draw</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cruise_parameters</span><span class="p">[</span><span class="s1">&#39;p_req_drag&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">eta_prop</span>
+        <span class="n">capacity</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">payload_power</span> <span class="o">+</span> <span class="n">flight_power_draw</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">flight_controller_power</span><span class="p">)</span> <span class="o">*</span> <span class="n">t</span>
         <span class="k">return</span> <span class="n">capacity</span></div></div>
 
 

@@ -16,8 +16,6 @@ from user import MyColors
 #  Import AVL wrapper written by Reno El Mendorp. https://github.com/renoelmendorp/AVLWrapper
 from avl import Geometry, Surface, Section, Point, Spacing, Session, Case, FileAirfoil
 
-#  TODO FIX BUG IN WING WETTED AREA CALCULATION, DUE TO WING MIRROR JUNCTION OF EXTERNAL SHAPE!!!!! see low AR wing.py
-
 __author__ = "Nelson Johnson"
 __all__ = ["Wing"]
 

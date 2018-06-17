@@ -200,6 +200,7 @@
 
 <span class="c1"># Required Modules</span>
 <span class="kn">from</span> <span class="nn">fframe</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">mframe</span> <span class="k">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">directories</span> <span class="k">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="n">sqrt</span>
 
@@ -216,8 +217,7 @@
 <span class="sd">    :type support_frame: FFrame</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="c1"># TODO cleanup init args and inputs, write documentation(comments, it is already in documentation)</span>
-    <span class="c1"># TODO ADD VALIDATORS TO INPUTS!</span>
+    <span class="c1"># TODO write documentation(comments, it is already in documentation)</span>
     <span class="c1">#  TODO finish commenting, it is in documentation</span>
 
     <span class="n">__initargs__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;support_frame&quot;</span><span class="p">,</span> <span class="s2">&quot;side_tangent&quot;</span><span class="p">,</span> <span class="s2">&quot;top_tangent&quot;</span><span class="p">,</span> <span class="s2">&quot;direction&quot;</span><span class="p">,</span> <span class="s2">&quot;tip_point_z&quot;</span><span class="p">]</span>
@@ -226,9 +226,9 @@
     <span class="c1"># A parameter for debugging, turns the visibility of miscellaneous parts ON/OFF</span>
     <span class="n">__show_primitives</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># type: bool</span>
 
-    <span class="n">support_frame</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">FFrame</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mf">0.5</span><span class="p">))</span>  <span class="c1">#</span>
-    <span class="n">side_tangent</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">Vector</span><span class="p">(</span><span class="o">-</span><span class="mf">0.88</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.65</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
-    <span class="n">top_tangent</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">Vector</span><span class="p">(</span><span class="mf">0.8851351164623547</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.46533410105554684</span><span class="p">))</span>
+    <span class="n">support_frame</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">FFrame</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mf">0.5</span><span class="p">),</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">InstanceList</span><span class="p">((</span><span class="n">FFrame</span><span class="p">,</span> <span class="n">MFrame</span><span class="p">)))</span>  <span class="c1">#</span>
+    <span class="n">side_tangent</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">Vector</span><span class="p">(</span><span class="o">-</span><span class="mf">0.88</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.65</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="n">Vector</span><span class="p">))</span>
+    <span class="n">top_tangent</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">Vector</span><span class="p">(</span><span class="mf">0.8851351164623547</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.46533410105554684</span><span class="p">),</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="n">Vector</span><span class="p">))</span>
     <span class="n">direction</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;x_&#39;</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">OneOf</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;x_&quot;</span><span class="p">]))</span>
     <span class="n">slenderness_ratio</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">))</span>  <span class="c1"># Nose-cone length / frame diagonal</span>
     <span class="n">transparency</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>

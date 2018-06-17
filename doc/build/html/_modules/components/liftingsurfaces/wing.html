@@ -209,10 +209,6 @@
 <span class="c1">#  Import AVL wrapper written by Reno El Mendorp. https://github.com/renoelmendorp/AVLWrapper</span>
 <span class="kn">from</span> <span class="nn">avl</span> <span class="k">import</span> <span class="n">Geometry</span><span class="p">,</span> <span class="n">Surface</span><span class="p">,</span> <span class="n">Section</span><span class="p">,</span> <span class="n">Point</span><span class="p">,</span> <span class="n">Spacing</span><span class="p">,</span> <span class="n">Session</span><span class="p">,</span> <span class="n">Case</span><span class="p">,</span> <span class="n">FileAirfoil</span>
 
-<span class="c1">#  TODO FIX BUG IN WING WETTED AREA CALCULATION, DUE TO WING MIRROR JUNCTION OF EXTERNAL SHAPE!!!!! see low AR wing.py</span>
-<span class="c1">#  TODO FIX show_avl_geom IF POSSIBLE</span>
-<span class="c1">#  TODO Fix</span>
-
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Nelson Johnson&quot;</span>
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Wing&quot;</span><span class="p">]</span>
 
@@ -225,6 +221,7 @@
 <span class="sd">    vs. angle of attack.</span>
 
 <span class="sd">    :returns: ParaPy Geometry of the Main Wing Surface</span>
+<span class="sd">    :rtype: Wing</span>
 
 <span class="sd">    :param wing_loading: This is the required wing loading from the class I weight estimation in [N/m^2]</span>
 <span class="sd">    :type wing_loading: float</span>
@@ -274,6 +271,8 @@
 
     <span class="c1">#: Below is the assumed factor of the semi_span which the fuselage extends over the wing.</span>
     <span class="n">fuse_width_factor</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.07</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Range</span><span class="p">(</span><span class="mf">0.001</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">))</span>
+
+    <span class="c1"># TODO add getancestor attribute here is wing is not root that gets camera length</span>
 
     <span class="c1">#: Below is a switch to hide/show the bbox of the wing section within the fuselage.</span>
     <span class="n">hide_bbox</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">bool</span><span class="p">))</span>
@@ -435,14 +434,14 @@
                    <span class="n">transparency</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
                    <span class="n">hidden</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">hide_bbox</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Wing.external_shape"><a class="viewcode-back" href="../../../components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing.external_shape">[docs]</a>    <span class="nd">@Part</span>
+<div class="viewcode-block" id="Wing.external_shape"><a class="viewcode-back" href="../../../components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing.external_shape">[docs]</a>    <span class="nd">@Attribute</span>
     <span class="k">def</span> <span class="nf">external_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; This defines the external shape for the ExternalBody class in definitions.</span>
 
 <span class="sd">        :return: Wing ParaPy Geometry</span>
-<span class="sd">        :rtype: Fused</span>
+<span class="sd">        :rtype: Tuple</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">Fused</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">solid</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">left_wing</span><span class="p">,</span> <span class="n">hidden</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">solid</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">left_wing</span></div>
 
 
 <span class="c1"># --- AVL Geometry &amp; Analysis: -----------------------------------------------------------------------------------------</span>

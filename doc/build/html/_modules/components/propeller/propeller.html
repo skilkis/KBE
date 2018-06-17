@@ -252,10 +252,10 @@
     <span class="c1">#:  A parameter for debugging, turns the visibility of miscellaneous parts ON/OFF</span>
     <span class="n">__show_primitives</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># type: bool # TODO rename this parameter</span>
 
-    <span class="c1"># TODO Validate this instance</span>
-    <span class="n">motor</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">Motor</span><span class="p">(</span><span class="n">integration</span><span class="o">=</span><span class="s1">&#39;puller&#39;</span><span class="p">))</span>
+    <span class="n">motor</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">Motor</span><span class="p">(</span><span class="n">integration</span><span class="o">=</span><span class="s1">&#39;puller&#39;</span><span class="p">),</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="n">Motor</span><span class="p">))</span>
     <span class="n">design_speed</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">50</span><span class="p">))</span>
-    <span class="c1">#:  position = Input(Position(Point(0, 0, 0)))</span>
+
+    <span class="c1">#: Sets the default directory for the propeller data files</span>
     <span class="n">database_path</span> <span class="o">=</span> <span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;PROPELLER_DATA_DIR&#39;</span><span class="p">]</span>
 
 <div class="viewcode-block" id="Propeller.position"><a class="viewcode-back" href="../../../components/propeller/propeller.html#components.propeller.propeller.Propeller.position">[docs]</a>    <span class="nd">@Input</span>
@@ -295,7 +295,13 @@
 
 <div class="viewcode-block" id="Propeller.center_of_gravity"><a class="viewcode-back" href="../../../components/propeller/propeller.html#components.propeller.propeller.Propeller.center_of_gravity">[docs]</a>    <span class="nd">@Attribute</span>
     <span class="k">def</span> <span class="nf">center_of_gravity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">propeller</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">center</span></div>
+        <span class="sd">&quot;&quot;&quot; Computes the center of gravity based on the</span>
+
+<span class="sd">        :return: Location of the Propeller Center of Gravity in SI meter [m]</span>
+<span class="sd">        :rtype: Point</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">bbox</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">propeller_top</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">center</span>
+        <span class="k">return</span> <span class="n">Point</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">bbox</span><span class="o">.</span><span class="n">cog</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">bbox</span><span class="o">.</span><span class="n">cog</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Propeller.efficiency"><a class="viewcode-back" href="../../../components/propeller/propeller.html#components.propeller.propeller.Propeller.efficiency">[docs]</a>    <span class="nd">@Attribute</span>
     <span class="k">def</span> <span class="nf">efficiency</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -314,7 +320,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor</span><span class="o">.</span><span class="n">specs</span><span class="p">[</span><span class="s1">&#39;prop_recommendation&#39;</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="Propeller.allowed_props"><a class="viewcode-back" href="../../../components/propeller/propeller.html#components.propeller.propeller.Propeller.allowed_props">[docs]</a>    <span class="nd">@Attribute</span><span class="p">(</span><span class="n">private</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="viewcode-block" id="Propeller.allowed_props"><a class="viewcode-back" href="../../../components/propeller/propeller.html#components.propeller.propeller.Propeller.allowed_props">[docs]</a>    <span class="nd">@Attribute</span>
     <span class="k">def</span> <span class="nf">allowed_props</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; An attribute which parses the string array provided by the attribute :attr:`propeller_recommendation` and  \</span>
 <span class="sd">        uses this information to create a list containing all propellers that fit this recommendation. Typically, the \</span>
@@ -328,10 +334,16 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Parsing the str in `self.prop_recommendation` to obtain diameter range</span>
-        <span class="n">diameter_range</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">propeller_recommendation</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">propeller_recommendation</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">diameter_range</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">propeller_recommendation</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">diameter_range</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">propeller_recommendation</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])]</span>
 
         <span class="c1"># Parsing the str in `self.prop_recommendation` to obtain pitch and type</span>
-        <span class="n">pitch_entries</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">propeller_recommendation</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">propeller_recommendation</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">pitch_entries</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">propeller_recommendation</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">pitch_entries</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">propeller_recommendation</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]]</span>
         <span class="n">pitch_range</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">type_range</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">pitch_entries</span><span class="p">:</span>
@@ -510,20 +522,25 @@
 
     <span class="c1"># --- Output Shapes: ----------------------------------------------------------------------------------------------</span>
 
-<div class="viewcode-block" id="Propeller.propeller"><a class="viewcode-back" href="../../../components/propeller/propeller.html#components.propeller.propeller.Propeller.propeller">[docs]</a>    <span class="nd">@Part</span>
-    <span class="k">def</span> <span class="nf">propeller</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; The propeller geometry which is visible in the GUI. The attributes used to construct it are below.</span>
+<div class="viewcode-block" id="Propeller.propeller_top"><a class="viewcode-back" href="../../../components/propeller/propeller.html#components.propeller.propeller.Propeller.propeller_top">[docs]</a>    <span class="nd">@Part</span>
+    <span class="k">def</span> <span class="nf">propeller_top</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; The top portion of the propeller geometry which is visible in the GUI. The attributes used to construct it</span>
+<span class="sd">        are below.</span>
 
-<span class="sd">        :rtype: TranslatedShape</span>
+<span class="sd">        :rtype: ScaledShape</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">TranslatedShape</span><span class="p">(</span><span class="n">shape_in</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">propeller_builder</span><span class="p">,</span>
-                               <span class="n">displacement</span><span class="o">=</span><span class="n">Vector</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_direction</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fairing_length</span> <span class="o">*</span> <span class="p">(</span><span class="mf">0.1</span>
-                                                                                             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor</span><span class="o">.</span><span class="n">integration</span>
-                                                                                             <span class="o">==</span> <span class="s1">&#39;puller&#39;</span> <span class="k">else</span> <span class="mf">0.15</span><span class="p">)),</span>
-                                                   <span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">y</span><span class="p">,</span>
-                                                   <span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">z</span><span class="p">),</span>
-                               <span class="n">color</span><span class="o">=</span><span class="n">MyColors</span><span class="o">.</span><span class="n">dark_grey</span><span class="p">,</span>
-                               <span class="n">mesh_deflection</span><span class="o">=</span><span class="mi">10</span> <span class="o">**</span> <span class="o">-</span><span class="mi">4</span><span class="p">)</span>  <span class="c1"># An optimum value between a good quality render &amp; performance</span></div>
+        <span class="k">return</span> <span class="n">ScaledShape</span><span class="p">(</span><span class="n">shape_in</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">propeller_builder</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">reference_point</span><span class="o">=</span><span class="n">XOY</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">MyColors</span><span class="o">.</span><span class="n">dark_grey</span><span class="p">,</span>
+                           <span class="n">mesh_deflection</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Propeller.propeller_bottom"><a class="viewcode-back" href="../../../components/propeller/propeller.html#components.propeller.propeller.Propeller.propeller_bottom">[docs]</a>    <span class="nd">@Part</span>
+    <span class="k">def</span> <span class="nf">propeller_bottom</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; The bottom portion of the propeller geometry which is visible in the GUI. The attributes used to construct</span>
+<span class="sd">        it are below.</span>
+
+<span class="sd">        :rtype: ScaledShape</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">ScaledShape</span><span class="p">(</span><span class="n">shape_in</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">propeller_builder</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reference_point</span><span class="o">=</span><span class="n">XOY</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">MyColors</span><span class="o">.</span><span class="n">dark_grey</span><span class="p">,</span>
+                           <span class="n">mesh_deflection</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Propeller.propeller_fairing"><a class="viewcode-back" href="../../../components/propeller/propeller.html#components.propeller.propeller.Propeller.propeller_fairing">[docs]</a>    <span class="nd">@Part</span>
     <span class="k">def</span> <span class="nf">propeller_fairing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -537,14 +554,13 @@
                                                    <span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">z</span><span class="p">),</span>
                                <span class="n">color</span><span class="o">=</span><span class="n">MyColors</span><span class="o">.</span><span class="n">chill_white</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Propeller.external_shape"><a class="viewcode-back" href="../../../components/propeller/propeller.html#components.propeller.propeller.Propeller.external_shape">[docs]</a>    <span class="nd">@Part</span>
+<div class="viewcode-block" id="Propeller.external_shape"><a class="viewcode-back" href="../../../components/propeller/propeller.html#components.propeller.propeller.Propeller.external_shape">[docs]</a>    <span class="nd">@Attribute</span>
     <span class="k">def</span> <span class="nf">external_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Presents the complete outer propeller shape for wetted area calculation as well as STEP output.</span>
 
-<span class="sd">        :rtype: Compound</span>
+<span class="sd">        :rtype: FusedSolid</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">Compound</span><span class="p">(</span><span class="n">built_from</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">propeller</span><span class="p">],</span> <span class="n">mesh_deflection</span><span class="o">=</span><span class="mi">10</span> <span class="o">**</span> <span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="n">hidden</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                        <span class="n">label</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">propeller_top</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">propeller_bottom</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">propeller_fairing</span></div>
 
     <span class="c1"># --- Propeller Geometry Creation: --------------------------------------------------------------------------------</span>
 
@@ -632,24 +648,38 @@
 
         <span class="c1"># Creating a Circle with equivalent points to the airfoils to be able to Loft to a common surface</span>
         <span class="n">circle_import</span> <span class="o">=</span> <span class="n">Circle</span><span class="p">(</span><span class="n">radius</span><span class="o">=</span><span class="n">geom</span><span class="p">[</span><span class="s1">&#39;chord_dist&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">rotated</span><span class="p">(</span><span class="n">XOY</span><span class="o">.</span><span class="n">Vz_</span><span class="p">,</span> <span class="n">radians</span><span class="p">(</span><span class="mi">90</span><span class="p">),</span> <span class="n">XOY</span><span class="p">)</span>
-        <span class="n">rotated_circle</span> <span class="o">=</span> <span class="n">circle_import</span><span class="o">.</span><span class="n">reversed</span><span class="o">.</span><span class="n">equispaced_points</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scaled_airfoil</span><span class="o">.</span><span class="n">sample_points</span><span class="p">))</span>
-        <span class="n">center_circle</span> <span class="o">=</span> <span class="n">FittedCurve</span><span class="p">(</span><span class="n">points</span><span class="o">=</span><span class="n">rotated_circle</span><span class="p">)</span>
-        <span class="n">airfoils</span> <span class="o">=</span> <span class="p">[</span><span class="n">center_circle</span><span class="p">]</span> <span class="o">+</span> <span class="n">airfoils</span>
+        <span class="n">rotated_circle</span> <span class="o">=</span> <span class="n">circle_import</span><span class="o">.</span><span class="n">reversed</span><span class="o">.</span><span class="n">equispaced_points</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scaled_airfoil</span><span class="o">.</span><span class="n">sample_points</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">center_circle</span> <span class="o">=</span> <span class="n">FittedCurve</span><span class="p">(</span><span class="n">points</span><span class="o">=</span><span class="n">rotated_circle</span><span class="p">,</span> <span class="n">min_degree</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">max_degree</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">continuity</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">tolerance</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
+        <span class="n">support_circle</span> <span class="o">=</span> <span class="n">ScaledCurve</span><span class="p">(</span><span class="n">center_circle</span><span class="p">,</span>
+                                     <span class="n">XOY</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span><span class="o">.</span><span class="n">translated</span><span class="p">(</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">propeller_geometry</span><span class="p">[</span><span class="s1">&#39;spanwise_loc&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span>
+        <span class="n">airfoils</span> <span class="o">=</span> <span class="p">[</span><span class="n">center_circle</span><span class="p">,</span> <span class="n">support_circle</span><span class="p">]</span> <span class="o">+</span> <span class="n">airfoils</span>
 
         <span class="k">return</span> <span class="n">airfoils</span></div>
 
 <div class="viewcode-block" id="Propeller.propeller_builder"><a class="viewcode-back" href="../../../components/propeller/propeller.html#components.propeller.propeller.Propeller.propeller_builder">[docs]</a>    <span class="nd">@Attribute</span><span class="p">(</span><span class="n">private</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">propeller_builder</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; The un-translated version of the main &#39;propeller&#39; part constructed from a Compound between a LoftedSolid \</span>
-<span class="sd">        and its MirroredShape.</span>
+        <span class="sd">&quot;&quot;&quot; The attribute responsible for instantiation of the top and bottom propeller which is constructed from a</span>
+<span class="sd">        LoftedSolid and its MirroredShape.</span>
 
 <span class="sd">        :return: A scale representation of the propeller geometry at the origin</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># TODO Comment here</span>
-        <span class="n">prop_top</span> <span class="o">=</span> <span class="n">LoftedSolid</span><span class="p">(</span><span class="n">profiles</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">airfoil_builder</span><span class="p">)</span>
-        <span class="n">prop_bottom</span> <span class="o">=</span> <span class="n">MirroredShape</span><span class="p">(</span><span class="n">shape_in</span><span class="o">=</span><span class="n">prop_top</span><span class="p">,</span> <span class="n">reference_point</span><span class="o">=</span><span class="n">XOY</span><span class="p">,</span> <span class="n">vector1</span><span class="o">=</span><span class="n">XOY</span><span class="o">.</span><span class="n">x_</span><span class="p">,</span> <span class="n">vector2</span><span class="o">=</span><span class="n">XOY</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
-        <span class="n">propeller</span> <span class="o">=</span> <span class="n">FusedSolid</span><span class="p">(</span><span class="n">shape_in</span><span class="o">=</span><span class="n">prop_top</span><span class="p">,</span> <span class="n">tool</span><span class="o">=</span><span class="n">prop_bottom</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">propeller</span></div>
+
+        <span class="c1"># Defining the displacement vector for the propeller</span>
+        <span class="n">vector</span> <span class="o">=</span> <span class="n">Vector</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_direction</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fairing_length</span> <span class="o">*</span> <span class="p">(</span><span class="mf">0.1</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor</span><span class="o">.</span><span class="n">integration</span>
+                                                                                        <span class="o">==</span> <span class="s1">&#39;puller&#39;</span> <span class="k">else</span> <span class="mf">0.15</span><span class="p">)),</span>
+                       <span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+
+        <span class="c1"># Instantiating the top half of the propeller</span>
+        <span class="n">prop_top_import</span> <span class="o">=</span> <span class="n">LoftedSolid</span><span class="p">(</span><span class="n">profiles</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">airfoil_builder</span><span class="p">)</span>
+
+        <span class="c1"># Mirroring to create the bottom half of the propeller</span>
+        <span class="n">prop_bottom_import</span> <span class="o">=</span> <span class="n">MirroredShape</span><span class="p">(</span><span class="n">shape_in</span><span class="o">=</span><span class="n">prop_top_import</span><span class="p">,</span> <span class="n">reference_point</span><span class="o">=</span><span class="n">XOY</span><span class="p">,</span> <span class="n">vector1</span><span class="o">=</span><span class="n">XOY</span><span class="o">.</span><span class="n">x_</span><span class="p">,</span> <span class="n">vector2</span><span class="o">=</span><span class="n">XOY</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+
+        <span class="c1"># Translating both to the supplied coordinates</span>
+        <span class="n">prop_top</span> <span class="o">=</span> <span class="n">TranslatedShape</span><span class="p">(</span><span class="n">shape_in</span><span class="o">=</span><span class="n">prop_top_import</span><span class="p">,</span> <span class="n">displacement</span><span class="o">=</span><span class="n">vector</span><span class="p">)</span>
+        <span class="n">prop_bottom</span> <span class="o">=</span> <span class="n">TranslatedShape</span><span class="p">(</span><span class="n">shape_in</span><span class="o">=</span><span class="n">prop_bottom_import</span><span class="p">,</span> <span class="n">displacement</span><span class="o">=</span><span class="n">vector</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">prop_top</span><span class="p">,</span> <span class="n">prop_bottom</span></div>
 
 <div class="viewcode-block" id="Propeller.text_label_position"><a class="viewcode-back" href="../../../components/propeller/propeller.html#components.propeller.propeller.Propeller.text_label_position">[docs]</a>    <span class="nd">@Attribute</span><span class="p">(</span><span class="n">private</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">text_label_position</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -657,7 +687,7 @@
 
 <span class="sd">        :rtype: Point</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">tip_airfoil_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">propeller</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">corners</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">tip_airfoil_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">propeller_bottom</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">corners</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">tip_airfoil_pos</span></div>
 
     <span class="c1"># --- Primitives &amp; Private Attributes: ----------------------------------------------------------------------------</span>
@@ -673,7 +703,6 @@
 
 <div class="viewcode-block" id="Propeller.fairing_length"><a class="viewcode-back" href="../../../components/propeller/propeller.html#components.propeller.propeller.Propeller.fairing_length">[docs]</a>    <span class="nd">@Attribute</span>
     <span class="k">def</span> <span class="nf">fairing_length</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># TODO add this into the knowledge base</span>
         <span class="sd">&quot;&quot;&quot; This fairing length provides a realistic proportion w.r.t the motor diameter. This ratio was determined</span>
 <span class="sd">         through use of Adobe Photoshop along with reference images.</span>
 
@@ -693,9 +722,13 @@
         <span class="n">crv</span> <span class="o">=</span> <span class="n">InterpolatedCurve</span><span class="p">(</span><span class="n">points</span><span class="o">=</span><span class="n">points</span><span class="p">,</span> <span class="n">tangents</span><span class="o">=</span><span class="p">[</span><span class="n">XOY</span><span class="o">.</span><span class="n">Vz</span><span class="p">,</span> <span class="kc">None</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">crv</span></div>
 
-    <span class="nd">@Attribute</span><span class="p">(</span><span class="n">private</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="viewcode-block" id="Propeller.propeller_fairing_import"><a class="viewcode-back" href="../../../components/propeller/propeller.html#components.propeller.propeller.Propeller.propeller_fairing_import">[docs]</a>    <span class="nd">@Attribute</span><span class="p">(</span><span class="n">private</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">propeller_fairing_import</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">Revolution</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fairing_curve</span><span class="p">)</span>
+        <span class="sd">&quot;&quot;&quot; Instantiates the propeller fairing by revolving the :attr:`fairing_curve` about the the z-axis</span>
+
+<span class="sd">        :rtype: Revolution</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Revolution</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fairing_curve</span><span class="p">)</span></div>
 
     <span class="nd">@Attribute</span><span class="p">(</span><span class="n">private</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">propeller_fairing_thrust_aligned</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

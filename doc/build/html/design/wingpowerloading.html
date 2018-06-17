@@ -217,7 +217,7 @@ SI Units unless stated.</p>
 <li><strong>pl_target_weight</strong> (<em>float</em>) – The UAV design payload weight in kg</li>
 <li><strong>handlaunch</strong> (<em>bool</em>) – Whether the user requires the UAV to be hand launched</li>
 <li><strong>maximum_lift_coefficient</strong> (<em>list</em>) – A list of three C_lmax’s that the wing is assumed to generate which create     multiple lines on the thrust/wing loading plots.</li>
-<li><strong>AR</strong> (<em>list</em>) – A list of two potential aspect ratios for the design</li>
+<li><strong>aspect_ratio_range</strong> (<em>list</em>) – A list of two potential aspect ratios for the design</li>
 <li><strong>eta_prop</strong> (<em>float</em>) – This is the assumed propeller efficiency.</li>
 <li><strong>eta_motor</strong> (<em>float</em>) – This is the assumed motor efficiency.</li>
 <li><strong>e_factor</strong> (<em>float</em>) – This is the assumed oswald efficiency factor.</li>
@@ -233,9 +233,26 @@ SI Units unless stated.</p>
 </tbody>
 </table>
 <dl class="attribute">
+<dt id="design.wingpowerloading.WingPowerLoading.aspect_ratio_range">
+<code class="descname">aspect_ratio_range</code><a class="reference internal" href="../_modules/design/wingpowerloading.html#WingPowerLoading.aspect_ratio_range"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#design.wingpowerloading.WingPowerLoading.aspect_ratio_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>Derived input that handles defaulting of the aspect_ratio. These values are determined from reference images
+for drones that are handlaunched vs those that are not.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Bounds of Acceptable Aspect Ratios</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="design.wingpowerloading.WingPowerLoading.battery_capacity">
 <code class="descname">battery_capacity</code><a class="reference internal" href="../_modules/design/wingpowerloading.html#WingPowerLoading.battery_capacity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#design.wingpowerloading.WingPowerLoading.battery_capacity" title="Permalink to this definition">¶</a></dt>
-<dd><p>This attribute calculates the required battery capacity, based on the payload mass, flight computer, and          flight performance characteristics.</p>
+<dd><p>This attribute calculates the required battery capacity, based on the payload mass, flight computer, and          flight performance characteristics. Battery efficiency is assumed to be 100 percent.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />

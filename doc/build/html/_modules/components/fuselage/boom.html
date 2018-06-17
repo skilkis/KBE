@@ -204,8 +204,8 @@
 <span class="n">__author__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Şan Kılkış&quot;</span><span class="p">,</span> <span class="s2">&quot;Nelson Johnson&quot;</span><span class="p">]</span>
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Boom&quot;</span><span class="p">]</span>
 
-<span class="c1">#  TODO add validator in inputs?</span>
-<span class="c1">#  TODO Commenting, it is in documentation</span>
+<span class="c1"># TODO Commenting, it is in documentation</span>
+<span class="c1"># TODO organize and add labels</span>
 
 
 <div class="viewcode-block" id="Boom"><a class="viewcode-back" href="../../../components/fuselage/boom.html#components.fuselage.boom.Boom">[docs]</a><span class="k">class</span> <span class="nc">Boom</span><span class="p">(</span><span class="n">ExternalBody</span><span class="p">):</span>
@@ -228,8 +228,8 @@
 <span class="sd">    :type ply_number: int</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">wing_in</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">Wing</span><span class="p">())</span>
-    <span class="n">tail_in</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">CompoundStabilizer</span><span class="p">())</span>
+    <span class="n">wing_in</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">Wing</span><span class="p">(),</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="n">Wing</span><span class="p">))</span>
+    <span class="n">tail_in</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">CompoundStabilizer</span><span class="p">(),</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="n">CompoundStabilizer</span><span class="p">))</span>
     <span class="n">diameter_factor</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.75</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Between</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">))</span>
 
     <span class="c1">#: Changes the number of ply&#39;s of carbon fiber http://www.ijera.com/papers/Vol4_issue5/Version%202/J45025355.pdf</span>

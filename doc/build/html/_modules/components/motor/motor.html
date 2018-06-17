@@ -232,7 +232,13 @@
     <span class="n">motor_name</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;Not Specified&#39;</span><span class="p">)</span>
     <span class="n">integration</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;pusher&#39;</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">OneOf</span><span class="p">([</span><span class="s2">&quot;pusher&quot;</span><span class="p">,</span> <span class="s2">&quot;puller&quot;</span><span class="p">]))</span>
     <span class="n">position</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">Position</span><span class="p">(</span><span class="n">Point</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)))</span>
-    <span class="n">database_path</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;MOTOR_DATA_DIR&#39;</span><span class="p">])</span>
+
+<div class="viewcode-block" id="Motor.database_path"><a class="viewcode-back" href="../../../components/motor.html#components.motor.Motor.database_path">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">database_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; The default absolute directory of the Motor Database</span>
+
+<span class="sd">        :rtype: unicode &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;MOTOR_DATA_DIR&#39;</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="Motor.label"><a class="viewcode-back" href="../../../components/motor.html#components.motor.Motor.label">[docs]</a>    <span class="nd">@Input</span>
     <span class="k">def</span> <span class="nf">label</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -311,7 +317,6 @@
 <span class="sd">        :rtype: Point</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">internal_shape</span><span class="o">.</span><span class="n">cog</span></div>
-
 
 <div class="viewcode-block" id="Motor.diameter"><a class="viewcode-back" href="../../../components/motor.html#components.motor.Motor.diameter">[docs]</a>    <span class="nd">@Attribute</span>
     <span class="k">def</span> <span class="nf">diameter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

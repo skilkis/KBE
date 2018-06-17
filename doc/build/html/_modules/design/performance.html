@@ -196,15 +196,18 @@
 <span class="kn">from</span> <span class="nn">parapy.core</span> <span class="k">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">components</span> <span class="k">import</span> <span class="n">Motor</span><span class="p">,</span> <span class="n">Propeller</span><span class="p">,</span> <span class="n">Wing</span><span class="p">,</span> <span class="n">Battery</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">matplotlib.patches</span> <span class="k">as</span> <span class="nn">ptch</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="n">pi</span><span class="p">,</span> <span class="n">sqrt</span>
 <span class="kn">from</span> <span class="nn">directories</span> <span class="k">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="k">import</span> <span class="n">interp1d</span>
+<span class="kn">from</span> <span class="nn">user</span> <span class="k">import</span> <span class="n">MyColors</span><span class="p">,</span> <span class="n">rgb</span>
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;San Kilkis&quot;</span><span class="p">]</span>
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Performance&quot;</span><span class="p">]</span>
 
 <span class="c1"># TODO Comment code, it is in documentation</span>
+<span class="c1"># TODO Make some attributes private</span>
 
 
 <div class="viewcode-block" id="Performance"><a class="viewcode-back" href="../../design/performance.html#design.performance.Performance">[docs]</a><span class="k">class</span> <span class="nc">Performance</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
@@ -212,7 +215,7 @@
 <span class="sd">    fulfill the mission requirements.</span>
 
 <span class="sd">    :param wing_in: The Wing input instantiation.</span>
-<span class="sd">    :type wing_in: str</span>
+<span class="sd">    :type wing_in: Wing</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">__initargs__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;parasitic_drag&quot;</span><span class="p">]</span>
@@ -351,6 +354,19 @@
                   <span class="s1">&#39; safety factor has been added to the stall speed and returned&#39;</span> <span class="o">%</span> <span class="n">calc_speed</span>
         <span class="k">return</span> <span class="n">calc_speed</span> <span class="k">if</span> <span class="n">safe</span> <span class="k">else</span> <span class="n">safe_speed</span></div>
 
+<div class="viewcode-block" id="Performance.maximum_velocity"><a class="viewcode-back" href="../../design/performance.html#design.performance.Performance.maximum_velocity">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">maximum_velocity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Computes the maximum flight velocity utilizing the burst-power curve of the motor.</span>
+
+<span class="sd">        :return: Maximum velocity in SI meter per second [m/s]</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">diff</span> <span class="o">=</span> <span class="p">[</span><span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">power_available_burst</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">power_required</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">speed_range</span><span class="p">))]</span>
+        <span class="n">idx_m</span> <span class="o">=</span> <span class="n">diff</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">diff</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_range</span><span class="p">[</span><span class="n">idx_m</span><span class="p">]</span></div>
+
 <div class="viewcode-block" id="Performance.power_spline"><a class="viewcode-back" href="../../design/performance.html#design.performance.Performance.power_spline">[docs]</a>    <span class="nd">@Attribute</span>
     <span class="k">def</span> <span class="nf">power_spline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Creates a linear-spline of the power required curve to be able to call any velocity value.</span>
@@ -401,12 +417,18 @@
         <span class="c1"># Plotting Velocities</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stall_speed</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-.&#39;</span><span class="p">,</span>
                     <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$V_{\mathrm</span><span class="si">{stall}</span><span class="s1">}=</span><span class="si">%1.2f</span><span class="s1">$&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">stall_speed</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">endurance_velocity</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-.&#39;</span><span class="p">,</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">endurance_velocity</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">rgb</span><span class="p">(</span><span class="n">MyColors</span><span class="o">.</span><span class="n">deep_green</span><span class="p">),</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-.&#39;</span><span class="p">,</span>
                     <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$V_{\mathrm</span><span class="si">{end}</span><span class="s1">}=</span><span class="si">%1.2f</span><span class="s1">$&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">endurance_velocity</span><span class="p">)</span>
-
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cruise_velocity</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">endurance_velocity</span><span class="p">:</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cruise_velocity</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-.&#39;</span><span class="p">,</span>
                         <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$V_{\mathrm</span><span class="si">{cruise}</span><span class="s1">}=</span><span class="si">%1.2f</span><span class="s1">$&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">cruise_velocity</span><span class="p">)</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">maximum_velocity</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">rgb</span><span class="p">(</span><span class="n">MyColors</span><span class="o">.</span><span class="n">deep_purple</span><span class="p">),</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-.&#39;</span><span class="p">,</span>
+                    <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$V_{\mathrm</span><span class="si">{max}</span><span class="s1">}=</span><span class="si">%1.2f</span><span class="s1">$&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">maximum_velocity</span><span class="p">)</span>
+
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+        <span class="n">stall_zone</span> <span class="o">=</span> <span class="n">ptch</span><span class="o">.</span><span class="n">Rectangle</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">stall_speed</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor_in</span><span class="o">.</span><span class="n">power</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">stall_zone</span><span class="p">)</span>
 
         <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$V_{\mathrm</span><span class="si">{TAS}</span><span class="s1">}$ [m/s]&#39;</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Power [W]&#39;</span><span class="p">)</span>
@@ -415,6 +437,8 @@
         <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
         <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fname</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;USER_DIR&#39;</span><span class="p">],</span> <span class="s1">&#39;plots&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">.pdf&#39;</span> <span class="o">%</span> <span class="n">fig</span><span class="o">.</span><span class="n">get_label</span><span class="p">()),</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;pdf&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="s1">&#39;Figure Plotted and Saved&#39;</span>
+
+    <span class="c1"># TODO Add specific points to the L/D plot and add attributes</span>
 
     <span class="nd">@Attribute</span>
     <span class="k">def</span> <span class="nf">plot_lift_to_drag</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

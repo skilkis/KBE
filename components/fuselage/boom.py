@@ -11,8 +11,8 @@ from math import radians
 __author__ = ["Şan Kılkış", "Nelson Johnson"]
 __all__ = ["Boom"]
 
-#  TODO add validator in inputs?
-#  TODO Commenting, it is in documentation
+# TODO Commenting, it is in documentation
+# TODO organize and add labels
 
 
 class Boom(ExternalBody):
@@ -35,8 +35,8 @@ class Boom(ExternalBody):
     :type ply_number: int
     """
 
-    wing_in = Input(Wing())
-    tail_in = Input(CompoundStabilizer())
+    wing_in = Input(Wing(), validator=val.Instance(Wing))
+    tail_in = Input(CompoundStabilizer(), validator=val.Instance(CompoundStabilizer))
     diameter_factor = Input(0.75, validator=val.Between(0.5, 1.0))
 
     #: Changes the number of ply's of carbon fiber http://www.ijera.com/papers/Vol4_issue5/Version%202/J45025355.pdf

@@ -376,12 +376,14 @@ Possible entries:
 <dl class="attribute">
 <dt id="definitions.ExternalBody.wetted_area">
 <code class="descname">wetted_area</code><a class="reference internal" href="_modules/definitions.html#ExternalBody.wetted_area"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#definitions.ExternalBody.wetted_area" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the total wetted area of the external_part to be able to perform drag and weight estimations</p>
+<dd><p>Returns the total wetted area of the external_part to be able to perform drag and weight estimations
+accurate to 3 decimal places. This is accomplished by subtracting the total shell area from the area of the
+intersected faces to obtain a fairly accurate wetted area.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Total wetted area of the external_part in SI sq. meter</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Total wetted area of the external_part in SI sq. meter [m^2]</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
 </tr>

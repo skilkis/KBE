@@ -15,7 +15,6 @@ from directories import *
 __all__ = ["Battery", "show_primitives"]
 
 
-# TODO remove error message since it is already handled by a validator
 # TODO Add power requirement
 
 
@@ -48,12 +47,9 @@ class Battery(Component):
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'batteryIII.png')
 
     sizing_target = Input('capacity', validator=val.OneOf(["capacity", "weight"]))
-    # TODO link this to custom validator function
-
     sizing_value = Input(500, validator=val.Positive())
     max_width = Input(0.15, validator=val.Positive())
-    max_height = Input(0.1, validator=val.Positive())  # Suggested to use a wider-battery, max_height = max_width / 2 for fuselage aerodynamics
-    # position = Input(Position(Point(0, 0, 0)))
+    max_height = Input(0.1, validator=val.Positive())
     label = Input('LiPo Battery')
 
     @Attribute
@@ -162,11 +158,6 @@ class Battery(Component):
         """
         min_dimension = min(self.width, self.height)
         return min_dimension / 2.0
-
-    @Attribute(private=True)
-    def type_errormsg(self):
-        error_str = "%s is not a valid weight_target. Valid inputs: 'weight', 'capacity'" % self.sizing_target
-        raise TypeError(error_str)
 
     # --- Output Solid: -----------------------------------------------------------------------------------------------
 

@@ -199,9 +199,6 @@
 <span class="c1"># Required ParaPy Modules</span>
 <span class="kn">from</span> <span class="nn">parapy.core</span> <span class="k">import</span> <span class="o">*</span>
 
-<span class="c1"># Necessary package for importing Excel Files</span>
-<span class="kn">import</span> <span class="nn">xlrd</span>
-
 <span class="c1"># Importing Necessary Classes</span>
 <span class="kn">from</span> <span class="nn">wingpowerloading</span> <span class="k">import</span> <span class="n">WingPowerLoading</span>
 <span class="kn">from</span> <span class="nn">weightestimator</span> <span class="k">import</span> <span class="o">*</span>
@@ -209,7 +206,7 @@
 <span class="kn">from</span> <span class="nn">designinput</span> <span class="k">import</span> <span class="n">valid_payloads</span>
 <span class="kn">from</span> <span class="nn">components</span> <span class="k">import</span> <span class="n">EOIR</span>
 
-<span class="n">__author__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Şan Kılkış&quot;</span><span class="p">]</span>
+<span class="n">__author__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Şan Kılkış&quot;</span><span class="p">,</span> <span class="s2">&quot;Nelson Johnson&quot;</span><span class="p">]</span>
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ParameterGenerator&quot;</span><span class="p">]</span>
 
 <span class="c1">#  TODO comments, documentation complete</span>
@@ -244,6 +241,7 @@
             <span class="c1"># TODO Add custom dialog here</span>
             <span class="nb">print</span> <span class="n">actual_weight</span>
 
+    <span class="c1"># TODO add icons and labels for weight_estimator as well as wingpowerloading</span>
     <span class="nd">@Part</span>
     <span class="k">def</span> <span class="nf">weightestimator</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Here we instantiate the class I weight estimation using the inputs.</span>
@@ -305,6 +303,10 @@
     <span class="k">def</span> <span class="nf">wing_loading</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1">#  Here we pull the UAV&#39;s wing loading from the design point.</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">wingpowerloading</span><span class="o">.</span><span class="n">designpoint</span><span class="p">[</span><span class="s1">&#39;wing_loading&#39;</span><span class="p">]</span>
+
+    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">motor_power</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">((</span><span class="mf">9.81</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">power_loading</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_mtow</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">wingpowerloading</span><span class="o">.</span><span class="n">eta_prop</span>
 
     <span class="nd">@Attribute</span>
     <span class="k">def</span> <span class="nf">rho</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

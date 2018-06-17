@@ -208,7 +208,6 @@
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Battery&quot;</span><span class="p">,</span> <span class="s2">&quot;show_primitives&quot;</span><span class="p">]</span>
 
 
-<span class="c1"># TODO remove error message since it is already handled by a validator</span>
 <span class="c1"># TODO Add power requirement</span>
 
 
@@ -241,12 +240,9 @@
     <span class="n">__icon__</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;ICON_DIR&#39;</span><span class="p">],</span> <span class="s1">&#39;batteryIII.png&#39;</span><span class="p">)</span>
 
     <span class="n">sizing_target</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;capacity&#39;</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">OneOf</span><span class="p">([</span><span class="s2">&quot;capacity&quot;</span><span class="p">,</span> <span class="s2">&quot;weight&quot;</span><span class="p">]))</span>
-    <span class="c1"># TODO link this to custom validator function</span>
-
     <span class="n">sizing_value</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">())</span>
     <span class="n">max_width</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.15</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">())</span>
-    <span class="n">max_height</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">())</span>  <span class="c1"># Suggested to use a wider-battery, max_height = max_width / 2 for fuselage aerodynamics</span>
-    <span class="c1"># position = Input(Position(Point(0, 0, 0)))</span>
+    <span class="n">max_height</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">())</span>
     <span class="n">label</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;LiPo Battery&#39;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Battery.component_type"><a class="viewcode-back" href="../../../components/battery.html#components.battery.Battery.component_type">[docs]</a>    <span class="nd">@Attribute</span>
@@ -355,11 +351,6 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">min_dimension</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">min_dimension</span> <span class="o">/</span> <span class="mf">2.0</span></div>
-
-    <span class="nd">@Attribute</span><span class="p">(</span><span class="n">private</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">type_errormsg</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">error_str</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> is not a valid weight_target. Valid inputs: &#39;weight&#39;, &#39;capacity&#39;&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">sizing_target</span>
-        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">error_str</span><span class="p">)</span>
 
     <span class="c1"># --- Output Solid: -----------------------------------------------------------------------------------------------</span>
 

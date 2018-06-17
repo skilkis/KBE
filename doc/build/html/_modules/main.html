@@ -210,7 +210,7 @@
     <span class="c1"># Although it is infinite bro it is simply flipping back and forth on the stability plot, that is why we stop it and</span>
     <span class="c1"># for now that is good enough behavior, most designs converge to a single value!</span>
 
-<span class="c1">#  TODO MAKE final_cg NON LAZY OR USER SEES WRONG TAIL!!!!!!!!!!!!!!!!!!</span>
+<span class="c1">#  TODO MAKE final_cg NON LAZY OR USER SEES WRONG TAIL!!!!!!!!!!!!!!!!!! (Add listener to input cg)</span>
 <span class="c1">#  TODO Make sure vt weight is correct in final weight for changes in the GUI ......</span>
 <span class="c1">#  TODO cont&#39;d .....I tried changing # plys on right wing in GUI but cg stayed on x ax</span>
 
@@ -220,23 +220,34 @@
 <span class="c1">#  TODO FIX PLAYLOAD MASS IN FINAL MTOW TO CORRESPOND WITH WING/ TAIL SIZING &amp; CLASS I!!!!!!!!!!!</span>
 
 <span class="c1">#  TODO add tkMessagebox browser to payloads</span>
-<span class="c1">#  TODO Add listener? for browse airfoils in lifting surface, or all to invalidate attribute</span>
 
 <span class="c1"># TODO Add instance validator for each class input (check out performance.py for example)</span>
 <span class="c1"># TODO Make a nice visual CG representation of both c.g. before and after run</span>
 
-<span class="c1"># TODO change input endurance to be in hours instead of seconds (more convenient)</span>
 <span class="c1">#  TODO every class should have print statement saying that it has been instantiated into the console</span>
 
 <span class="c1">#  TODO delete all example and irrelevant documents &amp; data files in KBE folder and rename folder with original name.</span>
-
-<span class="c1"># TODO Auto-writer function for the AVL-wrapper so La. Rocca can run the scripts w/o errors!!!!!!!!!!!!!!!!!!!!!</span>
 
 <span class="c1"># TODO move everything except for main.py into a \bin folder to clean up directory</span>
 
 <span class="c1"># TODO Add UML in doc</span>
 
 <span class="c1"># TODO bug found in eletronics, number of engines messes up the Fuse Operation</span>
+
+<span class="c1"># TODO Determine CL_max from the maximum lift coefficient from the XFOIL database</span>
+
+<span class="c1"># TODO Fix color of booms</span>
+
+
+<span class="c1"># TODO Check that all plots are actually output, and consider trigerring all plots with an attribute</span>
+
+<span class="c1"># TODO internal shape of electronics module is wrong</span>
+
+<span class="c1"># TODO Add inheritance diagram to documentation</span>
+
+<span class="c1"># TODO add validator Class IntersectedShapes on Fuselage</span>
+
+<span class="c1"># TODO Re-organize main folder add icons</span>
 
 <span class="kn">from</span> <span class="nn">design</span> <span class="k">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">parapy.core</span> <span class="k">import</span> <span class="o">*</span>
@@ -246,6 +257,7 @@
 <span class="kn">from</span> <span class="nn">directories</span> <span class="k">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">definitions</span> <span class="k">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="n">sin</span><span class="p">,</span> <span class="n">radians</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">Iterable</span>
 <span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">xlwt</span>
 
@@ -304,11 +316,12 @@
                            <span class="n">C_mac</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="o">.</span><span class="n">moment_coef_control</span><span class="p">,</span>
                            <span class="n">Cla_w</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="o">.</span><span class="n">lift_coef_vs_alpha</span><span class="p">,</span>
                            <span class="n">delta_xcg</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
-                           <span class="n">configuration</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">configuration</span><span class="p">)</span>
+                           <span class="n">configuration</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">configuration</span><span class="p">,</span>
+                           <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Stability Parameters&#39;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="UAV.final_cg"><a class="viewcode-back" href="../main.html#main.UAV.final_cg">[docs]</a>    <span class="nd">@Attribute</span>
     <span class="k">def</span> <span class="nf">final_cg</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; This parameter utilizes a loop to find a converged final Center of Gravity that is stable, this step is</span>
+        <span class="sd">&quot;&quot;&quot; This attribute utilizes a loop to find a converged final Center of Gravity that is stable, this step is</span>
 <span class="sd">        necessary since at run-time the tail is not yet made and the scissor plot only calculates stability for a</span>
 <span class="sd">        tail-less aircraft! &quot;&quot;&quot;</span>
         <span class="n">old_cg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cg</span>
@@ -326,48 +339,53 @@
             <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;cg&#39;</span><span class="p">,</span> <span class="n">new_cg</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">new_cg</span></div>
 
-    <span class="nd">@Attribute</span>
+<div class="viewcode-block" id="UAV.write_step"><a class="viewcode-back" href="../main.html#main.UAV.write_step">[docs]</a>    <span class="nd">@Attribute</span>
     <span class="k">def</span> <span class="nf">write_step</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">children</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_children</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot; This attribute utilizes a function :method:`part_fetcher` to loop through all children in the main file,</span>
+<span class="sd">        and collect the :attr:`external_shape` from these children. These are then fed to the :class:`STEPWriter` which</span>
+<span class="sd">        creates the .stp file in the user directory under KBE/user/model.</span>
+
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">def</span> <span class="nf">part_fetcher</span><span class="p">(</span><span class="n">external_shape</span><span class="p">,</span> <span class="n">label</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot; Collects all &#39;TopoDS_Shapes&#39; from the fed external_shape and returns in a list</span>
+
+<span class="sd">            :param external_shape: The current external shape in the loop</span>
+<span class="sd">            :param label: The label currently assigned to the child, this is used to name the part in the .stp file</span>
+<span class="sd">            :return: List of properly labeled ParaPy default shapes that have the &#39;TopoDS_Shapes&#39; attribute.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="n">part_bin</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">external_shape</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">body</span> <span class="ow">in</span> <span class="n">external_shape</span><span class="p">:</span>
+                    <span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="s1">&#39;TopoDS_Shape&#39;</span><span class="p">):</span>
+                        <span class="n">duplicate</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">body</span><span class="p">)</span>
+                        <span class="nb">setattr</span><span class="p">(</span><span class="n">duplicate</span><span class="p">,</span> <span class="s1">&#39;label&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">_</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">counter</span><span class="p">))</span>
+                        <span class="n">part_bin</span> <span class="o">=</span> <span class="n">part_bin</span> <span class="o">+</span> <span class="p">[</span><span class="n">duplicate</span><span class="p">]</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="nb">print</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> is not suitable for export, please verify geometry&#39;</span> <span class="o">%</span> <span class="n">label</span>
+            <span class="k">else</span><span class="p">:</span>  <span class="c1"># Condition to preserve compatibility with older class definitions</span>
+                <span class="n">duplicate</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">external_shape</span><span class="p">)</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="n">duplicate</span><span class="p">,</span> <span class="s1">&#39;label&#39;</span><span class="p">,</span> <span class="n">label</span><span class="p">)</span>
+                <span class="n">part_bin</span> <span class="o">=</span> <span class="n">part_bin</span> <span class="o">+</span> <span class="p">[</span><span class="n">duplicate</span><span class="p">]</span>
+
+            <span class="k">return</span> <span class="n">part_bin</span>
 
         <span class="c1"># Creating dummy lists to store all external_bodies</span>
         <span class="n">output</span> <span class="o">=</span> <span class="p">[]</span>
 
+        <span class="c1"># Looping through all children</span>
+        <span class="n">children</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_children</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">_child</span> <span class="ow">in</span> <span class="n">children</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">_child</span><span class="p">,</span> <span class="s1">&#39;external_shape&#39;</span><span class="p">):</span>
+                <span class="n">output</span> <span class="o">=</span> <span class="n">output</span> <span class="o">+</span> <span class="n">part_fetcher</span><span class="p">(</span><span class="n">_child</span><span class="o">.</span><span class="n">external_shape</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">_child</span><span class="o">.</span><span class="n">label</span><span class="p">)</span>
 
-                <span class="c1"># Special-Case to manually add the left wing due to visualization errors</span>
-                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">_child</span><span class="p">,</span> <span class="n">Wing</span><span class="p">):</span>
-
-                    <span class="c1"># Copying the left wing object and changing label for tree organization in a STEP Viewer</span>
-                    <span class="n">left_wing</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">_child</span><span class="o">.</span><span class="n">left_wing</span><span class="p">)</span>
-                    <span class="nb">setattr</span><span class="p">(</span><span class="n">left_wing</span><span class="p">,</span> <span class="s1">&#39;label&#39;</span><span class="p">,</span> <span class="s1">&#39;Left Wing&#39;</span><span class="p">)</span>
-                    <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">left_wing</span><span class="p">)</span>
-
-                    <span class="c1"># Copying the right wing object and changing label for tree organization in a STEP Viewer</span>
-                    <span class="n">right_wing</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">_child</span><span class="o">.</span><span class="n">solid</span><span class="p">)</span>
-                    <span class="nb">setattr</span><span class="p">(</span><span class="n">right_wing</span><span class="p">,</span> <span class="s1">&#39;label&#39;</span><span class="p">,</span> <span class="s1">&#39;Right Wing&#39;</span><span class="p">)</span>
-                    <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">right_wing</span><span class="p">)</span>
-
-                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">_child</span><span class="p">,</span> <span class="n">Propeller</span><span class="p">):</span>
-
-                    <span class="c1"># Copying the Propeller and changing the label for tree organization in the STEP Viewer</span>
-                    <span class="n">prop_copy</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">_child</span><span class="o">.</span><span class="n">propeller</span><span class="p">)</span>
-                    <span class="nb">setattr</span><span class="p">(</span><span class="n">prop_copy</span><span class="p">,</span> <span class="s1">&#39;label&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">_child</span><span class="o">.</span><span class="n">label</span><span class="p">)</span>
-                    <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">prop_copy</span><span class="p">)</span>
-
-                    <span class="c1"># Copying the Propeller Hub and changing the label for tree organization in the STEP Viewer</span>
-                    <span class="n">hub_copy</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">_child</span><span class="o">.</span><span class="n">propeller_fairing</span><span class="p">)</span>
-                    <span class="nb">setattr</span><span class="p">(</span><span class="n">hub_copy</span><span class="p">,</span> <span class="s1">&#39;label&#39;</span><span class="p">,</span> <span class="s1">&#39;Propeller Hub&#39;</span><span class="p">)</span>
-                    <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">hub_copy</span><span class="p">)</span>
-
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="c1"># Appending the current shape to the array to be exported</span>
-                    <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_child</span><span class="o">.</span><span class="n">external_shape</span><span class="p">)</span>
-
-        <span class="n">writer</span> <span class="o">=</span> <span class="n">STEPWriter</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;M&#39;</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;USER_DIR&#39;</span><span class="p">],</span> <span class="s1">&#39;model&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">.stp&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">))</span>
+        <span class="n">writer</span> <span class="o">=</span> <span class="n">STEPWriter</span><span class="p">(</span><span class="n">nodes</span><span class="o">=</span><span class="n">output</span><span class="p">,</span> <span class="n">schema</span><span class="o">=</span><span class="s1">&#39;AP214DIS&#39;</span><span class="p">,</span>
+                            <span class="n">filename</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;USER_DIR&#39;</span><span class="p">],</span> <span class="s1">&#39;model&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">.stp&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">))</span>
         <span class="n">writer</span><span class="o">.</span><span class="n">write</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">writer</span>
+        <span class="k">return</span> <span class="n">writer</span></div>
 
     <span class="nd">@Part</span>
     <span class="k">def</span> <span class="nf">center_of_gravity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -421,7 +439,7 @@
     <span class="c1"># TODO fix motor placement to be better looking</span>
     <span class="nd">@Part</span>
     <span class="k">def</span> <span class="nf">motor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">Motor</span><span class="p">(</span><span class="n">target_power</span><span class="o">=</span><span class="p">(</span><span class="mf">9.81</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">power_loading</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">weight_mtow</span><span class="p">,</span>
+        <span class="k">return</span> <span class="n">Motor</span><span class="p">(</span><span class="n">target_power</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">motor_power</span><span class="p">,</span>
                      <span class="n">integration</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">motor_integration</span><span class="p">,</span>
                      <span class="n">position</span><span class="o">=</span><span class="n">translate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="o">.</span><span class="n">position</span><span class="p">,</span>
                                         <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="mf">1.2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="o">.</span><span class="n">root_chord</span><span class="p">,</span>

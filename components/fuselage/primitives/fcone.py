@@ -7,6 +7,7 @@ from parapy.core import *
 
 # Required Modules
 from fframe import *
+from mframe import *
 from directories import *
 from math import sqrt
 
@@ -23,8 +24,7 @@ class FCone(GeomBase):
     :type support_frame: FFrame
     """
 
-    # TODO cleanup init args and inputs, write documentation(comments, it is already in documentation)
-    # TODO ADD VALIDATORS TO INPUTS!
+    # TODO write documentation(comments, it is already in documentation)
     #  TODO finish commenting, it is in documentation
 
     __initargs__ = ["support_frame", "side_tangent", "top_tangent", "direction", "tip_point_z"]
@@ -33,9 +33,9 @@ class FCone(GeomBase):
     # A parameter for debugging, turns the visibility of miscellaneous parts ON/OFF
     __show_primitives = False  # type: bool
 
-    support_frame = Input(FFrame(width=1.0, height=0.5))  #
-    side_tangent = Input(Vector(-0.88, -0.65, 0))
-    top_tangent = Input(Vector(0.8851351164623547, 0, 0.46533410105554684))
+    support_frame = Input(FFrame(width=1.0, height=0.5), validator=val.InstanceList((FFrame, MFrame)))  #
+    side_tangent = Input(Vector(-0.88, -0.65, 0), validator=val.Instance(Vector))
+    top_tangent = Input(Vector(0.8851351164623547, 0, 0.46533410105554684), validator=val.Instance(Vector))
     direction = Input('x_', validator=val.OneOf(["x", "x_"]))
     slenderness_ratio = Input(1, validator=val.Range(0, 1.5))  # Nose-cone length / frame diagonal
     transparency = Input(None)

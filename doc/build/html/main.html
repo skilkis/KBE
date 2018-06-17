@@ -223,7 +223,7 @@ all in the top level of the tree.</p>
 <dl class="attribute">
 <dt id="main.UAV.final_cg">
 <code class="descname">final_cg</code><a class="reference internal" href="_modules/main.html#UAV.final_cg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#main.UAV.final_cg" title="Permalink to this definition">¶</a></dt>
-<dd><p>This parameter utilizes a loop to find a converged final Center of Gravity that is stable, this step is
+<dd><p>This attribute utilizes a loop to find a converged final Center of Gravity that is stable, this step is
 necessary since at run-time the tail is not yet made and the scissor plot only calculates stability for a
 tail-less aircraft!</p>
 </dd></dl>
@@ -282,6 +282,22 @@ calculates the center of gravity w.r.t the origin Point(0, 0, 0)</p>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A dictionary of component weights as well as the center of gravity fieldnames = ‘WEIGHTS’, ‘CG’</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="main.UAV.write_step">
+<code class="descname">write_step</code><a class="reference internal" href="_modules/main.html#UAV.write_step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#main.UAV.write_step" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute utilizes a function <a href="#id1"><span class="problematic" id="id2">:method:`part_fetcher`</span></a> to loop through all children in the main file,
+and collect the <code class="xref py py-attr docutils literal notranslate"><span class="pre">external_shape</span></code> from these children. These are then fed to the <code class="xref py py-class docutils literal notranslate"><span class="pre">STEPWriter</span></code> which
+creates the .stp file in the user directory under KBE/user/model.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"></td>
 </tr>
 </tbody>
 </table>
