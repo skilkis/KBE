@@ -133,7 +133,7 @@ class DesignInput(Base):
         setattr(self, 'handlaunch', [True if str(i[1]) == 'True' else False for i in ws._cell_values
                                      if i[0] == 'handlaunch'][0])
 
-        self.configuration.reset_slot()  # Necessary step to fire dependent evaluation
+        self.reset_slot('configuration')  # Necessary step to fire dependent evaluation
 
         return 'Inputs have been overwritten from the supplied Excel File'
 

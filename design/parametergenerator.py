@@ -12,7 +12,7 @@ from weightestimator import *
 from directories import *
 from designinput import valid_payloads
 from components import EOIR
-from definitions import error_window
+from definitions import warn_window
 
 __author__ = ["Şan Kılkış", "Nelson Johnson"]
 __all__ = ["ParameterGenerator"]
@@ -53,7 +53,7 @@ class ParameterGenerator(Base):
         available this """
         if self.weight_target is 'payload':
             actual_weight = EOIR(target_weight=self.target_value).weight
-            error_window("No payload matching a weight of %1.1f [kg] were found, instead a value"
+            warn_window("No payload matching a weight of %1.1f [kg] were found, instead a value"
                          "of %1.1f [kg] will be used from now on" % (self.target_value, actual_weight))
             print actual_weight
 
