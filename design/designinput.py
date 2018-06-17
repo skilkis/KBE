@@ -13,6 +13,7 @@ import xlrd
 from directories import *
 import webbrowser
 import os
+from definitions import error_window
 
 __author__ = ["Şan Kılkış"]
 __all__ = ["DesignInput", "valid_payloads"]
@@ -92,6 +93,20 @@ class DesignInput(Base):
     #: Sets the design point of the UAV to be hand-launchable
     handlaunch = Input(True, validator=val.Instance(bool))
 
+    @target_value.on_slot_change
+    def weight_checker(self):
+        """ Validates the user-input weight to make sure it is within the bounds of the project and the region with
+        the highest confidence interval for Class I """
+        if self.weight_target is 'payload':
+            if self.target_value > 5.0:
+                error_window('The provided payload target exceeds the scope of this project (only light UAVs < 20 '
+                             '[kg] represent the design space')
+        else:
+            if self.target_value < 1.0 or self.target_value > 20.0:
+                error_window('The provided MTOW exceeds the scope of this project (only light UAVs < 20 [kg] '
+                             'represent the design space')
+        return None
+
     @Attribute
     def get_userinput(self):
         """ An attribute, that when evaluated, reads the input excel file present in the working directory and updates
@@ -117,6 +132,8 @@ class DesignInput(Base):
         setattr(self, 'configuration', [str(i[1]) for i in ws._cell_values if i[0] == 'configuration'][0])
         setattr(self, 'handlaunch', [True if str(i[1]) == 'True' else False for i in ws._cell_values
                                      if i[0] == 'handlaunch'][0])
+
+        # TODO Invalidate dependents after loading
 
         return 'Inputs have been overwritten from the supplied Excel File'
 

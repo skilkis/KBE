@@ -18,6 +18,7 @@ from avl import Geometry, Surface, Section, Point, Spacing, Session, Case, FileA
 
 __author__ = "Nelson Johnson"
 __all__ = ["Wing"]
+__settable__ = (True if __name__ == '__main__' else False)
 
 
 class Wing(ExternalBody, LiftingSurface):
@@ -65,10 +66,10 @@ class Wing(ExternalBody, LiftingSurface):
 
 #   This block of code contains the inputs. ########--------------------------------------------------------------------
     #: Below is the required wing loading from the class I weight estimation.
-    wing_loading = Input(100.0, validator=val.Positive())
+    wing_loading = Input(100.0, validator=val.Range(0, 300))
 
     #: Below is the required MTOW from the class I weight estimation.
-    weight_mtow = Input(25.0, validator=val.Positive())
+    weight_mtow = Input(25.0, validator=val.Range(0, 30))
 
     #: The stall speed of the wing from the class I weight estimation.
     stall_speed = Input(8.0, validator=val.Positive())
@@ -95,6 +96,9 @@ class Wing(ExternalBody, LiftingSurface):
 
     #: Changes the number of ply's of carbon fiber http://www.ijera.com/papers/Vol4_issue5/Version%202/J45025355.pdf
     ply_number = Input(5, validator=val.Instance(int))
+
+    #: Fixes the wing in place in order to use it as the datum for other parts
+    position = Input(Position(XOY), settable=False)
 
 #  This block of Attributes calculates the planform parameters. ########------------------------------------------------
 

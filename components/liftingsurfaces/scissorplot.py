@@ -12,6 +12,7 @@ from directories import *
 
 __author__ = "Nelson Johnson"
 __all__ = ["ScissorPlot"]
+__settable__ = (True if __name__ == '__main__' else False)
 
 #  TODO MAKE SURE THAT THE ASPECT RATIO IS CONSISTENT WHEN CHANGED IN OTHER PLACES OF THE GUI. SEE TODO IN MAIN!!!!!!!!
 # TODO Make sure that the Input excel file passes the argument 'configuration' correctly
@@ -116,9 +117,16 @@ class ScissorPlot(Base):
     SM = Input(0.05, validator=val.Positive())
 
     #: Below is the HT aspect ratio.
-    AR_h = Input(5.0, validator=val.Positive())
+    @Input
+    def AR_h(self):
+        """ Utilizes a relation based on reference pictures to obtain a ratio of the tail aspect ratio as a function of
+         the main-wing """
+        return self.AR / 20.0 + 4.0
 
     #: Below is the assumed HT span efficiency factor.
+    # @Input
+    # def e_h(self):
+    #     return
     e_h = Input(0.8, validator=val.Positive())
 
     #: Below is the speed ratio for a conventional tail aircraft.
@@ -193,12 +201,11 @@ class ScissorPlot(Base):
         """
         if self.configuration is 'conventional':
             cl_h = -0.35*(self.AR_h**(1.0/3.0))
-            print 'I am conventional'
         elif self.configuration is 'canard':
-            cl_h = 1
-            # = 0.35 * (self.AR_h ** (1.0 / 3.0))
-            #  Canard assumed to be full moving with Cl max = 1 in slow speed case.
+            cl_h = 1  # Canard assumed to be full moving with Cl max = 1 in slow speed case.
             #  This assumption allows the scissor plot lines to intersect and create a design space.
+        else:
+            cl_h = -0.35 * (self.AR_h ** (1.0 / 3.0))
         return cl_h
 
     @Attribute

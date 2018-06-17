@@ -11,6 +11,8 @@ invalid directory will raise errors
 
 import os
 import sys
+from Tkinter import *
+import tkMessageBox
 
 __all__ = ["get_dir", "DIRS", "os", "sys"]
 
@@ -37,34 +39,34 @@ def is_frozen():
 
 
 def get_dir(folder_name=None):
-    """get_dir returns the top-level directory of the package as an absolute path if :attr:`folder_name` is not
-    specified [1]. If an exiting sub directory is specified as `str` into the field :attr:`folder_name` then the
-    return of get_dir will be absolute path to this sub directory [2]. Usage with file names inside a directory is also
-    possible, see example below [3]
-
-    :param folder_name: The name of a folder, file, or relative path
-    :type folder_name: basestring
-
-    :return: The absolute path to the root directory or, if specified, to a sub directory within the root
-    :rtype: unicode
-
-
-    [1] Obtaining Root Directory:
-
-    >>> get_dir() # This will return the absolute path to root directory
-    C:/Python27/KBE
-
-    [2] Obtaining a Sub-Directory:
-
-    >>> get_dir('icons') # This will return the absolute path to the subdirectory /icons
-    C:/Python27/KBE\icons
-
-    [3] Obtaining File-Directory:
-
-    >>> get_dir('user/userinput.xlsx') # This will return the absolute path to the file userinput.xlsx
-    C:/Python27/KBE\user\userinput.xlsx
-
-    """
+    # """get_dir returns the top-level directory of the package as an absolute path if :attr:`folder_name` is not
+    # specified [1]. If an exiting sub directory is specified as `str` into the field :attr:`folder_name` then the
+    # return of get_dir will be absolute path to this sub directory [2]. Usage with file names inside a directory is also
+    # possible, see example below [3]
+    #
+    # :param folder_name: The name of a folder, file, or relative path
+    # :type folder_name: basestring
+    #
+    # :return: The absolute path to the root directory or, if specified, to a sub directory within the root
+    # :rtype: unicode
+    #
+    #
+    # [1] Obtaining Root Directory:
+    #
+    # >>> get_dir() # This will return the absolute path to root directory
+    # C:/Python27/KBE
+    #
+    # [2] Obtaining a Sub-Directory:
+    #
+    # >>> get_dir('icons') # This will return the absolute path to the subdirectory /icons
+    # C:/Python27/KBE\icons
+    #
+    # [3] Obtaining File-Directory:
+    #
+    # >>> get_dir('user/userinput.xlsx') # This will return the absolute path to the file userinput.xlsx
+    # C:/Python27/KBE\user\userinput.xlsx
+    #
+    # """
 
     encoding = sys.getfilesystemencoding()  # A variable that returns encoding of the user's machine
 
@@ -82,14 +84,25 @@ def get_dir(folder_name=None):
             if os.path.isdir(subdir) or os.path.isfile(subdir):  # Check to see if folder_name is a valid path or file
                 return subdir
             else:
-            #  TODO Properly distinguish between folder and file type, a folder named '2.0' will be treated as a file
+                # TODO (TBD) Properly distinguish between folder and file type
                 if subdir.find('.') != -1:  # Error handling to see if user was looking for a file or directory
+                    msg = ('Specified file %s does not exist' % subdir)
+                    root = Tk()
+                    root.withdraw()
+                    tkMessageBox.showerror("Warning", msg)
+                    root.destroy()
                     raise NameError('Specified file %s does not exist' % subdir)
                 else:
+                    msg = ('Specified directory %s does not exist' % subdir)
+                    root = Tk()
+                    root.withdraw()
+                    tkMessageBox.showerror("Warning", msg)
+                    root.destroy()
                     raise NameError('Specified directory %s does not exist' % subdir)
         else:
-            raise TypeError('Please enter a valid string or unicode path into folder_name, %s is %s'
-                            % (folder_name, type(folder_name)))
+            msg = ('Please enter a valid string or unicode path into folder_name, %s is %s' % (folder_name,
+                                                                                               type(folder_name)))
+            raise TypeError(msg)
 
 
 DIRS = {'ICON_DIR': get_dir('icons'),

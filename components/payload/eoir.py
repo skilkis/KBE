@@ -3,8 +3,6 @@
 
 
 # TODO Comment the whole code, it is in documentation
-# TODO add database as input w/ custom validator function
-#  TODO add validator on camera_name and/or add the browser!!
 
 from parapy.geom import *  # \
 from parapy.core import *  # / Required ParaPy Modules
@@ -19,6 +17,10 @@ from my_csv2dict import *
 
 # Custom Colors
 from user import *
+
+# GUI Browser
+from Tkinter import *
+import tkFileDialog
 
 __all__ = ["EOIR"]
 __author__ = "Şan Kılkış"
@@ -45,6 +47,27 @@ class EOIR(ExternalBody):
 
     target_weight = Input(0.2, validator=val.Positive())
     camera_name = Input('Not Specified')
+
+    @Input
+    def browse_motors(self):
+        """ Allows the user to easily choose amongst available cameras with a GUI File-Browser.
+
+        :return: Sets the `cameras_name` to the value chosen in the GUI Browser
+        """
+        root = Tk()
+        root.withdraw()
+        path = tkFileDialog.askopenfilename(initialdir=DIRS['EOIR_DATA_DIR'], title="Select Camera",
+                                            filetypes=(("Camera Data Files", "*.csv"), ("All Files", "*.*")))
+        root.destroy()
+
+        valid_dir = DIRS['EOIR_DATA_DIR'].replace('\\', '/')
+        if path.find(valid_dir) is -1:
+            error_window("Custom Cameras must be placed in the pre-allocated directory")
+            return 'Camera selection failed, please invalidate and run-again'
+        else:
+            if len(path) > 0:
+                setattr(self, 'camera_name', str(path.split('.')[-2].split('/')[-1]))  # Selects the motor_name
+            return 'Camera has been successfully chosen, invalidate to run-again'
 
     @Input
     def label(self):
@@ -159,7 +182,6 @@ class EOIR(ExternalBody):
                                                    self.position.y, self.position.z - self.exposed_height),
                                color=MyColors.light_grey)
 
-    # TODO Investigate if making this a compound improves performance
     @Part
     def camera_body(self):
         return TranslatedShape(shape_in=self.camera_body_import,

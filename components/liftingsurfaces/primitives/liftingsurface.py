@@ -8,14 +8,13 @@ from parapy.core import *           # / Required ParaPy Module
 from parapy.geom import *           # / Required ParaPy Module
 from math import *                  # / Python math operations.
 from directories import *           # / Project Directory
-# from collections import namedtuple  # / Allows creation of named tuples similar to Point
 from Tkinter import *
 import tkFileDialog
-import tkMessageBox
-import time
+from definitions import error_window, warn_window
 
 __author__ = "Nelson Johnson"
 __all__ = ["LiftingSurface"]
+__settable__ = (True if __name__ == '__main__' else False)
 
 
 class LiftingSurface(GeomBase):
@@ -95,6 +94,14 @@ class LiftingSurface(GeomBase):
     #: edge becomes unswept. In this case, with taper ratio < 1, the TE becomes forward swept.
     offset = Input(None)
 
+    @offset.on_slot_change
+    def sweep_validator(self):
+        if abs(self.le_sweep) >= 20.0 and self.offset is not None:
+            warn_window('Selected sweep was too high and not necessary for this flight regime, it has been set'
+                        'back to the default value')
+            setattr(self, 'offset', None)
+        return None
+
     @Input
     def browse_airfoils(self):
         """ Allows the user to easily choose amongst available airfoils with a GUI File-Browser.
@@ -102,23 +109,20 @@ class LiftingSurface(GeomBase):
         :return: Sets the inputs `airfoil_type` and `airfoil_choice` above to the value chosen in the GUI Browser
         """
         root = Tk()
-        root.update()
+        root.withdraw()
         path = tkFileDialog.askopenfilename(initialdir=DIRS['AIRFOIL_DIR'], title="Select Airfoil",
                                             filetypes=(("Airfoil Data Files", "*.dat"), ("All Files", "*.*")))
         root.destroy()
 
         valid_dir = DIRS['AIRFOIL_DIR'].replace('\\', '/')
         if path.find(valid_dir) is -1:
-            root = Tk()
-            root.update()
-            tkMessageBox.showerror("Directory Error", "Custom airfoils must be placed in the pre-allocated directory")
-            root.destroy()
-            print 'Test Failed'
+            error_window("Custom airfoils must be placed in the pre-allocated directory")
+            return 'Airfoil selection failed, please invalidate and run-again'
         else:
             if len(path) > 0:
                 setattr(self, 'airfoil_choice', str(path.split('.')[-2].split('/')[-1]))  # Selects the airfoil name
                 setattr(self, 'airfoil_type', str(path.split('.')[-2].split('/')[-2]))  # Selects the folder-name
-        return 'Airfoil has been successfully chosen, invalidate to run-again'
+            return 'Airfoil has been successfully chosen, invalidate to run-again'
 
     #: Boolean below allows the MAC curve to be shown on the wing when changed in the GUI to False.
     hide_mac = Input(True, validator=val.Instance(bool))
