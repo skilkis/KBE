@@ -41,7 +41,7 @@ class Fuselage(ExternalBody):
 
     #: Type of containers at each station, possible entries (nose, container, motor, tail)
     #: :type: str list
-    compartment_type = Input([None, None], validator=val.Instance(list))
+    compartment_type = Input(['', ''], validator=val.Instance(list))
     # compartment_type = Input()
 
     #: Parts that the fuselage will be sized for, these must correspond to the entries given in `compartment_type`

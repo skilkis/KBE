@@ -7,6 +7,7 @@ from parapy.core import *  # / Required ParaPy Modules
 from definitions import *
 from components.liftingsurfaces import CompoundStabilizer, Wing
 from math import radians
+from user import MyColors
 
 __author__ = ["Şan Kılkış", "Nelson Johnson"]
 __all__ = ["Boom"]
@@ -42,6 +43,17 @@ class Boom(ExternalBody):
     #: Changes the number of ply's of carbon fiber http://www.ijera.com/papers/Vol4_issue5/Version%202/J45025355.pdf
     ply_number = Input(3, validator=val.Instance(int))
 
+    color = Input(MyColors.dark_grey, validator=val.Instance(tuple))
+
+    @Attribute
+    def center_of_gravity(self):
+        """ Retrives the Center of Gravity location of the combined booms in SI meter [m]
+
+        :rtype: Point """
+        half_cg = self.tail_boom.solids[0].cog
+
+        return Point(half_cg.x, 0, half_cg.z)
+
     @Attribute
     def component_type(self):
         return 'boom'
@@ -50,7 +62,9 @@ class Boom(ExternalBody):
     def wing_end_point(self):
         """ Defines the termination point of the boom-extrude.
 
-        :return: Fused Shape
+        :return: Point corresponding to intersection between the :attr:`boom_plane` defined in
+        :class:`CompoundStabilizer` and the :attr:`front_spar_line` defined in :class:`Wing`
+        tail
         :rtype: Fused
         """
         srf = self.tail_in.boom_plane
@@ -79,6 +93,7 @@ class Boom(ExternalBody):
 
     @Attribute(private=True)
     def booms_import(self):
+        """ Responsible for """
         _unrotated = ExtrudedSolid(island=self.boom_tail_curve, distance=self.boom_length)
         _left_boom = MirroredShape(shape_in=_unrotated, reference_point=Point(0, 0, 0), vector1=Vector(1, 0, 0),
                                    vector2=Vector(0, 0, 1))
@@ -87,6 +102,11 @@ class Boom(ExternalBody):
 
     @Part
     def tail_boom(self):
+        """ The main geometry output of this class
+
+        :return: A joined set of tail-booms
+        :rtype: RotatedShape
+        """
         return RotatedShape(shape_in=self.booms_import,
                             rotation_point=self.tail_end_point,
                             vector=Vector(0, -1, 0),
@@ -96,8 +116,8 @@ class Boom(ExternalBody):
     def external_shape(self):
         """ This part is the external shape of the boom.
 
-        :return: Fused Shape
-        :rtype: Fused
+        :return: Presents the two booms for use in wetted area calculation as well as goemetry export
+        :rtype: ScaledShape
         """
         return ScaledShape(shape_in=self.tail_boom, reference_point=self.tail_boom.position, factor=1, hidden=True,
                            label=self.label)
@@ -106,8 +126,7 @@ class Boom(ExternalBody):
     def internal_shape(self):
         """ This overwrites the Part defined in the class `Component` an internal_shape w/ a Dummy Value
 
-        :return: Fused Shape
-        :rtype: Fused
+        :rtype: None
         """
         return None
 

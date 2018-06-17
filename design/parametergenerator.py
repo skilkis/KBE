@@ -53,8 +53,8 @@ class ParameterGenerator(Base):
         available this """
         if self.weight_target is 'payload':
             actual_weight = EOIR(target_weight=self.target_value).weight
-            error_window("No payload matching a weight of %1.1f were found, instead a value"
-                         "of %1.1f will be used from now on" % (self.target_value, actual_weight))
+            error_window("No payload matching a weight of %1.1f [kg] were found, instead a value"
+                         "of %1.1f [kg] will be used from now on" % (self.target_value, actual_weight))
             print actual_weight
 
     @Part

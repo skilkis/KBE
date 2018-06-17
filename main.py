@@ -15,14 +15,7 @@
 
 #  TODO MAKE final_cg NON LAZY OR USER SEES WRONG TAIL!!!!!!!!!!!!!!!!!! (Add listener to input cg)
 #  TODO Make sure vt weight is correct in final weight for changes in the GUI ......
-#  TODO cont'd .....I tried changing # plys on right wing in GUI but cg stayed on x ax
 
-# TODO Add high-sweep warning as per the assignment description
-
-
-#  TODO FIX PLAYLOAD MASS IN FINAL MTOW TO CORRESPOND WITH WING/ TAIL SIZING & CLASS I!!!!!!!!!!!
-
-#  TODO add tkMessagebox browser to payloads
 
 # TODO Add instance validator for each class input (check out performance.py for example)
 # TODO Make a nice visual CG representation of both c.g. before and after run
@@ -36,10 +29,6 @@
 # TODO Add UML in doc
 
 # TODO bug found in eletronics, number of engines messes up the Fuse Operation
-
-# TODO Determine CL_max from the maximum lift coefficient from the XFOIL database
-
-# TODO Fix color of booms
 
 
 # TODO Check that all plots are actually output, and consider trigerring all plots with an attribute
@@ -70,9 +59,7 @@ import matplotlib.pyplot as plt
 
 class UAV(DesignInput):
     """  This class will generate UAV aircraft. It inherits from 'DesignInput.py' so that the input requirements are
-    all in the top level of the tree.
-
-    """
+    all in the top level of the tree. """
 
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'plane.png')
 
@@ -111,14 +98,13 @@ class UAV(DesignInput):
 
     @Part
     def stability(self):
-        #  TODO Make Function for AR_h, e_h
         return ScissorPlot(x_cg=self.cg.x,
                            x_ac=self.wing.aerodynamic_center.x,
                            x_lemac=self.wing.lemac.x,
                            mac=self.wing.mac_length,
                            AR=self.params.aspect_ratio,
                            e=self.params.wingpowerloading.e_factor,
-                           e_h=0.8,
+                           e_h=self.params.wingpowerloading.e_factor,
                            Cl_w=self.wing.lift_coef_control,
                            C_mac=self.wing.moment_coef_control,
                            Cla_w=self.wing.lift_coef_vs_alpha,
@@ -216,7 +202,6 @@ class UAV(DesignInput):
     def center_of_gravity(self):
         return VisualCG(vis_cog=self.cg)
 
-    # TODO Make sure that distance is AC to AC
     @Part
     def stabilizer(self):
         """ Instantiates a Compound Stabilizer by assuming that the location is simply a translation along the x-axis
@@ -236,7 +221,7 @@ class UAV(DesignInput):
                                   wing_semi_span=self.wing.semi_span,
                                   lhc=self.stability.lhc,
                                   configuration=self.configuration,
-                                  aspect_ratio=5.0,
+                                  aspect_ratio=self.stability.AR_h,
                                   taper=0.35,
                                   twist=0.0,
                                   label='Tail')

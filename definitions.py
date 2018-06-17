@@ -11,14 +11,23 @@ import tkMessageBox
 
 
 __author__ = "Şan Kılkış"
-__all__ = ["Component", "ExternalBody", "VisualCG", "error_window"]
+__all__ = ["Component", "ExternalBody", "VisualCG", "error_window", "warn_window"]
 
 
 def error_window(msg):
     """ Provides a simple easy way to bring up an error message, useful for reducing clutter around error-message calls
     within the code """
     root = Tk()
-    root.update()
+    root.withdraw()
+    tkMessageBox.showerror("Warning", msg)
+    root.destroy()
+
+
+def warn_window(msg):
+    """ Provides a simple easy way to bring up an warning message, useful for reducing clutter around error-message
+    calls within the code """
+    root = Tk()
+    root.withdraw()
     tkMessageBox.showwarning("Warning", msg)
     root.destroy()
 
@@ -32,6 +41,7 @@ class VisualCG(GeomBase):
     # TODO add header here and create a nice looking visual CG
     #  TODO add validators to 2 inputs
 
+    #
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'battery.png')
     __initargs__ = ["vis_cog"]
     # TODO Find a proper icon here

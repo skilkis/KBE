@@ -152,11 +152,11 @@ class WingPowerLoading(Base):
         if isinstance(self.aspect_ratio_range, list):
                 for _ratio in self.aspect_ratio_range:
                     if _ratio < 10:
-                        error_window('%d will result in too of an low aspect ratio and thus high induced drag, '
+                        error_window('AR=%d will result in too of an low aspect ratio and thus high induced drag, '
                                      'consider increasing' % _ratio)
                     elif _ratio > 20:
-                        error_window('%d will result in too high of anaspect ratio and thus high structural loads due '
-                                     'to increased wing bending moments, consider decreasing' % _ratio)
+                        error_window('AR=%d will result in too high of anaspect ratio and thus high structural loads '
+                                     'due to increased wing bending moments, consider decreasing' % _ratio)
         else:
             raise TypeError('The provided input into :param:`aspect_ratio` is not valid')
 
@@ -164,13 +164,13 @@ class WingPowerLoading(Base):
     def lift_coef_validator(self):
         """ Validator for the compartment_type """
         if isinstance(self.aspect_ratio_range, list):
-                for _coef in self.aspect_ratio_range:
+                for _coef in self.maximum_lift_coefficient:
                     if _coef < 1 and self.handlaunch:
-                        error_window('%d is too low and will result in either too large of a wing surface, or too'
+                        error_window('C_L=%d is too low and will result in either too large of a wing surface, or too'
                                      'high of a launch speed to hand launch. Consider increasing' % _coef)
                     elif _coef > 1.7:
-                        error_window('%d This lift coefficient is very difficult to produce without high lift devices'
-                                     'at Low Reynolds numbers decreasing' % _coef)
+                        error_window('C_L=%d This lift coefficient is very difficult to produce without high lift '
+                                     'devices at Low Reynolds numbers decreasing' % _coef)
         else:
             raise TypeError('The provided input into :param:`maximum_lift_coefficient` is not valid')
 

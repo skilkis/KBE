@@ -12,11 +12,12 @@ from my_csv2dict import *
 from directories import *
 from os import listdir
 from user import MyColors
+from Tkinter import *
+import tkFileDialog
 
 __author__ = ["Şan Kılkış"]
 __all__ = ["Motor"]
 
-#  TODO Validator on motor_name, position, database_path
 #  TODO commenting, it is in documentation
 
 
@@ -27,6 +28,8 @@ class Motor(Component):
 
     :param target_power: This is the motor target power.
     :type target_power: float
+
+    :param browse_motors: Allows the user to easily choose amongst available motors with a GUI File-Browser.
     """
 
     __initargs__ = ["target_power", "motor_name", "position"]
@@ -36,9 +39,33 @@ class Motor(Component):
     __show_primitives = False
 
     target_power = Input(100.0, validator=val.Positive())
-    motor_name = Input('Not Specified')
+
+    motor_name = Input('Not Specified', validator=val.Instance(str))
+
     integration = Input('pusher', validator=val.OneOf(["pusher", "puller"]))
-    position = Input(Position(Point(0, 0, 0)))
+
+    position = Input(Position(Point(0, 0, 0)), validator=val.Instance(Position))
+
+    @Input
+    def browse_motors(self):
+        """ Allows the user to easily choose amongst available motors with a GUI File-Browser.
+
+        :return: Sets the `motor_name` to the value chosen in the GUI Browser
+        """
+        root = Tk()
+        root.withdraw()
+        path = tkFileDialog.askopenfilename(initialdir=DIRS['MOTOR_DATA_DIR'], title="Select Motor",
+                                            filetypes=(("Motor Data Files", "*.csv"), ("All Files", "*.*")))
+        root.destroy()
+
+        valid_dir = DIRS['MOTOR_DATA_DIR'].replace('\\', '/')
+        if path.find(valid_dir) is -1:
+            error_window("Custom motors must be placed in the pre-allocated directory")
+            return 'Motor selection failed, please invalidate and run-again'
+        else:
+            if len(path) > 0:
+                setattr(self, 'motor_name', str(path.split('.')[-2].split('/')[-1]))  # Selects the motor_name
+            return 'Motor has been successfully chosen, invalidate to run-again'
 
     @Attribute
     def database_path(self):
@@ -65,7 +92,7 @@ class Motor(Component):
             selected_motor_specs = [num[1] for num in self.motor_database if num[0] == self.motor_selector][0]
             selected_motor_specs['name'] = self.motor_selector
         else:
-            selected_motor_specs = read_csv(self.motor_name, DIRS['EOIR_DATA_DIR'])
+            selected_motor_specs = read_csv(self.motor_name, DIRS['MOTOR_DATA_DIR'])
             selected_motor_specs['name'] = self.motor_name
         return selected_motor_specs
 
