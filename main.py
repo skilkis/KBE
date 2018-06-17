@@ -130,7 +130,7 @@ class UAV(DesignInput):
 
     @Attribute
     def final_cg(self):
-        """ This parameter utilizes a loop to find a converged final Center of Gravity that is stable, this step is
+        """ This attribute utilizes a loop to find a converged final Center of Gravity that is stable, this step is
         necessary since at run-time the tail is not yet made and the scissor plot only calculates stability for a
         tail-less aircraft! """
         old_cg = self.cg
@@ -150,8 +150,20 @@ class UAV(DesignInput):
 
     @Attribute
     def write_step(self):
+        """ This attribute utilizes a function :method:`part_fetcher` to loop through all children in the main file,
+        and collect the :attr:`external_shape` from these children. These are then fed to the :class:`STEPWriter` which
+        creates the .stp file in the user directory under KBE/user/model.
 
-        def part_fecther(external_shape, label):
+        :return:
+        """
+
+        def part_fetcher(external_shape, label):
+            """ Collects all 'TopoDS_Shapes' from the fed external_shape and returns in a list
+
+            :param external_shape: The current external shape in the loop
+            :param label: The label currently assigned to the child, this is used to name the part in the .stp file
+            :return: List of properly labeled ParaPy default shapes that have the 'TopoDS_Shapes' attribute.
+            """
             part_bin = []
             counter = 0
             if isinstance(external_shape, Iterable):
@@ -177,37 +189,7 @@ class UAV(DesignInput):
         children = self.get_children()
         for _child in children:
             if hasattr(_child, 'external_shape'):
-                output = output + part_fecther(_child.external_shape, label=_child.label)
-
-
-                # Special-Case to manually add the left wing due to visualization errors
-                # if isinstance(_child, Wing):
-                #
-                #     # Copying the left wing object and changing label for tree organization in a STEP Viewer
-                #     left_wing = copy.copy(_child.left_wing)
-                #     setattr(left_wing, 'label', 'Left Wing')
-                #     output.append(left_wing)
-                #
-                #     # Copying the right wing object and changing label for tree organization in a STEP Viewer
-                #     right_wing = copy.copy(_child.solid)
-                #     setattr(right_wing, 'label', 'Right Wing')
-                #     output.append(right_wing)
-                #
-                # elif isinstance(_child, Propeller):
-                #
-                #     # Copying the Propeller and changing the label for tree organization in the STEP Viewer
-                #     prop_copy = copy.copy(_child.propeller)
-                #     setattr(prop_copy, 'label', '%s' % _child.label)
-                #     output.append(prop_copy)
-                #
-                #     # Copying the Propeller Hub and changing the label for tree organization in the STEP Viewer
-                #     hub_copy = copy.copy(_child.propeller_fairing)
-                #     setattr(hub_copy, 'label', 'Propeller Hub')
-                #     output.append(hub_copy)
-                #
-                # else:
-                #     # Appending the current shape to the array to be exported
-                #     output.append(_child.external_shape)
+                output = output + part_fetcher(_child.external_shape, label=_child.label)
 
         writer = STEPWriter(nodes=output, schema='AP214DIS',
                             filename=os.path.join(DIRS['USER_DIR'], 'model', '%s.stp' % self.label))
