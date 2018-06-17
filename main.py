@@ -22,7 +22,7 @@
 
 #  TODO every class should have print statement saying that it has been instantiated into the console
 
-#  TODO delete all example and irrelevant documents & data files in KBE folder and rename folder with original name.
+# TODO delete all example and irrelevant documents & data files in KBE folder and rename folder with original name.
 
 # TODO move everything except for main.py into a \bin folder to clean up directory
 
@@ -35,15 +35,13 @@
 
 # TODO internal shape of electronics module is wrong
 
-# TODO Add inheritance diagram to documentation
 
 # TODO add validator Class IntersectedShapes on Fuselage
 
-# TODO Re-organize main folder add icons
-
-# TODO fix flying booms when wing is very large MTOW = 20 kg
 
 # TODO Change fuselage fit-width to actual dimension to be able to be a certain fraction of camera size
+
+# TODO AIRFOIL BROWSER STOPPED WORKING!!!!
 
 from design import *
 from parapy.core import *
@@ -84,7 +82,7 @@ class UAV(DesignInput):
         necessary since at run-time the tail is not yet made and the scissor plot only calculates stability for a
         tail-less aircraft! """
         old_cg = self.cg
-        print 'Run-Time CG = %1.4f' % old_cg.x
+        print 'Run-Time CG = %1.4f \n' % old_cg.x
         new_cg = self.weight_and_balance()['CG']
         loop = 0
         xcg_cache = []
@@ -178,7 +176,7 @@ class UAV(DesignInput):
         :return: Zero-Lift Drag Coefficient
         :rtype: Float
         """
-        # TODO Incorporate drag estimation into the knowledge base
+
         skin_friction_coef = 0.0055
         area_dict = self.sum_area()
         reference_area = area_dict['REFERENCE']
@@ -324,9 +322,6 @@ class UAV(DesignInput):
                                                      + self.wing.aerodynamic_center.x,
                                                      'z', self.stabilizer.stabilizer_h.semi_span *
                                                      sin(radians(self.wing.dihedral))),
-                                                     # sin(radians(self.wing.dihedral) +
-                                                     #     self.wing.front_spar_line.point1.z -
-                                                     #     self.wing.position.z)),
                                   required_planform_area=self.wing.planform_area * self.stability.shs_req,
                                   wing_planform_area=self.wing.planform_area,
                                   wing_mac_length=self.wing.mac_length,

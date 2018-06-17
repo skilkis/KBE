@@ -378,7 +378,6 @@ class WingPowerLoading(Base):
                    't': t,
                    'p_req_drag': p_req_drag,
                    'capacity': capacity}
-            print 'Optimal Cruise Speed ', v_opt
 
         else:
             cl_opt = sqrt(3 * self.zero_lift_drag * pi * self.designpoint['aspect_ratio'] * self.e_factor)
@@ -397,7 +396,6 @@ class WingPowerLoading(Base):
                    't': t,
                    'p_req_drag': p_req_drag,
                    'capacity': capacity}
-            print 'Optimal Endurance Speed ', v_opt
         return out
 
     @Attribute
