@@ -44,7 +44,7 @@ class VisualCG(GeomBase):
     #  TODO add validators to 2 inputs
 
     #
-    __icon__ = os.path.join(DIRS['ICON_DIR'], 'battery.png')
+    __icon__ = os.path.join(DIRS['ICON_DIR'], 'cg.png')
     __initargs__ = ["vis_cog"]
     # TODO Find a proper icon here
     vis_cog = Input()
