@@ -59,6 +59,8 @@ import xlwt
 import matplotlib.pyplot as plt
 
 
+# TODO (TBD) Visualize performance in the GUI through the addition of bar-charts utilizing ParaPy Boxes
+
 class UAV(DesignInput):
     """  This class will generate UAV aircraft. It inherits from 'DesignInput.py' so that the input requirements are
     all in the top level of the tree. """
@@ -75,44 +77,6 @@ class UAV(DesignInput):
         :return: Initial Estimate C.G. location (x, y, z) in SI meter [m]
         :rtype: Point """
         return self.weight_and_balance()['CG']
-
-    @Part
-    def params(self):
-        #  Here we instantiate the parameter generator, passing down the inputs from the User input file.
-        return ParameterGenerator(pass_down=['performance_goal',
-                                             'goal_value',
-                                             'weight_target',
-                                             'target_value',
-                                             'payload_type',
-                                             'configuration',
-                                             'handlaunch',
-                                             'portable'],
-                                  label='Design Parameters')
-
-    @Part
-    def wing(self):
-        return Wing(wing_loading=self.params.wing_loading,
-                    weight_mtow=self.params.weight_mtow,
-                    stall_speed=self.params.stall_speed,
-                    rho=self.params.rho,
-                    aspect_ratio=self.params.aspect_ratio,
-                    label='Main Wing')
-
-    @Part
-    def stability(self):
-        return ScissorPlot(x_cg=self.cg.x,
-                           x_ac=self.wing.aerodynamic_center.x,
-                           x_lemac=self.wing.lemac.x,
-                           mac=self.wing.mac_length,
-                           AR=self.params.aspect_ratio,
-                           e=self.params.wingpowerloading.e_factor,
-                           e_h=self.params.wingpowerloading.e_factor,
-                           Cl_w=self.wing.lift_coef_control,
-                           C_mac=self.wing.moment_coef_control,
-                           Cla_w=self.wing.lift_coef_vs_alpha,
-                           delta_xcg=0.1,  # Decreasing for a slightly smaller tail
-                           configuration=self.configuration,
-                           label='Stability Parameters')
 
     @Attribute
     def final_cg(self):
@@ -200,6 +164,151 @@ class UAV(DesignInput):
         writer.write()
         return writer
 
+    @Attribute
+    def weights(self):
+        return self.weight_and_balance()['WEIGHTS']
+
+    @Attribute
+    def parasite_drag(self):
+        """ Utilizes Raymer's Equivalent skin-friction drag method to compute Zero-Lift Drag. The utilized value used
+        for the skin_friction_coef is taken from subsonic, light propeller aircraft
+
+        http://www.fzt.haw-hamburg.de/pers/Scholz/HOOU/AircraftDesign_13_Drag.pdf
+
+        :return: Zero-Lift Drag Coefficient
+        :rtype: Float
+        """
+        # TODO Incorporate drag estimation into the knowledge base
+        skin_friction_coef = 0.0055
+        area_dict = self.sum_area()
+        reference_area = area_dict['REFERENCE']
+        wetted_area = area_dict['WETTED']['total']
+        if wetted_area and reference_area is not 0:
+            parasite_drag = skin_friction_coef * (wetted_area / reference_area)
+        else:
+            parasite_drag = None
+        return parasite_drag
+
+    @Attribute
+    def areas(self):
+        return self.sum_area()
+
+    @Attribute
+    def write_excel(self):
+
+        ignore_list = ['children', 'mesh_deflection', 'browse_airfoils', '_local_bbox_bounds', '_bbox_bounds', 'hidden']
+        hdr_font = xlwt.Font()
+        hdr_font.name = 'Times New Roman'
+        hdr_font.bold = True
+
+        hdr_style = xlwt.XFStyle()
+        hdr_style.font = hdr_font
+
+        wb = xlwt.Workbook()
+        ws0 = wb.add_sheet('Weight & Balance')
+
+        headers = ['Parameter', 'Value', 'Units']
+        for i in range(0, len(headers)):
+            ws0.write(1, i+1, headers[i], hdr_style)
+
+        row = 3  # Filling in data for the weights w/ skip
+        ws0.write(row, 1, 'Weights', hdr_style)
+        for key, value in self.weights.items():
+            row = row + 1
+            ws0.write(row, 1, key)
+            ws0.write(row, 2, value)
+            ws0.write(row, 3, '[kg]')
+
+        row = row + 2  # Skipping two rows to have a row seperating Weights and C.G
+        ws0.write(row, 1, 'C.G. Location (X, Y, Z)', hdr_style)
+        ws0.write(row, 2, '(%1.2f, %1.2f, %1.2f)' % (self.cg.x, self.cg.y, self.cg.z))
+        ws0.write(row, 3, '[m]')
+
+        row = row + 2
+        ws0.write(row, 1, 'Areas', hdr_style)
+        for key, value in self.areas['WETTED'].items():
+            row = row + 1
+            ws0.write(row, 1, key)
+            ws0.write(row, 2, value)
+            ws0.write(row, 3, '[m^2]')
+
+        row = 1
+        ws0.write(row, 5, 'Wing', hdr_style)
+        ws0.write(row, 6, self.wing.airfoil_choice)
+        for key in self.wing._slots:
+            if key not in ignore_list and key.find('plot') == -1 and key.find('avl') == -1:
+                value = getattr(self.wing, key)
+                if isinstance(value, float) or isinstance(value, int) and not isinstance(value, basestring):
+                    row = row + 1
+                    ws0.write(row, 5, key)
+                    ws0.write(row, 6, value)
+
+        row = 1
+        ws0.write(row, 8, 'Stability', hdr_style)
+        for key in self.stability._slots:
+            if key not in ignore_list and key.find('plot') == -1 and key.find('avl') == -1:
+                value = getattr(self.stability, key)
+                if isinstance(value, float) or isinstance(value, int):
+                    row = row + 1
+                    ws0.write(row, 8, key)
+                    ws0.write(row, 9, value)
+
+        row = 1
+        ws0.write(row, 11, 'Stabilizer', hdr_style)
+        for key in self.stabilizer._slots:
+            if key not in ignore_list and key.find('plot') == -1 and key.find('avl') == -1:
+                value = getattr(self.stabilizer, key)
+                if isinstance(value, float) or isinstance(value, int):
+                    row = row + 1
+                    ws0.write(row, 11, key)
+                    ws0.write(row, 12, value)
+
+        wb.save(os.path.join(DIRS['USER_DIR'], 'results', 'output.xls'))
+        return 'Excel File Written'
+
+    # Geometry Constraints
+    @Attribute(private=True)
+    def pad_distance(self):
+        return self.fuselage.pad_factor * self.wing.root_chord
+
+    @Part
+    def params(self):
+        #  Here we instantiate the parameter generator, passing down the inputs from the User input file.
+        return ParameterGenerator(pass_down=['performance_goal',
+                                             'goal_value',
+                                             'weight_target',
+                                             'target_value',
+                                             'payload_type',
+                                             'configuration',
+                                             'handlaunch',
+                                             'portable'],
+                                  label='Design Parameters')
+
+    @Part
+    def wing(self):
+        return Wing(wing_loading=self.params.wing_loading,
+                    weight_mtow=self.params.weight_mtow,
+                    stall_speed=self.params.stall_speed,
+                    rho=self.params.rho,
+                    aspect_ratio=self.params.aspect_ratio,
+                    label='Main Wing')
+
+    @Part
+    def stability(self):
+        return ScissorPlot(x_cg=self.cg.x,
+                           x_ac=self.wing.aerodynamic_center.x,
+                           x_lemac=self.wing.lemac.x,
+                           mac=self.wing.mac_length,
+                           AR=self.params.aspect_ratio,
+                           e=self.params.wingpowerloading.e_factor,
+                           e_h=self.params.wingpowerloading.e_factor,
+                           Cl_w=self.wing.lift_coef_control,
+                           C_mac=self.wing.moment_coef_control,
+                           Cla_w=self.wing.lift_coef_vs_alpha,
+                           delta_xcg=0.1,  # Decreasing for a slightly smaller tail
+                           configuration=self.configuration,
+                           label='Stability Parameters')
+
     @Part
     def center_of_gravity(self):
         return VisualCG(vis_cog=self.cg)
@@ -214,9 +323,10 @@ class UAV(DesignInput):
                                                      'x', self.stability.lhc * self.wing.mac_length
                                                      + self.wing.aerodynamic_center.x,
                                                      'z', self.stabilizer.stabilizer_h.semi_span *
-                                                     sin(radians(self.wing.dihedral) +
-                                                         self.wing.front_spar_line.point1.z -
-                                                         self.wing.position.z)),
+                                                     sin(radians(self.wing.dihedral))),
+                                                     # sin(radians(self.wing.dihedral) +
+                                                     #     self.wing.front_spar_line.point1.z -
+                                                     #     self.wing.position.z)),
                                   required_planform_area=self.wing.planform_area * self.stability.shs_req,
                                   wing_planform_area=self.wing.planform_area,
                                   wing_mac_length=self.wing.mac_length,
@@ -289,42 +399,6 @@ class UAV(DesignInput):
                            weight_mtow=self.weights['mtow'],
                            parasitic_drag=self.parasite_drag,
                            oswald_factor=self.params.wingpowerloading.e_factor, label='Performance')
-
-    # Geometry Constraints
-    @Attribute(private=True)
-    def pad_distance(self):
-        return self.fuselage.pad_factor * self.wing.root_chord
-
-#     # TODO Add a nice bar-graph that shows performance, power consumption, drag, etc in the GUI with boxes!
-
-    @Attribute
-    def weights(self):
-        return self.weight_and_balance()['WEIGHTS']
-
-    @Attribute
-    def parasite_drag(self):
-        """ Utilizes Raymer's Equivalent skin-friction drag method to compute Zero-Lift Drag. The utilized value used
-        for the skin_friction_coef is taken from subsonic, light propeller aircraft
-
-        http://www.fzt.haw-hamburg.de/pers/Scholz/HOOU/AircraftDesign_13_Drag.pdf
-
-        :return: Zero-Lift Drag Coefficient
-        :rtype: Float
-        """
-        # TODO Incorporate drag estimation into the knowledge base
-        skin_friction_coef = 0.0055
-        area_dict = self.sum_area()
-        reference_area = area_dict['REFERENCE']
-        wetted_area = area_dict['WETTED']['total']
-        if wetted_area and reference_area is not 0:
-            parasite_drag = skin_friction_coef * (wetted_area / reference_area)
-        else:
-            parasite_drag = None
-        return parasite_drag
-
-    @Attribute
-    def areas(self):
-        return self.sum_area()
 
     def weight_and_balance(self):
         """ Retrieves all relevant parameters from children with `weight` and `center_of_gravity` attributes and then
@@ -464,79 +538,6 @@ class UAV(DesignInput):
         area_dict['WETTED']['total'] = sum(areas)
 
         return area_dict
-
-    @Attribute
-    def write_excel(self):
-
-        ignore_list = ['children', 'mesh_deflection', 'browse_airfoils', '_local_bbox_bounds', '_bbox_bounds', 'hidden']
-        hdr_font = xlwt.Font()
-        hdr_font.name = 'Times New Roman'
-        hdr_font.bold = True
-
-        hdr_style = xlwt.XFStyle()
-        hdr_style.font = hdr_font
-
-        wb = xlwt.Workbook()
-        ws0 = wb.add_sheet('Weight & Balance')
-
-        headers = ['Parameter', 'Value', 'Units']
-        for i in range(0, len(headers)):
-            ws0.write(1, i+1, headers[i], hdr_style)
-
-        row = 3  # Filling in data for the weights w/ skip
-        ws0.write(row, 1, 'Weights', hdr_style)
-        for key, value in self.weights.items():
-            row = row + 1
-            ws0.write(row, 1, key)
-            ws0.write(row, 2, value)
-            ws0.write(row, 3, '[kg]')
-
-        row = row + 2  # Skipping two rows to have a row seperating Weights and C.G
-        ws0.write(row, 1, 'C.G. Location (X, Y, Z)', hdr_style)
-        ws0.write(row, 2, '(%1.2f, %1.2f, %1.2f)' % (self.cg.x, self.cg.y, self.cg.z))
-        ws0.write(row, 3, '[m]')
-
-        row = row + 2
-        ws0.write(row, 1, 'Areas', hdr_style)
-        for key, value in self.areas['WETTED'].items():
-            row = row + 1
-            ws0.write(row, 1, key)
-            ws0.write(row, 2, value)
-            ws0.write(row, 3, '[m^2]')
-
-        row = 1
-        ws0.write(row, 5, 'Wing', hdr_style)
-        ws0.write(row, 6, self.wing.airfoil_choice)
-        for key in self.wing._slots:
-            if key not in ignore_list and key.find('plot') == -1 and key.find('avl') == -1:
-                value = getattr(self.wing, key)
-                if isinstance(value, float) or isinstance(value, int) and not isinstance(value, basestring):
-                    row = row + 1
-                    ws0.write(row, 5, key)
-                    ws0.write(row, 6, value)
-
-        row = 1
-        ws0.write(row, 8, 'Stability', hdr_style)
-        for key in self.stability._slots:
-            if key not in ignore_list and key.find('plot') == -1 and key.find('avl') == -1:
-                value = getattr(self.stability, key)
-                if isinstance(value, float) or isinstance(value, int):
-                    row = row + 1
-                    ws0.write(row, 8, key)
-                    ws0.write(row, 9, value)
-
-        row = 1
-        ws0.write(row, 11, 'Stabilizer', hdr_style)
-        for key in self.stabilizer._slots:
-            if key not in ignore_list and key.find('plot') == -1 and key.find('avl') == -1:
-                value = getattr(self.stabilizer, key)
-                if isinstance(value, float) or isinstance(value, int):
-                    row = row + 1
-                    ws0.write(row, 11, key)
-                    ws0.write(row, 12, value)
-
-        wb.save(os.path.join(DIRS['USER_DIR'], 'results', 'output.xls'))
-        return 'Excel File Written'
 
 
 if __name__ == '__main__':
