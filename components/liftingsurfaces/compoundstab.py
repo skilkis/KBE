@@ -52,6 +52,9 @@ class CompoundStabilizer(ExternalBody):
 
     :param color: Changes the color of the wing skin to the one defined in MyColors
     :type color: tuple
+
+    :param ply_number: Changes the number of ply's of carbon fiber pre-preg.
+    :type ply_number: int
     """
 
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'ctail.png')
@@ -86,6 +89,9 @@ class CompoundStabilizer(ExternalBody):
     #: This value is used to set the default color of the wing-part
     color = Input(MyColors.skin_color)
 
+    #: Changes the number of ply's of carbon fiber http://www.ijera.com/papers/Vol4_issue5/Version%202/J45025355.pdf
+    ply_number = Input(3, validator=val.Instance(int))
+
     @Part
     def stabilizer_h(self):
         """ This is an instantiation of the :class:`HorizontalStabilizer` class with the required planform area from the
@@ -96,7 +102,8 @@ class CompoundStabilizer(ExternalBody):
         """
         return HorizontalStabilizer(position=self.position,
                                     planform_area=self.required_planform_area,
-                                    aspect_ratio=self.aspect_ratio)
+                                    aspect_ratio=self.aspect_ratio,
+                                    ply_number=self.ply_number + 1)
 
     @Part
     def stabilizer_vright(self):
@@ -221,15 +228,6 @@ class CompoundStabilizer(ExternalBody):
     def internal_shape(self):
         """ This is the internal shape of the compound stabilizer. It is None because the current app uses a boom tail\
         structure instead of a single fuselage, and thus there is no shape to present for the fuselage builder.
-
-        :rtype: None
-        """
-        return None
-
-    @Attribute(private=True)
-    def ply_number(self):
-        """ This overwrites the input defined by the :class:`ExternalBody` since the ply-number should only be \
-        controlled from the respective stabilizers themselves.
 
         :rtype: None
         """
