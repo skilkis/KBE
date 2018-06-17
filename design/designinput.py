@@ -15,7 +15,7 @@ import webbrowser
 import os
 
 __author__ = ["Şan Kılkış"]
-__all__ = ["DesignInput"]
+__all__ = ["DesignInput", "valid_payloads"]
 
 # These variables determine the default filename/sheetname(s)
 filename = "userinput.xlsx"

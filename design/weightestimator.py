@@ -9,6 +9,7 @@ from directories import *
 
 __author__ = ["Nelson Johnson", "Şan Kılkış"]
 __all__ = ["ClassOne", "ClassTwo"]
+__settable__ = (True if __name__ == '__main__' else False)
 
 
 class ClassOne(Base):
@@ -48,8 +49,8 @@ class ClassOne(Base):
     __initargs__ = ["weight_target", "target_value"]
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'weight.png')
 
-    weight_target = Input('payload', validator=val.OneOf(["payload", "mtow"]))
-    target_value = Input(0.25, validator=val.Positive())
+    weight_target = Input('payload', validator=val.OneOf(["payload", "mtow"]), settable=__settable__)
+    target_value = Input(0.25, validator=val.Positive(), settable=__settable__)
 
     @Attribute
     def weight_mtow(self):

@@ -12,13 +12,13 @@ from weightestimator import *
 from directories import *
 from designinput import valid_payloads
 from components import EOIR
+from definitions import error_window
 
 __author__ = ["Şan Kılkış", "Nelson Johnson"]
 __all__ = ["ParameterGenerator"]
+__settable__ = (True if __name__ == '__main__' else False)
 
 #  TODO comments, documentation complete
-
-# Function which returns all valid payloads in the directory /components/payload
 
 
 class ParameterGenerator(Base):
@@ -30,46 +30,58 @@ class ParameterGenerator(Base):
 
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'parameters.png')
 
-    performance_goal = Input('endurance', validator=val.OneOf(['endurance', 'range']))
-    goal_value = Input(1.0, validator=val.Positive())
-    weight_target = Input('payload', validator=val.OneOf(['payload', 'mtow']))
-    # target_value = Input(0.25, validator=val.Positive())
-    target_value = Input(0.25)
-    payload_type = Input('eoir', validator=val.OneOf(valid_payloads()))  #
-    configuration = Input('conventional', validator=val.OneOf(['conventional', 'canard', 'flyingwing']))
-    handlaunch = Input(True, validator=val.Instance(bool))
-    portable = Input(True, validator=val.Instance(bool))
+    performance_goal = Input('endurance', validator=val.OneOf(['endurance', 'range']), settable=__settable__)
+
+    goal_value = Input(1.0, validator=val.Positive(), settable=__settable__)
+
+    weight_target = Input('payload', validator=val.OneOf(['payload', 'mtow']), settable=__settable__)
+
+    target_value = Input(0.25, validator=val.Positive(), settable=__settable__)
+
+    payload_type = Input('eoir', validator=val.OneOf(valid_payloads()), settable=__settable__)  #
+
+    configuration = Input('conventional', validator=val.OneOf(['conventional']),settable=__settable__)
+
+    handlaunch = Input(True, validator=val.Instance(bool), settable=__settable__)
+
+    portable = Input(True, validator=val.Instance(bool), settable=__settable__)
 
     @target_value.on_slot_change
     def payload_checker(self):
+        """ Adds a listener to the :param:`target_value` in order to alert the user that their desired payload has
+        been substituted by a commercially available EOIR sensor, in the future when multiple payload types are
+        available this """
         if self.weight_target is 'payload':
             actual_weight = EOIR(target_weight=self.target_value).weight
-            # setattr(self, 'target_value', actual_weight)
-            # TODO Add custom dialog here
+            error_window("No payload matching a weight of %1.1f were found, instead a value"
+                         "of %1.1f will be used from now on" % (self.target_value, actual_weight))
             print actual_weight
 
-    # TODO add icons and labels for weight_estimator as well as wingpowerloading
     @Part
     def weightestimator(self):
-        # Here we instantiate the class I weight estimation using the inputs.
+        """ Instantiates the :class:`ClassOne` to perform initial weight estimations utilizing statisctics """
         return ClassOne(weight_target=self.weight_target,
-                        target_value=self.target_value if self.weight_target is 'payload' else self.target_value)
+                        target_value=self.target_value if self.weight_target is 'payload' else self.target_value,
+                        label='Class-I Weight Estimation')
 
     @Part
     def wingpowerloading(self):
-        # inputs = mtow, rang/endurance and value, pl target weight
-        return WingPowerLoading(mtow=self.weight_mtow,
-                                mission=self.performance_goal,
+        """ Instantiates the :class:`WingPowerLoading` to be able to choose a suitable design point WingPowerLoading """
+        return WingPowerLoading(weight_mtow=self.weight_mtow,
+                                performance_goal=self.performance_goal,
                                 range=self.goal_value,
                                 endurance=self.goal_value,
-                                pl_target_weight=self.weight_payload,
-                                handlaunch=self.handlaunch)
+                                weight_payload=self.weight_payload,
+                                handlaunch=self.handlaunch,
+                                label='Design Point Selection')
 
-
-    # TODO make sure that the right payload mass is used for the weight estimation
-#  Below are the attributes which are all the required vaiables for use in other scripts.
     @Attribute
     def weight_mtow(self):
+        """ Fetches the output maximum take-off weight from the Class I weight estimation
+
+        :return: Maximum Take-Off Weight (MTOW) in SI kilogram [kg]
+        :rtype: float
+        """
         #  Here we obtain the MTOW of the UAV, from the Class I estimation in SI kilogram [kg]
         return self.weightestimator.weight_mtow
 
@@ -123,5 +135,5 @@ class ParameterGenerator(Base):
 if __name__ == '__main__':
     from parapy.gui import display
 
-    obj = ParameterGenerator(label='test')
+    obj = ParameterGenerator(label='ParameterGenerator')
     display(obj)

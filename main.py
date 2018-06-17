@@ -76,6 +76,7 @@ class UAV(DesignInput):
 
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'plane.png')
 
+    #: Switch case that handles build location of the single motor
     motor_integration = Input('pusher', validator=val.OneOf(['pusher', 'puller']))
 
     @Input
@@ -135,7 +136,7 @@ class UAV(DesignInput):
         new_cg = self.weight_and_balance()['CG']
         loop = 0
         xcg_cache = []
-        while abs(old_cg.x - new_cg.x) > 0.0005 and loop < 50:
+        while abs(old_cg.x - new_cg.x) > 0.0005 and loop < 20:
             loop += 1
             print 'Current Iteration: ' + str(loop)
 

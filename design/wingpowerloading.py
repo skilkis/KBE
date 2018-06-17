@@ -7,10 +7,12 @@ from math import *
 import matplotlib.pyplot as plt
 from directories import *
 from components import EOIR, FlightController
+from definitions import error_window
 
 
 __author__ = ["Nelson Johnson", "Şan Kılkış"]
 __all__ = ["WingPowerLoading"]
+__settable__ = (True if __name__ == '__main__' else False)
 
 # TODO Fix aspect ratio choice, add validator also for max_lift_coeff, stall_speed
 
@@ -21,22 +23,22 @@ class WingPowerLoading(Base):
     propeller efficiency, zero-lift drag coefficient, Aspect Ratio and Oswald Efficiency Factor. All Values are in
     SI Units unless stated.
 
-    :param mtow: The MTOW from class I
-    :type mtow: float
+    :param weight_mtow: The Maximum Take-Off Weight from Class I in SI kilogram [kg]
+    :type weight_mtow: float
 
-    :param mission: The UAV performance goal
-    :type mission: str
+    :param performance_goal: The UAV performance goal (either 'endurance', or 'range')
+    :type performance_goal: str
 
-    :param range: The UAV design range in km
+    :param range: The UAV design range in SI kilometer [km]
     :type range: float
 
-    :param endurance: The UAV design endurance in hrs
+    :param endurance: The UAV design endurance in SI hours [h]
     :type endurance: float
 
-    :param pl_target_weight: The UAV design payload weight in kg
-    :type pl_target_weight: float
+    :param weight_payload: The UAV design payload weight in SI kilogram [kg]
+    :type weight_payload: float
 
-    :param handlaunch: Whether the user requires the UAV to be hand launched
+    :param handlaunch: Handles the switch case of whether the user whether the UAV is to be handlaunched
     :type handlaunch: bool
 
     :param maximum_lift_coefficient: A list of three C_lmax's that the wing is assumed to generate which create \
@@ -74,34 +76,34 @@ class WingPowerLoading(Base):
     :type stall_speed: float
     """
 
-#: This block of code contains the inputs. ########---------------------------------------------------------------------
+    __icon__ = os.path.join(DIRS['ICON_DIR'], 'designpoint.png')
 
-    mtow = Input(5.0, validator=val.Positive())  # used for to find S from design point!
-    mission = Input('range', validator=val.OneOf(['range', 'endurance']))   #  used to switch optimal flight condition.
-    range = Input(100.0, validator=val.Positive())     # this is used to determine the battery capacity required for range. units = km
-    endurance = Input(1.0, validator=val.Positive()) #  this is used to det battery capacity for endurance requirement units = hours
-    pl_target_weight = Input(0.2, validator=val.Positive())
+    #: The Maximum Take-Off Weight from Class I in SI kilogram [kg]
+    weight_mtow = Input(5.0, validator=val.Positive(), settable=__settable__)
 
+    #: Performance goal to be optimized for (either 'endurance', or 'range')
+    performance_goal = Input('range', validator=val.OneOf(['range', 'endurance']), settable=__settable__)
 
-    #: Boolean operator to determine if the user requires the UAV to be hand launched
-    #: This parameter changes the stall-speed used for the Wing Loading
-    handlaunch = Input(True, validator=val.Instance(bool))
+    #: Design range in SI kilometers [km], depending on the performance_goal this can be ignored
+    range = Input(100.0, validator=val.Positive(), settable=__settable__)
+
+    #: Design endurance in SI hours [h], depending on the performance_goal this can be ignored
+    endurance = Input(1.0, validator=val.Positive(), settable=__settable__)
+
+    #: Current selected payload weight from Class I in SI kilogram [kg]
+    weight_payload = Input(0.2, validator=val.Positive(), settable=__settable__)
+
+    #: Switch case to determine if the user requires the UAV to be hand launched which affects the stall speed
+    handlaunch = Input(True, validator=val.Instance(bool), settable=__settable__)
+
+    #: STD ISA Sea Level Density in SI kilogram per meter cubed [kg/m^3]
+    rho = Input(1.225, validator=val.Positive(), settable=__settable__)
+
+    #: ISA Density at cruise, this value is at 3 [km] height for the climb rate power loading equation
+    rho_cr = Input(0.9091, validator=val.Positive(), settable=__settable__)
 
     #: This is a list of three C_lmax's that the wing is assumed to generate. This creates multiple lines on the plots.
     maximum_lift_coefficient = Input([1.0, 1.25, 1.5], val.Instance(list))
-
-    #: This is a list of three Aspect Ratios that the wing is assumed to generate. This creates multiple lines on
-    #: the plots.
-    # TODO Make this a proper implementation of Iterable comprehension, add validator
-    @Input
-    def aspect_ratio_range(self):
-        """ Derived input that handles defaulting of the aspect_ratio. These values are determined from reference images
-        for drones that are handlaunched vs those that are not.
-
-        :return: Bounds of Acceptable Aspect Ratios
-        :rtype: list
-        """
-        return [10, 12] if self.handlaunch else [12, 20]
 
     #: This is the assumed propeller efficiency.
     eta_prop = Input(0.7, validator=val.Positive())
@@ -112,26 +114,24 @@ class WingPowerLoading(Base):
     #: This is the assumed Oswald Efficiency Factor.
     e_factor = Input(0.8, validator=val.Positive())
 
-    #: Below is the STD ISA sea level density
-    rho = Input(1.225, validator=val.Positive())
-
-    #: Below is the ISA Density at 3km height for the climb rate power loading equation.
-    rho_cr = 0.9091
-
-    # #: Below is the assumed throwing speed of a hand launched UAV
-    # stall_speed_handlaunch = 8.0
-
-    # #: Below is assumed launch speed at the end of a catapult or runway.
-    # stall_speed = 12.0
-
-    #: Below is the assumed Value of Zero-Lift Drag Coefficient.
+    #: Assumed Value of Zero-Lift Drag Coefficient.
     zero_lift_drag = Input(0.02, validator=val.Positive())
 
-    #: Below is the assumption for Required Climb Rate, Same as Sparta UAV 1.1.2.
-    climb_rate = 1.524
+    #: Assumption for Required Climb Rate, Same as Sparta UAV 1.1.2.
+    climb_rate = Input(1.524, validator=val.Between(1.0, 3.0))
 
-    #: Below is the assumed Climb Gradient to clear 10m object 17m away.
-    climb_gradient = 0.507
+    #: Assumed Climb Gradient to clear 10m object 17m away.
+    climb_gradient = Input(0.507, validator=val.Between(0.1, 0.9))
+
+    @Input
+    def aspect_ratio_range(self):
+        """ Derived input that handles defaulting of the aspect_ratio. These values are determined from reference images
+        for drones that are handlaunched vs those that are not.
+
+        :return: Bounds of Acceptable Aspect Ratios
+        :rtype: list
+        """
+        return [10, 12] if self.handlaunch else [12, 20]
 
     @Input
     def stall_speed(self):
@@ -146,8 +146,34 @@ class WingPowerLoading(Base):
             stall_speed = 12.0
         return stall_speed
 
+    @aspect_ratio_range.on_slot_change
+    def aspect_validator(self):
+        """ Validator for the compartment_type """
+        if isinstance(self.aspect_ratio_range, list):
+                for _ratio in self.aspect_ratio_range:
+                    if _ratio < 10:
+                        error_window('%d will result in too of an low aspect ratio and thus high induced drag, '
+                                     'consider increasing' % _ratio)
+                    elif _ratio > 20:
+                        error_window('%d will result in too high of anaspect ratio and thus high structural loads due '
+                                     'to increased wing bending moments, consider decreasing' % _ratio)
+        else:
+            raise TypeError('The provided input into :param:`aspect_ratio` is not valid')
 
-#  This block of Attributes calculates the wing and thrust loading parameters and generates the plot. ########----------
+    @maximum_lift_coefficient.on_slot_change
+    def lift_coef_validator(self):
+        """ Validator for the compartment_type """
+        if isinstance(self.aspect_ratio_range, list):
+                for _coef in self.aspect_ratio_range:
+                    if _coef < 1 and self.handlaunch:
+                        error_window('%d is too low and will result in either too large of a wing surface, or too'
+                                     'high of a launch speed to hand launch. Consider increasing' % _coef)
+                    elif _coef > 1.7:
+                        error_window('%d This lift coefficient is very difficult to produce without high lift devices'
+                                     'at Low Reynolds numbers decreasing' % _coef)
+        else:
+            raise TypeError('The provided input into :param:`maximum_lift_coefficient` is not valid')
+
     @Attribute
     def wingloading(self):
         """ This attribute calculates the 3 required wing loadings from the lift equation, using the stall speed \
@@ -194,8 +220,7 @@ class WingPowerLoading(Base):
                 'climb_gradient': wp_cg}
 
     @Attribute
-    # TODO Make this plot appear on top of GUI & Be Eager (This can be accomplished by making it a part)
-    def loadingdiagram(self):
+    def plot_loadingdiagram(self):
         """ This attribute plots the loading diagram.
 
          :return: Plot
@@ -263,8 +288,6 @@ class WingPowerLoading(Base):
         #: idx2 is the index corresponding to the closest value in WS_range to the chosen design wing-loading
         idx2 = error.index(min(error))
 
-        # TODO Add knowledge base assumption for best aspect ratio
-        # TODO Find a better way to select optimum aspect ratio
         optimal_ars = [11, 20]
         if self.handlaunch:
             optimal_ar = optimal_ars[0]
@@ -309,7 +332,7 @@ class WingPowerLoading(Base):
         return {'lift': lift_coef_cg,
                 'drag': drag_coef_cg}
 
-    @Attribute
+    @Attribute(private=True)
     def ws_range(self):
         """ This is a dummy list of wing loadings for iterating in the Power Loading Equations.
 
@@ -319,8 +342,6 @@ class WingPowerLoading(Base):
         ws_limit = max(self.wingloading['values'])
         values = [float(i) for i in range(1, int(ceil(ws_limit / 100.0)) * 100)]
         return values
-
-#  The Block below will estimate the required power from the battery depending on the range or endurance goal.
 
     @Attribute
     def eta_tot(self):
@@ -340,12 +361,12 @@ class WingPowerLoading(Base):
         :return: Required battery capacity due to plane drag.
         :rtype: dict
         """
-        if self.mission is 'range':
+        if self.performance_goal is 'range':
             cl_opt = sqrt(self.zero_lift_drag * pi * self.designpoint['aspect_ratio'] * self.e_factor)
             cd_opt = self.zero_lift_drag + (cl_opt ** 2 / (pi * self.designpoint['aspect_ratio'] * self.e_factor))
             v_opt = sqrt(self.designpoint['wing_loading']*(2/self.rho)*(1/cl_opt))
             v_safe = 5.0 + self.stall_speed  # Safety factor to ensure optimal speed is not too close to stall
-            s = self.mtow * 9.81 / self.designpoint['wing_loading']
+            s = self.weight_mtow * 9.81 / self.designpoint['wing_loading']
             d_opt = cd_opt * 0.5 * self.rho * (v_opt ** 2) * s
             t = (self.range * 1000 / v_opt)
             p_req_drag = (d_opt * v_opt) / self.eta_tot
@@ -364,7 +385,7 @@ class WingPowerLoading(Base):
             cd_opt = self.zero_lift_drag + (cl_opt ** 2 / (pi * self.designpoint['aspect_ratio'] * self.e_factor))
             v_opt = sqrt(self.designpoint['wing_loading'] * (2 / self.rho) * (1 / cl_opt))
             v_safe = 5.0 + self.stall_speed  # Safety factor to ensure optimal speed is not too close to stall
-            s = (self.mtow * 9.81) / self.designpoint['wing_loading']
+            s = (self.weight_mtow * 9.81) / self.designpoint['wing_loading']
             d_opt = cd_opt * 0.5 * self.rho * (v_opt ** 2) * s
             t = self.endurance * 3600
             p_req_drag = (d_opt * v_opt) / self.eta_tot
@@ -386,7 +407,7 @@ class WingPowerLoading(Base):
         :return: Required battery power due to payload SI Watt
         :rtype: float
         """
-        return EOIR(target_weight=self.pl_target_weight).specs['power']
+        return EOIR(target_weight=self.weight_payload).specs['power']
 
     @Attribute
     def flight_controller_power(self):

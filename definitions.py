@@ -6,10 +6,21 @@ from parapy.core import *  # / Required ParaPy Modules
 
 from directories import *
 from collections import Iterable
+from Tkinter import *
+import tkMessageBox
 
 
 __author__ = "Şan Kılkış"
-__all__ = ["Component", "ExternalBody", "VisualCG"]
+__all__ = ["Component", "ExternalBody", "VisualCG", "error_window"]
+
+
+def error_window(msg):
+    """ Provides a simple easy way to bring up an error message, useful for reducing clutter around error-message calls
+    within the code """
+    root = Tk()
+    root.update()
+    tkMessageBox.showwarning("Warning", msg)
+    root.destroy()
 
 
 class VisualCG(GeomBase):

@@ -8,8 +8,10 @@ from math import radians
 from user import MyColors
 from definitions import ExternalBody
 
-__author__ = ["Nelson Johnson"]
+__author__ = ["Nelson Johnson", "San Kilkis"]
 __all__ = ["CompoundStabilizer"]
+
+# TODO fix boom position and add spheres to booms
 
 
 class CompoundStabilizer(ExternalBody):
