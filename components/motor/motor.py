@@ -39,7 +39,13 @@ class Motor(Component):
     motor_name = Input('Not Specified')
     integration = Input('pusher', validator=val.OneOf(["pusher", "puller"]))
     position = Input(Position(Point(0, 0, 0)))
-    database_path = Input(DIRS['MOTOR_DATA_DIR'])
+
+    @Attribute
+    def database_path(self):
+        """ The default absolute directory of the Motor Database
+
+        :rtype: unicode """
+        return DIRS['MOTOR_DATA_DIR']
 
     @Input
     def label(self):
@@ -118,7 +124,6 @@ class Motor(Component):
         :rtype: Point
         """
         return self.internal_shape.cog
-
 
     @Attribute
     def diameter(self):

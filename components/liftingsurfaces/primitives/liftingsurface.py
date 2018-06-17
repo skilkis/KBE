@@ -12,6 +12,7 @@ from directories import *           # / Project Directory
 from Tkinter import *
 import tkFileDialog
 import tkMessageBox
+import time
 
 __author__ = "Nelson Johnson"
 __all__ = ["LiftingSurface"]
@@ -115,10 +116,9 @@ class LiftingSurface(GeomBase):
             print 'Test Failed'
         else:
             if len(path) > 0:
-                self.airfoil_choice = str(path.split('.')[-2].split('/')[-1])  # Selects the airfoil name
-                self.airfoil_type = str(path.split('.')[-2].split('/')[-2])  # Selects the folder-name
-
-        return self.airfoil_choice, self.airfoil_type
+                setattr(self, 'airfoil_choice', str(path.split('.')[-2].split('/')[-1]))  # Selects the airfoil name
+                setattr(self, 'airfoil_type', str(path.split('.')[-2].split('/')[-2]))  # Selects the folder-name
+        return 'Airfoil has been successfully chosen, invalidate to run-again'
 
     #: Boolean below allows the MAC curve to be shown on the wing when changed in the GUI to False.
     hide_mac = Input(True, validator=val.Instance(bool))

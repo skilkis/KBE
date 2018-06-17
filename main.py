@@ -27,17 +27,13 @@
 #  TODO FIX PLAYLOAD MASS IN FINAL MTOW TO CORRESPOND WITH WING/ TAIL SIZING & CLASS I!!!!!!!!!!!
 
 #  TODO add tkMessagebox browser to payloads
-#  TODO Add listener? for browse airfoils in lifting surface, or all to invalidate attribute
 
 # TODO Add instance validator for each class input (check out performance.py for example)
 # TODO Make a nice visual CG representation of both c.g. before and after run
 
-# TODO change input endurance to be in hours instead of seconds (more convenient)
 #  TODO every class should have print statement saying that it has been instantiated into the console
 
 #  TODO delete all example and irrelevant documents & data files in KBE folder and rename folder with original name.
-
-# TODO Auto-writer function for the AVL-wrapper so La. Rocca can run the scripts w/o errors!!!!!!!!!!!!!!!!!!!!!
 
 # TODO move everything except for main.py into a \bin folder to clean up directory
 
@@ -57,6 +53,8 @@
 # TODO Add inheritance diagram to documentation
 
 # TODO add validator Class IntersectedShapes on Fuselage
+
+# TODO Re-organize main folder add icons
 
 from design import *
 from parapy.core import *

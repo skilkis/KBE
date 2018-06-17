@@ -161,7 +161,8 @@ class ExternalBody(Component):
     @Attribute
     def wetted_area(self):
         """ Returns the total wetted area of the external_part to be able to perform drag and weight estimations
-        accurate to 3 decimal places.
+        accurate to 3 decimal places. This is accomplished by subtracting the total shell area from the area of the
+        intersected faces to obtain a fairly accurate wetted area.
 
         :return: Total wetted area of the external_part in SI sq. meter [m^2]
         :rtype: float
@@ -183,7 +184,7 @@ class ExternalBody(Component):
 
             area = total_area - sum(common_areas)
 
-        else:
+        else:  # Opted to keep this funcionality in-case of old Fused class defintion is still used somewhere
             area = 0.0
             if hasattr(self.external_shape, 'shells'):
                 for i in self.external_shape.shells:
@@ -210,8 +211,6 @@ class ExternalBody(Component):
         :rtype: Box
         """
         return Box(0.5, 0.5, 0.5, transparency=0.8, centered=True, position=self.position)
-
-        # TODO Not make this a fused part, be abld to extract area w/o fused operation
 
 
 if __name__ == '__main__':

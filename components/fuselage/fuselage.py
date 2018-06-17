@@ -6,16 +6,12 @@ from parapy.core import *  # / Required ParaPy Modules
 
 from user import *
 from components.fuselage.primitives import *
-# from components import EOIR, Wing, Motor, Battery
 from definitions import *
 from directories import *
 from copy import copy
 
 __author__ = "Şan Kılkış"
 __all__ = ["Fuselage"]
-
-# TODO Figure out why tail cone does not appear instantly
-# TODO Add default sizing parts back in
 
 # http://www.dupont.com/content/dam/dupont/products-and-services/fabrics-fibers-and-nonwovens/fibers/documents/Kevlar_Technical_Guide.pdf
 
@@ -37,7 +33,6 @@ class Fuselage(ExternalBody):
 
     #  TODO Commenting, it is in documentation
     # TODO Class description and use cases
-    # TODO compartment_type and sizing_parts validators
 
     __initargs__ = ["compartment_type", "sizing_parts"]
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'fuselage.png')
@@ -46,13 +41,17 @@ class Fuselage(ExternalBody):
 
     #: Type of containers at each station, possible entries (nose, container, motor, tail)
     #: :type: str list
-    compartment_type = Input()
+    compartment_type = Input([None, None], validator=val.Instance(list))
     # compartment_type = Input()
 
     #: Parts that the fuselage will be sized for, these must correspond to the entries given in `compartment_type`
     #: :type: list
     # sizing_parts = Input()
-    sizing_parts = Input()
+    sizing_parts = Input([None, None], validator=val.Instance(list))
+
+    #: Disables Automatic Fuselage Frame (FFrame) Creation and allows instead manual user-input to set the shape
+    #: :type: bool
+    auto_fuselage_disable = Input(False, validator=val.Instance(bool))
 
     #: Sets the Padding Factor between Fuselage Sizing Parts
     #: :type: bool
@@ -78,9 +77,29 @@ class Fuselage(ExternalBody):
     #: :type: tuple
     ply_number = Input(3, validator=val.Instance(int))
 
-    #: Disables Automatic Fuselage Frame (FFrame) Creation and allows instead manual user-input to set the shape
-    #: :type: bool
-    auto_fuselage_disable = Input(False)
+    @compartment_type.on_slot_change
+    def compartment_validator(self):
+        """ Validator for the compartment_type """
+        if isinstance(self.compartment_type, list):
+            for _part in self.compartment_type:
+                if _part not in ['nose', 'container', 'motor', 'tail']:
+                    raise TypeError('%s is not a valid component type, please restrict input to "nose", "container", '
+                                    '"motor" or "tail"' % _part)
+                elif not isinstance(_part, basestring):
+                    raise TypeError
+        else:
+            raise TypeError('The provided input into :param:`sizing_parts` is not valid')
+
+    @sizing_parts.on_slot_change
+    def sizing_part_validator(self):
+        """ Validator for the sizing_parts """
+        if isinstance(self.sizing_parts, list):
+            for _part in self.sizing_parts:
+                if not isinstance(_part, Component):
+                    raise TypeError('%s is not a valid component, please check :class:`Component` syntax'
+                                    % _part.__repr__)
+        else:
+            raise TypeError('The provided input into :param:`sizing_parts` is not valid')
 
     @auto_fuselage_disable.on_slot_change
     def auto_disabler(self):

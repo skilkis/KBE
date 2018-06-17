@@ -5,8 +5,7 @@
 from parapy.geom import *
 from parapy.core import *
 
-#  TODO Allow this to work with any input position
-#  TODO add validator on position input?
+
 #  TODO finish comments, it is in documentation already.
 
 __author__ = ["Şan Kılkış"]
@@ -70,6 +69,7 @@ class MFrame(GeomBase):
     @Part(in_tree=__show_primitives)
     def unit_hcircle_import(self):
         return Arc3P(point1=self.curvepoints[0], point2=self.curvepoints[1], point3=self.curvepoints[2])
+
 
 if __name__ == '__main__':
     from parapy.gui import display

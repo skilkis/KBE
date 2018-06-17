@@ -1,5 +1,8 @@
 Automatic Fuselage Generator
 ===============================
 
-.. automodule:: components.fuselage.fuselage
-   :members:
+
+.. inheritance-diagram:: components.fuselage.fuselage.Fuselage
+	:parts: 1
+
+.. automodule:: components.fuselage.fuselage :members:
