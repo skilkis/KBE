@@ -5,6 +5,7 @@ from parapy.geom import *  # \
 from parapy.core import *  # / Required ParaPy Modules
 
 from directories import *
+from collections import Iterable
 
 
 __author__ = "Şan Kılkış"
@@ -160,17 +161,36 @@ class ExternalBody(Component):
     @Attribute
     def wetted_area(self):
         """ Returns the total wetted area of the external_part to be able to perform drag and weight estimations
+        accurate to 3 decimal places.
 
-        :return: Total wetted area of the external_part in SI sq. meter
+        :return: Total wetted area of the external_part in SI sq. meter [m^2]
         :rtype: float
         """
-        area = 0
-        if hasattr(self.external_shape, 'shells'):
-            for i in self.external_shape.shells:
-                area = area + i.area
+        if isinstance(self.external_shape, Iterable):
+            total_area = 0
+            common_areas = []
+            for body in self.external_shape:
+                if hasattr(body, 'shells'):
+                    for _shell in body.shells:
+                        total_area = total_area + _shell.area
+                for second_body in self.external_shape:
+                    if body is not second_body:
+                        _common_faces = Common(shape_in=body, tool=second_body).faces
+                        for _face in _common_faces:
+                            _calc_area = round(_face.area, 4)
+                            if _calc_area not in common_areas:
+                                common_areas = common_areas + [_calc_area]
+
+            area = total_area - sum(common_areas)
+
         else:
-            raise Exception('%s has no solids/shells to find wetted_area from, please create a fused operation '
-                            'to resolve' % self.external_shape)
+            area = 0.0
+            if hasattr(self.external_shape, 'shells'):
+                for i in self.external_shape.shells:
+                    area = area + i.area
+            else:
+                raise Exception('%s has no solids/shells to find wetted_area from, please create a fused operation '
+                                'to resolve' % self.external_shape)
         return area
 
     @Attribute

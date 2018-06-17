@@ -88,7 +88,7 @@ class WingPowerLoading(Base):
     handlaunch = Input(True, validator=val.Instance(bool))
 
     #: This is a list of three C_lmax's that the wing is assumed to generate. This creates multiple lines on the plots.
-    maximum_lift_coefficient = Input([1.0, 1.25, 1.5])
+    maximum_lift_coefficient = Input([1.0, 1.25, 1.5], val.Instance(list))
 
     #: This is a list of three Aspect Ratios that the wing is assumed to generate. This creates multiple lines on
     #: the plots.
@@ -265,7 +265,7 @@ class WingPowerLoading(Base):
 
         # TODO Add knowledge base assumption for best aspect ratio
         # TODO Find a better way to select optimum aspect ratio
-        optimal_ars = [7, 15]
+        optimal_ars = [11, 20]
         if self.handlaunch:
             optimal_ar = optimal_ars[0]
         else:

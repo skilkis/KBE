@@ -243,14 +243,14 @@ class Wing(ExternalBody, LiftingSurface):
                    transparency=0.5,
                    hidden=self.hide_bbox)
 
-    @Part
+    @Attribute
     def external_shape(self):
         """ This defines the external shape for the ExternalBody class in definitions.
 
         :return: Wing ParaPy Geometry
-        :rtype: Fused
+        :rtype: Tuple
         """
-        return Fused(self.solid, self.left_wing, hidden=True, label=self.label)
+        return self.solid, self.left_wing
 
 
 # --- AVL Geometry & Analysis: -----------------------------------------------------------------------------------------

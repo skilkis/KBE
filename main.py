@@ -52,6 +52,12 @@
 
 # TODO Check that all plots are actually output, and consider trigerring all plots with an attribute
 
+# TODO internal shape of electronics module is wrong
+
+# TODO Add inheritance diagram to documentation
+
+# TODO add validator Class IntersectedShapes on Fuselage
+
 from design import *
 from parapy.core import *
 from parapy.geom import *
@@ -60,6 +66,7 @@ from components import *
 from directories import *
 from definitions import *
 from math import sin, radians
+from collections import Iterable
 import copy
 import xlwt
 
@@ -118,7 +125,8 @@ class UAV(DesignInput):
                            C_mac=self.wing.moment_coef_control,
                            Cla_w=self.wing.lift_coef_vs_alpha,
                            delta_xcg=0.1,
-                           configuration=self.configuration)
+                           configuration=self.configuration,
+                           label='Stability Parameters')
 
     @Attribute
     def final_cg(self):
@@ -142,44 +150,67 @@ class UAV(DesignInput):
 
     @Attribute
     def write_step(self):
-        children = self.get_children()
+
+        def part_fecther(external_shape, label):
+            part_bin = []
+            counter = 0
+            if isinstance(external_shape, Iterable):
+                for body in external_shape:
+                    counter += 1
+                    if hasattr(body, 'TopoDS_Shape'):
+                        duplicate = copy.copy(body)
+                        setattr(duplicate, 'label', '%s_%d' % (label, counter))
+                        part_bin = part_bin + [duplicate]
+                    else:
+                        print '%s is not suitable for export, please verify geometry' % label
+            else:  # Condition to preserve compatibility with older class definitions
+                duplicate = copy.copy(external_shape)
+                setattr(duplicate, 'label', label)
+                part_bin = part_bin + [duplicate]
+
+            return part_bin
 
         # Creating dummy lists to store all external_bodies
         output = []
 
+        # Looping through all children
+        children = self.get_children()
         for _child in children:
             if hasattr(_child, 'external_shape'):
+                output = output + part_fecther(_child.external_shape, label=_child.label)
+
 
                 # Special-Case to manually add the left wing due to visualization errors
-                if isinstance(_child, Wing):
+                # if isinstance(_child, Wing):
+                #
+                #     # Copying the left wing object and changing label for tree organization in a STEP Viewer
+                #     left_wing = copy.copy(_child.left_wing)
+                #     setattr(left_wing, 'label', 'Left Wing')
+                #     output.append(left_wing)
+                #
+                #     # Copying the right wing object and changing label for tree organization in a STEP Viewer
+                #     right_wing = copy.copy(_child.solid)
+                #     setattr(right_wing, 'label', 'Right Wing')
+                #     output.append(right_wing)
+                #
+                # elif isinstance(_child, Propeller):
+                #
+                #     # Copying the Propeller and changing the label for tree organization in the STEP Viewer
+                #     prop_copy = copy.copy(_child.propeller)
+                #     setattr(prop_copy, 'label', '%s' % _child.label)
+                #     output.append(prop_copy)
+                #
+                #     # Copying the Propeller Hub and changing the label for tree organization in the STEP Viewer
+                #     hub_copy = copy.copy(_child.propeller_fairing)
+                #     setattr(hub_copy, 'label', 'Propeller Hub')
+                #     output.append(hub_copy)
+                #
+                # else:
+                #     # Appending the current shape to the array to be exported
+                #     output.append(_child.external_shape)
 
-                    # Copying the left wing object and changing label for tree organization in a STEP Viewer
-                    left_wing = copy.copy(_child.left_wing)
-                    setattr(left_wing, 'label', 'Left Wing')
-                    output.append(left_wing)
-
-                    # Copying the right wing object and changing label for tree organization in a STEP Viewer
-                    right_wing = copy.copy(_child.solid)
-                    setattr(right_wing, 'label', 'Right Wing')
-                    output.append(right_wing)
-
-                elif isinstance(_child, Propeller):
-
-                    # Copying the Propeller and changing the label for tree organization in the STEP Viewer
-                    prop_copy = copy.copy(_child.propeller)
-                    setattr(prop_copy, 'label', '%s' % _child.label)
-                    output.append(prop_copy)
-
-                    # Copying the Propeller Hub and changing the label for tree organization in the STEP Viewer
-                    hub_copy = copy.copy(_child.propeller_fairing)
-                    setattr(hub_copy, 'label', 'Propeller Hub')
-                    output.append(hub_copy)
-
-                else:
-                    # Appending the current shape to the array to be exported
-                    output.append(_child.external_shape)
-
-        writer = STEPWriter(output, unit='M', filename=os.path.join(DIRS['USER_DIR'], 'model', '%s.stp' % self.label))
+        writer = STEPWriter(nodes=output, schema='AP214DIS',
+                            filename=os.path.join(DIRS['USER_DIR'], 'model', '%s.stp' % self.label))
         writer.write()
         return writer
 

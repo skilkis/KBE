@@ -59,10 +59,10 @@ class Propeller(ExternalBody):
     #:  A parameter for debugging, turns the visibility of miscellaneous parts ON/OFF
     __show_primitives = False  # type: bool # TODO rename this parameter
 
-    # TODO Validate this instance
-    motor = Input(Motor(integration='puller'))
+    motor = Input(Motor(integration='puller'), validator=val.Instance(Motor))
     design_speed = Input(15, validator=val.Range(0, 50))
-    #:  position = Input(Position(Point(0, 0, 0)))
+
+    #: Sets the default directory for the propeller data files
     database_path = DIRS['PROPELLER_DATA_DIR']
 
     @Input
@@ -102,7 +102,13 @@ class Propeller(ExternalBody):
 
     @Attribute
     def center_of_gravity(self):
-        return self.propeller.bbox.center
+        """ Computes the center of gravity based on the
+
+        :return: Location of the Propeller Center of Gravity in SI meter [m]
+        :rtype: Point
+        """
+        bbox = self.propeller_top.bbox.center
+        return Point(x=bbox.cog.x, y=bbox.cog.y, z=0.0)
 
     @Attribute
     def efficiency(self):
@@ -324,19 +330,24 @@ class Propeller(ExternalBody):
     # --- Output Shapes: ----------------------------------------------------------------------------------------------
 
     @Part
-    def propeller(self):
-        """ The propeller geometry which is visible in the GUI. The attributes used to construct it are below.
+    def propeller_top(self):
+        """ The top portion of the propeller geometry which is visible in the GUI. The attributes used to construct it
+        are below.
 
-        :rtype: TranslatedShape
+        :rtype: ScaledShape
         """
-        return TranslatedShape(shape_in=self.propeller_builder,
-                               displacement=Vector(self.position.x + self.build_direction * (self.fairing_length * (0.1
-                                                                                             if self.motor.integration
-                                                                                             == 'puller' else 0.15)),
-                                                   self.position.y,
-                                                   self.position.z),
-                               color=MyColors.dark_grey,
-                               mesh_deflection=10 ** -4)  # An optimum value between a good quality render & performance
+        return ScaledShape(shape_in=self.propeller_builder[0], reference_point=XOY, factor=1, color=MyColors.dark_grey,
+                           mesh_deflection=1e-4)
+
+    @Part
+    def propeller_bottom(self):
+        """ The bottom portion of the propeller geometry which is visible in the GUI. The attributes used to construct
+        it are below.
+
+        :rtype: ScaledShape
+        """
+        return ScaledShape(shape_in=self.propeller_builder[1], reference_point=XOY, factor=1, color=MyColors.dark_grey,
+                           mesh_deflection=1e-4)
 
     @Part
     def propeller_fairing(self):
@@ -350,14 +361,13 @@ class Propeller(ExternalBody):
                                                    self.position.z),
                                color=MyColors.chill_white)
 
-    @Part
+    @Attribute
     def external_shape(self):
         """ Presents the complete outer propeller shape for wetted area calculation as well as STEP output.
 
-        :rtype: Compound
+        :rtype: FusedSolid
         """
-        return Compound(built_from=[self.propeller], mesh_deflection=10 ** -4, hidden=True,
-                        label=self.label)
+        return self.propeller_top, self.propeller_bottom, self.propeller_fairing
 
     # --- Propeller Geometry Creation: --------------------------------------------------------------------------------
 
@@ -445,24 +455,38 @@ class Propeller(ExternalBody):
 
         # Creating a Circle with equivalent points to the airfoils to be able to Loft to a common surface
         circle_import = Circle(radius=geom['chord_dist'][0]).rotated(XOY.Vz_, radians(90), XOY)
-        rotated_circle = circle_import.reversed.equispaced_points(n=len(self.scaled_airfoil.sample_points))
-        center_circle = FittedCurve(points=rotated_circle)
-        airfoils = [center_circle] + airfoils
+        rotated_circle = circle_import.reversed.equispaced_points(n=len(self.scaled_airfoil.sample_points) + 1)
+        center_circle = FittedCurve(points=rotated_circle, min_degree=2, max_degree=2, continuity=1, tolerance=1e-6)
+        support_circle = ScaledCurve(center_circle,
+                                     XOY, 0.5).translated('z', self.propeller_geometry['spanwise_loc'][1] / 2.0)
+        airfoils = [center_circle, support_circle] + airfoils
 
         return airfoils
 
     @Attribute(private=True)
     def propeller_builder(self):
-        """ The un-translated version of the main 'propeller' part constructed from a Compound between a LoftedSolid \
-        and its MirroredShape.
+        """ The attribute responsible for instantiation of the top and bottom propeller which is constructed from a
+        LoftedSolid and its MirroredShape.
 
         :return: A scale representation of the propeller geometry at the origin
         """
-        # TODO Comment here
-        prop_top = LoftedSolid(profiles=self.airfoil_builder)
-        prop_bottom = MirroredShape(shape_in=prop_top, reference_point=XOY, vector1=XOY.x_, vector2=XOY.y)
-        propeller = FusedSolid(shape_in=prop_top, tool=prop_bottom)
-        return propeller
+
+        # Defining the displacement vector for the propeller
+        vector = Vector(self.position.x + self.build_direction * (self.fairing_length * (0.1 if self.motor.integration
+                                                                                        == 'puller' else 0.15)),
+                       self.position.y, self.position.z)
+
+        # Instantiating the top half of the propeller
+        prop_top_import = LoftedSolid(profiles=self.airfoil_builder)
+
+        # Mirroring to create the bottom half of the propeller
+        prop_bottom_import = MirroredShape(shape_in=prop_top_import, reference_point=XOY, vector1=XOY.x_, vector2=XOY.y)
+
+        # Translating both to the supplied coordinates
+        prop_top = TranslatedShape(shape_in=prop_top_import, displacement=vector)
+        prop_bottom = TranslatedShape(shape_in=prop_bottom_import, displacement=vector)
+
+        return prop_top, prop_bottom
 
     @Attribute(private=True)
     def text_label_position(self):
@@ -470,7 +494,7 @@ class Propeller(ExternalBody):
 
         :rtype: Point
         """
-        tip_airfoil_pos = self.propeller.bbox.corners[1]
+        tip_airfoil_pos = self.propeller_bottom.bbox.corners[1]
         return tip_airfoil_pos
 
     # --- Primitives & Private Attributes: ----------------------------------------------------------------------------
@@ -486,7 +510,6 @@ class Propeller(ExternalBody):
 
     @Attribute
     def fairing_length(self):
-        # TODO add this into the knowledge base
         """ This fairing length provides a realistic proportion w.r.t the motor diameter. This ratio was determined
          through use of Adobe Photoshop along with reference images.
 
@@ -508,6 +531,10 @@ class Propeller(ExternalBody):
 
     @Attribute(private=True)
     def propeller_fairing_import(self):
+        """ Instantiates the propeller fairing by revolving the :attr:`fairing_curve` about the the z-axis
+
+        :rtype: Revolution
+        """
         return Revolution(self.fairing_curve)
 
     @Attribute(private=True)
