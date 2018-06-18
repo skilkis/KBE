@@ -207,7 +207,17 @@ fulfill the mission requirements.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>wing_in</strong> (<a class="reference internal" href="../components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing" title="components.liftingsurfaces.wing.Wing"><em>Wing</em></a>) – The Wing input instantiation.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>motor_in</strong> (<a class="reference internal" href="../components/motor.html#components.motor.Motor" title="components.motor.Motor"><em>Motor</em></a>) – The instantated motor (typically passed from myUAV)</li>
+<li><strong>propeller</strong> (<a class="reference internal" href="../components/propeller/propeller.html#components.propeller.propeller.Propeller" title="components.propeller.propeller.Propeller"><em>Propeller</em></a>) – The instantated propeller (typically passed from myUAV)</li>
+<li><strong>wing_in</strong> (<a class="reference internal" href="../components/liftingsurfaces/wing.html#components.liftingsurfaces.wing.Wing" title="components.liftingsurfaces.wing.Wing"><em>Wing</em></a>) – The instantated wing passed (typically passed from myUAV)</li>
+<li><strong>weight_mtow</strong> (<em>float</em>) – Final Maximum Take-Off Weight in SI kilogram [kg]</li>
+<li><strong>parasitic_drag</strong> (<em>float</em>) – Computed Parasitic Drag Coefficient</li>
+<li><strong>oswald_factor</strong> – Oswald Span Efficiency Factor</li>
+<li><strong>cg_valid</strong> (<em>bool</em>) – Switch case used to judge if the performance prediction is valid</li>
+<li><strong>stall_buffer</strong> (<em>float</em>) – Safety Factor to create a buffer between Endurance/Cruise velocity and the Stall Speed</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>

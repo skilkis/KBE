@@ -18,8 +18,6 @@ import tkFileDialog
 __author__ = ["Şan Kılkış"]
 __all__ = ["Motor"]
 
-#  TODO commenting, it is in documentation
-
 
 class Motor(Component):
     """ This class will create an electric motor.

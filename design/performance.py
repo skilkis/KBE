@@ -19,21 +19,59 @@ class Performance(Base):
     """ This class calculates the end performance of the UAV created in the KBE GUI. This verifies that the UAV will
     fulfill the mission requirements.
 
-    :param wing_in: The Wing input instantiation.
+    :param motor_in: The instantated motor (typically passed from myUAV)
+    :type motor_in: Motor
+
+    :param propeller: The instantated propeller (typically passed from myUAV)
+    :type propeller: Propeller
+
+    :param wing_in: The instantated wing passed (typically passed from myUAV)
     :type wing_in: Wing
+
+    :param weight_mtow: Final Maximum Take-Off Weight in SI kilogram [kg]
+    :type weight_mtow: float
+
+    :param parasitic_drag: Computed Parasitic Drag Coefficient
+    :type parasitic_drag: float
+
+    :param oswald_factor: Oswald Span Efficiency Factor
+    :type parasitic_drag: float
+
+    :param cg_valid: Switch case used to judge if the performance prediction is valid
+    :type cg_valid: bool
+
+    :param stall_buffer: Safety Factor to create a buffer between Endurance/Cruise velocity and the Stall Speed
+    :type stall_buffer: float
     """
 
     __initargs__ = ["parasitic_drag"]
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'performance.png')
 
+    #: Instantiated Motor Object
     motor_in = Input(Motor(), validator=val.Instance(Motor))
+
+    #: Instantiated Propeller Object
     propeller_in = Input(Propeller(), validator=val.Instance(Propeller))
+
+    #: Instantiated Battery Object
     battery_in = Input(Battery(), validator=val.Instance(Battery))
+
+    #: Instantiated Wing Object
     wing_in = Input(Wing(), validator=val.Instance(Wing))
+
+    #: The Maximum Take-Off Weight from bottoms-up Class II in SI kilogram [kg]
     weight_mtow = Input(5.0, validator=val.Instance(float))
+
+    #: The Parasitic Drag Coefficient (C_D_0)
     parasitic_drag = Input(0.02, validator=val.Instance(float))
+
+    #: Oswald Span Efficiency Factor
     oswald_factor = Input(0.85, validator=val.Instance(float))
+
+    #: Switch Case to determine if the C.G. has converged prior to running the Performance Estimation
     cg_valid = Input(False)
+
+    #: Safety Factor to create a buffer between flight speed and stall speed
     stall_buffer = Input(1.5, validator=val.Range(1.0, 1.5))
 
     @Attribute
@@ -85,12 +123,22 @@ class Performance(Base):
 
     @Attribute
     def speed_range(self):
+        """ An auxillary range to the :attr:`prop_speed_range` to be able to better display the induced drag curve
+
+        :return: Range of True Airspeeds (TAS) in SI meter per second [m/s]
+        :rtype: numpy array
+        """
         if not self.cg_valid:
             warn_window('Please run the c.g. convergence attribute in the root, before estimating Performance')
         return np.linspace(0.1, self.eta_curve_bounds[1], 100)
 
     @Attribute
     def dynamic_pressures(self):
+        """ Creates a range of dynamic pressurs corresponding to the range of flight speeds from :attr:`speed_range`
+
+        :return: Range of Dynamic Pressures in SI Pascal [Pa]
+        :rtype: numpy array
+        """
         return 0.5 * self.wing_in.rho * (self.speed_range ** 2)
 
     @Attribute

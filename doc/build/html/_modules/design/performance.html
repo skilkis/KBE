@@ -212,8 +212,29 @@
     <span class="sd">&quot;&quot;&quot; This class calculates the end performance of the UAV created in the KBE GUI. This verifies that the UAV will</span>
 <span class="sd">    fulfill the mission requirements.</span>
 
-<span class="sd">    :param wing_in: The Wing input instantiation.</span>
+<span class="sd">    :param motor_in: The instantated motor (typically passed from myUAV)</span>
+<span class="sd">    :type motor_in: Motor</span>
+
+<span class="sd">    :param propeller: The instantated propeller (typically passed from myUAV)</span>
+<span class="sd">    :type propeller: Propeller</span>
+
+<span class="sd">    :param wing_in: The instantated wing passed (typically passed from myUAV)</span>
 <span class="sd">    :type wing_in: Wing</span>
+
+<span class="sd">    :param weight_mtow: Final Maximum Take-Off Weight in SI kilogram [kg]</span>
+<span class="sd">    :type weight_mtow: float</span>
+
+<span class="sd">    :param parasitic_drag: Computed Parasitic Drag Coefficient</span>
+<span class="sd">    :type parasitic_drag: float</span>
+
+<span class="sd">    :param oswald_factor: Oswald Span Efficiency Factor</span>
+<span class="sd">    :type parasitic_drag: float</span>
+
+<span class="sd">    :param cg_valid: Switch case used to judge if the performance prediction is valid</span>
+<span class="sd">    :type cg_valid: bool</span>
+
+<span class="sd">    :param stall_buffer: Safety Factor to create a buffer between Endurance/Cruise velocity and the Stall Speed</span>
+<span class="sd">    :type stall_buffer: float</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">__initargs__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;parasitic_drag&quot;</span><span class="p">]</span>

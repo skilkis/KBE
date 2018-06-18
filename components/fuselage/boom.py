@@ -13,10 +13,6 @@ from directories import *
 __author__ = ["Şan Kılkış", "Nelson Johnson"]
 __all__ = ["Boom"]
 
-# TODO Commenting, it is in documentation
-# TODO organize and add labels
-
-
 class Boom(ExternalBody):
     """ This class will create a dual boom connection between the Main wing's spar line and the front face of the
     connector described in 'CompoundStabilizer'.

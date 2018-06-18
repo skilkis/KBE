@@ -12,8 +12,6 @@ from directories import *
 __author__ = ["Nelson Johnson", "San Kilkis"]
 __all__ = ["CompoundStabilizer"]
 
-# TODO fix boom position and add spheres to booms
-
 
 class CompoundStabilizer(ExternalBody):
     """ This class will instantiate the horizontal tail with the required area form the scissor plot. Also it will

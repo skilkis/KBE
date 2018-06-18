@@ -24,9 +24,6 @@ class FCone(GeomBase):
     :type support_frame: FFrame
     """
 
-    # TODO write documentation(comments, it is already in documentation)
-    #  TODO finish commenting, it is in documentation
-
     __initargs__ = ["support_frame", "side_tangent", "top_tangent", "direction", "tip_point_z"]
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'cone.png')
 

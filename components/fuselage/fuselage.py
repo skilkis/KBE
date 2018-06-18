@@ -13,12 +13,8 @@ from copy import copy
 __author__ = "Şan Kılkış"
 __all__ = ["Fuselage"]
 
-# http://www.dupont.com/content/dam/dupont/products-and-services/fabrics-fibers-and-nonwovens/fibers/documents/Kevlar_Technical_Guide.pdf
-
-# ^ Potential knowledge base for materials
-
-# TODO make the boundary condition spline more robust with sorting and lambda functions
-# TODO add a validator function for the fuselage promting user input if intersections occur
+# TODO (TBD) Make the boundary condition spline more robust with sorting and lambda functions
+# TODO (TBD) Add a validator function for the fuselage promting user input if intersections occur
 
 
 class Fuselage(ExternalBody):
@@ -30,9 +26,6 @@ class Fuselage(ExternalBody):
     :type compartment_type: str list
 
     """
-
-    #  TODO Commenting, it is in documentation
-    # TODO Class description and use cases
 
     __initargs__ = ["compartment_type", "sizing_parts"]
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'fuselage.png')
@@ -324,7 +317,6 @@ class Fuselage(ExternalBody):
 
         start_tangent = spline.tangent1
 
-        # TODO Make this more robust, currently the end_tangent does not produce good results when ruled mode is on
         end_tangent = spline.tangent2  # Not true when ruled mode is turned
         x = end_tangent.x
         y = 0  # Forced to zero to avoid minute floating point errors
@@ -458,8 +450,14 @@ class Fuselage(ExternalBody):
     # --- Methods: ----------------------------------------------------------------------------------------------------
 
     @staticmethod
-    # TODO Comment class methods
     def bbox_to_frame(bbox, placement='start'):
+        """ Responsible for instantiating the frame that is fit around a certain Bounding-box (bbox)
+
+        :param bbox: The input bbox for the frame to be fit around
+        :param placement: Determines if the frame will be placed at the start (min(x)) middle or end (max(x))
+        :return: Fuselage Frame
+        :rtype: FFrame
+        """
 
         # Extracting corners from bbox
         corners = bbox.corners
@@ -490,8 +488,13 @@ class Fuselage(ExternalBody):
         return [frame, param_dict]
 
     @staticmethod
-    # TODO comment this class method
     def bbox_extractor(sizing_components):
+        """ Obtains the bbox from a group of TopoDShapes and returns the resultant bbox
+
+        :param sizing_components:
+        :return: Bound-box of Input Parts
+        :rtype: bbox
+        """
         shape_out = None
         if type(sizing_components) == list:
             if len(sizing_components) > 1:

@@ -10,9 +10,6 @@ from directories import *
 __author__ = "Şan Kılkış"
 __all__ = ["FFrame"]
 
-#  TODO add validator (x, validator=val.Instance(int)) on position input?
-#  TODO finish comments, it is in documentation.
-
 
 class FFrame(GeomBase):
     """FFrame (Fuselage-Frame) is a class which utilizes a scaled 'unit curve' to define a fuselage cross-section

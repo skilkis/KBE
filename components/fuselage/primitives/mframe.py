@@ -6,8 +6,6 @@ from parapy.geom import *
 from parapy.core import *
 
 
-#  TODO finish comments, it is in documentation already.
-
 __author__ = ["Şan Kılkış"]
 __all__ = ["MFrame"]
 

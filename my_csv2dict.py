@@ -1,10 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# TODO Fix comments here
-# TODO create csv 2 dict syntax document
-
-
 from directories import *
 import io
 

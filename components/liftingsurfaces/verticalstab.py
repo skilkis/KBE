@@ -10,8 +10,6 @@ from definitions import *
 from user import MyColors
 from directories import *
 
-#  TODO ADD VALIDATOR FOR AIRFOIL TYPE & CHOICE, OFFSET. ALSO IN LIFTING SURF AND HORIZONTAL STAB!!!!!!!
-
 __author__ = ["Nelson Johnson"]
 __all__ = ["VerticalStabilizer"]
 
@@ -141,7 +139,6 @@ class VerticalStabilizer(ExternalBody, LiftingSurface):
         pos = self.solid.cog
         return pos
 
-    # TODO check value if it is correct to use 2.0 factor
     @Attribute
     def v_v(self):
         """ This attribute estimates the VTP volume coefficient from statistical agricultural conventional aircraft

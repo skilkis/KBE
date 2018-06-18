@@ -5,8 +5,6 @@
 from parapy.geom import *  # \
 from parapy.core import *  # / Required ParaPy Modules
 
-# TODO All necessary comments and documentation
-
 # Other Modules
 from user import *
 from definitions import *
