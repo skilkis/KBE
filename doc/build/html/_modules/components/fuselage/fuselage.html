@@ -206,12 +206,8 @@
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Şan Kılkış&quot;</span>
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Fuselage&quot;</span><span class="p">]</span>
 
-<span class="c1"># http://www.dupont.com/content/dam/dupont/products-and-services/fabrics-fibers-and-nonwovens/fibers/documents/Kevlar_Technical_Guide.pdf</span>
-
-<span class="c1"># ^ Potential knowledge base for materials</span>
-
-<span class="c1"># TODO make the boundary condition spline more robust with sorting and lambda functions</span>
-<span class="c1"># TODO add a validator function for the fuselage promting user input if intersections occur</span>
+<span class="c1"># TODO (TBD) Make the boundary condition spline more robust with sorting and lambda functions</span>
+<span class="c1"># TODO (TBD) Add a validator function for the fuselage promting user input if intersections occur</span>
 
 
 <div class="viewcode-block" id="Fuselage"><a class="viewcode-back" href="../../../components/fuselage/fuselage.html#components.fuselage.fuselage.Fuselage">[docs]</a><span class="k">class</span> <span class="nc">Fuselage</span><span class="p">(</span><span class="n">ExternalBody</span><span class="p">):</span>
@@ -223,9 +219,6 @@
 <span class="sd">    :type compartment_type: str list</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="c1">#  TODO Commenting, it is in documentation</span>
-    <span class="c1"># TODO Class description and use cases</span>
 
     <span class="n">__initargs__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;compartment_type&quot;</span><span class="p">,</span> <span class="s2">&quot;sizing_parts&quot;</span><span class="p">]</span>
     <span class="n">__icon__</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;ICON_DIR&#39;</span><span class="p">],</span> <span class="s1">&#39;fuselage.png&#39;</span><span class="p">)</span>
@@ -517,7 +510,6 @@
 
         <span class="n">start_tangent</span> <span class="o">=</span> <span class="n">spline</span><span class="o">.</span><span class="n">tangent1</span>
 
-        <span class="c1"># TODO Make this more robust, currently the end_tangent does not produce good results when ruled mode is on</span>
         <span class="n">end_tangent</span> <span class="o">=</span> <span class="n">spline</span><span class="o">.</span><span class="n">tangent2</span>  <span class="c1"># Not true when ruled mode is turned</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">end_tangent</span><span class="o">.</span><span class="n">x</span>
         <span class="n">y</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Forced to zero to avoid minute floating point errors</span>
@@ -650,9 +642,15 @@
 
     <span class="c1"># --- Methods: ----------------------------------------------------------------------------------------------------</span>
 
-    <span class="nd">@staticmethod</span>
-    <span class="c1"># TODO Comment class methods</span>
+<div class="viewcode-block" id="Fuselage.bbox_to_frame"><a class="viewcode-back" href="../../../components/fuselage/fuselage.html#components.fuselage.fuselage.Fuselage.bbox_to_frame">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">bbox_to_frame</span><span class="p">(</span><span class="n">bbox</span><span class="p">,</span> <span class="n">placement</span><span class="o">=</span><span class="s1">&#39;start&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Responsible for instantiating the frame that is fit around a certain Bounding-box (bbox)</span>
+
+<span class="sd">        :param bbox: The input bbox for the frame to be fit around</span>
+<span class="sd">        :param placement: Determines if the frame will be placed at the start (min(x)) middle or end (max(x))</span>
+<span class="sd">        :return: Fuselage Frame</span>
+<span class="sd">        :rtype: FFrame</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Extracting corners from bbox</span>
         <span class="n">corners</span> <span class="o">=</span> <span class="n">bbox</span><span class="o">.</span><span class="n">corners</span>
@@ -680,11 +678,16 @@
                       <span class="s1">&#39;length&#39;</span><span class="p">:</span> <span class="n">length</span><span class="p">,</span>
                       <span class="s1">&#39;position&#39;</span><span class="p">:</span> <span class="n">position</span><span class="p">}</span>
 
-        <span class="k">return</span> <span class="p">[</span><span class="n">frame</span><span class="p">,</span> <span class="n">param_dict</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">frame</span><span class="p">,</span> <span class="n">param_dict</span><span class="p">]</span></div>
 
-    <span class="nd">@staticmethod</span>
-    <span class="c1"># TODO comment this class method</span>
+<div class="viewcode-block" id="Fuselage.bbox_extractor"><a class="viewcode-back" href="../../../components/fuselage/fuselage.html#components.fuselage.fuselage.Fuselage.bbox_extractor">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">bbox_extractor</span><span class="p">(</span><span class="n">sizing_components</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Obtains the bbox from a group of TopoDShapes and returns the resultant bbox</span>
+
+<span class="sd">        :param sizing_components:</span>
+<span class="sd">        :return: Bound-box of Input Parts</span>
+<span class="sd">        :rtype: bbox</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">shape_out</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">sizing_components</span><span class="p">)</span> <span class="o">==</span> <span class="nb">list</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sizing_components</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
@@ -697,7 +700,7 @@
                 <span class="n">shape_out</span> <span class="o">=</span> <span class="n">sizing_components</span><span class="o">.</span><span class="n">internal_shape</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">shape_out</span> <span class="o">=</span> <span class="n">sizing_components</span><span class="o">.</span><span class="n">internal_shape</span>
-        <span class="k">return</span> <span class="n">shape_out</span><span class="o">.</span><span class="n">bbox</span></div>
+        <span class="k">return</span> <span class="n">shape_out</span><span class="o">.</span><span class="n">bbox</span></div></div>
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>

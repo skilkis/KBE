@@ -203,8 +203,6 @@
 <span class="kn">from</span> <span class="nn">user</span> <span class="k">import</span> <span class="n">MyColors</span>
 <span class="kn">from</span> <span class="nn">directories</span> <span class="k">import</span> <span class="o">*</span>
 
-<span class="c1">#  TODO ADD VALIDATOR FOR AIRFOIL TYPE &amp; CHOICE, OFFSET. ALSO IN LIFTING SURF AND HORIZONTAL STAB!!!!!!!</span>
-
 <span class="n">__author__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Nelson Johnson&quot;</span><span class="p">]</span>
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;VerticalStabilizer&quot;</span><span class="p">]</span>
 
@@ -334,7 +332,6 @@
         <span class="n">pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">solid</span><span class="o">.</span><span class="n">cog</span>
         <span class="k">return</span> <span class="n">pos</span></div>
 
-    <span class="c1"># TODO check value if it is correct to use 2.0 factor</span>
 <div class="viewcode-block" id="VerticalStabilizer.v_v"><a class="viewcode-back" href="../../../components/liftingsurfaces/verticalstab.html#components.liftingsurfaces.verticalstab.VerticalStabilizer.v_v">[docs]</a>    <span class="nd">@Attribute</span>
     <span class="k">def</span> <span class="nf">v_v</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; This attribute estimates the VTP volume coefficient from statistical agricultural conventional aircraft</span>

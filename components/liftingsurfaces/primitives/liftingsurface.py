@@ -136,8 +136,8 @@ class LiftingSurface(GeomBase):
             return 'Airfoil selection failed, please invalidate and run-again'
         else:
             if len(path) > 0:
-                setattr(self, 'airfoil_choice', str(path.split('.')[-2].split('/')[-1]))  # Selects the airfoil name
-                setattr(self, 'airfoil_type', str(path.split('.')[-2].split('/')[-2]))  # Selects the folder-name
+                self.set_slot_value('airfoil_choice', str(path.split('.')[-2].split('/')[-1]))
+                self.set_slot_value('airfoil_type', str(path.split('.')[-2].split('/')[-2]))
             return 'Airfoil has been successfully chosen, invalidate to run-again'
 
     @Attribute

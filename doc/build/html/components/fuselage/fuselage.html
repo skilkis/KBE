@@ -221,6 +221,48 @@
 :type: bool</p>
 </dd></dl>
 
+<dl class="staticmethod">
+<dt id="components.fuselage.fuselage.Fuselage.bbox_extractor">
+<em class="property">static </em><code class="descname">bbox_extractor</code><span class="sig-paren">(</span><em>sizing_components</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/components/fuselage/fuselage.html#Fuselage.bbox_extractor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.fuselage.fuselage.Fuselage.bbox_extractor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtains the bbox from a group of TopoDShapes and returns the resultant bbox</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sizing_components</strong> – </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Bound-box of Input Parts</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">bbox</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="components.fuselage.fuselage.Fuselage.bbox_to_frame">
+<em class="property">static </em><code class="descname">bbox_to_frame</code><span class="sig-paren">(</span><em>bbox</em>, <em>placement='start'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/components/fuselage/fuselage.html#Fuselage.bbox_to_frame"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.fuselage.fuselage.Fuselage.bbox_to_frame" title="Permalink to this definition">¶</a></dt>
+<dd><p>Responsible for instantiating the frame that is fit around a certain Bounding-box (bbox)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>bbox</strong> – The input bbox for the frame to be fit around</li>
+<li><strong>placement</strong> – Determines if the frame will be placed at the start (min(x)) middle or end (max(x))</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Fuselage Frame</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="fframe.html#components.fuselage.primitives.fframe.FFrame" title="components.fuselage.primitives.fframe.FFrame">FFrame</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="components.fuselage.fuselage.Fuselage.build_nose">
 <code class="descname">build_nose</code><a class="reference internal" href="../../_modules/components/fuselage/fuselage.html#Fuselage.build_nose"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.fuselage.fuselage.Fuselage.build_nose" title="Permalink to this definition">¶</a></dt>

@@ -240,14 +240,31 @@
     <span class="n">__initargs__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;parasitic_drag&quot;</span><span class="p">]</span>
     <span class="n">__icon__</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;ICON_DIR&#39;</span><span class="p">],</span> <span class="s1">&#39;performance.png&#39;</span><span class="p">)</span>
 
+    <span class="c1">#: Instantiated Motor Object</span>
     <span class="n">motor_in</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">Motor</span><span class="p">(),</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="n">Motor</span><span class="p">))</span>
+
+    <span class="c1">#: Instantiated Propeller Object</span>
     <span class="n">propeller_in</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">Propeller</span><span class="p">(),</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="n">Propeller</span><span class="p">))</span>
+
+    <span class="c1">#: Instantiated Battery Object</span>
     <span class="n">battery_in</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">Battery</span><span class="p">(),</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="n">Battery</span><span class="p">))</span>
+
+    <span class="c1">#: Instantiated Wing Object</span>
     <span class="n">wing_in</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">Wing</span><span class="p">(),</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="n">Wing</span><span class="p">))</span>
+
+    <span class="c1">#: The Maximum Take-Off Weight from bottoms-up Class II in SI kilogram [kg]</span>
     <span class="n">weight_mtow</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">5.0</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">float</span><span class="p">))</span>
+
+    <span class="c1">#: The Parasitic Drag Coefficient (C_D_0)</span>
     <span class="n">parasitic_drag</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">float</span><span class="p">))</span>
+
+    <span class="c1">#: Oswald Span Efficiency Factor</span>
     <span class="n">oswald_factor</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.85</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">float</span><span class="p">))</span>
+
+    <span class="c1">#: Switch Case to determine if the C.G. has converged prior to running the Performance Estimation</span>
     <span class="n">cg_valid</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="c1">#: Safety Factor to create a buffer between flight speed and stall speed</span>
     <span class="n">stall_buffer</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Range</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">))</span>
 
 <div class="viewcode-block" id="Performance.stall_speed"><a class="viewcode-back" href="../../design/performance.html#design.performance.Performance.stall_speed">[docs]</a>    <span class="nd">@Attribute</span>
@@ -297,15 +314,25 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eta_curve_bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">eta_curve_bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">100</span><span class="p">)</span></div>
 
-    <span class="nd">@Attribute</span>
+<div class="viewcode-block" id="Performance.speed_range"><a class="viewcode-back" href="../../design/performance.html#design.performance.Performance.speed_range">[docs]</a>    <span class="nd">@Attribute</span>
     <span class="k">def</span> <span class="nf">speed_range</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; An auxillary range to the :attr:`prop_speed_range` to be able to better display the induced drag curve</span>
+
+<span class="sd">        :return: Range of True Airspeeds (TAS) in SI meter per second [m/s]</span>
+<span class="sd">        :rtype: numpy array</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">cg_valid</span><span class="p">:</span>
             <span class="n">warn_window</span><span class="p">(</span><span class="s1">&#39;Please run the c.g. convergence attribute in the root, before estimating Performance&#39;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">eta_curve_bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">100</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">eta_curve_bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">100</span><span class="p">)</span></div>
 
-    <span class="nd">@Attribute</span>
+<div class="viewcode-block" id="Performance.dynamic_pressures"><a class="viewcode-back" href="../../design/performance.html#design.performance.Performance.dynamic_pressures">[docs]</a>    <span class="nd">@Attribute</span>
     <span class="k">def</span> <span class="nf">dynamic_pressures</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">wing_in</span><span class="o">.</span><span class="n">rho</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">speed_range</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="sd">&quot;&quot;&quot; Creates a range of dynamic pressurs corresponding to the range of flight speeds from :attr:`speed_range`</span>
+
+<span class="sd">        :return: Range of Dynamic Pressures in SI Pascal [Pa]</span>
+<span class="sd">        :rtype: numpy array</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">wing_in</span><span class="o">.</span><span class="n">rho</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">speed_range</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span></div>
 
     <span class="nd">@Attribute</span>
     <span class="k">def</span> <span class="nf">lift_coefficients</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
