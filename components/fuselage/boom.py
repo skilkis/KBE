@@ -78,14 +78,27 @@ class Boom(ExternalBody):
 
     @Attribute
     def tail_end_point(self):
+        """ Components the most forward position of the compound tail
+
+        :return: Position of the front face that the boom will join to
+        :rtype: Position
+        """
         return self.tail_in.tail_shaft_circle[0].center
 
     @Attribute
     def boom_length(self):
+        """ Computes the length of the boom
+
+        :rtype: float
+        """
         return abs(self.wing_end_point.vector_from(self.tail_end_point).x)
 
     @Attribute
     def boom_tail_curve(self):
+        """ Instantiates the curve which is later used by :attr:`booms_import` in an extrude process
+
+        :rtype: RotatedCurve
+        """
         sorted_faces = sorted(self.tail_in.connector_right.faces, key=lambda f: f.cog.x)
         scaled_curve = ScaledCurve(curve_in=sorted_faces[0].edges[0],
                                    reference_point=self.tail_end_point,
@@ -98,7 +111,11 @@ class Boom(ExternalBody):
 
     @Attribute(private=True)
     def booms_import(self):
-        """ Responsible for """
+        """ Responsible for instantiating and thus importing the boom shape into the class, this is accomplished first
+         by an Extruded solid that is then mirrored and later fused
+
+         :rtype: Fused
+         """
         _unrotated = ExtrudedSolid(island=self.boom_tail_curve, distance=self.boom_length)
         _left_boom = MirroredShape(shape_in=_unrotated, reference_point=Point(0, 0, 0), vector1=Vector(1, 0, 0),
                                    vector2=Vector(0, 0, 1))

@@ -200,9 +200,12 @@
 <span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="n">radians</span>
 <span class="kn">from</span> <span class="nn">user</span> <span class="k">import</span> <span class="n">MyColors</span>
 <span class="kn">from</span> <span class="nn">definitions</span> <span class="k">import</span> <span class="n">ExternalBody</span>
+<span class="kn">from</span> <span class="nn">directories</span> <span class="k">import</span> <span class="o">*</span>
 
-<span class="n">__author__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Nelson Johnson&quot;</span><span class="p">]</span>
+<span class="n">__author__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Nelson Johnson&quot;</span><span class="p">,</span> <span class="s2">&quot;San Kilkis&quot;</span><span class="p">]</span>
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;CompoundStabilizer&quot;</span><span class="p">]</span>
+
+<span class="c1"># TODO fix boom position and add spheres to booms</span>
 
 
 <div class="viewcode-block" id="CompoundStabilizer"><a class="viewcode-back" href="../../../components/liftingsurfaces/compoundstab.html#components.liftingsurfaces.compoundstab.CompoundStabilizer">[docs]</a><span class="k">class</span> <span class="nc">CompoundStabilizer</span><span class="p">(</span><span class="n">ExternalBody</span><span class="p">):</span>
@@ -242,7 +245,12 @@
 
 <span class="sd">    :param color: Changes the color of the wing skin to the one defined in MyColors</span>
 <span class="sd">    :type color: tuple</span>
+
+<span class="sd">    :param ply_number: Changes the number of ply&#39;s of carbon fiber pre-preg.</span>
+<span class="sd">    :type ply_number: int</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">__icon__</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;ICON_DIR&#39;</span><span class="p">],</span> <span class="s1">&#39;ctail.png&#39;</span><span class="p">)</span>
 
     <span class="c1">#: Below is the required horizontal tail area of the main wings from the stability analysis.</span>
     <span class="n">required_planform_area</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">settable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -274,6 +282,9 @@
     <span class="c1">#: This value is used to set the default color of the wing-part</span>
     <span class="n">color</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">MyColors</span><span class="o">.</span><span class="n">skin_color</span><span class="p">)</span>
 
+    <span class="c1">#: Changes the number of ply&#39;s of carbon fiber http://www.ijera.com/papers/Vol4_issue5/Version%202/J45025355.pdf</span>
+    <span class="n">ply_number</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
+
 <div class="viewcode-block" id="CompoundStabilizer.stabilizer_h"><a class="viewcode-back" href="../../../components/liftingsurfaces/compoundstab.html#components.liftingsurfaces.compoundstab.CompoundStabilizer.stabilizer_h">[docs]</a>    <span class="nd">@Part</span>
     <span class="k">def</span> <span class="nf">stabilizer_h</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; This is an instantiation of the :class:`HorizontalStabilizer` class with the required planform area from the</span>
@@ -284,7 +295,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">HorizontalStabilizer</span><span class="p">(</span><span class="n">position</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">,</span>
                                     <span class="n">planform_area</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">required_planform_area</span><span class="p">,</span>
-                                    <span class="n">aspect_ratio</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">aspect_ratio</span><span class="p">)</span></div>
+                                    <span class="n">aspect_ratio</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">aspect_ratio</span><span class="p">,</span>
+                                    <span class="n">ply_number</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ply_number</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="CompoundStabilizer.stabilizer_vright"><a class="viewcode-back" href="../../../components/liftingsurfaces/compoundstab.html#components.liftingsurfaces.compoundstab.CompoundStabilizer.stabilizer_vright">[docs]</a>    <span class="nd">@Part</span>
     <span class="k">def</span> <span class="nf">stabilizer_vright</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -409,15 +421,6 @@
     <span class="k">def</span> <span class="nf">internal_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; This is the internal shape of the compound stabilizer. It is None because the current app uses a boom tail\</span>
 <span class="sd">        structure instead of a single fuselage, and thus there is no shape to present for the fuselage builder.</span>
-
-<span class="sd">        :rtype: None</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="kc">None</span></div>
-
-<div class="viewcode-block" id="CompoundStabilizer.ply_number"><a class="viewcode-back" href="../../../components/liftingsurfaces/compoundstab.html#components.liftingsurfaces.compoundstab.CompoundStabilizer.ply_number">[docs]</a>    <span class="nd">@Attribute</span><span class="p">(</span><span class="n">private</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">ply_number</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; This overwrites the input defined by the :class:`ExternalBody` since the ply-number should only be \</span>
-<span class="sd">        controlled from the respective stabilizers themselves.</span>
 
 <span class="sd">        :rtype: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>

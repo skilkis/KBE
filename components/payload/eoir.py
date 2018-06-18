@@ -2,8 +2,6 @@
 # -*- coding: utf-8 -*-
 
 
-# TODO Comment the whole code, it is in documentation
-
 from parapy.geom import *  # \
 from parapy.core import *  # / Required ParaPy Modules
 
@@ -50,8 +48,8 @@ class EOIR(ExternalBody):
     target_weight = Input(0.2, validator=val.Positive())
     camera_name = Input('Not Specified')
 
-    @Input
-    def browse_motors(self):
+    @Attribute
+    def browse_cameras(self):
         """ Allows the user to easily choose amongst available cameras with a GUI File-Browser.
 
         :return: Sets the `cameras_name` to the value chosen in the GUI Browser

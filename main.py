@@ -8,42 +8,8 @@
 @version: 1.0
 """
 
-#  TODO DELIVERABLE:   WRITE   OUTPUT    EXCEL    FILE   !!!!!!!!!!!!!!!!!!!!!!
-
-#  TODO !!!!!! IF AR (for example) CHANGED IN Main Wing INSTANTIATION, SCISSOR PLOT IS NOT UPDATED WITH CORRESP. VALUE!
-#  TODO .... we must update the values in params, and change them ONLY there in the GUI!!!!!!!!!!!!!!!!
-
-#  TODO MAKE final_cg NON LAZY OR USER SEES WRONG TAIL!!!!!!!!!!!!!!!!!! (Add listener to input cg)
-#  TODO Make sure vt weight is correct in final weight for changes in the GUI ......
-
-
-# TODO Add instance validator for each class input (check out performance.py for example)
-# TODO Make a nice visual CG representation of both c.g. before and after run
-
-#  TODO every class should have print statement saying that it has been instantiated into the console
-
-# TODO delete all example and irrelevant documents & data files in KBE folder and rename folder with original name.
-
-# TODO move everything except for main.py into a \bin folder to clean up directory
-
-# TODO Add UML in doc
-
-# TODO bug found in eletronics, number of engines messes up the Fuse Operation
-
-
-# TODO Check that all plots are actually output, and consider trigerring all plots with an attribute
-
-# TODO internal shape of electronics module is wrong
-
-
-# TODO add validator Class IntersectedShapes on Fuselage
-
-
-# TODO Change fuselage fit-width to actual dimension to be able to be a certain fraction of camera size
-
-# TODO AIRFOIL BROWSER STOPPED WORKING!!!!
-
 from design import *
+from user import MyColors
 from parapy.core import *
 from parapy.geom import *
 from parapy.exchange import STEPWriter
@@ -120,7 +86,8 @@ class UAV(DesignInput):
         and collect the :attr:`external_shape` from these children. These are then fed to the :class:`STEPWriter` which
         creates the .stp file in the user directory under KBE/user/model.
 
-        :return:
+        :return: The .stp file of the current myUAV instance in the /user/model folder
+        :rtype: STEPWriter
         """
 
         def part_fetcher(external_shape, label):
@@ -193,8 +160,12 @@ class UAV(DesignInput):
 
     @Attribute
     def write_excel(self):
+        """ Responsible for writing the important parameters generated from the instantiation of myUAV and stores them
+        in a .xls file in /user/results/output.xls. Due to the large amount of string formatting within this attribute
+        feel free to collapse for readability of the code """
 
-        ignore_list = ['children', 'mesh_deflection', 'browse_airfoils', '_local_bbox_bounds', '_bbox_bounds', 'hidden']
+        ignore_list = ['children', 'mesh_deflection', 'browse_airfoils', 'browse_cameras', 'browse_motors',
+                       '_local_bbox_bounds', '_bbox_bounds', 'hidden']
         hdr_font = xlwt.Font()
         hdr_font.name = 'Times New Roman'
         hdr_font.bold = True
@@ -203,7 +174,7 @@ class UAV(DesignInput):
         hdr_style.font = hdr_font
 
         wb = xlwt.Workbook()
-        ws0 = wb.add_sheet('Weight & Balance')
+        ws0 = wb.add_sheet('myUAV Ouput Data')
 
         headers = ['Parameter', 'Value', 'Units']
         for i in range(0, len(headers)):
@@ -230,11 +201,29 @@ class UAV(DesignInput):
             ws0.write(row, 2, value)
             ws0.write(row, 3, '[m^2]')
 
+        #: Writing Parasitic Drag
+        row = row + 2
+        ws0.write(row, 1, 'CD_0', hdr_style)
+        ws0.write(row, 2, self.parasite_drag)
+        ws0.write(row, 3, '[-]')
+
+        #: Writing Endurance
+        row = row + 2
+        ws0.write(row, 1, 'Endurance', hdr_style)
+        ws0.write(row, 2, self.performance.endurance)
+        ws0.write(row, 3, '[h]')
+
+        #: Writing Range
+        row = row + 2
+        ws0.write(row, 1, 'Range', hdr_style)
+        ws0.write(row, 2, self.performance.range)
+        ws0.write(row, 3, '[km]')
+
         row = 1
         ws0.write(row, 5, 'Wing', hdr_style)
         ws0.write(row, 6, self.wing.airfoil_choice)
         for key in self.wing._slots:
-            if key not in ignore_list and key.find('plot') == -1 and key.find('avl') == -1:
+            if key not in ignore_list and key.find('plot') == -1 and key.find('avl') == -1 and key.find('hide'):
                 value = getattr(self.wing, key)
                 if isinstance(value, float) or isinstance(value, int) and not isinstance(value, basestring):
                     row = row + 1
@@ -244,7 +233,7 @@ class UAV(DesignInput):
         row = 1
         ws0.write(row, 8, 'Stability', hdr_style)
         for key in self.stability._slots:
-            if key not in ignore_list and key.find('plot') == -1 and key.find('avl') == -1:
+            if key not in ignore_list and key.find('plot') == -1 and key.find('avl') == -1 and key.find('hide'):
                 value = getattr(self.stability, key)
                 if isinstance(value, float) or isinstance(value, int):
                     row = row + 1
@@ -254,12 +243,32 @@ class UAV(DesignInput):
         row = 1
         ws0.write(row, 11, 'Stabilizer', hdr_style)
         for key in self.stabilizer._slots:
-            if key not in ignore_list and key.find('plot') == -1 and key.find('avl') == -1:
+            if key not in ignore_list and key.find('plot') == -1 and key.find('avl') == -1 and key.find('hide'):
                 value = getattr(self.stabilizer, key)
                 if isinstance(value, float) or isinstance(value, int):
                     row = row + 1
                     ws0.write(row, 11, key)
                     ws0.write(row, 12, value)
+
+        row = 1
+        ws0.write(row, 14, 'Payload', hdr_style)
+        for key in self.camera._slots:
+            if key not in ignore_list and key.find('plot') == -1 and key.find('avl') == -1 and key.find('hide'):
+                value = getattr(self.camera, key)
+                if isinstance(value, float) or isinstance(value, int):
+                    row = row + 1
+                    ws0.write(row, 14, key)
+                    ws0.write(row, 15, value)
+
+        row = 1
+        ws0.write(row, 17, 'Motor', hdr_style)
+        for key in self.motor._slots:
+            if key not in ignore_list and key.find('plot') == -1 and key.find('avl') == -1 and key.find('hide'):
+                value = getattr(self.motor, key)
+                if isinstance(value, float) or isinstance(value, int):
+                    row = row + 1
+                    ws0.write(row, 17, key)
+                    ws0.write(row, 18, value)
 
         wb.save(os.path.join(DIRS['USER_DIR'], 'results', 'output.xls'))
         return 'Excel File Written'
@@ -268,6 +277,14 @@ class UAV(DesignInput):
     @Attribute(private=True)
     def pad_distance(self):
         return self.fuselage.pad_factor * self.wing.root_chord
+
+    @Attribute(private=True)
+    def cg_valid(self):
+        """ A switch-case attribute that handles whether or not the c.g. convergence procedure has been executed """
+        cg_valid = False
+        if self.get_slot_status('final_cg'):
+                cg_valid = True
+        return cg_valid
 
     @Part
     def params(self):
@@ -309,7 +326,9 @@ class UAV(DesignInput):
 
     @Part
     def center_of_gravity(self):
-        return VisualCG(vis_cog=self.cg)
+        return VisualCG(vis_cog=self.cg,
+                        color=MyColors.deep_green if self.cg_valid else 'yellow',
+                        label='Converged C.G.' if self.cg_valid else 'Initial Estimate C.G.')
 
     @Part
     def stabilizer(self):
@@ -353,7 +372,6 @@ class UAV(DesignInput):
                         [self.motor, [self.camera, self.electronics], self.battery, self.wing, None],
                         label='Fuselage')
 
-    # TODO fix motor placement to be better looking
     @Part
     def motor(self):
         return Motor(target_power=self.params.motor_power,
@@ -393,7 +411,9 @@ class UAV(DesignInput):
                            wing_in=self.wing,
                            weight_mtow=self.weights['mtow'],
                            parasitic_drag=self.parasite_drag,
-                           oswald_factor=self.params.wingpowerloading.e_factor, label='Performance')
+                           oswald_factor=self.params.wingpowerloading.e_factor,
+                           cg_valid=self.cg_valid,
+                           label='Performance')
 
     def weight_and_balance(self):
         """ Retrieves all relevant parameters from children with `weight` and `center_of_gravity` attributes and then

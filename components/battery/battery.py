@@ -15,12 +15,11 @@ from directories import *
 __all__ = ["Battery", "show_primitives"]
 
 
-# TODO Add power requirement
-
-
 # A parameter for debugging, turns the visibility of miscellaneous parts ON/OFF
 show_primitives = False  # type: bool
 
+
+# TODO (TBD) Add power-draw requirement to the battery sizing
 
 class Battery(Component):
     """  Battery.py is a file which automatically generates a battery part depending on parametric input of battery

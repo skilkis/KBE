@@ -14,8 +14,6 @@ __author__ = ["Nelson Johnson", "Şan Kılkış"]
 __all__ = ["WingPowerLoading"]
 __settable__ = (True if __name__ == '__main__' else False)
 
-# TODO Fix aspect ratio choice, add validator also for max_lift_coeff, stall_speed
-
 
 class WingPowerLoading(Base):
     """ This class will construct the wing and power loading plot for the fixed wing UAV based on the input MTOW. The
@@ -305,7 +303,9 @@ class WingPowerLoading(Base):
         if self.handlaunch:
             wp = wp_choices[1]
         else:
-            wp = wp_choices[0]
+            wp = wp_choices[1]
+        # Went back to utilizing the climb_gradient requirement for non-hand launched UAV's
+        # as well since climb_rate is not as critical and produced unrealistic motor selection
 
         return{'lift_coefficient': self.maximum_lift_coefficient[idx1],
                'aspect_ratio': self.aspect_ratio_range[idx3],

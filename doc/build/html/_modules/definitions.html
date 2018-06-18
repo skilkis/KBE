@@ -199,33 +199,50 @@
 
 <span class="kn">from</span> <span class="nn">directories</span> <span class="k">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">Iterable</span>
-
+<span class="kn">from</span> <span class="nn">Tkinter</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">tkMessageBox</span>
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Şan Kılkış&quot;</span>
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Component&quot;</span><span class="p">,</span> <span class="s2">&quot;ExternalBody&quot;</span><span class="p">,</span> <span class="s2">&quot;VisualCG&quot;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Component&quot;</span><span class="p">,</span> <span class="s2">&quot;ExternalBody&quot;</span><span class="p">,</span> <span class="s2">&quot;VisualCG&quot;</span><span class="p">,</span> <span class="s2">&quot;error_window&quot;</span><span class="p">,</span> <span class="s2">&quot;warn_window&quot;</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="error_window"><a class="viewcode-back" href="../definitions.html#definitions.error_window">[docs]</a><span class="k">def</span> <span class="nf">error_window</span><span class="p">(</span><span class="n">msg</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Provides a simple easy way to bring up an error message, useful for reducing clutter around error-message calls</span>
+<span class="sd">    within the code &quot;&quot;&quot;</span>
+    <span class="n">root</span> <span class="o">=</span> <span class="n">Tk</span><span class="p">()</span>
+    <span class="n">root</span><span class="o">.</span><span class="n">withdraw</span><span class="p">()</span>
+    <span class="n">tkMessageBox</span><span class="o">.</span><span class="n">showerror</span><span class="p">(</span><span class="s2">&quot;Warning&quot;</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span>
+    <span class="n">root</span><span class="o">.</span><span class="n">destroy</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="warn_window"><a class="viewcode-back" href="../definitions.html#definitions.warn_window">[docs]</a><span class="k">def</span> <span class="nf">warn_window</span><span class="p">(</span><span class="n">msg</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Provides a simple easy way to bring up an warning message, useful for reducing clutter around error-message</span>
+<span class="sd">    calls within the code &quot;&quot;&quot;</span>
+    <span class="n">root</span> <span class="o">=</span> <span class="n">Tk</span><span class="p">()</span>
+    <span class="n">root</span><span class="o">.</span><span class="n">withdraw</span><span class="p">()</span>
+    <span class="n">tkMessageBox</span><span class="o">.</span><span class="n">showwarning</span><span class="p">(</span><span class="s2">&quot;Warning&quot;</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span>
+    <span class="n">root</span><span class="o">.</span><span class="n">destroy</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="VisualCG"><a class="viewcode-back" href="../definitions.html#definitions.VisualCG">[docs]</a><span class="k">class</span> <span class="nc">VisualCG</span><span class="p">(</span><span class="n">GeomBase</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;  xxxx</span>
+    <span class="sd">&quot;&quot;&quot; VisualCG provides the user with a nice visualization of the C.G. location without relying in small and hard to</span>
+<span class="sd">    see points</span>
 
-<span class="sd">    :return: xxx</span>
+<span class="sd">    :return: A sphere at the location of th specified center of gravity</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="c1"># TODO add header here and create a nice looking visual CG</span>
-    <span class="c1">#  TODO add validators to 2 inputs</span>
-
-    <span class="n">__icon__</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;ICON_DIR&#39;</span><span class="p">],</span> <span class="s1">&#39;battery.png&#39;</span><span class="p">)</span>
+    <span class="n">__icon__</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;ICON_DIR&#39;</span><span class="p">],</span> <span class="s1">&#39;cg.png&#39;</span><span class="p">)</span>
     <span class="n">__initargs__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;vis_cog&quot;</span><span class="p">]</span>
-    <span class="c1"># TODO Find a proper icon here</span>
-    <span class="n">vis_cog</span> <span class="o">=</span> <span class="n">Input</span><span class="p">()</span>
-    <span class="n">scale</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.01</span><span class="p">)</span>
+
+    <span class="n">vis_cog</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">Point</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="n">Point</span><span class="p">))</span>
+    <span class="n">scale</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">())</span>
+    <span class="n">color</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;yellow&#39;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="VisualCG.visual_cg_location"><a class="viewcode-back" href="../definitions.html#definitions.VisualCG.visual_cg_location">[docs]</a>    <span class="nd">@Part</span>
     <span class="k">def</span> <span class="nf">visual_cg_location</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;  xxxx</span>
+        <span class="sd">&quot;&quot;&quot; The sphere which is visibile in the GUI</span>
 
-<span class="sd">         :return: xxx</span>
-
+<span class="sd">         :rtype: Sphere</span>
 <span class="sd">         &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">Sphere</span><span class="p">(</span><span class="n">radius</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scale</span><span class="p">,</span>
                       <span class="n">position</span><span class="o">=</span><span class="n">translate</span><span class="p">(</span><span class="n">XOY</span><span class="p">,</span>
@@ -236,6 +253,19 @@
 
 
 <div class="viewcode-block" id="Component"><a class="viewcode-back" href="../definitions.html#definitions.Component">[docs]</a><span class="k">class</span> <span class="nc">Component</span><span class="p">(</span><span class="n">GeomBase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Defines the main class definition for the entire components module. This acts as a template to then allow better</span>
+<span class="sd">    meshing between modded components or multiple collaborators. Thus, the use of such primitive classes makes it easy</span>
+<span class="sd">    for the code to be expanded later, since any class which inherits from Component can be assigned a new method simply</span>
+<span class="sd">    by changing it once in this class</span>
+
+<span class="sd">    :param position: Position of the current component in SI meter [m]</span>
+<span class="sd">    :type position: Position</span>
+
+<span class="sd">    :param inside_fuselage: Although currently not implemented this would allow non-dimensioned fuselage creation where</span>
+<span class="sd">    parts could simply be assigned without constraints and the fuselage would be able to create a shell around them</span>
+<span class="sd">    :type: inside_fuselage: bool</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">__icon__</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;ICON_DIR&#39;</span><span class="p">],</span> <span class="s1">&#39;gear.png&#39;</span><span class="p">)</span>
 

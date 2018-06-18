@@ -57,7 +57,7 @@ class Propeller(ExternalBody):
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'propeller.png')
 
     #:  A parameter for debugging, turns the visibility of miscellaneous parts ON/OFF
-    __show_primitives = False  # type: bool # TODO rename this parameter
+    __show_primitives = False  # type: bool
 
     motor = Input(Motor(integration='puller'), validator=val.Instance(Motor))
     design_speed = Input(15, validator=val.Range(0, 50))
