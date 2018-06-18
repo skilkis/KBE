@@ -18,8 +18,6 @@ __author__ = ["Şan Kılkış", "Nelson Johnson"]
 __all__ = ["ParameterGenerator"]
 __settable__ = (True if __name__ == '__main__' else False)
 
-#  TODO comments, documentation complete
-
 
 class ParameterGenerator(Base):
     """ This class contains all the global design variables.

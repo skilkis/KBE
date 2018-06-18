@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#  TODO ADD VALIDATOR FOR AIRFOIL TYPE & CHOICE, OFFSET. ALSO IN HORIZONTAL AND VERTICAL STAB!!!!!!!
-
-
 from parapy.core import *           # / Required ParaPy Module
 from parapy.geom import *           # / Required ParaPy Module
 from math import *                  # / Python math operations.
@@ -46,8 +43,6 @@ class LiftingSurface(GeomBase):
 
     :param offset: This is the offset in the flow direction of the tip W.R.T. the root Leading Edge.
     :type offset: float or NoneType
-
-    :param browse_airfoils: Allows the user to easily choose amongst available airfoils with a GUI File-Browser.
 
     :param hide_mac: This allows the MAC curve to be shown on the wing when changed in the GUI to False.
     :type hide_mac: bool
@@ -102,28 +97,6 @@ class LiftingSurface(GeomBase):
             setattr(self, 'offset', None)
         return None
 
-    @Input
-    def browse_airfoils(self):
-        """ Allows the user to easily choose amongst available airfoils with a GUI File-Browser.
-
-        :return: Sets the inputs `airfoil_type` and `airfoil_choice` above to the value chosen in the GUI Browser
-        """
-        root = Tk()
-        root.withdraw()
-        path = tkFileDialog.askopenfilename(initialdir=DIRS['AIRFOIL_DIR'], title="Select Airfoil",
-                                            filetypes=(("Airfoil Data Files", "*.dat"), ("All Files", "*.*")))
-        root.destroy()
-
-        valid_dir = DIRS['AIRFOIL_DIR'].replace('\\', '/')
-        if path.find(valid_dir) is -1:
-            error_window("Custom airfoils must be placed in the pre-allocated directory")
-            return 'Airfoil selection failed, please invalidate and run-again'
-        else:
-            if len(path) > 0:
-                setattr(self, 'airfoil_choice', str(path.split('.')[-2].split('/')[-1]))  # Selects the airfoil name
-                setattr(self, 'airfoil_type', str(path.split('.')[-2].split('/')[-2]))  # Selects the folder-name
-            return 'Airfoil has been successfully chosen, invalidate to run-again'
-
     #: Boolean below allows the MAC curve to be shown on the wing when changed in the GUI to False.
     hide_mac = Input(True, validator=val.Instance(bool))
 
@@ -145,6 +118,28 @@ class LiftingSurface(GeomBase):
     airfoil_choice = Input('SD7062')
 
 #  This block of Attributes calculates the planform parameters. ########------------------------------------------------
+    @Attribute
+    def browse_airfoils(self):
+        """ Allows the user to easily choose amongst available airfoils with a GUI File-Browser.
+
+        :return: Sets the inputs `airfoil_type` and `airfoil_choice` above to the value chosen in the GUI Browser
+        """
+        root = Tk()
+        root.withdraw()
+        path = tkFileDialog.askopenfilename(initialdir=DIRS['AIRFOIL_DIR'], title="Select Airfoil",
+                                            filetypes=(("Airfoil Data Files", "*.dat"), ("All Files", "*.*")))
+        root.destroy()
+
+        valid_dir = DIRS['AIRFOIL_DIR'].replace('\\', '/')
+        if path.find(valid_dir) is -1:
+            error_window("Custom airfoils must be placed in the pre-allocated directory")
+            return 'Airfoil selection failed, please invalidate and run-again'
+        else:
+            if len(path) > 0:
+                setattr(self, 'airfoil_choice', str(path.split('.')[-2].split('/')[-1]))  # Selects the airfoil name
+                setattr(self, 'airfoil_type', str(path.split('.')[-2].split('/')[-2]))  # Selects the folder-name
+            return 'Airfoil has been successfully chosen, invalidate to run-again'
+
     @Attribute
     def span(self):
         """ This attribute calculates the required wingspan based on the wing area and Aspect Ratio.

@@ -118,16 +118,7 @@ class Electronics(Component):
         :return: ParaPy Fused Boxes
         :rtype: Fused
         """
-        parts_in = [self.speed_controller.esc_joiner, self.flight_controller.solid]
-        if self.number_engines > 1:
-            shape_in = parts_in[0]
-            for i in range(0, self.number_engines - 1):
-                new_part = Fused(shape_in=shape_in, tool=parts_in[i+1])
-                shape_in = new_part
-            shape_out = shape_in
-        else:
-            shape_out = parts_in[0]
-        return shape_out
+        return Fused(shape_in=self.speed_controller.esc_joiner, tool=self.flight_controller.solid).solids[0]
 
     @Attribute
     def center_of_gravity(self):
@@ -153,7 +144,8 @@ class Electronics(Component):
         :return: Speed Controller(s) bounded box
         :rtype: ScaledShape
         """
-        return ScaledShape(shape_in=self.elec_joiner, reference_point=self.speed_controller.center_of_gravity, factor=1, transparency=0.7)
+        return ScaledShape(shape_in=self.elec_joiner, reference_point=self.speed_controller.center_of_gravity,
+                           factor=1, transparency=0.7)
 
 
 if __name__ == '__main__':

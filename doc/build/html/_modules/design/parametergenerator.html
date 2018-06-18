@@ -205,13 +205,11 @@
 <span class="kn">from</span> <span class="nn">directories</span> <span class="k">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">designinput</span> <span class="k">import</span> <span class="n">valid_payloads</span>
 <span class="kn">from</span> <span class="nn">components</span> <span class="k">import</span> <span class="n">EOIR</span>
+<span class="kn">from</span> <span class="nn">definitions</span> <span class="k">import</span> <span class="n">warn_window</span>
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Şan Kılkış&quot;</span><span class="p">,</span> <span class="s2">&quot;Nelson Johnson&quot;</span><span class="p">]</span>
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ParameterGenerator&quot;</span><span class="p">]</span>
-
-<span class="c1">#  TODO comments, documentation complete</span>
-
-<span class="c1"># Function which returns all valid payloads in the directory /components/payload</span>
+<span class="n">__settable__</span> <span class="o">=</span> <span class="p">(</span><span class="kc">True</span> <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span> <span class="k">else</span> <span class="kc">False</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="ParameterGenerator"><a class="viewcode-back" href="../../design/paramgen.html#design.parametergenerator.ParameterGenerator">[docs]</a><span class="k">class</span> <span class="nc">ParameterGenerator</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
@@ -223,48 +221,60 @@
 
     <span class="n">__icon__</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;ICON_DIR&#39;</span><span class="p">],</span> <span class="s1">&#39;parameters.png&#39;</span><span class="p">)</span>
 
-    <span class="n">performance_goal</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;endurance&#39;</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">OneOf</span><span class="p">([</span><span class="s1">&#39;endurance&#39;</span><span class="p">,</span> <span class="s1">&#39;range&#39;</span><span class="p">]))</span>
-    <span class="n">goal_value</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">())</span>
-    <span class="n">weight_target</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;payload&#39;</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">OneOf</span><span class="p">([</span><span class="s1">&#39;payload&#39;</span><span class="p">,</span> <span class="s1">&#39;mtow&#39;</span><span class="p">]))</span>
-    <span class="c1"># target_value = Input(0.25, validator=val.Positive())</span>
-    <span class="n">target_value</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.25</span><span class="p">)</span>
-    <span class="n">payload_type</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;eoir&#39;</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">OneOf</span><span class="p">(</span><span class="n">valid_payloads</span><span class="p">()))</span>  <span class="c1">#</span>
-    <span class="n">configuration</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;conventional&#39;</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">OneOf</span><span class="p">([</span><span class="s1">&#39;conventional&#39;</span><span class="p">,</span> <span class="s1">&#39;canard&#39;</span><span class="p">,</span> <span class="s1">&#39;flyingwing&#39;</span><span class="p">]))</span>
-    <span class="n">handlaunch</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">bool</span><span class="p">))</span>
-    <span class="n">portable</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">bool</span><span class="p">))</span>
+    <span class="n">performance_goal</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;endurance&#39;</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">OneOf</span><span class="p">([</span><span class="s1">&#39;endurance&#39;</span><span class="p">,</span> <span class="s1">&#39;range&#39;</span><span class="p">]),</span> <span class="n">settable</span><span class="o">=</span><span class="n">__settable__</span><span class="p">)</span>
+
+    <span class="n">goal_value</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">(),</span> <span class="n">settable</span><span class="o">=</span><span class="n">__settable__</span><span class="p">)</span>
+
+    <span class="n">weight_target</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;payload&#39;</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">OneOf</span><span class="p">([</span><span class="s1">&#39;payload&#39;</span><span class="p">,</span> <span class="s1">&#39;mtow&#39;</span><span class="p">]),</span> <span class="n">settable</span><span class="o">=</span><span class="n">__settable__</span><span class="p">)</span>
+
+    <span class="n">target_value</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">(),</span> <span class="n">settable</span><span class="o">=</span><span class="n">__settable__</span><span class="p">)</span>
+
+    <span class="n">payload_type</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;eoir&#39;</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">OneOf</span><span class="p">(</span><span class="n">valid_payloads</span><span class="p">()),</span> <span class="n">settable</span><span class="o">=</span><span class="n">__settable__</span><span class="p">)</span>  <span class="c1">#</span>
+
+    <span class="n">configuration</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;conventional&#39;</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">OneOf</span><span class="p">([</span><span class="s1">&#39;conventional&#39;</span><span class="p">]),</span><span class="n">settable</span><span class="o">=</span><span class="n">__settable__</span><span class="p">)</span>
+
+    <span class="n">handlaunch</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">bool</span><span class="p">),</span> <span class="n">settable</span><span class="o">=</span><span class="n">__settable__</span><span class="p">)</span>
+
+    <span class="n">portable</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">bool</span><span class="p">),</span> <span class="n">settable</span><span class="o">=</span><span class="n">__settable__</span><span class="p">)</span>
 
     <span class="nd">@target_value</span><span class="o">.</span><span class="n">on_slot_change</span>
     <span class="k">def</span> <span class="nf">payload_checker</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Adds a listener to the :param:`target_value` in order to alert the user that their desired payload has</span>
+<span class="sd">        been substituted by a commercially available EOIR sensor, in the future when multiple payload types are</span>
+<span class="sd">        available this &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_target</span> <span class="ow">is</span> <span class="s1">&#39;payload&#39;</span><span class="p">:</span>
             <span class="n">actual_weight</span> <span class="o">=</span> <span class="n">EOIR</span><span class="p">(</span><span class="n">target_weight</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">target_value</span><span class="p">)</span><span class="o">.</span><span class="n">weight</span>
-            <span class="c1"># setattr(self, &#39;target_value&#39;, actual_weight)</span>
-            <span class="c1"># TODO Add custom dialog here</span>
+            <span class="n">warn_window</span><span class="p">(</span><span class="s2">&quot;No payload matching a weight of </span><span class="si">%1.1f</span><span class="s2"> [kg] were found, instead a value&quot;</span>
+                         <span class="s2">&quot;of </span><span class="si">%1.1f</span><span class="s2"> [kg] will be used from now on&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_value</span><span class="p">,</span> <span class="n">actual_weight</span><span class="p">))</span>
             <span class="nb">print</span> <span class="n">actual_weight</span>
 
-    <span class="c1"># TODO add icons and labels for weight_estimator as well as wingpowerloading</span>
-    <span class="nd">@Part</span>
+<div class="viewcode-block" id="ParameterGenerator.weightestimator"><a class="viewcode-back" href="../../design/paramgen.html#design.parametergenerator.ParameterGenerator.weightestimator">[docs]</a>    <span class="nd">@Part</span>
     <span class="k">def</span> <span class="nf">weightestimator</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># Here we instantiate the class I weight estimation using the inputs.</span>
+        <span class="sd">&quot;&quot;&quot; Instantiates the :class:`ClassOne` to perform initial weight estimations utilizing statisctics &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">ClassOne</span><span class="p">(</span><span class="n">weight_target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">weight_target</span><span class="p">,</span>
-                        <span class="n">target_value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">target_value</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_target</span> <span class="ow">is</span> <span class="s1">&#39;payload&#39;</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_value</span><span class="p">)</span>
+                        <span class="n">target_value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">target_value</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_target</span> <span class="ow">is</span> <span class="s1">&#39;payload&#39;</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_value</span><span class="p">,</span>
+                        <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Class-I Weight Estimation&#39;</span><span class="p">)</span></div>
 
-    <span class="nd">@Part</span>
+<div class="viewcode-block" id="ParameterGenerator.wingpowerloading"><a class="viewcode-back" href="../../design/paramgen.html#design.parametergenerator.ParameterGenerator.wingpowerloading">[docs]</a>    <span class="nd">@Part</span>
     <span class="k">def</span> <span class="nf">wingpowerloading</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># inputs = mtow, rang/endurance and value, pl target weight</span>
-        <span class="k">return</span> <span class="n">WingPowerLoading</span><span class="p">(</span><span class="n">mtow</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">weight_mtow</span><span class="p">,</span>
-                                <span class="n">mission</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">performance_goal</span><span class="p">,</span>
+        <span class="sd">&quot;&quot;&quot; Instantiates the :class:`WingPowerLoading` to be able to choose a suitable design point WingPowerLoading &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">WingPowerLoading</span><span class="p">(</span><span class="n">weight_mtow</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">weight_mtow</span><span class="p">,</span>
+                                <span class="n">performance_goal</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">performance_goal</span><span class="p">,</span>
                                 <span class="nb">range</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">goal_value</span><span class="p">,</span>
                                 <span class="n">endurance</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">goal_value</span><span class="p">,</span>
-                                <span class="n">pl_target_weight</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">weight_payload</span><span class="p">,</span>
-                                <span class="n">handlaunch</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">handlaunch</span><span class="p">)</span>
+                                <span class="n">weight_payload</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">weight_payload</span><span class="p">,</span>
+                                <span class="n">handlaunch</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">handlaunch</span><span class="p">,</span>
+                                <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Design Point Selection&#39;</span><span class="p">)</span></div>
 
-
-    <span class="c1"># TODO make sure that the right payload mass is used for the weight estimation</span>
-<span class="c1">#  Below are the attributes which are all the required vaiables for use in other scripts.</span>
-    <span class="nd">@Attribute</span>
+<div class="viewcode-block" id="ParameterGenerator.weight_mtow"><a class="viewcode-back" href="../../design/paramgen.html#design.parametergenerator.ParameterGenerator.weight_mtow">[docs]</a>    <span class="nd">@Attribute</span>
     <span class="k">def</span> <span class="nf">weight_mtow</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Fetches the output maximum take-off weight from the Class I weight estimation</span>
+
+<span class="sd">        :return: Maximum Take-Off Weight (MTOW) in SI kilogram [kg]</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1">#  Here we obtain the MTOW of the UAV, from the Class I estimation in SI kilogram [kg]</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">weightestimator</span><span class="o">.</span><span class="n">weight_mtow</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">weightestimator</span><span class="o">.</span><span class="n">weight_mtow</span></div>
 
     <span class="nd">@Attribute</span>
     <span class="k">def</span> <span class="nf">weight_payload</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -316,7 +326,7 @@
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">parapy.gui</span> <span class="k">import</span> <span class="n">display</span>
 
-    <span class="n">obj</span> <span class="o">=</span> <span class="n">ParameterGenerator</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;test&#39;</span><span class="p">)</span>
+    <span class="n">obj</span> <span class="o">=</span> <span class="n">ParameterGenerator</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;ParameterGenerator&#39;</span><span class="p">)</span>
     <span class="n">display</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
 </pre></div>
 

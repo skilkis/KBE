@@ -194,21 +194,17 @@
 <span></span><span class="ch">#!/usr/bin/env python</span>
 <span class="c1"># -*- coding: utf-8 -*-</span>
 
-<span class="c1">#  TODO ADD VALIDATOR FOR AIRFOIL TYPE &amp; CHOICE, OFFSET. ALSO IN HORIZONTAL AND VERTICAL STAB!!!!!!!</span>
-
-
 <span class="kn">from</span> <span class="nn">parapy.core</span> <span class="k">import</span> <span class="o">*</span>           <span class="c1"># / Required ParaPy Module</span>
 <span class="kn">from</span> <span class="nn">parapy.geom</span> <span class="k">import</span> <span class="o">*</span>           <span class="c1"># / Required ParaPy Module</span>
 <span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="o">*</span>                  <span class="c1"># / Python math operations.</span>
 <span class="kn">from</span> <span class="nn">directories</span> <span class="k">import</span> <span class="o">*</span>           <span class="c1"># / Project Directory</span>
-<span class="c1"># from collections import namedtuple  # / Allows creation of named tuples similar to Point</span>
 <span class="kn">from</span> <span class="nn">Tkinter</span> <span class="k">import</span> <span class="o">*</span>
 <span class="kn">import</span> <span class="nn">tkFileDialog</span>
-<span class="kn">import</span> <span class="nn">tkMessageBox</span>
-<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">definitions</span> <span class="k">import</span> <span class="n">error_window</span><span class="p">,</span> <span class="n">warn_window</span>
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Nelson Johnson&quot;</span>
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;LiftingSurface&quot;</span><span class="p">]</span>
+<span class="n">__settable__</span> <span class="o">=</span> <span class="p">(</span><span class="kc">True</span> <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span> <span class="k">else</span> <span class="kc">False</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="LiftingSurface"><a class="viewcode-back" href="../../../../components/liftingsurfaces/liftingsurfaceprim.html#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface">[docs]</a><span class="k">class</span> <span class="nc">LiftingSurface</span><span class="p">(</span><span class="n">GeomBase</span><span class="p">):</span>
@@ -240,8 +236,6 @@
 
 <span class="sd">    :param offset: This is the offset in the flow direction of the tip W.R.T. the root Leading Edge.</span>
 <span class="sd">    :type offset: float or NoneType</span>
-
-<span class="sd">    :param browse_airfoils: Allows the user to easily choose amongst available airfoils with a GUI File-Browser.</span>
 
 <span class="sd">    :param hide_mac: This allows the MAC curve to be shown on the wing when changed in the GUI to False.</span>
 <span class="sd">    :type hide_mac: bool</span>
@@ -288,30 +282,13 @@
     <span class="c1">#: edge becomes unswept. In this case, with taper ratio &lt; 1, the TE becomes forward swept.</span>
     <span class="n">offset</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
 
-<div class="viewcode-block" id="LiftingSurface.browse_airfoils"><a class="viewcode-back" href="../../../../components/liftingsurfaces/liftingsurfaceprim.html#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.browse_airfoils">[docs]</a>    <span class="nd">@Input</span>
-    <span class="k">def</span> <span class="nf">browse_airfoils</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Allows the user to easily choose amongst available airfoils with a GUI File-Browser.</span>
-
-<span class="sd">        :return: Sets the inputs `airfoil_type` and `airfoil_choice` above to the value chosen in the GUI Browser</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">root</span> <span class="o">=</span> <span class="n">Tk</span><span class="p">()</span>
-        <span class="n">root</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
-        <span class="n">path</span> <span class="o">=</span> <span class="n">tkFileDialog</span><span class="o">.</span><span class="n">askopenfilename</span><span class="p">(</span><span class="n">initialdir</span><span class="o">=</span><span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;AIRFOIL_DIR&#39;</span><span class="p">],</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Select Airfoil&quot;</span><span class="p">,</span>
-                                            <span class="n">filetypes</span><span class="o">=</span><span class="p">((</span><span class="s2">&quot;Airfoil Data Files&quot;</span><span class="p">,</span> <span class="s2">&quot;*.dat&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;All Files&quot;</span><span class="p">,</span> <span class="s2">&quot;*.*&quot;</span><span class="p">)))</span>
-        <span class="n">root</span><span class="o">.</span><span class="n">destroy</span><span class="p">()</span>
-
-        <span class="n">valid_dir</span> <span class="o">=</span> <span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;AIRFOIL_DIR&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">valid_dir</span><span class="p">)</span> <span class="ow">is</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
-            <span class="n">root</span> <span class="o">=</span> <span class="n">Tk</span><span class="p">()</span>
-            <span class="n">root</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
-            <span class="n">tkMessageBox</span><span class="o">.</span><span class="n">showerror</span><span class="p">(</span><span class="s2">&quot;Directory Error&quot;</span><span class="p">,</span> <span class="s2">&quot;Custom airfoils must be placed in the pre-allocated directory&quot;</span><span class="p">)</span>
-            <span class="n">root</span><span class="o">.</span><span class="n">destroy</span><span class="p">()</span>
-            <span class="nb">print</span> <span class="s1">&#39;Test Failed&#39;</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;airfoil_choice&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>  <span class="c1"># Selects the airfoil name</span>
-                <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;airfoil_type&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">2</span><span class="p">]))</span>  <span class="c1"># Selects the folder-name</span>
-        <span class="k">return</span> <span class="s1">&#39;Airfoil has been successfully chosen, invalidate to run-again&#39;</span></div>
+    <span class="nd">@offset</span><span class="o">.</span><span class="n">on_slot_change</span>
+    <span class="k">def</span> <span class="nf">sweep_validator</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">le_sweep</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mf">20.0</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">warn_window</span><span class="p">(</span><span class="s1">&#39;Selected sweep was too high and not necessary for this flight regime, it has been set&#39;</span>
+                        <span class="s1">&#39;back to the default value&#39;</span><span class="p">)</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;offset&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
 
     <span class="c1">#: Boolean below allows the MAC curve to be shown on the wing when changed in the GUI to False.</span>
     <span class="n">hide_mac</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">bool</span><span class="p">))</span>
@@ -334,6 +311,28 @@
     <span class="n">airfoil_choice</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;SD7062&#39;</span><span class="p">)</span>
 
 <span class="c1">#  This block of Attributes calculates the planform parameters. ########------------------------------------------------</span>
+<div class="viewcode-block" id="LiftingSurface.browse_airfoils"><a class="viewcode-back" href="../../../../components/liftingsurfaces/liftingsurfaceprim.html#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.browse_airfoils">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">browse_airfoils</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Allows the user to easily choose amongst available airfoils with a GUI File-Browser.</span>
+
+<span class="sd">        :return: Sets the inputs `airfoil_type` and `airfoil_choice` above to the value chosen in the GUI Browser</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">root</span> <span class="o">=</span> <span class="n">Tk</span><span class="p">()</span>
+        <span class="n">root</span><span class="o">.</span><span class="n">withdraw</span><span class="p">()</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">tkFileDialog</span><span class="o">.</span><span class="n">askopenfilename</span><span class="p">(</span><span class="n">initialdir</span><span class="o">=</span><span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;AIRFOIL_DIR&#39;</span><span class="p">],</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Select Airfoil&quot;</span><span class="p">,</span>
+                                            <span class="n">filetypes</span><span class="o">=</span><span class="p">((</span><span class="s2">&quot;Airfoil Data Files&quot;</span><span class="p">,</span> <span class="s2">&quot;*.dat&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;All Files&quot;</span><span class="p">,</span> <span class="s2">&quot;*.*&quot;</span><span class="p">)))</span>
+        <span class="n">root</span><span class="o">.</span><span class="n">destroy</span><span class="p">()</span>
+
+        <span class="n">valid_dir</span> <span class="o">=</span> <span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;AIRFOIL_DIR&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">valid_dir</span><span class="p">)</span> <span class="ow">is</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">error_window</span><span class="p">(</span><span class="s2">&quot;Custom airfoils must be placed in the pre-allocated directory&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="s1">&#39;Airfoil selection failed, please invalidate and run-again&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;airfoil_choice&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>  <span class="c1"># Selects the airfoil name</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;airfoil_type&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">2</span><span class="p">]))</span>  <span class="c1"># Selects the folder-name</span>
+            <span class="k">return</span> <span class="s1">&#39;Airfoil has been successfully chosen, invalidate to run-again&#39;</span></div>
+
 <div class="viewcode-block" id="LiftingSurface.span"><a class="viewcode-back" href="../../../../components/liftingsurfaces/liftingsurfaceprim.html#components.liftingsurfaces.primitives.liftingsurface.LiftingSurface.span">[docs]</a>    <span class="nd">@Attribute</span>
     <span class="k">def</span> <span class="nf">span</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; This attribute calculates the required wingspan based on the wing area and Aspect Ratio.</span>

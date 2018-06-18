@@ -210,12 +210,12 @@ SI Units unless stated.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>mtow</strong> (<em>float</em>) – The MTOW from class I</li>
-<li><strong>mission</strong> (<em>str</em>) – The UAV performance goal</li>
-<li><strong>range</strong> (<em>float</em>) – The UAV design range in km</li>
-<li><strong>endurance</strong> (<em>float</em>) – The UAV design endurance in hrs</li>
-<li><strong>pl_target_weight</strong> (<em>float</em>) – The UAV design payload weight in kg</li>
-<li><strong>handlaunch</strong> (<em>bool</em>) – Whether the user requires the UAV to be hand launched</li>
+<li><strong>weight_mtow</strong> (<em>float</em>) – The Maximum Take-Off Weight from Class I in SI kilogram [kg]</li>
+<li><strong>performance_goal</strong> (<em>str</em>) – The UAV performance goal (either ‘endurance’, or ‘range’)</li>
+<li><strong>range</strong> (<em>float</em>) – The UAV design range in SI kilometer [km]</li>
+<li><strong>endurance</strong> (<em>float</em>) – The UAV design endurance in SI hours [h]</li>
+<li><strong>weight_payload</strong> (<em>float</em>) – The UAV design payload weight in SI kilogram [kg]</li>
+<li><strong>handlaunch</strong> (<em>bool</em>) – Handles the switch case of whether the user whether the UAV is to be handlaunched</li>
 <li><strong>maximum_lift_coefficient</strong> (<em>list</em>) – A list of three C_lmax’s that the wing is assumed to generate which create     multiple lines on the thrust/wing loading plots.</li>
 <li><strong>aspect_ratio_range</strong> (<em>list</em>) – A list of two potential aspect ratios for the design</li>
 <li><strong>eta_prop</strong> (<em>float</em>) – This is the assumed propeller efficiency.</li>
@@ -267,14 +267,14 @@ for drones that are handlaunched vs those that are not.</p>
 
 <dl class="attribute">
 <dt id="design.wingpowerloading.WingPowerLoading.climb_gradient">
-<code class="descname">climb_gradient</code><em class="property"> = 0.507</em><a class="headerlink" href="#design.wingpowerloading.WingPowerLoading.climb_gradient" title="Permalink to this definition">¶</a></dt>
-<dd><p>Below is the assumed Climb Gradient to clear 10m object 17m away.</p>
+<code class="descname">climb_gradient</code><a class="headerlink" href="#design.wingpowerloading.WingPowerLoading.climb_gradient" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assumed Climb Gradient to clear 10m object 17m away.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="design.wingpowerloading.WingPowerLoading.climb_rate">
-<code class="descname">climb_rate</code><em class="property"> = 1.524</em><a class="headerlink" href="#design.wingpowerloading.WingPowerLoading.climb_rate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Below is the assumption for Required Climb Rate, Same as Sparta UAV 1.1.2.</p>
+<code class="descname">climb_rate</code><a class="headerlink" href="#design.wingpowerloading.WingPowerLoading.climb_rate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assumption for Required Climb Rate, Same as Sparta UAV 1.1.2.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -332,6 +332,12 @@ the latter part of this code computes the new drag coefficients.</p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="design.wingpowerloading.WingPowerLoading.endurance">
+<code class="descname">endurance</code><a class="headerlink" href="#design.wingpowerloading.WingPowerLoading.endurance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Design endurance in SI hours [h], depending on the performance_goal this can be ignored</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="design.wingpowerloading.WingPowerLoading.eta_motor">
 <code class="descname">eta_motor</code><a class="headerlink" href="#design.wingpowerloading.WingPowerLoading.eta_motor" title="Permalink to this definition">¶</a></dt>
 <dd><p>This is the assumed motor efficiency.</p>
@@ -378,22 +384,7 @@ the latter part of this code computes the new drag coefficients.</p>
 <dl class="attribute">
 <dt id="design.wingpowerloading.WingPowerLoading.handlaunch">
 <code class="descname">handlaunch</code><a class="headerlink" href="#design.wingpowerloading.WingPowerLoading.handlaunch" title="Permalink to this definition">¶</a></dt>
-<dd><p>Boolean operator to determine if the user requires the UAV to be hand launched
-This parameter changes the stall-speed used for the Wing Loading</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="design.wingpowerloading.WingPowerLoading.loadingdiagram">
-<code class="descname">loadingdiagram</code><a class="reference internal" href="../_modules/design/wingpowerloading.html#WingPowerLoading.loadingdiagram"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#design.wingpowerloading.WingPowerLoading.loadingdiagram" title="Permalink to this definition">¶</a></dt>
-<dd><p>This attribute plots the loading diagram.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Plot</td>
-</tr>
-</tbody>
-</table>
+<dd><p>Switch case to determine if the user requires the UAV to be hand launched which affects the stall speed</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -419,6 +410,26 @@ This parameter changes the stall-speed used for the Wing Loading</p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="design.wingpowerloading.WingPowerLoading.performance_goal">
+<code class="descname">performance_goal</code><a class="headerlink" href="#design.wingpowerloading.WingPowerLoading.performance_goal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performance goal to be optimized for (either ‘endurance’, or ‘range’)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="design.wingpowerloading.WingPowerLoading.plot_loadingdiagram">
+<code class="descname">plot_loadingdiagram</code><a class="reference internal" href="../_modules/design/wingpowerloading.html#WingPowerLoading.plot_loadingdiagram"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#design.wingpowerloading.WingPowerLoading.plot_loadingdiagram" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute plots the loading diagram.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Plot</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="design.wingpowerloading.WingPowerLoading.powerloading">
 <code class="descname">powerloading</code><a class="reference internal" href="../_modules/design/wingpowerloading.html#WingPowerLoading.powerloading"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#design.wingpowerloading.WingPowerLoading.powerloading" title="Permalink to this definition">¶</a></dt>
 <dd><p>Lazy-evaluation of Power Loading due to a Climb Rate Requirement at 3000m for various Aspect Ratios</p>
@@ -435,15 +446,21 @@ This parameter changes the stall-speed used for the Wing Loading</p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="design.wingpowerloading.WingPowerLoading.range">
+<code class="descname">range</code><a class="headerlink" href="#design.wingpowerloading.WingPowerLoading.range" title="Permalink to this definition">¶</a></dt>
+<dd><p>Design range in SI kilometers [km], depending on the performance_goal this can be ignored</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="design.wingpowerloading.WingPowerLoading.rho">
 <code class="descname">rho</code><a class="headerlink" href="#design.wingpowerloading.WingPowerLoading.rho" title="Permalink to this definition">¶</a></dt>
-<dd><p>Below is the STD ISA sea level density</p>
+<dd><p>STD ISA Sea Level Density in SI kilogram per meter cubed [kg/m^3]</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="design.wingpowerloading.WingPowerLoading.rho_cr">
-<code class="descname">rho_cr</code><em class="property"> = 0.9091</em><a class="headerlink" href="#design.wingpowerloading.WingPowerLoading.rho_cr" title="Permalink to this definition">¶</a></dt>
-<dd><p>Below is the ISA Density at 3km height for the climb rate power loading equation.</p>
+<code class="descname">rho_cr</code><a class="headerlink" href="#design.wingpowerloading.WingPowerLoading.rho_cr" title="Permalink to this definition">¶</a></dt>
+<dd><p>ISA Density at cruise, this value is at 3 [km] height for the climb rate power loading equation</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -458,6 +475,18 @@ This parameter changes the stall-speed used for the Wing Loading</p>
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="design.wingpowerloading.WingPowerLoading.weight_mtow">
+<code class="descname">weight_mtow</code><a class="headerlink" href="#design.wingpowerloading.WingPowerLoading.weight_mtow" title="Permalink to this definition">¶</a></dt>
+<dd><p>The Maximum Take-Off Weight from Class I in SI kilogram [kg]</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="design.wingpowerloading.WingPowerLoading.weight_payload">
+<code class="descname">weight_payload</code><a class="headerlink" href="#design.wingpowerloading.WingPowerLoading.weight_payload" title="Permalink to this definition">¶</a></dt>
+<dd><p>Current selected payload weight from Class I in SI kilogram [kg]</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -495,7 +524,7 @@ This parameter changes the stall-speed used for the Wing Loading</p>
 <dl class="attribute">
 <dt id="design.wingpowerloading.WingPowerLoading.zero_lift_drag">
 <code class="descname">zero_lift_drag</code><a class="headerlink" href="#design.wingpowerloading.WingPowerLoading.zero_lift_drag" title="Permalink to this definition">¶</a></dt>
-<dd><p>Below is the assumed Value of Zero-Lift Drag Coefficient.</p>
+<dd><p>Assumed Value of Zero-Lift Drag Coefficient.</p>
 </dd></dl>
 
 </dd></dl>

@@ -200,12 +200,12 @@
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">from</span> <span class="nn">directories</span> <span class="k">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">components</span> <span class="k">import</span> <span class="n">EOIR</span><span class="p">,</span> <span class="n">FlightController</span>
+<span class="kn">from</span> <span class="nn">definitions</span> <span class="k">import</span> <span class="n">error_window</span>
 
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Nelson Johnson&quot;</span><span class="p">,</span> <span class="s2">&quot;Şan Kılkış&quot;</span><span class="p">]</span>
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;WingPowerLoading&quot;</span><span class="p">]</span>
-
-<span class="c1"># TODO Fix aspect ratio choice, add validator also for max_lift_coeff, stall_speed</span>
+<span class="n">__settable__</span> <span class="o">=</span> <span class="p">(</span><span class="kc">True</span> <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span> <span class="k">else</span> <span class="kc">False</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="WingPowerLoading"><a class="viewcode-back" href="../../design/wingpowerloading.html#design.wingpowerloading.WingPowerLoading">[docs]</a><span class="k">class</span> <span class="nc">WingPowerLoading</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
@@ -214,22 +214,22 @@
 <span class="sd">    propeller efficiency, zero-lift drag coefficient, Aspect Ratio and Oswald Efficiency Factor. All Values are in</span>
 <span class="sd">    SI Units unless stated.</span>
 
-<span class="sd">    :param mtow: The MTOW from class I</span>
-<span class="sd">    :type mtow: float</span>
+<span class="sd">    :param weight_mtow: The Maximum Take-Off Weight from Class I in SI kilogram [kg]</span>
+<span class="sd">    :type weight_mtow: float</span>
 
-<span class="sd">    :param mission: The UAV performance goal</span>
-<span class="sd">    :type mission: str</span>
+<span class="sd">    :param performance_goal: The UAV performance goal (either &#39;endurance&#39;, or &#39;range&#39;)</span>
+<span class="sd">    :type performance_goal: str</span>
 
-<span class="sd">    :param range: The UAV design range in km</span>
+<span class="sd">    :param range: The UAV design range in SI kilometer [km]</span>
 <span class="sd">    :type range: float</span>
 
-<span class="sd">    :param endurance: The UAV design endurance in hrs</span>
+<span class="sd">    :param endurance: The UAV design endurance in SI hours [h]</span>
 <span class="sd">    :type endurance: float</span>
 
-<span class="sd">    :param pl_target_weight: The UAV design payload weight in kg</span>
-<span class="sd">    :type pl_target_weight: float</span>
+<span class="sd">    :param weight_payload: The UAV design payload weight in SI kilogram [kg]</span>
+<span class="sd">    :type weight_payload: float</span>
 
-<span class="sd">    :param handlaunch: Whether the user requires the UAV to be hand launched</span>
+<span class="sd">    :param handlaunch: Handles the switch case of whether the user whether the UAV is to be handlaunched</span>
 <span class="sd">    :type handlaunch: bool</span>
 
 <span class="sd">    :param maximum_lift_coefficient: A list of three C_lmax&#39;s that the wing is assumed to generate which create \</span>
@@ -267,34 +267,34 @@
 <span class="sd">    :type stall_speed: float</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<span class="c1">#: This block of code contains the inputs. ########---------------------------------------------------------------------</span>
+    <span class="n">__icon__</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;ICON_DIR&#39;</span><span class="p">],</span> <span class="s1">&#39;designpoint.png&#39;</span><span class="p">)</span>
 
-    <span class="n">mtow</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">5.0</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">())</span>  <span class="c1"># used for to find S from design point!</span>
-    <span class="n">mission</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;range&#39;</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">OneOf</span><span class="p">([</span><span class="s1">&#39;range&#39;</span><span class="p">,</span> <span class="s1">&#39;endurance&#39;</span><span class="p">]))</span>   <span class="c1">#  used to switch optimal flight condition.</span>
-    <span class="nb">range</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">100.0</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">())</span>     <span class="c1"># this is used to determine the battery capacity required for range. units = km</span>
-    <span class="n">endurance</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">())</span> <span class="c1">#  this is used to det battery capacity for endurance requirement units = hours</span>
-    <span class="n">pl_target_weight</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">())</span>
+    <span class="c1">#: The Maximum Take-Off Weight from Class I in SI kilogram [kg]</span>
+    <span class="n">weight_mtow</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">5.0</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">(),</span> <span class="n">settable</span><span class="o">=</span><span class="n">__settable__</span><span class="p">)</span>
 
+    <span class="c1">#: Performance goal to be optimized for (either &#39;endurance&#39;, or &#39;range&#39;)</span>
+    <span class="n">performance_goal</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;range&#39;</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">OneOf</span><span class="p">([</span><span class="s1">&#39;range&#39;</span><span class="p">,</span> <span class="s1">&#39;endurance&#39;</span><span class="p">]),</span> <span class="n">settable</span><span class="o">=</span><span class="n">__settable__</span><span class="p">)</span>
 
-    <span class="c1">#: Boolean operator to determine if the user requires the UAV to be hand launched</span>
-    <span class="c1">#: This parameter changes the stall-speed used for the Wing Loading</span>
-    <span class="n">handlaunch</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">bool</span><span class="p">))</span>
+    <span class="c1">#: Design range in SI kilometers [km], depending on the performance_goal this can be ignored</span>
+    <span class="nb">range</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">100.0</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">(),</span> <span class="n">settable</span><span class="o">=</span><span class="n">__settable__</span><span class="p">)</span>
+
+    <span class="c1">#: Design endurance in SI hours [h], depending on the performance_goal this can be ignored</span>
+    <span class="n">endurance</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">(),</span> <span class="n">settable</span><span class="o">=</span><span class="n">__settable__</span><span class="p">)</span>
+
+    <span class="c1">#: Current selected payload weight from Class I in SI kilogram [kg]</span>
+    <span class="n">weight_payload</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">(),</span> <span class="n">settable</span><span class="o">=</span><span class="n">__settable__</span><span class="p">)</span>
+
+    <span class="c1">#: Switch case to determine if the user requires the UAV to be hand launched which affects the stall speed</span>
+    <span class="n">handlaunch</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">bool</span><span class="p">),</span> <span class="n">settable</span><span class="o">=</span><span class="n">__settable__</span><span class="p">)</span>
+
+    <span class="c1">#: STD ISA Sea Level Density in SI kilogram per meter cubed [kg/m^3]</span>
+    <span class="n">rho</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">1.225</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">(),</span> <span class="n">settable</span><span class="o">=</span><span class="n">__settable__</span><span class="p">)</span>
+
+    <span class="c1">#: ISA Density at cruise, this value is at 3 [km] height for the climb rate power loading equation</span>
+    <span class="n">rho_cr</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.9091</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">(),</span> <span class="n">settable</span><span class="o">=</span><span class="n">__settable__</span><span class="p">)</span>
 
     <span class="c1">#: This is a list of three C_lmax&#39;s that the wing is assumed to generate. This creates multiple lines on the plots.</span>
     <span class="n">maximum_lift_coefficient</span> <span class="o">=</span> <span class="n">Input</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.25</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">],</span> <span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">list</span><span class="p">))</span>
-
-    <span class="c1">#: This is a list of three Aspect Ratios that the wing is assumed to generate. This creates multiple lines on</span>
-    <span class="c1">#: the plots.</span>
-    <span class="c1"># TODO Make this a proper implementation of Iterable comprehension, add validator</span>
-<div class="viewcode-block" id="WingPowerLoading.aspect_ratio_range"><a class="viewcode-back" href="../../design/wingpowerloading.html#design.wingpowerloading.WingPowerLoading.aspect_ratio_range">[docs]</a>    <span class="nd">@Input</span>
-    <span class="k">def</span> <span class="nf">aspect_ratio_range</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Derived input that handles defaulting of the aspect_ratio. These values are determined from reference images</span>
-<span class="sd">        for drones that are handlaunched vs those that are not.</span>
-
-<span class="sd">        :return: Bounds of Acceptable Aspect Ratios</span>
-<span class="sd">        :rtype: list</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">12</span><span class="p">]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">handlaunch</span> <span class="k">else</span> <span class="p">[</span><span class="mi">12</span><span class="p">,</span> <span class="mi">20</span><span class="p">]</span></div>
 
     <span class="c1">#: This is the assumed propeller efficiency.</span>
     <span class="n">eta_prop</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">())</span>
@@ -305,26 +305,24 @@
     <span class="c1">#: This is the assumed Oswald Efficiency Factor.</span>
     <span class="n">e_factor</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">())</span>
 
-    <span class="c1">#: Below is the STD ISA sea level density</span>
-    <span class="n">rho</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">1.225</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">())</span>
-
-    <span class="c1">#: Below is the ISA Density at 3km height for the climb rate power loading equation.</span>
-    <span class="n">rho_cr</span> <span class="o">=</span> <span class="mf">0.9091</span>
-
-    <span class="c1"># #: Below is the assumed throwing speed of a hand launched UAV</span>
-    <span class="c1"># stall_speed_handlaunch = 8.0</span>
-
-    <span class="c1"># #: Below is assumed launch speed at the end of a catapult or runway.</span>
-    <span class="c1"># stall_speed = 12.0</span>
-
-    <span class="c1">#: Below is the assumed Value of Zero-Lift Drag Coefficient.</span>
+    <span class="c1">#: Assumed Value of Zero-Lift Drag Coefficient.</span>
     <span class="n">zero_lift_drag</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">())</span>
 
-    <span class="c1">#: Below is the assumption for Required Climb Rate, Same as Sparta UAV 1.1.2.</span>
-    <span class="n">climb_rate</span> <span class="o">=</span> <span class="mf">1.524</span>
+    <span class="c1">#: Assumption for Required Climb Rate, Same as Sparta UAV 1.1.2.</span>
+    <span class="n">climb_rate</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">1.524</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Between</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">))</span>
 
-    <span class="c1">#: Below is the assumed Climb Gradient to clear 10m object 17m away.</span>
-    <span class="n">climb_gradient</span> <span class="o">=</span> <span class="mf">0.507</span>
+    <span class="c1">#: Assumed Climb Gradient to clear 10m object 17m away.</span>
+    <span class="n">climb_gradient</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.507</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Between</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">))</span>
+
+<div class="viewcode-block" id="WingPowerLoading.aspect_ratio_range"><a class="viewcode-back" href="../../design/wingpowerloading.html#design.wingpowerloading.WingPowerLoading.aspect_ratio_range">[docs]</a>    <span class="nd">@Input</span>
+    <span class="k">def</span> <span class="nf">aspect_ratio_range</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Derived input that handles defaulting of the aspect_ratio. These values are determined from reference images</span>
+<span class="sd">        for drones that are handlaunched vs those that are not.</span>
+
+<span class="sd">        :return: Bounds of Acceptable Aspect Ratios</span>
+<span class="sd">        :rtype: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">12</span><span class="p">]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">handlaunch</span> <span class="k">else</span> <span class="p">[</span><span class="mi">12</span><span class="p">,</span> <span class="mi">20</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="WingPowerLoading.stall_speed"><a class="viewcode-back" href="../../design/wingpowerloading.html#design.wingpowerloading.WingPowerLoading.stall_speed">[docs]</a>    <span class="nd">@Input</span>
     <span class="k">def</span> <span class="nf">stall_speed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -339,8 +337,34 @@
             <span class="n">stall_speed</span> <span class="o">=</span> <span class="mf">12.0</span>
         <span class="k">return</span> <span class="n">stall_speed</span></div>
 
+    <span class="nd">@aspect_ratio_range</span><span class="o">.</span><span class="n">on_slot_change</span>
+    <span class="k">def</span> <span class="nf">aspect_validator</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Validator for the compartment_type &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">aspect_ratio_range</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">_ratio</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">aspect_ratio_range</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">_ratio</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">:</span>
+                        <span class="n">error_window</span><span class="p">(</span><span class="s1">&#39;AR=</span><span class="si">%d</span><span class="s1"> will result in too of an low aspect ratio and thus high induced drag, &#39;</span>
+                                     <span class="s1">&#39;consider increasing&#39;</span> <span class="o">%</span> <span class="n">_ratio</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">_ratio</span> <span class="o">&gt;</span> <span class="mi">20</span><span class="p">:</span>
+                        <span class="n">error_window</span><span class="p">(</span><span class="s1">&#39;AR=</span><span class="si">%d</span><span class="s1"> will result in too high of anaspect ratio and thus high structural loads &#39;</span>
+                                     <span class="s1">&#39;due to increased wing bending moments, consider decreasing&#39;</span> <span class="o">%</span> <span class="n">_ratio</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;The provided input into :param:`aspect_ratio` is not valid&#39;</span><span class="p">)</span>
 
-<span class="c1">#  This block of Attributes calculates the wing and thrust loading parameters and generates the plot. ########----------</span>
+    <span class="nd">@maximum_lift_coefficient</span><span class="o">.</span><span class="n">on_slot_change</span>
+    <span class="k">def</span> <span class="nf">lift_coef_validator</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Validator for the compartment_type &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">aspect_ratio_range</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">_coef</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">maximum_lift_coefficient</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">_coef</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">handlaunch</span><span class="p">:</span>
+                        <span class="n">error_window</span><span class="p">(</span><span class="s1">&#39;C_L=</span><span class="si">%d</span><span class="s1"> is too low and will result in either too large of a wing surface, or too&#39;</span>
+                                     <span class="s1">&#39;high of a launch speed to hand launch. Consider increasing&#39;</span> <span class="o">%</span> <span class="n">_coef</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">_coef</span> <span class="o">&gt;</span> <span class="mf">1.7</span><span class="p">:</span>
+                        <span class="n">error_window</span><span class="p">(</span><span class="s1">&#39;C_L=</span><span class="si">%d</span><span class="s1"> This lift coefficient is very difficult to produce without high lift &#39;</span>
+                                     <span class="s1">&#39;devices at Low Reynolds numbers decreasing&#39;</span> <span class="o">%</span> <span class="n">_coef</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;The provided input into :param:`maximum_lift_coefficient` is not valid&#39;</span><span class="p">)</span>
+
 <div class="viewcode-block" id="WingPowerLoading.wingloading"><a class="viewcode-back" href="../../design/wingpowerloading.html#design.wingpowerloading.WingPowerLoading.wingloading">[docs]</a>    <span class="nd">@Attribute</span>
     <span class="k">def</span> <span class="nf">wingloading</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; This attribute calculates the 3 required wing loadings from the lift equation, using the stall speed \</span>
@@ -386,9 +410,8 @@
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;climb_rate&#39;</span><span class="p">:</span> <span class="n">wp_cr</span><span class="p">,</span>
                 <span class="s1">&#39;climb_gradient&#39;</span><span class="p">:</span> <span class="n">wp_cg</span><span class="p">}</span></div>
 
-<div class="viewcode-block" id="WingPowerLoading.loadingdiagram"><a class="viewcode-back" href="../../design/wingpowerloading.html#design.wingpowerloading.WingPowerLoading.loadingdiagram">[docs]</a>    <span class="nd">@Attribute</span>
-    <span class="c1"># TODO Make this plot appear on top of GUI &amp; Be Eager (This can be accomplished by making it a part)</span>
-    <span class="k">def</span> <span class="nf">loadingdiagram</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="WingPowerLoading.plot_loadingdiagram"><a class="viewcode-back" href="../../design/wingpowerloading.html#design.wingpowerloading.WingPowerLoading.plot_loadingdiagram">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">plot_loadingdiagram</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; This attribute plots the loading diagram.</span>
 
 <span class="sd">         :return: Plot</span>
@@ -456,8 +479,6 @@
         <span class="c1">#: idx2 is the index corresponding to the closest value in WS_range to the chosen design wing-loading</span>
         <span class="n">idx2</span> <span class="o">=</span> <span class="n">error</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">error</span><span class="p">))</span>
 
-        <span class="c1"># TODO Add knowledge base assumption for best aspect ratio</span>
-        <span class="c1"># TODO Find a better way to select optimum aspect ratio</span>
         <span class="n">optimal_ars</span> <span class="o">=</span> <span class="p">[</span><span class="mi">11</span><span class="p">,</span> <span class="mi">20</span><span class="p">]</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">handlaunch</span><span class="p">:</span>
             <span class="n">optimal_ar</span> <span class="o">=</span> <span class="n">optimal_ars</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -475,7 +496,9 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">handlaunch</span><span class="p">:</span>
             <span class="n">wp</span> <span class="o">=</span> <span class="n">wp_choices</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">wp</span> <span class="o">=</span> <span class="n">wp_choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">wp</span> <span class="o">=</span> <span class="n">wp_choices</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="c1"># Went back to utilizing the climb_gradient requirement for non-hand launched UAV&#39;s</span>
+        <span class="c1"># as well since climb_rate is not as critical and produced unrealistic motor selection</span>
 
         <span class="k">return</span><span class="p">{</span><span class="s1">&#39;lift_coefficient&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">maximum_lift_coefficient</span><span class="p">[</span><span class="n">idx1</span><span class="p">],</span>
                <span class="s1">&#39;aspect_ratio&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">aspect_ratio_range</span><span class="p">[</span><span class="n">idx3</span><span class="p">],</span>
@@ -502,7 +525,7 @@
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;lift&#39;</span><span class="p">:</span> <span class="n">lift_coef_cg</span><span class="p">,</span>
                 <span class="s1">&#39;drag&#39;</span><span class="p">:</span> <span class="n">drag_coef_cg</span><span class="p">}</span></div>
 
-<div class="viewcode-block" id="WingPowerLoading.ws_range"><a class="viewcode-back" href="../../design/wingpowerloading.html#design.wingpowerloading.WingPowerLoading.ws_range">[docs]</a>    <span class="nd">@Attribute</span>
+<div class="viewcode-block" id="WingPowerLoading.ws_range"><a class="viewcode-back" href="../../design/wingpowerloading.html#design.wingpowerloading.WingPowerLoading.ws_range">[docs]</a>    <span class="nd">@Attribute</span><span class="p">(</span><span class="n">private</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">ws_range</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; This is a dummy list of wing loadings for iterating in the Power Loading Equations.</span>
 
@@ -512,8 +535,6 @@
         <span class="n">ws_limit</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wingloading</span><span class="p">[</span><span class="s1">&#39;values&#39;</span><span class="p">])</span>
         <span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">ceil</span><span class="p">(</span><span class="n">ws_limit</span> <span class="o">/</span> <span class="mf">100.0</span><span class="p">))</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)]</span>
         <span class="k">return</span> <span class="n">values</span></div>
-
-<span class="c1">#  The Block below will estimate the required power from the battery depending on the range or endurance goal.</span>
 
 <div class="viewcode-block" id="WingPowerLoading.eta_tot"><a class="viewcode-back" href="../../design/wingpowerloading.html#design.wingpowerloading.WingPowerLoading.eta_tot">[docs]</a>    <span class="nd">@Attribute</span>
     <span class="k">def</span> <span class="nf">eta_tot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -533,12 +554,12 @@
 <span class="sd">        :return: Required battery capacity due to plane drag.</span>
 <span class="sd">        :rtype: dict</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mission</span> <span class="ow">is</span> <span class="s1">&#39;range&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">performance_goal</span> <span class="ow">is</span> <span class="s1">&#39;range&#39;</span><span class="p">:</span>
             <span class="n">cl_opt</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">zero_lift_drag</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">designpoint</span><span class="p">[</span><span class="s1">&#39;aspect_ratio&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">e_factor</span><span class="p">)</span>
             <span class="n">cd_opt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">zero_lift_drag</span> <span class="o">+</span> <span class="p">(</span><span class="n">cl_opt</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">pi</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">designpoint</span><span class="p">[</span><span class="s1">&#39;aspect_ratio&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">e_factor</span><span class="p">))</span>
             <span class="n">v_opt</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">designpoint</span><span class="p">[</span><span class="s1">&#39;wing_loading&#39;</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="mi">2</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">rho</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">cl_opt</span><span class="p">))</span>
             <span class="n">v_safe</span> <span class="o">=</span> <span class="mf">5.0</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">stall_speed</span>  <span class="c1"># Safety factor to ensure optimal speed is not too close to stall</span>
-            <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mtow</span> <span class="o">*</span> <span class="mf">9.81</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">designpoint</span><span class="p">[</span><span class="s1">&#39;wing_loading&#39;</span><span class="p">]</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_mtow</span> <span class="o">*</span> <span class="mf">9.81</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">designpoint</span><span class="p">[</span><span class="s1">&#39;wing_loading&#39;</span><span class="p">]</span>
             <span class="n">d_opt</span> <span class="o">=</span> <span class="n">cd_opt</span> <span class="o">*</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">rho</span> <span class="o">*</span> <span class="p">(</span><span class="n">v_opt</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">s</span>
             <span class="n">t</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">range</span> <span class="o">*</span> <span class="mi">1000</span> <span class="o">/</span> <span class="n">v_opt</span><span class="p">)</span>
             <span class="n">p_req_drag</span> <span class="o">=</span> <span class="p">(</span><span class="n">d_opt</span> <span class="o">*</span> <span class="n">v_opt</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">eta_tot</span>
@@ -550,14 +571,13 @@
                    <span class="s1">&#39;t&#39;</span><span class="p">:</span> <span class="n">t</span><span class="p">,</span>
                    <span class="s1">&#39;p_req_drag&#39;</span><span class="p">:</span> <span class="n">p_req_drag</span><span class="p">,</span>
                    <span class="s1">&#39;capacity&#39;</span><span class="p">:</span> <span class="n">capacity</span><span class="p">}</span>
-            <span class="nb">print</span> <span class="s1">&#39;Optimal Cruise Speed &#39;</span><span class="p">,</span> <span class="n">v_opt</span>
 
         <span class="k">else</span><span class="p">:</span>
             <span class="n">cl_opt</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">zero_lift_drag</span> <span class="o">*</span> <span class="n">pi</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">designpoint</span><span class="p">[</span><span class="s1">&#39;aspect_ratio&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">e_factor</span><span class="p">)</span>
             <span class="n">cd_opt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">zero_lift_drag</span> <span class="o">+</span> <span class="p">(</span><span class="n">cl_opt</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">pi</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">designpoint</span><span class="p">[</span><span class="s1">&#39;aspect_ratio&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">e_factor</span><span class="p">))</span>
             <span class="n">v_opt</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">designpoint</span><span class="p">[</span><span class="s1">&#39;wing_loading&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">rho</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">cl_opt</span><span class="p">))</span>
             <span class="n">v_safe</span> <span class="o">=</span> <span class="mf">5.0</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">stall_speed</span>  <span class="c1"># Safety factor to ensure optimal speed is not too close to stall</span>
-            <span class="n">s</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mtow</span> <span class="o">*</span> <span class="mf">9.81</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">designpoint</span><span class="p">[</span><span class="s1">&#39;wing_loading&#39;</span><span class="p">]</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weight_mtow</span> <span class="o">*</span> <span class="mf">9.81</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">designpoint</span><span class="p">[</span><span class="s1">&#39;wing_loading&#39;</span><span class="p">]</span>
             <span class="n">d_opt</span> <span class="o">=</span> <span class="n">cd_opt</span> <span class="o">*</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">rho</span> <span class="o">*</span> <span class="p">(</span><span class="n">v_opt</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">s</span>
             <span class="n">t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">endurance</span> <span class="o">*</span> <span class="mi">3600</span>
             <span class="n">p_req_drag</span> <span class="o">=</span> <span class="p">(</span><span class="n">d_opt</span> <span class="o">*</span> <span class="n">v_opt</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">eta_tot</span>
@@ -569,7 +589,6 @@
                    <span class="s1">&#39;t&#39;</span><span class="p">:</span> <span class="n">t</span><span class="p">,</span>
                    <span class="s1">&#39;p_req_drag&#39;</span><span class="p">:</span> <span class="n">p_req_drag</span><span class="p">,</span>
                    <span class="s1">&#39;capacity&#39;</span><span class="p">:</span> <span class="n">capacity</span><span class="p">}</span>
-            <span class="nb">print</span> <span class="s1">&#39;Optimal Endurance Speed &#39;</span><span class="p">,</span> <span class="n">v_opt</span>
         <span class="k">return</span> <span class="n">out</span></div>
 
 <div class="viewcode-block" id="WingPowerLoading.payload_power"><a class="viewcode-back" href="../../design/wingpowerloading.html#design.wingpowerloading.WingPowerLoading.payload_power">[docs]</a>    <span class="nd">@Attribute</span>
@@ -579,7 +598,7 @@
 <span class="sd">        :return: Required battery power due to payload SI Watt</span>
 <span class="sd">        :rtype: float</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">EOIR</span><span class="p">(</span><span class="n">target_weight</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pl_target_weight</span><span class="p">)</span><span class="o">.</span><span class="n">specs</span><span class="p">[</span><span class="s1">&#39;power&#39;</span><span class="p">]</span></div>
+        <span class="k">return</span> <span class="n">EOIR</span><span class="p">(</span><span class="n">target_weight</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">weight_payload</span><span class="p">)</span><span class="o">.</span><span class="n">specs</span><span class="p">[</span><span class="s1">&#39;power&#39;</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="WingPowerLoading.flight_controller_power"><a class="viewcode-back" href="../../design/wingpowerloading.html#design.wingpowerloading.WingPowerLoading.flight_controller_power">[docs]</a>    <span class="nd">@Attribute</span>
     <span class="k">def</span> <span class="nf">flight_controller_power</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

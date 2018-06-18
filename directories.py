@@ -39,34 +39,34 @@ def is_frozen():
 
 
 def get_dir(folder_name=None):
-    # """get_dir returns the top-level directory of the package as an absolute path if :attr:`folder_name` is not
-    # specified [1]. If an exiting sub directory is specified as `str` into the field :attr:`folder_name` then the
-    # return of get_dir will be absolute path to this sub directory [2]. Usage with file names inside a directory is also
-    # possible, see example below [3]
-    #
-    # :param folder_name: The name of a folder, file, or relative path
-    # :type folder_name: basestring
-    #
-    # :return: The absolute path to the root directory or, if specified, to a sub directory within the root
-    # :rtype: unicode
-    #
-    #
-    # [1] Obtaining Root Directory:
-    #
-    # >>> get_dir() # This will return the absolute path to root directory
-    # C:/Python27/KBE
-    #
-    # [2] Obtaining a Sub-Directory:
-    #
-    # >>> get_dir('icons') # This will return the absolute path to the subdirectory /icons
-    # C:/Python27/KBE\icons
-    #
-    # [3] Obtaining File-Directory:
-    #
-    # >>> get_dir('user/userinput.xlsx') # This will return the absolute path to the file userinput.xlsx
-    # C:/Python27/KBE\user\userinput.xlsx
-    #
-    # """
+    """get_dir returns the top-level directory of the package as an absolute path if :attr:`folder_name` is not
+    specified [1]. If an exiting sub directory is specified as `str` into the field :attr:`folder_name` then the
+    return of get_dir will be absolute path to this sub directory [2]. Usage with file names inside a directory is also
+    possible, see example below [3]
+
+    :param folder_name: The name of a folder, file, or relative path
+    :type folder_name: basestring
+
+    :return: The absolute path to the root directory or, if specified, to a sub directory within the root
+    :rtype: unicode
+
+
+    [1] Obtaining Root Directory:
+
+    >>> get_dir() # This will return the absolute path to root directory
+    C:/Python27/KBE
+
+    [2] Obtaining a Sub-Directory:
+
+    >>> get_dir('icons') # This will return the absolute path to the subdirectory /icons
+    C:/Python27/KBE\icons
+
+    [3] Obtaining File-Directory:
+
+    >>> get_dir('user/userinput.xlsx') # This will return the absolute path to the file userinput.xlsx
+    C:/Python27/KBE\user\userinput.xlsx
+
+    """
 
     encoding = sys.getfilesystemencoding()  # A variable that returns encoding of the user's machine
 

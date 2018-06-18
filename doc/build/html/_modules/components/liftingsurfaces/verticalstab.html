@@ -201,6 +201,7 @@
 <span class="kn">from</span> <span class="nn">primitives</span> <span class="k">import</span> <span class="n">LiftingSurface</span>
 <span class="kn">from</span> <span class="nn">definitions</span> <span class="k">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">user</span> <span class="k">import</span> <span class="n">MyColors</span>
+<span class="kn">from</span> <span class="nn">directories</span> <span class="k">import</span> <span class="o">*</span>
 
 <span class="c1">#  TODO ADD VALIDATOR FOR AIRFOIL TYPE &amp; CHOICE, OFFSET. ALSO IN LIFTING SURF AND HORIZONTAL STAB!!!!!!!</span>
 
@@ -263,6 +264,8 @@
 <span class="sd">    :param ply_number: Changes the number of ply&#39;s of carbon fiber pre-preg.</span>
 <span class="sd">    :type ply_number: int</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">__icon__</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;ICON_DIR&#39;</span><span class="p">],</span> <span class="s1">&#39;vtail.png&#39;</span><span class="p">)</span>
 
     <span class="c1">#: Below is the required TOTAL wing area of the main wings.</span>
     <span class="n">wing_planform_area</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">())</span>

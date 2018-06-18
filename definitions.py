@@ -9,9 +9,6 @@ from collections import Iterable
 from Tkinter import *
 import tkMessageBox
 
-""" Contains all """
-
-
 __author__ = "Şan Kılkış"
 __all__ = ["Component", "ExternalBody", "VisualCG", "error_window", "warn_window"]
 
@@ -35,27 +32,24 @@ def warn_window(msg):
 
 
 class VisualCG(GeomBase):
-    """  xxxx
+    """ VisualCG provides the user with a nice visualization of the C.G. location without relying in small and hard to
+    see points
 
-    :return: xxx
+    :return: A sphere at the location of th specified center of gravity
     """
 
-    # TODO add header here and create a nice looking visual CG
-    #  TODO add validators to 2 inputs
-
-    #
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'cg.png')
     __initargs__ = ["vis_cog"]
-    # TODO Find a proper icon here
-    vis_cog = Input()
-    scale = Input(0.01)
+
+    vis_cog = Input(Point(0, 0, 0), validator=val.Instance(Point))
+    scale = Input(0.01, validator=val.Positive())
+    color = Input('yellow')
 
     @Part
     def visual_cg_location(self):
-        """  xxxx
+        """ The sphere which is visibile in the GUI
 
-         :return: xxx
-
+         :rtype: Sphere
          """
         return Sphere(radius=self.scale,
                       position=translate(XOY,
@@ -66,7 +60,19 @@ class VisualCG(GeomBase):
 
 
 class Component(GeomBase):
-    # TODO Comment here
+    """ Defines the main class definition for the entire components module. This acts as a template to then allow better
+    meshing between modded components or multiple collaborators. Thus, the use of such primitive classes makes it easy
+    for the code to be expanded later, since any class which inherits from Component can be assigned a new method simply
+    by changing it once in this class
+
+    :param position: Position of the current component in SI meter [m]
+    :type position: Position
+
+    :param inside_fuselage: Although currently not implemented this would allow non-dimensioned fuselage creation where
+    parts could simply be assigned without constraints and the fuselage would be able to create a shell around them
+    :type: inside_fuselage: bool
+
+    """
 
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'gear.png')
 
@@ -147,7 +153,6 @@ class Component(GeomBase):
 
 
 class ExternalBody(Component):
-    # TODO Comment here
 
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'air.png')
 

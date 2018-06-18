@@ -9,12 +9,10 @@ from math import pi, sqrt
 from directories import *
 from scipy.interpolate import interp1d
 from user import MyColors, rgb
+from definitions import warn_window
 
 __author__ = ["San Kilkis"]
 __all__ = ["Performance"]
-
-# TODO Comment code, it is in documentation
-# TODO Make some attributes private
 
 
 class Performance(Base):
@@ -35,6 +33,7 @@ class Performance(Base):
     weight_mtow = Input(5.0, validator=val.Instance(float))
     parasitic_drag = Input(0.02, validator=val.Instance(float))
     oswald_factor = Input(0.85, validator=val.Instance(float))
+    cg_valid = Input(False)
     stall_buffer = Input(1.5, validator=val.Range(1.0, 1.5))
 
     @Attribute
@@ -86,6 +85,8 @@ class Performance(Base):
 
     @Attribute
     def speed_range(self):
+        if not self.cg_valid:
+            warn_window('Please run the c.g. convergence attribute in the root, before estimating Performance')
         return np.linspace(0.1, self.eta_curve_bounds[1], 100)
 
     @Attribute
@@ -244,8 +245,6 @@ class Performance(Base):
         plt.show()
         fig.savefig(fname=os.path.join(DIRS['USER_DIR'], 'plots', '%s.pdf' % fig.get_label()), format='pdf')
         return 'Figure Plotted and Saved'
-
-    # TODO Add specific points to the L/D plot and add attributes
 
     @Attribute
     def plot_lift_to_drag(self):

@@ -197,11 +197,9 @@
 <span class="kn">from</span> <span class="nn">parapy.core</span> <span class="k">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">parapy.geom</span> <span class="k">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">primitives</span> <span class="k">import</span> <span class="n">LiftingSurface</span>
-<span class="kn">from</span> <span class="nn">scissorplot</span> <span class="k">import</span> <span class="n">ScissorPlot</span>
 <span class="kn">from</span> <span class="nn">definitions</span> <span class="k">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">user</span> <span class="k">import</span> <span class="n">MyColors</span>
-
-<span class="c1">#  TODO ADD VALIDATOR FOR AIRFOIL TYPE &amp; CHOICE, OFFSET. ALSO IN LIFTING SURF AND VERTICAL STAB!!!!!!!</span>
+<span class="kn">from</span> <span class="nn">directories</span> <span class="k">import</span> <span class="o">*</span>
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Nelson Johnson&quot;</span><span class="p">]</span>
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;HorizontalStabilizer&quot;</span><span class="p">]</span>
@@ -249,6 +247,8 @@
 <span class="sd">    :type ply_number: int</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="n">__icon__</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;ICON_DIR&#39;</span><span class="p">],</span> <span class="s1">&#39;htail.png&#39;</span><span class="p">)</span>
+
     <span class="c1">#: Below is the required tail surface area from the scissor plot.</span>
     <span class="n">planform_area</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">())</span>
 
@@ -281,6 +281,14 @@
 
     <span class="c1">#: Changes the number of ply&#39;s of carbon fiber http://www.ijera.com/papers/Vol4_issue5/Version%202/J45025355.pdf</span>
     <span class="n">ply_number</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
+
+    <span class="nd">@offset</span><span class="o">.</span><span class="n">on_slot_change</span>
+    <span class="k">def</span> <span class="nf">sweep_validator</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Simple listener to validate the offset parameter &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">le_sweep</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mf">0.0</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">error_window</span><span class="p">(</span><span class="s1">&#39;Currently adding sweep to the horizontal tail is not implemented&#39;</span><span class="p">)</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;offset&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
 
 
 <span class="c1">#  Attributes ########--------------------------------------------------------------------------------------------------</span>

@@ -200,6 +200,8 @@
 <span class="kn">from</span> <span class="nn">definitions</span> <span class="k">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">components.liftingsurfaces</span> <span class="k">import</span> <span class="n">CompoundStabilizer</span><span class="p">,</span> <span class="n">Wing</span>
 <span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="n">radians</span>
+<span class="kn">from</span> <span class="nn">user</span> <span class="k">import</span> <span class="n">MyColors</span>
+<span class="kn">from</span> <span class="nn">directories</span> <span class="k">import</span> <span class="o">*</span>
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Şan Kılkış&quot;</span><span class="p">,</span> <span class="s2">&quot;Nelson Johnson&quot;</span><span class="p">]</span>
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Boom&quot;</span><span class="p">]</span>
@@ -228,12 +230,27 @@
 <span class="sd">    :type ply_number: int</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="n">__icon__</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;ICON_DIR&#39;</span><span class="p">],</span> <span class="s1">&#39;booms.png&#39;</span><span class="p">)</span>
+
     <span class="n">wing_in</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">Wing</span><span class="p">(),</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="n">Wing</span><span class="p">))</span>
+
     <span class="n">tail_in</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">CompoundStabilizer</span><span class="p">(),</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="n">CompoundStabilizer</span><span class="p">))</span>
+
     <span class="n">diameter_factor</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.75</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Between</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">))</span>
 
     <span class="c1">#: Changes the number of ply&#39;s of carbon fiber http://www.ijera.com/papers/Vol4_issue5/Version%202/J45025355.pdf</span>
     <span class="n">ply_number</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
+
+    <span class="n">color</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">MyColors</span><span class="o">.</span><span class="n">dark_grey</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">tuple</span><span class="p">))</span>
+
+<div class="viewcode-block" id="Boom.center_of_gravity"><a class="viewcode-back" href="../../../components/fuselage/boom.html#components.fuselage.boom.Boom.center_of_gravity">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">center_of_gravity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Retrives the Center of Gravity location of the combined booms in SI meter [m]</span>
+
+<span class="sd">        :rtype: Point &quot;&quot;&quot;</span>
+        <span class="n">half_cg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tail_boom</span><span class="o">.</span><span class="n">solids</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">cog</span>
+
+        <span class="k">return</span> <span class="n">Point</span><span class="p">(</span><span class="n">half_cg</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">half_cg</span><span class="o">.</span><span class="n">z</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Boom.component_type"><a class="viewcode-back" href="../../../components/fuselage/boom.html#components.fuselage.boom.Boom.component_type">[docs]</a>    <span class="nd">@Attribute</span>
     <span class="k">def</span> <span class="nf">component_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -243,23 +260,38 @@
     <span class="k">def</span> <span class="nf">wing_end_point</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Defines the termination point of the boom-extrude.</span>
 
-<span class="sd">        :return: Fused Shape</span>
+<span class="sd">        :return: Point corresponding to intersection between the :attr:`boom_plane` defined in</span>
+<span class="sd">        :class:`CompoundStabilizer` and the :attr:`front_spar_line` defined in :class:`Wing`</span>
+<span class="sd">        tail</span>
 <span class="sd">        :rtype: Fused</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">srf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tail_in</span><span class="o">.</span><span class="n">boom_plane</span>
         <span class="n">line</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wing_in</span><span class="o">.</span><span class="n">front_spar_line</span>
         <span class="k">return</span> <span class="n">srf</span><span class="o">.</span><span class="n">intersection_point</span><span class="p">(</span><span class="n">line</span><span class="p">)</span></div>
 
-    <span class="nd">@Attribute</span>
+<div class="viewcode-block" id="Boom.tail_end_point"><a class="viewcode-back" href="../../../components/fuselage/boom.html#components.fuselage.boom.Boom.tail_end_point">[docs]</a>    <span class="nd">@Attribute</span>
     <span class="k">def</span> <span class="nf">tail_end_point</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">tail_in</span><span class="o">.</span><span class="n">tail_shaft_circle</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">center</span>
+        <span class="sd">&quot;&quot;&quot; Components the most forward position of the compound tail</span>
 
-    <span class="nd">@Attribute</span>
+<span class="sd">        :return: Position of the front face that the boom will join to</span>
+<span class="sd">        :rtype: Position</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">tail_in</span><span class="o">.</span><span class="n">tail_shaft_circle</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">center</span></div>
+
+<div class="viewcode-block" id="Boom.boom_length"><a class="viewcode-back" href="../../../components/fuselage/boom.html#components.fuselage.boom.Boom.boom_length">[docs]</a>    <span class="nd">@Attribute</span>
     <span class="k">def</span> <span class="nf">boom_length</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wing_end_point</span><span class="o">.</span><span class="n">vector_from</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tail_end_point</span><span class="p">)</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+        <span class="sd">&quot;&quot;&quot; Computes the length of the boom</span>
 
-    <span class="nd">@Attribute</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wing_end_point</span><span class="o">.</span><span class="n">vector_from</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tail_end_point</span><span class="p">)</span><span class="o">.</span><span class="n">x</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Boom.boom_tail_curve"><a class="viewcode-back" href="../../../components/fuselage/boom.html#components.fuselage.boom.Boom.boom_tail_curve">[docs]</a>    <span class="nd">@Attribute</span>
     <span class="k">def</span> <span class="nf">boom_tail_curve</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Instantiates the curve which is later used by :attr:`booms_import` in an extrude process</span>
+
+<span class="sd">        :rtype: RotatedCurve</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">sorted_faces</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tail_in</span><span class="o">.</span><span class="n">connector_right</span><span class="o">.</span><span class="n">faces</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="n">cog</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
         <span class="n">scaled_curve</span> <span class="o">=</span> <span class="n">ScaledCurve</span><span class="p">(</span><span class="n">curve_in</span><span class="o">=</span><span class="n">sorted_faces</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">edges</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
                                    <span class="n">reference_point</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tail_end_point</span><span class="p">,</span>
@@ -268,29 +300,39 @@
                                      <span class="n">rotation_point</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tail_end_point</span><span class="p">,</span>
                                      <span class="n">vector</span><span class="o">=</span><span class="n">Vector</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
                                      <span class="n">angle</span><span class="o">=</span><span class="n">radians</span><span class="p">(</span><span class="mi">90</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">rotated_curve</span>
+        <span class="k">return</span> <span class="n">rotated_curve</span></div>
 
-    <span class="nd">@Attribute</span><span class="p">(</span><span class="n">private</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="viewcode-block" id="Boom.booms_import"><a class="viewcode-back" href="../../../components/fuselage/boom.html#components.fuselage.boom.Boom.booms_import">[docs]</a>    <span class="nd">@Attribute</span><span class="p">(</span><span class="n">private</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">booms_import</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Responsible for instantiating and thus importing the boom shape into the class, this is accomplished first</span>
+<span class="sd">         by an Extruded solid that is then mirrored and later fused</span>
+
+<span class="sd">         :rtype: Fused</span>
+<span class="sd">         &quot;&quot;&quot;</span>
         <span class="n">_unrotated</span> <span class="o">=</span> <span class="n">ExtrudedSolid</span><span class="p">(</span><span class="n">island</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">boom_tail_curve</span><span class="p">,</span> <span class="n">distance</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">boom_length</span><span class="p">)</span>
         <span class="n">_left_boom</span> <span class="o">=</span> <span class="n">MirroredShape</span><span class="p">(</span><span class="n">shape_in</span><span class="o">=</span><span class="n">_unrotated</span><span class="p">,</span> <span class="n">reference_point</span><span class="o">=</span><span class="n">Point</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">vector1</span><span class="o">=</span><span class="n">Vector</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
                                    <span class="n">vector2</span><span class="o">=</span><span class="n">Vector</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
         <span class="n">_dual_booms</span> <span class="o">=</span> <span class="n">Fused</span><span class="p">(</span><span class="n">_unrotated</span><span class="p">,</span> <span class="n">_left_boom</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">_dual_booms</span>
+        <span class="k">return</span> <span class="n">_dual_booms</span></div>
 
-    <span class="nd">@Part</span>
+<div class="viewcode-block" id="Boom.tail_boom"><a class="viewcode-back" href="../../../components/fuselage/boom.html#components.fuselage.boom.Boom.tail_boom">[docs]</a>    <span class="nd">@Part</span>
     <span class="k">def</span> <span class="nf">tail_boom</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; The main geometry output of this class</span>
+
+<span class="sd">        :return: A joined set of tail-booms</span>
+<span class="sd">        :rtype: RotatedShape</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">RotatedShape</span><span class="p">(</span><span class="n">shape_in</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">booms_import</span><span class="p">,</span>
                             <span class="n">rotation_point</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tail_end_point</span><span class="p">,</span>
                             <span class="n">vector</span><span class="o">=</span><span class="n">Vector</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
-                            <span class="n">angle</span><span class="o">=</span><span class="n">radians</span><span class="p">(</span><span class="mi">90</span><span class="p">))</span>
+                            <span class="n">angle</span><span class="o">=</span><span class="n">radians</span><span class="p">(</span><span class="mi">90</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="Boom.external_shape"><a class="viewcode-back" href="../../../components/fuselage/boom.html#components.fuselage.boom.Boom.external_shape">[docs]</a>    <span class="nd">@Part</span>
     <span class="k">def</span> <span class="nf">external_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; This part is the external shape of the boom.</span>
 
-<span class="sd">        :return: Fused Shape</span>
-<span class="sd">        :rtype: Fused</span>
+<span class="sd">        :return: Presents the two booms for use in wetted area calculation as well as goemetry export</span>
+<span class="sd">        :rtype: ScaledShape</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">ScaledShape</span><span class="p">(</span><span class="n">shape_in</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tail_boom</span><span class="p">,</span> <span class="n">reference_point</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tail_boom</span><span class="o">.</span><span class="n">position</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">hidden</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                            <span class="n">label</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">)</span></div>
@@ -299,8 +341,7 @@
     <span class="k">def</span> <span class="nf">internal_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; This overwrites the Part defined in the class `Component` an internal_shape w/ a Dummy Value</span>
 
-<span class="sd">        :return: Fused Shape</span>
-<span class="sd">        :rtype: Fused</span>
+<span class="sd">        :rtype: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="kc">None</span></div></div>
 

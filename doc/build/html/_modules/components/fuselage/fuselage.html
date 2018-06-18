@@ -234,8 +234,7 @@
 
     <span class="c1">#: Type of containers at each station, possible entries (nose, container, motor, tail)</span>
     <span class="c1">#: :type: str list</span>
-    <span class="n">compartment_type</span> <span class="o">=</span> <span class="n">Input</span><span class="p">([</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">list</span><span class="p">))</span>
-    <span class="c1"># compartment_type = Input()</span>
+    <span class="n">compartment_type</span> <span class="o">=</span> <span class="n">Input</span><span class="p">([</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">],</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">list</span><span class="p">))</span>
 
     <span class="c1">#: Parts that the fuselage will be sized for, these must correspond to the entries given in `compartment_type`</span>
     <span class="c1">#: :type: list</span>

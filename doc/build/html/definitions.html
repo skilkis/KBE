@@ -199,7 +199,25 @@
 <dl class="class">
 <dt id="definitions.Component">
 <em class="property">class </em><code class="descclassname">definitions.</code><code class="descname">Component</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/definitions.html#Component"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#definitions.Component" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="attribute">
+<dd><p>Defines the main class definition for the entire components module. This acts as a template to then allow better
+meshing between modded components or multiple collaborators. Thus, the use of such primitive classes makes it easy
+for the code to be expanded later, since any class which inherits from Component can be assigned a new method simply
+by changing it once in this class</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>position</strong> (<em>Position</em>) – Position of the current component in SI meter [m]</li>
+<li><strong>inside_fuselage</strong> – Although currently not implemented this would allow non-dimensioned fuselage creation where</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>parts could simply be assigned without constraints and the fuselage would be able to create a shell around them
+:type: inside_fuselage: bool</p>
+<dl class="attribute">
 <dt id="definitions.Component.center_of_gravity">
 <code class="descname">center_of_gravity</code><a class="reference internal" href="_modules/definitions.html#Component.center_of_gravity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#definitions.Component.center_of_gravity" title="Permalink to this definition">¶</a></dt>
 <dd><p>Location of the center of gravity w.r.t the origin</p>
@@ -396,29 +414,44 @@ intersected faces to obtain a fairly accurate wetted area.</p>
 <dl class="class">
 <dt id="definitions.VisualCG">
 <em class="property">class </em><code class="descclassname">definitions.</code><code class="descname">VisualCG</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/definitions.html#VisualCG"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#definitions.VisualCG" title="Permalink to this definition">¶</a></dt>
-<dd><p>xxxx</p>
+<dd><p>VisualCG provides the user with a nice visualization of the C.G. location without relying in small and hard to
+see points</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">xxx</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A sphere at the location of th specified center of gravity</td>
 </tr>
 </tbody>
 </table>
 <dl class="attribute">
 <dt id="definitions.VisualCG.visual_cg_location">
 <code class="descname">visual_cg_location</code><a class="reference internal" href="_modules/definitions.html#VisualCG.visual_cg_location"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#definitions.VisualCG.visual_cg_location" title="Permalink to this definition">¶</a></dt>
-<dd><p>xxxx</p>
+<dd><p>The sphere which is visibile in the GUI</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">xxx</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">Sphere</td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="function">
+<dt id="definitions.error_window">
+<code class="descclassname">definitions.</code><code class="descname">error_window</code><span class="sig-paren">(</span><em>msg</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/definitions.html#error_window"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#definitions.error_window" title="Permalink to this definition">¶</a></dt>
+<dd><p>Provides a simple easy way to bring up an error message, useful for reducing clutter around error-message calls
+within the code</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="definitions.warn_window">
+<code class="descclassname">definitions.</code><code class="descname">warn_window</code><span class="sig-paren">(</span><em>msg</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/definitions.html#warn_window"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#definitions.warn_window" title="Permalink to this definition">¶</a></dt>
+<dd><p>Provides a simple easy way to bring up an warning message, useful for reducing clutter around error-message
+calls within the code</p>
 </dd></dl>
 
 </div>

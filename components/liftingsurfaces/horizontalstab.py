@@ -8,8 +8,6 @@ from definitions import *
 from user import MyColors
 from directories import *
 
-#  TODO ADD VALIDATOR FOR AIRFOIL TYPE & CHOICE, OFFSET. ALSO IN LIFTING SURF AND VERTICAL STAB!!!!!!!
-
 __author__ = ["Nelson Johnson"]
 __all__ = ["HorizontalStabilizer"]
 

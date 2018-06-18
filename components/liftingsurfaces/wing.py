@@ -80,8 +80,6 @@ class Wing(ExternalBody, LiftingSurface):
     #: Below is the assumed factor of the semi_span which the fuselage extends over the wing.
     fuse_width_factor = Input(0.07, validator=val.Range(0.001, 0.1))
 
-    # TODO add getancestor attribute here is wing is not root that gets camera length
-
     #: Below is a switch to hide/show the bbox of the wing section within the fuselage.
     hide_bbox = Input(False, validator=val.Instance(bool))
 
@@ -102,7 +100,6 @@ class Wing(ExternalBody, LiftingSurface):
 
 #  This block of Attributes calculates the planform parameters. ########------------------------------------------------
 
-    # TODO make sure that the wing position is not settable, this doesn't work
     @Attribute(private=True)
     def position(self):
         """ Overwrites the inherited position attribute, to make the wing-fixed at Point(0, 0, 0), thus the

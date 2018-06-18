@@ -311,16 +311,7 @@
 <span class="sd">        :return: ParaPy Fused Boxes</span>
 <span class="sd">        :rtype: Fused</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">parts_in</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">speed_controller</span><span class="o">.</span><span class="n">esc_joiner</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">flight_controller</span><span class="o">.</span><span class="n">solid</span><span class="p">]</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">number_engines</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">shape_in</span> <span class="o">=</span> <span class="n">parts_in</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">number_engines</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
-                <span class="n">new_part</span> <span class="o">=</span> <span class="n">Fused</span><span class="p">(</span><span class="n">shape_in</span><span class="o">=</span><span class="n">shape_in</span><span class="p">,</span> <span class="n">tool</span><span class="o">=</span><span class="n">parts_in</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span>
-                <span class="n">shape_in</span> <span class="o">=</span> <span class="n">new_part</span>
-            <span class="n">shape_out</span> <span class="o">=</span> <span class="n">shape_in</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">shape_out</span> <span class="o">=</span> <span class="n">parts_in</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">shape_out</span></div>
+        <span class="k">return</span> <span class="n">Fused</span><span class="p">(</span><span class="n">shape_in</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">speed_controller</span><span class="o">.</span><span class="n">esc_joiner</span><span class="p">,</span> <span class="n">tool</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">flight_controller</span><span class="o">.</span><span class="n">solid</span><span class="p">)</span><span class="o">.</span><span class="n">solids</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="Electronics.center_of_gravity"><a class="viewcode-back" href="../../../components/electronics/electronics.html#components.electronics.electronics.Electronics.center_of_gravity">[docs]</a>    <span class="nd">@Attribute</span>
     <span class="k">def</span> <span class="nf">center_of_gravity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -346,7 +337,8 @@
 <span class="sd">        :return: Speed Controller(s) bounded box</span>
 <span class="sd">        :rtype: ScaledShape</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">ScaledShape</span><span class="p">(</span><span class="n">shape_in</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">elec_joiner</span><span class="p">,</span> <span class="n">reference_point</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">speed_controller</span><span class="o">.</span><span class="n">center_of_gravity</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">transparency</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="n">ScaledShape</span><span class="p">(</span><span class="n">shape_in</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">elec_joiner</span><span class="p">,</span> <span class="n">reference_point</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">speed_controller</span><span class="o">.</span><span class="n">center_of_gravity</span><span class="p">,</span>
+                           <span class="n">factor</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">transparency</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span></div></div>
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>

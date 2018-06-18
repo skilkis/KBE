@@ -206,9 +206,10 @@
 <span class="kn">from</span> <span class="nn">directories</span> <span class="k">import</span> <span class="o">*</span>
 <span class="kn">import</span> <span class="nn">webbrowser</span>
 <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">definitions</span> <span class="k">import</span> <span class="n">error_window</span>
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Şan Kılkış&quot;</span><span class="p">]</span>
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;DesignInput&quot;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;DesignInput&quot;</span><span class="p">,</span> <span class="s2">&quot;valid_payloads&quot;</span><span class="p">]</span>
 
 <span class="c1"># These variables determine the default filename/sheetname(s)</span>
 <span class="n">filename</span> <span class="o">=</span> <span class="s2">&quot;userinput.xlsx&quot;</span>
@@ -216,13 +217,13 @@
 
 
 <span class="c1"># Function which returns all valid payloads in the directory /components/payload</span>
-<span class="k">def</span> <span class="nf">valid_payloads</span><span class="p">():</span>
+<div class="viewcode-block" id="valid_payloads"><a class="viewcode-back" href="../../design/designinput.html#design.designinput.valid_payloads">[docs]</a><span class="k">def</span> <span class="nf">valid_payloads</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot; Returns all valid payloads in the payloads directory for the field `payload_type`</span>
 
 <span class="sd">    :rtype: list</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">payloads</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;COMPONENTS_DIR&#39;</span><span class="p">],</span> <span class="s1">&#39;payload&#39;</span><span class="p">))</span>
-    <span class="k">return</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">payloads</span> <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.py&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">!=</span> <span class="s1">&#39;__init__.py&#39;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">payloads</span> <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.py&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">!=</span> <span class="s1">&#39;__init__.py&#39;</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="DesignInput"><a class="viewcode-back" href="../../design/designinput.html#design.designinput.DesignInput">[docs]</a><span class="k">class</span> <span class="nc">DesignInput</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
@@ -285,6 +286,20 @@
     <span class="c1">#: Sets the design point of the UAV to be hand-launchable</span>
     <span class="n">handlaunch</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">bool</span><span class="p">))</span>
 
+    <span class="nd">@target_value</span><span class="o">.</span><span class="n">on_slot_change</span>
+    <span class="k">def</span> <span class="nf">weight_checker</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Validates the user-input weight to make sure it is within the bounds of the project and the region with</span>
+<span class="sd">        the highest confidence interval for Class I &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_target</span> <span class="ow">is</span> <span class="s1">&#39;payload&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_value</span> <span class="o">&gt;</span> <span class="mf">5.0</span><span class="p">:</span>
+                <span class="n">error_window</span><span class="p">(</span><span class="s1">&#39;The provided payload target exceeds the scope of this project (only light UAVs &lt; 20 &#39;</span>
+                             <span class="s1">&#39;[kg] represent the design space&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_value</span> <span class="o">&lt;</span> <span class="mf">1.0</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_value</span> <span class="o">&gt;</span> <span class="mf">20.0</span><span class="p">:</span>
+                <span class="n">error_window</span><span class="p">(</span><span class="s1">&#39;The provided MTOW exceeds the scope of this project (only light UAVs &lt; 20 [kg] &#39;</span>
+                             <span class="s1">&#39;represent the design space&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
 <div class="viewcode-block" id="DesignInput.get_userinput"><a class="viewcode-back" href="../../design/designinput.html#design.designinput.DesignInput.get_userinput">[docs]</a>    <span class="nd">@Attribute</span>
     <span class="k">def</span> <span class="nf">get_userinput</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; An attribute, that when evaluated, reads the input excel file present in the working directory and updates</span>
@@ -310,6 +325,8 @@
         <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;configuration&#39;</span><span class="p">,</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ws</span><span class="o">.</span><span class="n">_cell_values</span> <span class="k">if</span> <span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;configuration&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
         <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;handlaunch&#39;</span><span class="p">,</span> <span class="p">[</span><span class="kc">True</span> <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">==</span> <span class="s1">&#39;True&#39;</span> <span class="k">else</span> <span class="kc">False</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ws</span><span class="o">.</span><span class="n">_cell_values</span>
                                      <span class="k">if</span> <span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;handlaunch&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset_slot</span><span class="p">(</span><span class="s1">&#39;configuration&#39;</span><span class="p">)</span>  <span class="c1"># Necessary step to fire dependent evaluation</span>
 
         <span class="k">return</span> <span class="s1">&#39;Inputs have been overwritten from the supplied Excel File&#39;</span></div>
 

@@ -46,7 +46,7 @@ class Motor(Component):
 
     position = Input(Position(Point(0, 0, 0)), validator=val.Instance(Position))
 
-    @Input
+    @Attribute
     def browse_motors(self):
         """ Allows the user to easily choose amongst available motors with a GUI File-Browser.
 

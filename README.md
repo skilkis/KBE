@@ -31,8 +31,8 @@
 
         [7.]	The performance of the UAV is evaluated in the ‘Performance’ part. Here, if the ‘plot_airspeed_vs_power’
         attribute is fired, all power components are plotted against flight velocity. The CD0 used in these calculations
-         is calculated using the final wetted areas extracted from ParaPy. The maximum range and endurance speeds are
-         extracted and the final mission requirements are recalculated and shown in the plot’s legend.
+        is calculated using the final wetted areas extracted from ParaPy. The maximum range and endurance speeds are
+        extracted and the final mission requirements are recalculated and shown in the plot’s legend.
 
         [8.]	The relevant UAV design parameters may be exported to the ‘output.xls’ file in the root/user/results
         folder by firing the ‘write_excel’ attribute in the root ‘mainUAV’ Class.

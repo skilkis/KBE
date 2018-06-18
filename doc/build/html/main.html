@@ -221,11 +221,23 @@ all in the top level of the tree.</p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="main.UAV.cg_valid">
+<code class="descname">cg_valid</code><a class="reference internal" href="_modules/main.html#UAV.cg_valid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#main.UAV.cg_valid" title="Permalink to this definition">¶</a></dt>
+<dd><p>A switch-case attribute that handles whether or not the c.g. convergence procedure has been executed</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="main.UAV.final_cg">
 <code class="descname">final_cg</code><a class="reference internal" href="_modules/main.html#UAV.final_cg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#main.UAV.final_cg" title="Permalink to this definition">¶</a></dt>
 <dd><p>This attribute utilizes a loop to find a converged final Center of Gravity that is stable, this step is
 necessary since at run-time the tail is not yet made and the scissor plot only calculates stability for a
 tail-less aircraft!</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="main.UAV.motor_integration">
+<code class="descname">motor_integration</code><a class="headerlink" href="#main.UAV.motor_integration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Switch case that handles build location of the single motor</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -288,6 +300,14 @@ calculates the center of gravity w.r.t the origin Point(0, 0, 0)</p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="main.UAV.write_excel">
+<code class="descname">write_excel</code><a class="reference internal" href="_modules/main.html#UAV.write_excel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#main.UAV.write_excel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Responsible for writing the important parameters generated from the instantiation of myUAV and stores them
+in a .xls file in /user/results/output.xls. Due to the large amount of string formatting within this attribute
+feel free to collapse for readability of the code</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="main.UAV.write_step">
 <code class="descname">write_step</code><a class="reference internal" href="_modules/main.html#UAV.write_step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#main.UAV.write_step" title="Permalink to this definition">¶</a></dt>
 <dd><p>This attribute utilizes a function <a href="#id1"><span class="problematic" id="id2">:method:`part_fetcher`</span></a> to loop through all children in the main file,
@@ -297,7 +317,9 @@ creates the .stp file in the user directory under KBE/user/model.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"></td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The .stp file of the current myUAV instance in the /user/model folder</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">STEPWriter</td>
 </tr>
 </tbody>
 </table>

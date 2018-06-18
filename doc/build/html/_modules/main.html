@@ -201,55 +201,8 @@
 <span class="sd">@version: 1.0</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="c1">#  TODO DELIVERABLE:   WRITE   OUTPUT    EXCEL    FILE   !!!!!!!!!!!!!!!!!!!!!!</span>
-
-<span class="c1">#  TODO !!!!!! IF AR (for example) CHANGED IN Main Wing INSTANTIATION, SCISSOR PLOT IS NOT UPDATED WITH CORRESP. VALUE!</span>
-<span class="c1">#  TODO .... we must update the values in params, and change them ONLY there in the GUI!!!!!!!!!!!!!!!!</span>
-
-<span class="c1">#  TODO CHECK THE CG LOOP CONVERGENCE. SEE OLD CG AND NEW CG SIMPLY CHANGE SPOTS, IT IS INFINITE!!!!!</span>
-    <span class="c1"># Although it is infinite bro it is simply flipping back and forth on the stability plot, that is why we stop it and</span>
-    <span class="c1"># for now that is good enough behavior, most designs converge to a single value!</span>
-
-<span class="c1">#  TODO MAKE final_cg NON LAZY OR USER SEES WRONG TAIL!!!!!!!!!!!!!!!!!! (Add listener to input cg)</span>
-<span class="c1">#  TODO Make sure vt weight is correct in final weight for changes in the GUI ......</span>
-<span class="c1">#  TODO cont&#39;d .....I tried changing # plys on right wing in GUI but cg stayed on x ax</span>
-
-<span class="c1"># TODO Add high-sweep warning as per the assignment description</span>
-
-
-<span class="c1">#  TODO FIX PLAYLOAD MASS IN FINAL MTOW TO CORRESPOND WITH WING/ TAIL SIZING &amp; CLASS I!!!!!!!!!!!</span>
-
-<span class="c1">#  TODO add tkMessagebox browser to payloads</span>
-
-<span class="c1"># TODO Add instance validator for each class input (check out performance.py for example)</span>
-<span class="c1"># TODO Make a nice visual CG representation of both c.g. before and after run</span>
-
-<span class="c1">#  TODO every class should have print statement saying that it has been instantiated into the console</span>
-
-<span class="c1">#  TODO delete all example and irrelevant documents &amp; data files in KBE folder and rename folder with original name.</span>
-
-<span class="c1"># TODO move everything except for main.py into a \bin folder to clean up directory</span>
-
-<span class="c1"># TODO Add UML in doc</span>
-
-<span class="c1"># TODO bug found in eletronics, number of engines messes up the Fuse Operation</span>
-
-<span class="c1"># TODO Determine CL_max from the maximum lift coefficient from the XFOIL database</span>
-
-<span class="c1"># TODO Fix color of booms</span>
-
-
-<span class="c1"># TODO Check that all plots are actually output, and consider trigerring all plots with an attribute</span>
-
-<span class="c1"># TODO internal shape of electronics module is wrong</span>
-
-<span class="c1"># TODO Add inheritance diagram to documentation</span>
-
-<span class="c1"># TODO add validator Class IntersectedShapes on Fuselage</span>
-
-<span class="c1"># TODO Re-organize main folder add icons</span>
-
 <span class="kn">from</span> <span class="nn">design</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">user</span> <span class="k">import</span> <span class="n">MyColors</span>
 <span class="kn">from</span> <span class="nn">parapy.core</span> <span class="k">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">parapy.geom</span> <span class="k">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">parapy.exchange</span> <span class="k">import</span> <span class="n">STEPWriter</span>
@@ -260,16 +213,18 @@
 <span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">Iterable</span>
 <span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">xlwt</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
+
+<span class="c1"># TODO (TBD) Visualize performance in the GUI through the addition of bar-charts utilizing ParaPy Boxes</span>
 
 <div class="viewcode-block" id="UAV"><a class="viewcode-back" href="../main.html#main.UAV">[docs]</a><span class="k">class</span> <span class="nc">UAV</span><span class="p">(</span><span class="n">DesignInput</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;  This class will generate UAV aircraft. It inherits from &#39;DesignInput.py&#39; so that the input requirements are</span>
-<span class="sd">    all in the top level of the tree.</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    all in the top level of the tree. &quot;&quot;&quot;</span>
 
     <span class="n">__icon__</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;ICON_DIR&#39;</span><span class="p">],</span> <span class="s1">&#39;plane.png&#39;</span><span class="p">)</span>
 
+    <span class="c1">#: Switch case that handles build location of the single motor</span>
     <span class="n">motor_integration</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;pusher&#39;</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">OneOf</span><span class="p">([</span><span class="s1">&#39;pusher&#39;</span><span class="p">,</span> <span class="s1">&#39;puller&#39;</span><span class="p">]))</span>
 
 <div class="viewcode-block" id="UAV.cg"><a class="viewcode-back" href="../main.html#main.UAV.cg">[docs]</a>    <span class="nd">@Input</span>
@@ -280,64 +235,43 @@
 <span class="sd">        :rtype: Point &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_and_balance</span><span class="p">()[</span><span class="s1">&#39;CG&#39;</span><span class="p">]</span></div>
 
-    <span class="nd">@Part</span>
-    <span class="k">def</span> <span class="nf">params</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1">#  Here we instantiate the parameter generator, passing down the inputs from the User input file.</span>
-        <span class="k">return</span> <span class="n">ParameterGenerator</span><span class="p">(</span><span class="n">pass_down</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;performance_goal&#39;</span><span class="p">,</span>
-                                             <span class="s1">&#39;goal_value&#39;</span><span class="p">,</span>
-                                             <span class="s1">&#39;weight_target&#39;</span><span class="p">,</span>
-                                             <span class="s1">&#39;target_value&#39;</span><span class="p">,</span>
-                                             <span class="s1">&#39;payload_type&#39;</span><span class="p">,</span>
-                                             <span class="s1">&#39;configuration&#39;</span><span class="p">,</span>
-                                             <span class="s1">&#39;handlaunch&#39;</span><span class="p">,</span>
-                                             <span class="s1">&#39;portable&#39;</span><span class="p">],</span>
-                                  <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Design Parameters&#39;</span><span class="p">)</span>
-
-    <span class="nd">@Part</span>
-    <span class="k">def</span> <span class="nf">wing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">Wing</span><span class="p">(</span><span class="n">wing_loading</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">wing_loading</span><span class="p">,</span>
-                    <span class="n">weight_mtow</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">weight_mtow</span><span class="p">,</span>
-                    <span class="n">stall_speed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">stall_speed</span><span class="p">,</span>
-                    <span class="n">rho</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">rho</span><span class="p">,</span>
-                    <span class="n">aspect_ratio</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">aspect_ratio</span><span class="p">,</span>
-                    <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Main Wing&#39;</span><span class="p">)</span>
-
-    <span class="nd">@Part</span>
-    <span class="k">def</span> <span class="nf">stability</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1">#  TODO Make Function for AR_h, e_h</span>
-        <span class="k">return</span> <span class="n">ScissorPlot</span><span class="p">(</span><span class="n">x_cg</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cg</span><span class="o">.</span><span class="n">x</span><span class="p">,</span>
-                           <span class="n">x_ac</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="o">.</span><span class="n">aerodynamic_center</span><span class="o">.</span><span class="n">x</span><span class="p">,</span>
-                           <span class="n">x_lemac</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="o">.</span><span class="n">lemac</span><span class="o">.</span><span class="n">x</span><span class="p">,</span>
-                           <span class="n">mac</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="o">.</span><span class="n">mac_length</span><span class="p">,</span>
-                           <span class="n">AR</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">aspect_ratio</span><span class="p">,</span>
-                           <span class="n">e</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">wingpowerloading</span><span class="o">.</span><span class="n">e_factor</span><span class="p">,</span>
-                           <span class="n">e_h</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
-                           <span class="n">Cl_w</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="o">.</span><span class="n">lift_coef_control</span><span class="p">,</span>
-                           <span class="n">C_mac</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="o">.</span><span class="n">moment_coef_control</span><span class="p">,</span>
-                           <span class="n">Cla_w</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="o">.</span><span class="n">lift_coef_vs_alpha</span><span class="p">,</span>
-                           <span class="n">delta_xcg</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
-                           <span class="n">configuration</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">configuration</span><span class="p">,</span>
-                           <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Stability Parameters&#39;</span><span class="p">)</span>
-
 <div class="viewcode-block" id="UAV.final_cg"><a class="viewcode-back" href="../main.html#main.UAV.final_cg">[docs]</a>    <span class="nd">@Attribute</span>
     <span class="k">def</span> <span class="nf">final_cg</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; This attribute utilizes a loop to find a converged final Center of Gravity that is stable, this step is</span>
 <span class="sd">        necessary since at run-time the tail is not yet made and the scissor plot only calculates stability for a</span>
 <span class="sd">        tail-less aircraft! &quot;&quot;&quot;</span>
         <span class="n">old_cg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cg</span>
-        <span class="nb">print</span> <span class="s1">&#39;Run-Time CG = </span><span class="si">%1.4f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">old_cg</span><span class="o">.</span><span class="n">x</span>
+        <span class="nb">print</span> <span class="s1">&#39;Run-Time CG = </span><span class="si">%1.4f</span><span class="s1"> </span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">old_cg</span><span class="o">.</span><span class="n">x</span>
         <span class="n">new_cg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_and_balance</span><span class="p">()[</span><span class="s1">&#39;CG&#39;</span><span class="p">]</span>
         <span class="n">loop</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">while</span> <span class="nb">abs</span><span class="p">(</span><span class="n">old_cg</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">new_cg</span><span class="o">.</span><span class="n">x</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">0.005</span> <span class="ow">and</span> <span class="n">loop</span> <span class="o">&lt;</span> <span class="mi">20</span><span class="p">:</span>
-            <span class="n">loop</span> <span class="o">=</span> <span class="n">loop</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">xcg_cache</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">while</span> <span class="nb">abs</span><span class="p">(</span><span class="n">old_cg</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">new_cg</span><span class="o">.</span><span class="n">x</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">0.0005</span> <span class="ow">and</span> <span class="n">loop</span> <span class="o">&lt;</span> <span class="mi">20</span><span class="p">:</span>
+            <span class="n">loop</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="nb">print</span> <span class="s1">&#39;Current Iteration: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">loop</span><span class="p">)</span>
+
             <span class="n">new_uav_object</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>  <span class="c1"># Large Performance improvement from making a copy of the current object!</span>
             <span class="n">old_cg</span> <span class="o">=</span> <span class="n">new_uav_object</span><span class="o">.</span><span class="n">cg</span>
-            <span class="nb">print</span> <span class="s1">&#39;Old CG = </span><span class="si">%1.4f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">old_cg</span><span class="o">.</span><span class="n">x</span>
+            <span class="nb">print</span> <span class="s1">&#39;Old CG = </span><span class="si">%1.6f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">old_cg</span><span class="o">.</span><span class="n">x</span>
+
             <span class="n">new_cg</span> <span class="o">=</span> <span class="n">new_uav_object</span><span class="o">.</span><span class="n">weight_and_balance</span><span class="p">()[</span><span class="s1">&#39;CG&#39;</span><span class="p">]</span>
-            <span class="nb">print</span> <span class="s1">&#39;New CG = </span><span class="si">%1.4f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">new_cg</span><span class="o">.</span><span class="n">x</span>
+            <span class="nb">print</span> <span class="s1">&#39;New CG = </span><span class="si">%1.6f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">new_cg</span><span class="o">.</span><span class="n">x</span>
+
+            <span class="c1"># Adding rounded c.g.x values to cache and cross-referencing to see if convergence behavior is oscillating</span>
+            <span class="k">if</span> <span class="nb">round</span><span class="p">(</span><span class="n">old_cg</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">round</span><span class="p">(</span><span class="n">new_cg</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span> <span class="ow">in</span> <span class="n">xcg_cache</span><span class="p">:</span>
+                <span class="n">new_cg</span> <span class="o">=</span> <span class="n">Point</span><span class="p">((</span><span class="n">new_cg</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">old_cg</span><span class="o">.</span><span class="n">x</span><span class="p">)</span><span class="o">/</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">new_cg</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">new_cg</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
             <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;cg&#39;</span><span class="p">,</span> <span class="n">new_cg</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">new_cg</span></div>
+            <span class="n">xcg_cache</span> <span class="o">=</span> <span class="n">xcg_cache</span> <span class="o">+</span> <span class="p">[</span><span class="nb">round</span><span class="p">(</span><span class="n">old_cg</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="mi">4</span><span class="p">)]</span> <span class="o">+</span> <span class="p">[</span><span class="nb">round</span><span class="p">(</span><span class="n">new_cg</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="mi">4</span><span class="p">)]</span>
+
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="s1">&#39;Convergence Behavior&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;ggplot&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xcg_cache</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Congergence History of the Center of Gravity&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Iterations [-]&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Longitudinal Center of Gravity Location [m]&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fname</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;USER_DIR&#39;</span><span class="p">],</span> <span class="s1">&#39;plots&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">.pdf&#39;</span> <span class="o">%</span> <span class="n">fig</span><span class="o">.</span><span class="n">get_label</span><span class="p">()),</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;pdf&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="s1">&#39;Converged after </span><span class="si">%d</span><span class="s1"> Iterations, Figure Plotted and Saved!&#39;</span> <span class="o">%</span> <span class="n">loop</span></div>
 
 <div class="viewcode-block" id="UAV.write_step"><a class="viewcode-back" href="../main.html#main.UAV.write_step">[docs]</a>    <span class="nd">@Attribute</span>
     <span class="k">def</span> <span class="nf">write_step</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -345,11 +279,12 @@
 <span class="sd">        and collect the :attr:`external_shape` from these children. These are then fed to the :class:`STEPWriter` which</span>
 <span class="sd">        creates the .stp file in the user directory under KBE/user/model.</span>
 
-<span class="sd">        :return:</span>
+<span class="sd">        :return: The .stp file of the current myUAV instance in the /user/model folder</span>
+<span class="sd">        :rtype: STEPWriter</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">def</span> <span class="nf">part_fetcher</span><span class="p">(</span><span class="n">external_shape</span><span class="p">,</span> <span class="n">label</span><span class="p">):</span>
-            <span class="sd">&quot;&quot;&quot; Collects all &#39;TopoDS_Shapes&#39; from the fed external_shape and returns in a list</span>
+            <span class="sd">&quot;&quot;&quot; Collects all entities with &#39;TopoDS_Shapes&#39; from the input external_shape and returns them in a list</span>
 
 <span class="sd">            :param external_shape: The current external shape in the loop</span>
 <span class="sd">            :param label: The label currently assigned to the child, this is used to name the part in the .stp file</span>
@@ -387,11 +322,207 @@
         <span class="n">writer</span><span class="o">.</span><span class="n">write</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">writer</span></div>
 
+    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">weights</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_and_balance</span><span class="p">()[</span><span class="s1">&#39;WEIGHTS&#39;</span><span class="p">]</span>
+
+<div class="viewcode-block" id="UAV.parasite_drag"><a class="viewcode-back" href="../main.html#main.UAV.parasite_drag">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">parasite_drag</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Utilizes Raymer&#39;s Equivalent skin-friction drag method to compute Zero-Lift Drag. The utilized value used</span>
+<span class="sd">        for the skin_friction_coef is taken from subsonic, light propeller aircraft</span>
+
+<span class="sd">        http://www.fzt.haw-hamburg.de/pers/Scholz/HOOU/AircraftDesign_13_Drag.pdf</span>
+
+<span class="sd">        :return: Zero-Lift Drag Coefficient</span>
+<span class="sd">        :rtype: Float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">skin_friction_coef</span> <span class="o">=</span> <span class="mf">0.0055</span>
+        <span class="n">area_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sum_area</span><span class="p">()</span>
+        <span class="n">reference_area</span> <span class="o">=</span> <span class="n">area_dict</span><span class="p">[</span><span class="s1">&#39;REFERENCE&#39;</span><span class="p">]</span>
+        <span class="n">wetted_area</span> <span class="o">=</span> <span class="n">area_dict</span><span class="p">[</span><span class="s1">&#39;WETTED&#39;</span><span class="p">][</span><span class="s1">&#39;total&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">wetted_area</span> <span class="ow">and</span> <span class="n">reference_area</span> <span class="ow">is</span> <span class="ow">not</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">parasite_drag</span> <span class="o">=</span> <span class="n">skin_friction_coef</span> <span class="o">*</span> <span class="p">(</span><span class="n">wetted_area</span> <span class="o">/</span> <span class="n">reference_area</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">parasite_drag</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">parasite_drag</span></div>
+
+    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">areas</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sum_area</span><span class="p">()</span>
+
+<div class="viewcode-block" id="UAV.write_excel"><a class="viewcode-back" href="../main.html#main.UAV.write_excel">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">write_excel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Responsible for writing the important parameters generated from the instantiation of myUAV and stores them</span>
+<span class="sd">        in a .xls file in /user/results/output.xls. Due to the large amount of string formatting within this attribute</span>
+<span class="sd">        feel free to collapse for readability of the code &quot;&quot;&quot;</span>
+
+        <span class="n">ignore_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;children&#39;</span><span class="p">,</span> <span class="s1">&#39;mesh_deflection&#39;</span><span class="p">,</span> <span class="s1">&#39;browse_airfoils&#39;</span><span class="p">,</span> <span class="s1">&#39;browse_cameras&#39;</span><span class="p">,</span> <span class="s1">&#39;browse_motors&#39;</span><span class="p">,</span>
+                       <span class="s1">&#39;_local_bbox_bounds&#39;</span><span class="p">,</span> <span class="s1">&#39;_bbox_bounds&#39;</span><span class="p">,</span> <span class="s1">&#39;hidden&#39;</span><span class="p">]</span>
+        <span class="n">hdr_font</span> <span class="o">=</span> <span class="n">xlwt</span><span class="o">.</span><span class="n">Font</span><span class="p">()</span>
+        <span class="n">hdr_font</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;Times New Roman&#39;</span>
+        <span class="n">hdr_font</span><span class="o">.</span><span class="n">bold</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="n">hdr_style</span> <span class="o">=</span> <span class="n">xlwt</span><span class="o">.</span><span class="n">XFStyle</span><span class="p">()</span>
+        <span class="n">hdr_style</span><span class="o">.</span><span class="n">font</span> <span class="o">=</span> <span class="n">hdr_font</span>
+
+        <span class="n">wb</span> <span class="o">=</span> <span class="n">xlwt</span><span class="o">.</span><span class="n">Workbook</span><span class="p">()</span>
+        <span class="n">ws0</span> <span class="o">=</span> <span class="n">wb</span><span class="o">.</span><span class="n">add_sheet</span><span class="p">(</span><span class="s1">&#39;myUAV Ouput Data&#39;</span><span class="p">)</span>
+
+        <span class="n">headers</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Parameter&#39;</span><span class="p">,</span> <span class="s1">&#39;Value&#39;</span><span class="p">,</span> <span class="s1">&#39;Units&#39;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">headers</span><span class="p">)):</span>
+            <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">headers</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">hdr_style</span><span class="p">)</span>
+
+        <span class="n">row</span> <span class="o">=</span> <span class="mi">3</span>  <span class="c1"># Filling in data for the weights w/ skip</span>
+        <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;Weights&#39;</span><span class="p">,</span> <span class="n">hdr_style</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">row</span> <span class="o">=</span> <span class="n">row</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+            <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+            <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;[kg]&#39;</span><span class="p">)</span>
+
+        <span class="n">row</span> <span class="o">=</span> <span class="n">row</span> <span class="o">+</span> <span class="mi">2</span>  <span class="c1"># Skipping two rows to have a row seperating Weights and C.G</span>
+        <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;C.G. Location (X, Y, Z)&#39;</span><span class="p">,</span> <span class="n">hdr_style</span><span class="p">)</span>
+        <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;(</span><span class="si">%1.2f</span><span class="s1">, </span><span class="si">%1.2f</span><span class="s1">, </span><span class="si">%1.2f</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cg</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cg</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cg</span><span class="o">.</span><span class="n">z</span><span class="p">))</span>
+        <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;[m]&#39;</span><span class="p">)</span>
+
+        <span class="n">row</span> <span class="o">=</span> <span class="n">row</span> <span class="o">+</span> <span class="mi">2</span>
+        <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;Areas&#39;</span><span class="p">,</span> <span class="n">hdr_style</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">areas</span><span class="p">[</span><span class="s1">&#39;WETTED&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">row</span> <span class="o">=</span> <span class="n">row</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+            <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+            <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;[m^2]&#39;</span><span class="p">)</span>
+
+        <span class="c1">#: Writing Parasitic Drag</span>
+        <span class="n">row</span> <span class="o">=</span> <span class="n">row</span> <span class="o">+</span> <span class="mi">2</span>
+        <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;CD_0&#39;</span><span class="p">,</span> <span class="n">hdr_style</span><span class="p">)</span>
+        <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">parasite_drag</span><span class="p">)</span>
+        <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;[-]&#39;</span><span class="p">)</span>
+
+        <span class="c1">#: Writing Endurance</span>
+        <span class="n">row</span> <span class="o">=</span> <span class="n">row</span> <span class="o">+</span> <span class="mi">2</span>
+        <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;Endurance&#39;</span><span class="p">,</span> <span class="n">hdr_style</span><span class="p">)</span>
+        <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">performance</span><span class="o">.</span><span class="n">endurance</span><span class="p">)</span>
+        <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;[h]&#39;</span><span class="p">)</span>
+
+        <span class="c1">#: Writing Range</span>
+        <span class="n">row</span> <span class="o">=</span> <span class="n">row</span> <span class="o">+</span> <span class="mi">2</span>
+        <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;Range&#39;</span><span class="p">,</span> <span class="n">hdr_style</span><span class="p">)</span>
+        <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">performance</span><span class="o">.</span><span class="n">range</span><span class="p">)</span>
+        <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;[km]&#39;</span><span class="p">)</span>
+
+        <span class="n">row</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;Wing&#39;</span><span class="p">,</span> <span class="n">hdr_style</span><span class="p">)</span>
+        <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="o">.</span><span class="n">airfoil_choice</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="o">.</span><span class="n">_slots</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ignore_list</span> <span class="ow">and</span> <span class="n">key</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">key</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;avl&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">key</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;hide&#39;</span><span class="p">):</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">basestring</span><span class="p">):</span>
+                    <span class="n">row</span> <span class="o">=</span> <span class="n">row</span> <span class="o">+</span> <span class="mi">1</span>
+                    <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+                    <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+        <span class="n">row</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="s1">&#39;Stability&#39;</span><span class="p">,</span> <span class="n">hdr_style</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">stability</span><span class="o">.</span><span class="n">_slots</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ignore_list</span> <span class="ow">and</span> <span class="n">key</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">key</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;avl&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">key</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;hide&#39;</span><span class="p">):</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stability</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+                    <span class="n">row</span> <span class="o">=</span> <span class="n">row</span> <span class="o">+</span> <span class="mi">1</span>
+                    <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+                    <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+        <span class="n">row</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="s1">&#39;Stabilizer&#39;</span><span class="p">,</span> <span class="n">hdr_style</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">stabilizer</span><span class="o">.</span><span class="n">_slots</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ignore_list</span> <span class="ow">and</span> <span class="n">key</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">key</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;avl&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">key</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;hide&#39;</span><span class="p">):</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stabilizer</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+                    <span class="n">row</span> <span class="o">=</span> <span class="n">row</span> <span class="o">+</span> <span class="mi">1</span>
+                    <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+                    <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+        <span class="n">row</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="s1">&#39;Payload&#39;</span><span class="p">,</span> <span class="n">hdr_style</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">_slots</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ignore_list</span> <span class="ow">and</span> <span class="n">key</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">key</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;avl&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">key</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;hide&#39;</span><span class="p">):</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">camera</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+                    <span class="n">row</span> <span class="o">=</span> <span class="n">row</span> <span class="o">+</span> <span class="mi">1</span>
+                    <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+                    <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+        <span class="n">row</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="s1">&#39;Motor&#39;</span><span class="p">,</span> <span class="n">hdr_style</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor</span><span class="o">.</span><span class="n">_slots</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ignore_list</span> <span class="ow">and</span> <span class="n">key</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">key</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;avl&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">key</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;hide&#39;</span><span class="p">):</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">motor</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+                    <span class="n">row</span> <span class="o">=</span> <span class="n">row</span> <span class="o">+</span> <span class="mi">1</span>
+                    <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+                    <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+        <span class="n">wb</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;USER_DIR&#39;</span><span class="p">],</span> <span class="s1">&#39;results&#39;</span><span class="p">,</span> <span class="s1">&#39;output.xls&#39;</span><span class="p">))</span>
+        <span class="k">return</span> <span class="s1">&#39;Excel File Written&#39;</span></div>
+
+    <span class="c1"># Geometry Constraints</span>
+    <span class="nd">@Attribute</span><span class="p">(</span><span class="n">private</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">pad_distance</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fuselage</span><span class="o">.</span><span class="n">pad_factor</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="o">.</span><span class="n">root_chord</span>
+
+<div class="viewcode-block" id="UAV.cg_valid"><a class="viewcode-back" href="../main.html#main.UAV.cg_valid">[docs]</a>    <span class="nd">@Attribute</span><span class="p">(</span><span class="n">private</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">cg_valid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; A switch-case attribute that handles whether or not the c.g. convergence procedure has been executed &quot;&quot;&quot;</span>
+        <span class="n">cg_valid</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_slot_status</span><span class="p">(</span><span class="s1">&#39;final_cg&#39;</span><span class="p">):</span>
+                <span class="n">cg_valid</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="n">cg_valid</span></div>
+
+    <span class="nd">@Part</span>
+    <span class="k">def</span> <span class="nf">params</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1">#  Here we instantiate the parameter generator, passing down the inputs from the User input file.</span>
+        <span class="k">return</span> <span class="n">ParameterGenerator</span><span class="p">(</span><span class="n">pass_down</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;performance_goal&#39;</span><span class="p">,</span>
+                                             <span class="s1">&#39;goal_value&#39;</span><span class="p">,</span>
+                                             <span class="s1">&#39;weight_target&#39;</span><span class="p">,</span>
+                                             <span class="s1">&#39;target_value&#39;</span><span class="p">,</span>
+                                             <span class="s1">&#39;payload_type&#39;</span><span class="p">,</span>
+                                             <span class="s1">&#39;configuration&#39;</span><span class="p">,</span>
+                                             <span class="s1">&#39;handlaunch&#39;</span><span class="p">,</span>
+                                             <span class="s1">&#39;portable&#39;</span><span class="p">],</span>
+                                  <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Design Parameters&#39;</span><span class="p">)</span>
+
+    <span class="nd">@Part</span>
+    <span class="k">def</span> <span class="nf">wing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Wing</span><span class="p">(</span><span class="n">wing_loading</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">wing_loading</span><span class="p">,</span>
+                    <span class="n">weight_mtow</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">weight_mtow</span><span class="p">,</span>
+                    <span class="n">stall_speed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">stall_speed</span><span class="p">,</span>
+                    <span class="n">rho</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">rho</span><span class="p">,</span>
+                    <span class="n">aspect_ratio</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">aspect_ratio</span><span class="p">,</span>
+                    <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Main Wing&#39;</span><span class="p">)</span>
+
+    <span class="nd">@Part</span>
+    <span class="k">def</span> <span class="nf">stability</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">ScissorPlot</span><span class="p">(</span><span class="n">x_cg</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cg</span><span class="o">.</span><span class="n">x</span><span class="p">,</span>
+                           <span class="n">x_ac</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="o">.</span><span class="n">aerodynamic_center</span><span class="o">.</span><span class="n">x</span><span class="p">,</span>
+                           <span class="n">x_lemac</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="o">.</span><span class="n">lemac</span><span class="o">.</span><span class="n">x</span><span class="p">,</span>
+                           <span class="n">mac</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="o">.</span><span class="n">mac_length</span><span class="p">,</span>
+                           <span class="n">AR</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">aspect_ratio</span><span class="p">,</span>
+                           <span class="n">e</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">wingpowerloading</span><span class="o">.</span><span class="n">e_factor</span><span class="p">,</span>
+                           <span class="n">e_h</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">wingpowerloading</span><span class="o">.</span><span class="n">e_factor</span><span class="p">,</span>
+                           <span class="n">Cl_w</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="o">.</span><span class="n">lift_coef_control</span><span class="p">,</span>
+                           <span class="n">C_mac</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="o">.</span><span class="n">moment_coef_control</span><span class="p">,</span>
+                           <span class="n">Cla_w</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="o">.</span><span class="n">lift_coef_vs_alpha</span><span class="p">,</span>
+                           <span class="n">delta_xcg</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>  <span class="c1"># Decreasing for a slightly smaller tail</span>
+                           <span class="n">configuration</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">configuration</span><span class="p">,</span>
+                           <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Stability Parameters&#39;</span><span class="p">)</span>
+
     <span class="nd">@Part</span>
     <span class="k">def</span> <span class="nf">center_of_gravity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">VisualCG</span><span class="p">(</span><span class="n">vis_cog</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cg</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">VisualCG</span><span class="p">(</span><span class="n">vis_cog</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cg</span><span class="p">,</span>
+                        <span class="n">color</span><span class="o">=</span><span class="n">MyColors</span><span class="o">.</span><span class="n">deep_green</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cg_valid</span> <span class="k">else</span> <span class="s1">&#39;yellow&#39;</span><span class="p">,</span>
+                        <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Converged C.G.&#39;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cg_valid</span> <span class="k">else</span> <span class="s1">&#39;Initial Estimate C.G.&#39;</span><span class="p">)</span>
 
-    <span class="c1"># TODO Make sure that distance is AC to AC</span>
 <div class="viewcode-block" id="UAV.stabilizer"><a class="viewcode-back" href="../main.html#main.UAV.stabilizer">[docs]</a>    <span class="nd">@Part</span>
     <span class="k">def</span> <span class="nf">stabilizer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Instantiates a Compound Stabilizer by assuming that the location is simply a translation along the x-axis</span>
@@ -402,16 +533,14 @@
                                                      <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stability</span><span class="o">.</span><span class="n">lhc</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="o">.</span><span class="n">mac_length</span>
                                                      <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="o">.</span><span class="n">aerodynamic_center</span><span class="o">.</span><span class="n">x</span><span class="p">,</span>
                                                      <span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stabilizer</span><span class="o">.</span><span class="n">stabilizer_h</span><span class="o">.</span><span class="n">semi_span</span> <span class="o">*</span>
-                                                     <span class="n">sin</span><span class="p">(</span><span class="n">radians</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="o">.</span><span class="n">dihedral</span><span class="p">)</span> <span class="o">+</span>
-                                                         <span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="o">.</span><span class="n">front_spar_line</span><span class="o">.</span><span class="n">point1</span><span class="o">.</span><span class="n">z</span> <span class="o">-</span>
-                                                         <span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">z</span><span class="p">)),</span>
+                                                     <span class="n">sin</span><span class="p">(</span><span class="n">radians</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="o">.</span><span class="n">dihedral</span><span class="p">))),</span>
                                   <span class="n">required_planform_area</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="o">.</span><span class="n">planform_area</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">stability</span><span class="o">.</span><span class="n">shs_req</span><span class="p">,</span>
                                   <span class="n">wing_planform_area</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="o">.</span><span class="n">planform_area</span><span class="p">,</span>
                                   <span class="n">wing_mac_length</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="o">.</span><span class="n">mac_length</span><span class="p">,</span>
                                   <span class="n">wing_semi_span</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="o">.</span><span class="n">semi_span</span><span class="p">,</span>
                                   <span class="n">lhc</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stability</span><span class="o">.</span><span class="n">lhc</span><span class="p">,</span>
                                   <span class="n">configuration</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">configuration</span><span class="p">,</span>
-                                  <span class="n">aspect_ratio</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span>
+                                  <span class="n">aspect_ratio</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stability</span><span class="o">.</span><span class="n">AR_h</span><span class="p">,</span>
                                   <span class="n">taper</span><span class="o">=</span><span class="mf">0.35</span><span class="p">,</span>
                                   <span class="n">twist</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
                                   <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Tail&#39;</span><span class="p">)</span></div>
@@ -436,7 +565,6 @@
                         <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">motor</span><span class="p">,</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">camera</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">electronics</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">battery</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span>
                         <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Fuselage&#39;</span><span class="p">)</span>
 
-    <span class="c1"># TODO fix motor placement to be better looking</span>
     <span class="nd">@Part</span>
     <span class="k">def</span> <span class="nf">motor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">Motor</span><span class="p">(</span><span class="n">target_power</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">motor_power</span><span class="p">,</span>
@@ -476,43 +604,9 @@
                            <span class="n">wing_in</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="p">,</span>
                            <span class="n">weight_mtow</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">[</span><span class="s1">&#39;mtow&#39;</span><span class="p">],</span>
                            <span class="n">parasitic_drag</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">parasite_drag</span><span class="p">,</span>
-                           <span class="n">oswald_factor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">wingpowerloading</span><span class="o">.</span><span class="n">e_factor</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Performance&#39;</span><span class="p">)</span>
-
-    <span class="c1"># Geometry Constraints</span>
-    <span class="nd">@Attribute</span><span class="p">(</span><span class="n">private</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">pad_distance</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fuselage</span><span class="o">.</span><span class="n">pad_factor</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="o">.</span><span class="n">root_chord</span>
-
-<span class="c1">#     # TODO Add a nice bar-graph that shows performance, power consumption, drag, etc in the GUI with boxes!</span>
-
-    <span class="nd">@Attribute</span>
-    <span class="k">def</span> <span class="nf">weights</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_and_balance</span><span class="p">()[</span><span class="s1">&#39;WEIGHTS&#39;</span><span class="p">]</span>
-
-<div class="viewcode-block" id="UAV.parasite_drag"><a class="viewcode-back" href="../main.html#main.UAV.parasite_drag">[docs]</a>    <span class="nd">@Attribute</span>
-    <span class="k">def</span> <span class="nf">parasite_drag</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Utilizes Raymer&#39;s Equivalent skin-friction drag method to compute Zero-Lift Drag. The utilized value used</span>
-<span class="sd">        for the skin_friction_coef is taken from subsonic, light propeller aircraft</span>
-
-<span class="sd">        http://www.fzt.haw-hamburg.de/pers/Scholz/HOOU/AircraftDesign_13_Drag.pdf</span>
-
-<span class="sd">        :return: Zero-Lift Drag Coefficient</span>
-<span class="sd">        :rtype: Float</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># TODO Incorporate drag estimation into the knowledge base</span>
-        <span class="n">skin_friction_coef</span> <span class="o">=</span> <span class="mf">0.0055</span>
-        <span class="n">area_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sum_area</span><span class="p">()</span>
-        <span class="n">reference_area</span> <span class="o">=</span> <span class="n">area_dict</span><span class="p">[</span><span class="s1">&#39;REFERENCE&#39;</span><span class="p">]</span>
-        <span class="n">wetted_area</span> <span class="o">=</span> <span class="n">area_dict</span><span class="p">[</span><span class="s1">&#39;WETTED&#39;</span><span class="p">][</span><span class="s1">&#39;total&#39;</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">wetted_area</span> <span class="ow">and</span> <span class="n">reference_area</span> <span class="ow">is</span> <span class="ow">not</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">parasite_drag</span> <span class="o">=</span> <span class="n">skin_friction_coef</span> <span class="o">*</span> <span class="p">(</span><span class="n">wetted_area</span> <span class="o">/</span> <span class="n">reference_area</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">parasite_drag</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">return</span> <span class="n">parasite_drag</span></div>
-
-    <span class="nd">@Attribute</span>
-    <span class="k">def</span> <span class="nf">areas</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sum_area</span><span class="p">()</span>
+                           <span class="n">oswald_factor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">wingpowerloading</span><span class="o">.</span><span class="n">e_factor</span><span class="p">,</span>
+                           <span class="n">cg_valid</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cg_valid</span><span class="p">,</span>
+                           <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Performance&#39;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="UAV.weight_and_balance"><a class="viewcode-back" href="../main.html#main.UAV.weight_and_balance">[docs]</a>    <span class="k">def</span> <span class="nf">weight_and_balance</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Retrieves all relevant parameters from children with `weight` and `center_of_gravity` attributes and then</span>
@@ -651,80 +745,7 @@
                                   <span class="s2">&quot;it was thus added to the &#39;misc&#39; category in the area_dictionary&quot;</span> <span class="o">%</span> <span class="n">_child</span><span class="p">)</span>
         <span class="n">area_dict</span><span class="p">[</span><span class="s1">&#39;WETTED&#39;</span><span class="p">][</span><span class="s1">&#39;total&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">areas</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">area_dict</span></div>
-
-    <span class="nd">@Attribute</span>
-    <span class="k">def</span> <span class="nf">write_excel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-
-        <span class="n">ignore_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;children&#39;</span><span class="p">,</span> <span class="s1">&#39;mesh_deflection&#39;</span><span class="p">,</span> <span class="s1">&#39;browse_airfoils&#39;</span><span class="p">,</span> <span class="s1">&#39;_local_bbox_bounds&#39;</span><span class="p">,</span> <span class="s1">&#39;_bbox_bounds&#39;</span><span class="p">,</span> <span class="s1">&#39;hidden&#39;</span><span class="p">]</span>
-        <span class="n">hdr_font</span> <span class="o">=</span> <span class="n">xlwt</span><span class="o">.</span><span class="n">Font</span><span class="p">()</span>
-        <span class="n">hdr_font</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;Times New Roman&#39;</span>
-        <span class="n">hdr_font</span><span class="o">.</span><span class="n">bold</span> <span class="o">=</span> <span class="kc">True</span>
-
-        <span class="n">hdr_style</span> <span class="o">=</span> <span class="n">xlwt</span><span class="o">.</span><span class="n">XFStyle</span><span class="p">()</span>
-        <span class="n">hdr_style</span><span class="o">.</span><span class="n">font</span> <span class="o">=</span> <span class="n">hdr_font</span>
-
-        <span class="n">wb</span> <span class="o">=</span> <span class="n">xlwt</span><span class="o">.</span><span class="n">Workbook</span><span class="p">()</span>
-        <span class="n">ws0</span> <span class="o">=</span> <span class="n">wb</span><span class="o">.</span><span class="n">add_sheet</span><span class="p">(</span><span class="s1">&#39;Weight &amp; Balance&#39;</span><span class="p">)</span>
-
-        <span class="n">headers</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Parameter&#39;</span><span class="p">,</span> <span class="s1">&#39;Value&#39;</span><span class="p">,</span> <span class="s1">&#39;Units&#39;</span><span class="p">]</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">headers</span><span class="p">)):</span>
-            <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">headers</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">hdr_style</span><span class="p">)</span>
-
-        <span class="n">row</span> <span class="o">=</span> <span class="mi">3</span>  <span class="c1"># Filling in data for the weights w/ skip</span>
-        <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;Weights&#39;</span><span class="p">,</span> <span class="n">hdr_style</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="n">row</span> <span class="o">=</span> <span class="n">row</span> <span class="o">+</span> <span class="mi">1</span>
-            <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
-            <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-            <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;[kg]&#39;</span><span class="p">)</span>
-
-        <span class="n">row</span> <span class="o">=</span> <span class="n">row</span> <span class="o">+</span> <span class="mi">2</span>  <span class="c1"># Skipping two rows to have a row seperating Weights and C.G</span>
-        <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;C.G. Location (X, Y, Z)&#39;</span><span class="p">,</span> <span class="n">hdr_style</span><span class="p">)</span>
-        <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;(</span><span class="si">%1.2f</span><span class="s1">, </span><span class="si">%1.2f</span><span class="s1">, </span><span class="si">%1.2f</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cg</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cg</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cg</span><span class="o">.</span><span class="n">z</span><span class="p">))</span>
-        <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;[m]&#39;</span><span class="p">)</span>
-
-        <span class="n">row</span> <span class="o">=</span> <span class="n">row</span> <span class="o">+</span> <span class="mi">2</span>
-        <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;Areas&#39;</span><span class="p">,</span> <span class="n">hdr_style</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">areas</span><span class="p">[</span><span class="s1">&#39;WETTED&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="n">row</span> <span class="o">=</span> <span class="n">row</span> <span class="o">+</span> <span class="mi">1</span>
-            <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
-            <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-            <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;[m^2]&#39;</span><span class="p">)</span>
-
-        <span class="n">row</span> <span class="o">=</span> <span class="mi">1</span>
-        <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;Wing&#39;</span><span class="p">,</span> <span class="n">hdr_style</span><span class="p">)</span>
-        <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="o">.</span><span class="n">airfoil_choice</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="o">.</span><span class="n">_slots</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ignore_list</span> <span class="ow">and</span> <span class="n">key</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">key</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;avl&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
-                <span class="n">value</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wing</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
-                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">basestring</span><span class="p">):</span>
-                    <span class="n">row</span> <span class="o">=</span> <span class="n">row</span> <span class="o">+</span> <span class="mi">1</span>
-                    <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
-                    <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-
-        <span class="n">row</span> <span class="o">=</span> <span class="mi">1</span>
-        <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="s1">&#39;Stability&#39;</span><span class="p">,</span> <span class="n">hdr_style</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">stability</span><span class="o">.</span><span class="n">_slots</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ignore_list</span> <span class="ow">and</span> <span class="n">key</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">key</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;avl&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
-                <span class="n">value</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stability</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
-                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
-                    <span class="n">row</span> <span class="o">=</span> <span class="n">row</span> <span class="o">+</span> <span class="mi">1</span>
-                    <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
-                    <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-
-        <span class="n">row</span> <span class="o">=</span> <span class="mi">1</span>
-        <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="s1">&#39;Stabilizer&#39;</span><span class="p">,</span> <span class="n">hdr_style</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">stabilizer</span><span class="o">.</span><span class="n">_slots</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ignore_list</span> <span class="ow">and</span> <span class="n">key</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">key</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;avl&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
-                <span class="n">value</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stabilizer</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
-                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
-                    <span class="n">row</span> <span class="o">=</span> <span class="n">row</span> <span class="o">+</span> <span class="mi">1</span>
-                    <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
-                    <span class="n">ws0</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-
-        <span class="n">wb</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;USER_DIR&#39;</span><span class="p">],</span> <span class="s1">&#39;results&#39;</span><span class="p">,</span> <span class="s1">&#39;output.xls&#39;</span><span class="p">))</span>
-        <span class="k">return</span> <span class="s1">&#39;Excel File Written&#39;</span></div>
+        <span class="k">return</span> <span class="n">area_dict</span></div></div>
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>

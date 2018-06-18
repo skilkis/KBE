@@ -196,7 +196,6 @@
 
 <span class="c1">#  Required Modules</span>
 <span class="kn">from</span> <span class="nn">parapy.core</span> <span class="k">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">parapy.geom</span> <span class="k">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="o">*</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
@@ -205,9 +204,7 @@
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Nelson Johnson&quot;</span>
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ScissorPlot&quot;</span><span class="p">]</span>
-
-<span class="c1">#  TODO MAKE SURE THAT THE ASPECT RATIO IS CONSISTENT WHEN CHANGED IN OTHER PLACES OF THE GUI. SEE TODO IN MAIN!!!!!!!!</span>
-<span class="c1"># TODO Make sure that the Input excel file passes the argument &#39;configuration&#39; correctly</span>
+<span class="n">__settable__</span> <span class="o">=</span> <span class="p">(</span><span class="kc">True</span> <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span> <span class="k">else</span> <span class="kc">False</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="ScissorPlot"><a class="viewcode-back" href="../../../components/liftingsurfaces/scissorplot.html#components.liftingsurfaces.scissorplot.ScissorPlot">[docs]</a><span class="k">class</span> <span class="nc">ScissorPlot</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
@@ -280,27 +277,29 @@
 <span class="sd">    :type lhc: float</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="n">__icon__</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;ICON_DIR&#39;</span><span class="p">],</span> <span class="s1">&#39;stability.png&#39;</span><span class="p">)</span>
+
 <span class="c1">#  This block of code contains the inputs. ########---------------------------------------------------------------------</span>
     <span class="c1">#: Below is the current COG position</span>
-    <span class="n">x_cg</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">float</span><span class="p">))</span>
+    <span class="n">x_cg</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">float</span><span class="p">),</span> <span class="n">settable</span><span class="o">=</span><span class="n">__settable__</span><span class="p">)</span>
 
     <span class="c1">#: Below is the current Aerodynamic Center position</span>
-    <span class="n">x_ac</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">float</span><span class="p">))</span>
+    <span class="n">x_ac</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">float</span><span class="p">),</span> <span class="n">settable</span><span class="o">=</span><span class="n">__settable__</span><span class="p">)</span>
 
     <span class="c1">#: Below is the current leading edge of the MAC position</span>
-    <span class="n">x_lemac</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">float</span><span class="p">))</span>
+    <span class="n">x_lemac</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">float</span><span class="p">),</span> <span class="n">settable</span><span class="o">=</span><span class="n">__settable__</span><span class="p">)</span>
 
     <span class="c1">#: Below is the MAC length</span>
-    <span class="n">mac</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">float</span><span class="p">))</span>
+    <span class="n">mac</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">float</span><span class="p">),</span> <span class="n">settable</span><span class="o">=</span><span class="n">__settable__</span><span class="p">)</span>
 
     <span class="c1">#: Below is the wing aspect ratio.</span>
-    <span class="n">AR</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">9.0</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Range</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">30.0</span><span class="p">))</span>
+    <span class="n">AR</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">9.0</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Range</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">30.0</span><span class="p">),</span> <span class="n">settable</span><span class="o">=</span><span class="n">__settable__</span><span class="p">)</span>
 
     <span class="c1">#: Below is the wing span efficiency factor</span>
-    <span class="n">e</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">())</span>
+    <span class="n">e</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">(),</span> <span class="n">settable</span><span class="o">=</span><span class="n">__settable__</span><span class="p">)</span>
 
     <span class="c1">#: Below is the assumed zero lift drag coefficient</span>
-    <span class="n">CD0</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">())</span>
+    <span class="n">CD0</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">(),</span> <span class="n">settable</span><span class="o">=</span><span class="n">__settable__</span><span class="p">)</span>
 
     <span class="c1">#: Below is the k factor to correct the canard main wing C_Lalpha due to canard downwash.</span>
     <span class="n">k_factor</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">())</span>
@@ -309,9 +308,12 @@
     <span class="n">SM</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">())</span>
 
     <span class="c1">#: Below is the HT aspect ratio.</span>
-    <span class="n">AR_h</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">5.0</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">())</span>
+<div class="viewcode-block" id="ScissorPlot.AR_h"><a class="viewcode-back" href="../../../components/liftingsurfaces/scissorplot.html#components.liftingsurfaces.scissorplot.ScissorPlot.AR_h">[docs]</a>    <span class="nd">@Input</span>
+    <span class="k">def</span> <span class="nf">AR_h</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Utilizes a relation based on reference pictures to obtain a ratio of the tail aspect ratio as a function of</span>
+<span class="sd">         the main-wing &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">AR</span> <span class="o">/</span> <span class="mf">20.0</span> <span class="o">+</span> <span class="mf">4.0</span></div>
 
-    <span class="c1">#: Below is the assumed HT span efficiency factor.</span>
     <span class="n">e_h</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">())</span>
 
     <span class="c1">#: Below is the speed ratio for a conventional tail aircraft.</span>
@@ -324,13 +326,13 @@
     <span class="n">a_0</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">pi</span>
 
     <span class="c1">#: Below is the controllability lift coefficient of the wing at 1.2*V_s imported from wing.</span>
-    <span class="n">Cl_w</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">())</span>
+    <span class="n">Cl_w</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">(),</span> <span class="n">settable</span><span class="o">=</span><span class="n">__settable__</span><span class="p">)</span>
 
     <span class="c1">#: Below is the pitching moment about the aerodynamic center of the wing. This is calculated with AVL in &#39;wing.py&#39;.</span>
-    <span class="n">C_mac</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="o">-</span><span class="mf">0.32</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Range</span><span class="p">(</span><span class="o">-</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">))</span>
+    <span class="n">C_mac</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="o">-</span><span class="mf">0.32</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Range</span><span class="p">(</span><span class="o">-</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">),</span> <span class="n">settable</span><span class="o">=</span><span class="n">__settable__</span><span class="p">)</span>
 
     <span class="c1">#: Below is the lift curve slope of the wing. This is calculated with AVL in &#39;wing.py&#39;.</span>
-    <span class="n">Cla_w</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">5.14</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">())</span>
+    <span class="n">Cla_w</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">5.14</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">(),</span> <span class="n">settable</span><span class="o">=</span><span class="n">__settable__</span><span class="p">)</span>
 
     <span class="c1">#: Below is the assumed change in the cg location.</span>
     <span class="n">delta_xcg</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">())</span>
@@ -386,12 +388,11 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">configuration</span> <span class="ow">is</span> <span class="s1">&#39;conventional&#39;</span><span class="p">:</span>
             <span class="n">cl_h</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.35</span><span class="o">*</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">AR_h</span><span class="o">**</span><span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="mf">3.0</span><span class="p">))</span>
-            <span class="nb">print</span> <span class="s1">&#39;I am conventional&#39;</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">configuration</span> <span class="ow">is</span> <span class="s1">&#39;canard&#39;</span><span class="p">:</span>
-            <span class="n">cl_h</span> <span class="o">=</span> <span class="mi">1</span>
-            <span class="c1"># = 0.35 * (self.AR_h ** (1.0 / 3.0))</span>
-            <span class="c1">#  Canard assumed to be full moving with Cl max = 1 in slow speed case.</span>
+            <span class="n">cl_h</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># Canard assumed to be full moving with Cl max = 1 in slow speed case.</span>
             <span class="c1">#  This assumption allows the scissor plot lines to intersect and create a design space.</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">cl_h</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.35</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">AR_h</span> <span class="o">**</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="mf">3.0</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">cl_h</span></div>
 
 <div class="viewcode-block" id="ScissorPlot.cla_w_canard"><a class="viewcode-back" href="../../../components/liftingsurfaces/scissorplot.html#components.liftingsurfaces.scissorplot.ScissorPlot.cla_w_canard">[docs]</a>    <span class="nd">@Attribute</span>
@@ -503,7 +504,7 @@
                     <span class="n">stability_criteria</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">i</span><span class="p">,</span> <span class="n">_cont_pnt</span><span class="p">,</span> <span class="n">_stab_pnt</span><span class="p">,</span> <span class="n">_current_margin</span><span class="p">,</span> <span class="n">error</span><span class="p">])</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">stability_criteria</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">stability_criteria</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">stability_criteria</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+            <span class="n">stability_criteria</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">stability_criteria</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>  <span class="c1"># use Index 4 to sort based on midpoint</span>
             <span class="n">shs_cg</span> <span class="o">=</span> <span class="n">stability_criteria</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">shs_cg</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shs_sm</span><span class="p">:</span>
                 <span class="n">shs_req</span> <span class="o">=</span> <span class="n">shs_cg</span>
@@ -525,15 +526,14 @@
         <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xcg_range</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">shs_stability</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Stability&#39;</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">xcg_range</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">shs_control</span><span class="p">,</span> <span class="s1">&#39;g&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Controllablility&#39;</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">shs_req</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-.&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Required Sh/S&#39;</span><span class="p">)</span>
-        <span class="c1"># plt.axhline(y=self.test[1])</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">x_cg_vs_mac</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">shs_req</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;CG Location&#39;</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\frac{S_</span><span class="si">{h}</span><span class="s1">}</span><span class="si">{S}</span><span class="s1">$&#39;</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\frac{X_</span><span class="si">{cg}</span><span class="s1">-X_</span><span class="si">{ac}</span><span class="s1">}</span><span class="si">{c}</span><span class="s1">$&#39;</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">([</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-        <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fname</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;USER_DIR&#39;</span><span class="p">],</span> <span class="s1">&#39;plots&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">.pdf&#39;</span> <span class="o">%</span> <span class="n">fig</span><span class="o">.</span><span class="n">get_label</span><span class="p">()),</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;pdf&#39;</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-        <span class="k">return</span> <span class="s1">&#39;Plot Made, See PyCharm&#39;</span></div></div>
+        <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fname</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;USER_DIR&#39;</span><span class="p">],</span> <span class="s1">&#39;plots&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">.pdf&#39;</span> <span class="o">%</span> <span class="n">fig</span><span class="o">.</span><span class="n">get_label</span><span class="p">()),</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;pdf&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s1">&#39;Figure Plotted and Saved&#39;</span></div></div>
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
