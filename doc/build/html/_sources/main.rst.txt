@@ -1,6 +1,24 @@
 Main UAV
 ===============================
 
+.. figure:: _static/keyshot.jpg
+   :scale: 50 %
+   :alt: map to buried treasure
+
+   Keyshot Render of STL Export
+
+.. figure:: _static/keyshot2.jpg
+   :scale: 50 %
+   :alt: mape to buried treasur
+
+   Keyshot Render of STL Export
+
+.. figure:: _static/cfd.jpg
+   :scale: 50 %
+   :alt: Flow Design
+
+   Flow Design Mock Fluid Dyamics Analysis
+
 .. automodule:: main
    :members:
 
