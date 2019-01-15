@@ -1,0 +1,647 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Automatic Fuselage Generator &mdash; KBE 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Boom" href="boom.html" />
+    <link rel="prev" title="Motor Frame (MFrame)" href="mframe.html" /> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> KBE
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../main.html">Main UAV</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../definitions.html">Definitions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../directories.html">Directories</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Components Module</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../battery.html">Li-PO Battery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../electronics/index.html">Electronics Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../electronics/electronics.html">Electronics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../electronics/flightcontroller.html">FlightController</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../electronics/speedcontroller.html">SpeedController</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../liftingsurfaces/index.html">LiftingSurface Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../liftingsurfaces/liftingsurfaceprim.html">LiftingSurface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../liftingsurfaces/wing.html">Wing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../liftingsurfaces/scissorplot.html">ScissorPlot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../liftingsurfaces/horizontalstab.html">HorizontalStabilizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../liftingsurfaces/verticalstab.html">VerticalStablilizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../liftingsurfaces/compoundstab.html">CompoundStabilizer</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Fuselage Module</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="fframe.html">Fuselage Frame (FFrame)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="fcone.html">Fuselage Nose/Tail Cone (FCone)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mframe.html">Motor Frame (MFrame)</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Automatic Fuselage Generator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="boom.html">Boom</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../motor.html">Electric Motor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../propeller/index.html">Propeller Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../propeller/propparser.html">Propeller Parser</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../propeller/propeller.html">Propeller</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../eoir.html">Electro-Optical Infra-Red Camera</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../design/index.html">Design Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../design/designinput.html">Design Input</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../design/paramgen.html">Parameter Generator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../design/weightestimator.html">Class I and II Weight Estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../design/wingpowerloading.html">Thrust and Power Loading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../design/performance.html">Performance Verification</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../mycsv2dict.html">My CSV Dictionary</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">KBE</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Components Module</a> &raquo;</li>
+        
+          <li><a href="index.html">Fuselage Module</a> &raquo;</li>
+        
+      <li>Automatic Fuselage Generator</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/components/fuselage/fuselage.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-components.fuselage.fuselage">
+<span id="automatic-fuselage-generator"></span><h1>Automatic Fuselage Generator<a class="headerlink" href="#module-components.fuselage.fuselage" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="components.fuselage.fuselage.Fuselage">
+<em class="property">class </em><code class="descclassname">components.fuselage.fuselage.</code><code class="descname">Fuselage</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/components/fuselage/fuselage.html#Fuselage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.fuselage.fuselage.Fuselage" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class will create a fuselage from frames created from desired internal components.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">ParaPy Geometry of the Fuselage</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Parameters:</th><td class="field-body"><strong>compartment_type</strong> (<em>str list</em>) – Type of containers at each station, possible entries (nose, container, motor, tail)</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="components.fuselage.fuselage.Fuselage.auto_fuselage_disable">
+<code class="descname">auto_fuselage_disable</code><a class="headerlink" href="#components.fuselage.fuselage.Fuselage.auto_fuselage_disable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disables Automatic Fuselage Frame (FFrame) Creation and allows instead manual user-input to set the shape
+:type: bool</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="components.fuselage.fuselage.Fuselage.bbox_extractor">
+<em class="property">static </em><code class="descname">bbox_extractor</code><span class="sig-paren">(</span><em>sizing_components</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/components/fuselage/fuselage.html#Fuselage.bbox_extractor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.fuselage.fuselage.Fuselage.bbox_extractor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtains the bbox from a group of TopoDShapes and returns the resultant bbox</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sizing_components</strong> – </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Bound-box of Input Parts</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">bbox</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="components.fuselage.fuselage.Fuselage.bbox_to_frame">
+<em class="property">static </em><code class="descname">bbox_to_frame</code><span class="sig-paren">(</span><em>bbox</em>, <em>placement='start'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/components/fuselage/fuselage.html#Fuselage.bbox_to_frame"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.fuselage.fuselage.Fuselage.bbox_to_frame" title="Permalink to this definition">¶</a></dt>
+<dd><p>Responsible for instantiating the frame that is fit around a certain Bounding-box (bbox)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>bbox</strong> – The input bbox for the frame to be fit around</li>
+<li><strong>placement</strong> – Determines if the frame will be placed at the start (min(x)) middle or end (max(x))</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Fuselage Frame</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="fframe.html#components.fuselage.primitives.fframe.FFrame" title="components.fuselage.primitives.fframe.FFrame">FFrame</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.fuselage.fuselage.Fuselage.build_nose">
+<code class="descname">build_nose</code><a class="reference internal" href="../../_modules/components/fuselage/fuselage.html#Fuselage.build_nose"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.fuselage.fuselage.Fuselage.build_nose" title="Permalink to this definition">¶</a></dt>
+<dd><p>Switch case that that returns True/False if a nose is specified in <cite>compartment_type</cite></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.fuselage.fuselage.Fuselage.build_tail">
+<code class="descname">build_tail</code><a class="reference internal" href="../../_modules/components/fuselage/fuselage.html#Fuselage.build_tail"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.fuselage.fuselage.Fuselage.build_tail" title="Permalink to this definition">¶</a></dt>
+<dd><p>Switch case that that returns True/False if a tail is specified in <cite>compartment_type</cite></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.fuselage.fuselage.Fuselage.center_of_gravity">
+<code class="descname">center_of_gravity</code><a class="reference internal" href="../../_modules/components/fuselage/fuselage.html#Fuselage.center_of_gravity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.fuselage.fuselage.Fuselage.center_of_gravity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Area weighted average of center of gravity</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Position of the center of gravity in 3D space (x, y, z) w.r.t the origin XOY in [SI Meter]</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">Point</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.fuselage.fuselage.Fuselage.center_section">
+<code class="descname">center_section</code><a class="reference internal" href="../../_modules/components/fuselage/fuselage.html#Fuselage.center_section"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.fuselage.fuselage.Fuselage.center_section" title="Permalink to this definition">¶</a></dt>
+<dd><p>The main output shape of the class Fuselage, constructed from the Private Attributes below</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.fuselage.fuselage.Fuselage.center_section_left">
+<code class="descname">center_section_left</code><a class="reference internal" href="../../_modules/components/fuselage/fuselage.html#Fuselage.center_section_left"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.fuselage.fuselage.Fuselage.center_section_left" title="Permalink to this definition">¶</a></dt>
+<dd><p>The main fuselage section excluding nose and tail</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.fuselage.fuselage.Fuselage.center_section_right">
+<code class="descname">center_section_right</code><a class="reference internal" href="../../_modules/components/fuselage/fuselage.html#Fuselage.center_section_right"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.fuselage.fuselage.Fuselage.center_section_right" title="Permalink to this definition">¶</a></dt>
+<dd><p>The mirror image of <cite>center_section_left</cite> since by definition half-frames are used</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.fuselage.fuselage.Fuselage.color">
+<code class="descname">color</code><a class="headerlink" href="#components.fuselage.fuselage.Fuselage.color" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the color of the fuselage (Overwritten from the default yellow)
+:type: str or Tuple</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.fuselage.fuselage.Fuselage.compartment_type">
+<code class="descname">compartment_type</code><a class="headerlink" href="#components.fuselage.fuselage.Fuselage.compartment_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type of containers at each station, possible entries (nose, container, motor, tail)
+:type: str list</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.fuselage.fuselage.Fuselage.component_type">
+<code class="descname">component_type</code><a class="reference internal" href="../../_modules/components/fuselage/fuselage.html#Fuselage.component_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.fuselage.fuselage.Fuselage.component_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>An identifier to be able to lump masses together.
+Possible entries:
+‘wing’
+‘fuselage’
+‘vt’
+‘ht’
+‘ct’
+‘boom’
+‘payload’
+‘prop’
+‘battery’
+‘electronics’</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Component Type</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.fuselage.fuselage.Fuselage.curves">
+<code class="descname">curves</code><a class="reference internal" href="../../_modules/components/fuselage/fuselage.html#Fuselage.curves"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.fuselage.fuselage.Fuselage.curves" title="Permalink to this definition">¶</a></dt>
+<dd><p>Grabs all curves out of the list <cite>frames</cite></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">List of curves</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.fuselage.fuselage.Fuselage.external_shape">
+<code class="descname">external_shape</code><a class="reference internal" href="../../_modules/components/fuselage/fuselage.html#Fuselage.external_shape"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.fuselage.fuselage.Fuselage.external_shape" title="Permalink to this definition">¶</a></dt>
+<dd><p>The final shape of a ExternalSurface class which is to be exported THIS PART MUST BE OVERWRITTEN!!!</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">External Shape</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">Box</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.fuselage.fuselage.Fuselage.frame_builder">
+<code class="descname">frame_builder</code><a class="reference internal" href="../../_modules/components/fuselage/fuselage.html#Fuselage.frame_builder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.fuselage.fuselage.Fuselage.frame_builder" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute codifies the knowledge for the fuselage and automatically generates the required frames by
+extracting the dimensions of the supplied <cite>sizing_parts’ through the methods `bbox_extractor</cite> and <cite>bbox_2_frame</cite>
+This has proven to be a very robust method since it does not depend on the complexity of the input part. Since
+these drones operate at very low mach numbers, the area rule which is commonly used for transonic aircraft
+is not valid. Instead these small drones can benefit from a lifting fuselage which is accomplished through
+having an airfoil like shape (thus a single location of maximum thickness). This location is
+referred to as the fuselage apex and is obtained by comparing the current frame to its sequential neighbor
+which links to a switch case, <cite>apex_reached</cite> and <cite>build_loc</cite>. A forward-chaining inference procedure is used
+in a for loop that traverses the fuselage from nose to tail and fires all fire-able rules sequentially.
+This procedure is preferred since multiple possibilities at each frame location exist (nose, container, motor,
+or tail) along with the same number of possibilities existing at the nearest neighbor. Finally, the start
+and end boundary conditions reject the creation of a nose or tail-cone before the fuselage is built, since both
+of these classes require tangency conditions at the start and end of the fuselage. Thus, the requested class
+is appended to a string array of <cite>still_to_build</cite> which is referenced later in the code.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A collection of frame variables that are used later in the fuselage class</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.fuselage.fuselage.Fuselage.frames">
+<code class="descname">frames</code><a class="reference internal" href="../../_modules/components/fuselage/fuselage.html#Fuselage.frames"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.fuselage.fuselage.Fuselage.frames" title="Permalink to this definition">¶</a></dt>
+<dd><p>Collection of all center-fuselage section frames (those that were built by <cite>frame_builder</cite>. Each frame has
+an :attr: <cite>frame</cite> and :attr: <cite>points</cite>. If the user option <cite>minimize_frames</cite> is True then only the following
+frames are kept: [start, apex_start, apex_end, end].</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">List of center-fuselage section frames</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.fuselage.fuselage.Fuselage.fuselage_joiner">
+<code class="descname">fuselage_joiner</code><a class="reference internal" href="../../_modules/components/fuselage/fuselage.html#Fuselage.fuselage_joiner"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.fuselage.fuselage.Fuselage.fuselage_joiner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Joines the current instantiated elements (nose/tail cone(s)) of the fuselage and outputs a single part</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.fuselage.fuselage.Fuselage.internal_shape">
+<code class="descname">internal_shape</code><a class="reference internal" href="../../_modules/components/fuselage/fuselage.html#Fuselage.internal_shape"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.fuselage.fuselage.Fuselage.internal_shape" title="Permalink to this definition">¶</a></dt>
+<dd><p>This overwrites the Part defined in the class <cite>Component</cite> an internal_shape w/ a Dummy Value</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.fuselage.fuselage.Fuselage.make_transparent">
+<code class="descname">make_transparent</code><a class="headerlink" href="#components.fuselage.fuselage.Fuselage.make_transparent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Toggles transparency of the fuselage
+:type: bool</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.fuselage.fuselage.Fuselage.minimize_frames">
+<code class="descname">minimize_frames</code><a class="headerlink" href="#components.fuselage.fuselage.Fuselage.minimize_frames" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initiates the automatic frame minimization WARNING: May lead to intersecting surfaces
+:type: bool</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.fuselage.fuselage.Fuselage.nose">
+<code class="descname">nose</code><a class="reference internal" href="../../_modules/components/fuselage/fuselage.html#Fuselage.nose"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.fuselage.fuselage.Fuselage.nose" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the nose cone of the fuselage is asked, otherwise returns a hidden circle. NOTE: This workaround
+was necessary to produce the parts in the tree, while still preserving lazy evaluation</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.fuselage.fuselage.Fuselage.pad_factor">
+<code class="descname">pad_factor</code><a class="headerlink" href="#components.fuselage.fuselage.Fuselage.pad_factor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the Padding Factor between Fuselage Sizing Parts
+:type: bool</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.fuselage.fuselage.Fuselage.ply_number">
+<code class="descname">ply_number</code><a class="headerlink" href="#components.fuselage.fuselage.Fuselage.ply_number" title="Permalink to this definition">¶</a></dt>
+<dd><p>Changes the number of ply’s of carbon fiber <a class="reference external" href="http://www.ijera.com/papers/Vol4_issue5/Version%202/J45025355.pdf">http://www.ijera.com/papers/Vol4_issue5/Version%202/J45025355.pdf</a>
+:type: tuple</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.fuselage.fuselage.Fuselage.points">
+<code class="descname">points</code><a class="reference internal" href="../../_modules/components/fuselage/fuselage.html#Fuselage.points"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.fuselage.fuselage.Fuselage.points" title="Permalink to this definition">¶</a></dt>
+<dd><p>Grabs all spline_points out of the list <cite>frames</cite>. Due to how the primitive class <cite>Frame</cite> is defined
+the significance of the points in order is as follows: Point 0 = Bottom (start), Point 1 = Right Side,
+Point 2 = Top (end), Point 3 = Left Side</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">List of spline_points in</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.fuselage.fuselage.Fuselage.ruled">
+<code class="descname">ruled</code><a class="headerlink" href="#components.fuselage.fuselage.Fuselage.ruled" title="Permalink to this definition">¶</a></dt>
+<dd><p>Linearly joins the frames of the center fuselage WARNING: May lead to errors at the tail cone
+:type: bool</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.fuselage.fuselage.Fuselage.side_bc">
+<code class="descname">side_bc</code><a class="reference internal" href="../../_modules/components/fuselage/fuselage.html#Fuselage.side_bc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.fuselage.fuselage.Fuselage.side_bc" title="Permalink to this definition">¶</a></dt>
+<dd><p>The side tangency boundary condition required for the fuselage nose and tail. This is obtained by fitting
+a curve through all side-points (Point 1 of Attribute <cite>points</cite>). Since, the fuselage shell is lofted from nose
+to tail (toward positive <cite>x</cite>) the start tangent and end tangents, obtained from a <cite>FittedCurve</cite>
+both face this direction. Thus, to create a nose cone, which has a build direction of <cite>x_</cite> the direction of the
+start_tangent must be reversed. BC 0 = Start Tangent (Direction <cite>x_</cite>), BC 1 = End Tangent (Direction <cite>x</cite>).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">List containing the start and end tangent vectors, and construction spline, included for debugging</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">Vector</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.fuselage.fuselage.Fuselage.tail">
+<code class="descname">tail</code><a class="reference internal" href="../../_modules/components/fuselage/fuselage.html#Fuselage.tail"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.fuselage.fuselage.Fuselage.tail" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the tail cone of the fuselage is asked, otherwise returns a hidden circle. NOTE: This workaround
+was necessary to produce the parts in the tree, while still preserving lazy evaluation</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.fuselage.fuselage.Fuselage.top_bc">
+<code class="descname">top_bc</code><a class="reference internal" href="../../_modules/components/fuselage/fuselage.html#Fuselage.top_bc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.fuselage.fuselage.Fuselage.top_bc" title="Permalink to this definition">¶</a></dt>
+<dd><p>The top tangency boundary condition required for the fuselage nose and tail. This is obtained by extracting
+the start and end tangents of the inner top edge from the attribute <cite>center_section_left</cite>. Keeping in-line with
+the definition of points in the frame primitives, the interpolated curve is conveniently constructed from the
+bottom point (Point 0) to the top point (Point 2). However, due to this convention the direction of the end
+tangent must be reversed.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">List containing the start and end tangent vectors</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">Vector</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.fuselage.fuselage.Fuselage.transparency">
+<code class="descname">transparency</code><a class="reference internal" href="../../_modules/components/fuselage/fuselage.html#Fuselage.transparency"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.fuselage.fuselage.Fuselage.transparency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Switch case that returns the proper transparency value based on the status of <cite>show_internals</cite></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Transparency value</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="boom.html" class="btn btn-neutral float-right" title="Boom" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="mframe.html" class="btn btn-neutral" title="Motor Frame (MFrame)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, San Kilkis, Nelson Johnson.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'1.0',
+            LANGUAGE:'en',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

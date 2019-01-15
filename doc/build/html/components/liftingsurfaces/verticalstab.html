@@ -1,0 +1,572 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>VerticalStablilizer &mdash; KBE 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="CompoundStabilizer" href="compoundstab.html" />
+    <link rel="prev" title="HorizontalStabilizer" href="horizontalstab.html" /> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> KBE
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../main.html">Main UAV</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../definitions.html">Definitions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../directories.html">Directories</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Components Module</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../battery.html">Li-PO Battery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../electronics/index.html">Electronics Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../electronics/electronics.html">Electronics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../electronics/flightcontroller.html">FlightController</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../electronics/speedcontroller.html">SpeedController</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">LiftingSurface Module</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="liftingsurfaceprim.html">LiftingSurface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="wing.html">Wing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scissorplot.html">ScissorPlot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="horizontalstab.html">HorizontalStabilizer</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">VerticalStablilizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="compoundstab.html">CompoundStabilizer</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../fuselage/index.html">Fuselage Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../fuselage/fframe.html">Fuselage Frame (FFrame)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../fuselage/fcone.html">Fuselage Nose/Tail Cone (FCone)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../fuselage/mframe.html">Motor Frame (MFrame)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../fuselage/fuselage.html">Automatic Fuselage Generator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../fuselage/boom.html">Boom</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../motor.html">Electric Motor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../propeller/index.html">Propeller Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../propeller/propparser.html">Propeller Parser</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../propeller/propeller.html">Propeller</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../eoir.html">Electro-Optical Infra-Red Camera</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../design/index.html">Design Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../design/designinput.html">Design Input</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../design/paramgen.html">Parameter Generator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../design/weightestimator.html">Class I and II Weight Estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../design/wingpowerloading.html">Thrust and Power Loading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../design/performance.html">Performance Verification</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../mycsv2dict.html">My CSV Dictionary</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">KBE</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Components Module</a> &raquo;</li>
+        
+          <li><a href="index.html">LiftingSurface Module</a> &raquo;</li>
+        
+      <li>VerticalStablilizer</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/components/liftingsurfaces/verticalstab.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-components.liftingsurfaces.verticalstab">
+<span id="verticalstablilizer"></span><h1>VerticalStablilizer<a class="headerlink" href="#module-components.liftingsurfaces.verticalstab" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="components.liftingsurfaces.verticalstab.VerticalStabilizer">
+<em class="property">class </em><code class="descclassname">components.liftingsurfaces.verticalstab.</code><code class="descname">VerticalStabilizer</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/components/liftingsurfaces/verticalstab.html#VerticalStabilizer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.liftingsurfaces.verticalstab.VerticalStabilizer" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class will size the VT according to statistical VT volume coefficients and generate it using the
+LiftingSurface primitive. Also, the bounding box is made for the section of the VTP within the fuselage, which is
+used to size the fuselage frames.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">ParaPy Geometry of the VT</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>wing_planform_area</strong> (<em>float</em>) – This is the wing planfrom area in [m^2]</li>
+<li><strong>wing_mac_length</strong> (<em>float</em>) – This is the MAC length of the wing in SI meters</li>
+<li><strong>wing_semi_span</strong> (<em>float</em>) – This is the semispan of the wing in SI meters</li>
+<li><strong>lvc</strong> (<em>float</em>) – This is non-dimensionalized vertical tail arm for the conventional plane.</li>
+<li><strong>lvc_canard</strong> (<em>float</em>) – This is non-dimensionalized vertical tail arm for the canard plane. Note for the canard the     VTP is is much closer to the main wing!</li>
+<li><strong>configuration</strong> (<em>str</em>) – This is a switch to determine the configuration.</li>
+<li><strong>aspect_ratio</strong> (<em>float</em>) – This is the assumed Aspect Ratio of the VT Surface.</li>
+<li><strong>is_half</strong> (<em>bool</em>) – This overwrites the is_half parameter from the class LiftingSurface stating that the entire     surface area is covering one VT.</li>
+<li><strong>taper</strong> (<em>float</em>) – This is the required Taper Ratio of the VT Surface.</li>
+<li><strong>twist</strong> (<em>float</em>) – This is the required Twist Angle of the Tip Airfoil w.r.t the Root Airfoil in degrees.</li>
+<li><strong>offset</strong> (<em>float</em><em> or </em><em>NoneType</em>) – This is the offset in the flow direction of the tip W.R.T. the root Leading Edge.</li>
+<li><strong>fuse_width_factor</strong> (<em>float</em>) – This is the assumed factor of the semispan which the fuselage extends over the VT semispan</li>
+<li><strong>airfoil_type</strong> (<em>str</em>) – This is the name of the folder within the ‘airfoils’ folder. There are three options     ‘cambered’, ‘reflexed’ and ‘symmetric’.</li>
+<li><strong>airfoil_choice</strong> (<em>str</em>) – This is the filename of the requested airfoil.</li>
+<li><strong>ply_number</strong> (<em>int</em>) – Changes the number of ply’s of carbon fiber pre-preg.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="components.liftingsurfaces.verticalstab.VerticalStabilizer.airfoil_choice">
+<code class="descname">airfoil_choice</code><a class="headerlink" href="#components.liftingsurfaces.verticalstab.VerticalStabilizer.airfoil_choice" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the airfoil filename for the VT. This must contain the correct filename name of the airfoil.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.verticalstab.VerticalStabilizer.airfoil_type">
+<code class="descname">airfoil_type</code><a class="headerlink" href="#components.liftingsurfaces.verticalstab.VerticalStabilizer.airfoil_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the airfoil type for the VT. This must contain the correct folder name to the airfoils.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.verticalstab.VerticalStabilizer.aspect_ratio">
+<code class="descname">aspect_ratio</code><a class="headerlink" href="#components.liftingsurfaces.verticalstab.VerticalStabilizer.aspect_ratio" title="Permalink to this definition">¶</a></dt>
+<dd><p>Below is the assumed VT aspect ratio.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.verticalstab.VerticalStabilizer.center_of_gravity">
+<code class="descname">center_of_gravity</code><a class="reference internal" href="../../_modules/components/liftingsurfaces/verticalstab.html#VerticalStabilizer.center_of_gravity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.liftingsurfaces.verticalstab.VerticalStabilizer.center_of_gravity" title="Permalink to this definition">¶</a></dt>
+<dd><p>This finds the COG for the VT.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">ParaPy Point</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">Point</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.verticalstab.VerticalStabilizer.component_type">
+<code class="descname">component_type</code><a class="reference internal" href="../../_modules/components/liftingsurfaces/verticalstab.html#VerticalStabilizer.component_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.liftingsurfaces.verticalstab.VerticalStabilizer.component_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute names the component ‘vt’ for horizontal stabilizer.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Name of VT</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.verticalstab.VerticalStabilizer.configuration">
+<code class="descname">configuration</code><a class="headerlink" href="#components.liftingsurfaces.verticalstab.VerticalStabilizer.configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Below is a switch to determine the configuration.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.verticalstab.VerticalStabilizer.external_shape">
+<code class="descname">external_shape</code><a class="reference internal" href="../../_modules/components/liftingsurfaces/verticalstab.html#VerticalStabilizer.external_shape"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.liftingsurfaces.verticalstab.VerticalStabilizer.external_shape" title="Permalink to this definition">¶</a></dt>
+<dd><p>This defines the external shape for the ExternalBody class in definitions.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">VTP External Geometry</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">ScaledShape</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.verticalstab.VerticalStabilizer.fuse_width_factor">
+<code class="descname">fuse_width_factor</code><a class="headerlink" href="#components.liftingsurfaces.verticalstab.VerticalStabilizer.fuse_width_factor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Below is the assumed factor relating the part of the VT covered by fuse to semispan.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.verticalstab.VerticalStabilizer.get_vtfuse_bounds">
+<code class="descname">get_vtfuse_bounds</code><a class="reference internal" href="../../_modules/components/liftingsurfaces/verticalstab.html#VerticalStabilizer.get_vtfuse_bounds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.liftingsurfaces.verticalstab.VerticalStabilizer.get_vtfuse_bounds" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute is obtaining (the dimensions of) a bounded box at a fuselage width factor of the semispan
+which will be used to size the fuselage frames. These frames drive the shape of the fuselage.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">VTP fuselage section bounding box</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bbox</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.verticalstab.VerticalStabilizer.internal_shape">
+<code class="descname">internal_shape</code><a class="reference internal" href="../../_modules/components/liftingsurfaces/verticalstab.html#VerticalStabilizer.internal_shape"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.liftingsurfaces.verticalstab.VerticalStabilizer.internal_shape" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is creating the bounded box at a fuselage width factor of the semispan which will be used to size the
+fuselage frames. These frames drive the shape of the fuselage.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">VTP fuselage section bounding box</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">Box</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.verticalstab.VerticalStabilizer.is_half">
+<code class="descname">is_half</code><a class="headerlink" href="#components.liftingsurfaces.verticalstab.VerticalStabilizer.is_half" title="Permalink to this definition">¶</a></dt>
+<dd><p>This overwrites the is_half parameter from the class <cite>LiftingSurface</cite>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.verticalstab.VerticalStabilizer.lvc">
+<code class="descname">lvc</code><a class="headerlink" href="#components.liftingsurfaces.verticalstab.VerticalStabilizer.lvc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Below is non-dimensionalized vertical tail arm for the conventional plane.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.verticalstab.VerticalStabilizer.offset">
+<code class="descname">offset</code><a class="headerlink" href="#components.liftingsurfaces.verticalstab.VerticalStabilizer.offset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Below is the chosen trailing edge offset.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.verticalstab.VerticalStabilizer.planform_area">
+<code class="descname">planform_area</code><a class="reference internal" href="../../_modules/components/liftingsurfaces/verticalstab.html#VerticalStabilizer.planform_area"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.liftingsurfaces.verticalstab.VerticalStabilizer.planform_area" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute calculates the total tail surface area based on the estimated VT volume coefficient.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">VT planform area</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.verticalstab.VerticalStabilizer.ply_number">
+<code class="descname">ply_number</code><a class="headerlink" href="#components.liftingsurfaces.verticalstab.VerticalStabilizer.ply_number" title="Permalink to this definition">¶</a></dt>
+<dd><p>Changes the number of ply’s of carbon fiber <a class="reference external" href="http://www.ijera.com/papers/Vol4_issue5/Version%202/J45025355.pdf">http://www.ijera.com/papers/Vol4_issue5/Version%202/J45025355.pdf</a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.verticalstab.VerticalStabilizer.solid">
+<code class="descname">solid</code><a class="reference internal" href="../../_modules/components/liftingsurfaces/verticalstab.html#VerticalStabilizer.solid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.liftingsurfaces.verticalstab.VerticalStabilizer.solid" title="Permalink to this definition">¶</a></dt>
+<dd><p>This rotates the entire VT solid LiftingSurface instantiation by 90 deg.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">ParaPy rotated lofted solid wing geometry.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">RotatedShape</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.verticalstab.VerticalStabilizer.taper">
+<code class="descname">taper</code><a class="headerlink" href="#components.liftingsurfaces.verticalstab.VerticalStabilizer.taper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Below is the assumed VT taper ratio.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.verticalstab.VerticalStabilizer.twist">
+<code class="descname">twist</code><a class="headerlink" href="#components.liftingsurfaces.verticalstab.VerticalStabilizer.twist" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the wing twist for the VT.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.verticalstab.VerticalStabilizer.v_v">
+<code class="descname">v_v</code><a class="reference internal" href="../../_modules/components/liftingsurfaces/verticalstab.html#VerticalStabilizer.v_v"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.liftingsurfaces.verticalstab.VerticalStabilizer.v_v" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute estimates the VTP volume coefficient from statistical agricultural conventional aircraft
+data.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Estimated VT volume coefficient</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.verticalstab.VerticalStabilizer.v_v_canard">
+<code class="descname">v_v_canard</code><a class="reference internal" href="../../_modules/components/liftingsurfaces/verticalstab.html#VerticalStabilizer.v_v_canard"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.liftingsurfaces.verticalstab.VerticalStabilizer.v_v_canard" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute calculates the tail volume coefficient for a canard. This is done by rewriting the equation
+for a conventional VT volume coefficient for S_v/S, equating it to the same equation of the canard. The canard
+tail volume is thus a reduced tail volume coefficient (with the canard having a smaller tail arm).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Estimated Canard VT volume coefficient</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.verticalstab.VerticalStabilizer.vtright_cut_plane">
+<code class="descname">vtright_cut_plane</code><a class="reference internal" href="../../_modules/components/liftingsurfaces/verticalstab.html#VerticalStabilizer.vtright_cut_plane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.liftingsurfaces.verticalstab.VerticalStabilizer.vtright_cut_plane" title="Permalink to this definition">¶</a></dt>
+<dd><p>This makes a plane at the VTP span location where the fuselage is to end.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">VTP cut Plane ParaPy Geometry</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">Plane</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.verticalstab.VerticalStabilizer.vtwing_cut_loc">
+<code class="descname">vtwing_cut_loc</code><a class="reference internal" href="../../_modules/components/liftingsurfaces/verticalstab.html#VerticalStabilizer.vtwing_cut_loc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.liftingsurfaces.verticalstab.VerticalStabilizer.vtwing_cut_loc" title="Permalink to this definition">¶</a></dt>
+<dd><p>This calculates the spanwise distance of the cut, inside of which, the VTP is inside the fuselage.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">VTP length within the fuselage</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.verticalstab.VerticalStabilizer.wing_mac_length">
+<code class="descname">wing_mac_length</code><a class="headerlink" href="#components.liftingsurfaces.verticalstab.VerticalStabilizer.wing_mac_length" title="Permalink to this definition">¶</a></dt>
+<dd><p>Below is the MAC length of the wing.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.verticalstab.VerticalStabilizer.wing_planform_area">
+<code class="descname">wing_planform_area</code><a class="headerlink" href="#components.liftingsurfaces.verticalstab.VerticalStabilizer.wing_planform_area" title="Permalink to this definition">¶</a></dt>
+<dd><p>Below is the required TOTAL wing area of the main wings.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.verticalstab.VerticalStabilizer.wing_semi_span">
+<code class="descname">wing_semi_span</code><a class="headerlink" href="#components.liftingsurfaces.verticalstab.VerticalStabilizer.wing_semi_span" title="Permalink to this definition">¶</a></dt>
+<dd><p>Below is the semispan of the wing.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="compoundstab.html" class="btn btn-neutral float-right" title="CompoundStabilizer" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="horizontalstab.html" class="btn btn-neutral" title="HorizontalStabilizer" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, San Kilkis, Nelson Johnson.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'1.0',
+            LANGUAGE:'en',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

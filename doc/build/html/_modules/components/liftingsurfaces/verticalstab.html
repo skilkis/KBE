@@ -1,0 +1,518 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>components.liftingsurfaces.verticalstab &mdash; KBE 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> KBE
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../main.html">Main UAV</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../definitions.html">Definitions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../directories.html">Directories</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/index.html">Components Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/battery.html">Li-PO Battery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/electronics/index.html">Electronics Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/electronics/electronics.html">Electronics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/electronics/flightcontroller.html">FlightController</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/electronics/speedcontroller.html">SpeedController</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/liftingsurfaces/index.html">LiftingSurface Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/liftingsurfaceprim.html">LiftingSurface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/wing.html">Wing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/scissorplot.html">ScissorPlot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/horizontalstab.html">HorizontalStabilizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/verticalstab.html">VerticalStablilizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/compoundstab.html">CompoundStabilizer</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/fuselage/index.html">Fuselage Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/fuselage/fframe.html">Fuselage Frame (FFrame)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/fuselage/fcone.html">Fuselage Nose/Tail Cone (FCone)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/fuselage/mframe.html">Motor Frame (MFrame)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/fuselage/fuselage.html">Automatic Fuselage Generator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/fuselage/boom.html">Boom</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/motor.html">Electric Motor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/propeller/index.html">Propeller Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/propeller/propparser.html">Propeller Parser</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/propeller/propeller.html">Propeller</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/eoir.html">Electro-Optical Infra-Red Camera</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../design/index.html">Design Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../design/designinput.html">Design Input</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../design/paramgen.html">Parameter Generator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../design/weightestimator.html">Class I and II Weight Estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../design/wingpowerloading.html">Thrust and Power Loading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../design/performance.html">Performance Verification</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../mycsv2dict.html">My CSV Dictionary</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">KBE</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>components.liftingsurfaces.verticalstab</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for components.liftingsurfaces.verticalstab</h1><div class="highlight"><pre>
+<span></span><span class="c1">#  This script will estimate the required VT size and planform from statistical data.</span>
+<span class="c1">#  In the future, this will become more detailed!</span>
+
+<span class="c1">#  Required Modules</span>
+<span class="kn">from</span> <span class="nn">parapy.core</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">parapy.geom</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">primitives</span> <span class="k">import</span> <span class="n">LiftingSurface</span>
+<span class="kn">from</span> <span class="nn">definitions</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">user</span> <span class="k">import</span> <span class="n">MyColors</span>
+<span class="kn">from</span> <span class="nn">directories</span> <span class="k">import</span> <span class="o">*</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Nelson Johnson&quot;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;VerticalStabilizer&quot;</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="VerticalStabilizer"><a class="viewcode-back" href="../../../components/liftingsurfaces/verticalstab.html#components.liftingsurfaces.verticalstab.VerticalStabilizer">[docs]</a><span class="k">class</span> <span class="nc">VerticalStabilizer</span><span class="p">(</span><span class="n">ExternalBody</span><span class="p">,</span> <span class="n">LiftingSurface</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; This class will size the VT according to statistical VT volume coefficients and generate it using the</span>
+<span class="sd">    LiftingSurface primitive. Also, the bounding box is made for the section of the VTP within the fuselage, which is</span>
+<span class="sd">    used to size the fuselage frames.</span>
+
+<span class="sd">    :returns: ParaPy Geometry of the VT</span>
+
+<span class="sd">    :param wing_planform_area: This is the wing planfrom area in [m^2]</span>
+<span class="sd">    :type wing_planform_area: float</span>
+
+<span class="sd">    :param wing_mac_length: This is the MAC length of the wing in SI meters</span>
+<span class="sd">    :type wing_mac_length: float</span>
+
+<span class="sd">    :param wing_semi_span: This is the semispan of the wing in SI meters</span>
+<span class="sd">    :type wing_semi_span: float</span>
+
+<span class="sd">    :param lvc: This is non-dimensionalized vertical tail arm for the conventional plane.</span>
+<span class="sd">    :type lvc: float</span>
+
+<span class="sd">    :param lvc_canard: This is non-dimensionalized vertical tail arm for the canard plane. Note for the canard the \</span>
+<span class="sd">    VTP is is much closer to the main wing!</span>
+<span class="sd">    :type lvc_canard: float</span>
+
+<span class="sd">    :param configuration: This is a switch to determine the configuration.</span>
+<span class="sd">    :type configuration: str</span>
+
+<span class="sd">    :param aspect_ratio: This is the assumed Aspect Ratio of the VT Surface.</span>
+<span class="sd">    :type aspect_ratio: float</span>
+
+<span class="sd">    :param is_half: This overwrites the is_half parameter from the class LiftingSurface stating that the entire \</span>
+<span class="sd">    surface area is covering one VT.</span>
+<span class="sd">    :type is_half: bool</span>
+
+<span class="sd">    :param taper: This is the required Taper Ratio of the VT Surface.</span>
+<span class="sd">    :type taper: float</span>
+
+<span class="sd">    :param twist: This is the required Twist Angle of the Tip Airfoil w.r.t the Root Airfoil in degrees.</span>
+<span class="sd">    :type twist: float</span>
+
+<span class="sd">    :param offset: This is the offset in the flow direction of the tip W.R.T. the root Leading Edge.</span>
+<span class="sd">    :type offset: float or NoneType</span>
+
+<span class="sd">    :param fuse_width_factor: This is the assumed factor of the semispan which the fuselage extends over the VT semispan</span>
+<span class="sd">    :type fuse_width_factor: float</span>
+
+<span class="sd">    :param airfoil_type: This is the name of the folder within the &#39;airfoils&#39; folder. There are three options \</span>
+<span class="sd">    &#39;cambered&#39;, &#39;reflexed&#39; and &#39;symmetric&#39;.</span>
+<span class="sd">    :type airfoil_type: str</span>
+
+<span class="sd">    :param airfoil_choice: This is the filename of the requested airfoil.</span>
+<span class="sd">    :type airfoil_choice: str</span>
+
+<span class="sd">    :param ply_number: Changes the number of ply&#39;s of carbon fiber pre-preg.</span>
+<span class="sd">    :type ply_number: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">__icon__</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;ICON_DIR&#39;</span><span class="p">],</span> <span class="s1">&#39;vtail.png&#39;</span><span class="p">)</span>
+
+    <span class="c1">#: Below is the required TOTAL wing area of the main wings.</span>
+    <span class="n">wing_planform_area</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">())</span>
+
+    <span class="c1">#: Below is the MAC length of the wing.</span>
+    <span class="n">wing_mac_length</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.43</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">())</span>
+
+    <span class="c1">#: Below is the semispan of the wing.</span>
+    <span class="n">wing_semi_span</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">1.9</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">())</span>
+
+    <span class="c1">#: Below is non-dimensionalized vertical tail arm for the conventional plane.</span>
+    <span class="n">lvc</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">3.0</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">float</span><span class="p">))</span>
+
+    <span class="c1">#: Below is non-dimensionalized vertical tail arm for the canard plane. Note for the canard the VTP is is much</span>
+    <span class="c1"># closer to the main wing!</span>
+    <span class="n">lvc_canard</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">float</span><span class="p">))</span>
+
+    <span class="c1">#: Below is a switch to determine the configuration.</span>
+    <span class="n">configuration</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;conventional&#39;</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">OneOf</span><span class="p">([</span><span class="s1">&#39;canard&#39;</span><span class="p">,</span> <span class="s1">&#39;conventional&#39;</span><span class="p">]))</span>
+
+    <span class="c1">#: Below is the assumed VT aspect ratio.</span>
+    <span class="n">aspect_ratio</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">1.4</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">())</span>
+
+    <span class="c1">#: This overwrites the is_half parameter from the class `LiftingSurface`.</span>
+    <span class="n">is_half</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">bool</span><span class="p">))</span>
+
+    <span class="c1">#: Below is the assumed VT taper ratio.</span>
+    <span class="n">taper</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.35</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Range</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">))</span>
+
+    <span class="c1">#:  This is the wing twist for the VT.</span>
+    <span class="n">twist</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Range</span><span class="p">(</span><span class="o">-</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">))</span>
+
+    <span class="c1">#: Below is the chosen trailing edge offset.</span>
+    <span class="n">offset</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+
+    <span class="c1">#: Below is the assumed factor relating the part of the VT covered by fuse to semispan.</span>
+    <span class="n">fuse_width_factor</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Range</span><span class="p">(</span><span class="mf">0.001</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">))</span>
+
+    <span class="c1">#:  This is the airfoil type for the VT. This must contain the correct folder name to the airfoils.</span>
+    <span class="n">airfoil_type</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;symmetric&#39;</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">OneOf</span><span class="p">([</span><span class="s1">&#39;cambered&#39;</span><span class="p">,</span> <span class="s1">&#39;reflexed&#39;</span><span class="p">,</span> <span class="s1">&#39;symmetric&#39;</span><span class="p">]))</span>
+
+    <span class="c1">#:  This is the airfoil filename for the VT. This must contain the correct filename name of the airfoil.</span>
+    <span class="n">airfoil_choice</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;NACA0012&#39;</span><span class="p">)</span>
+
+    <span class="c1">#: Changes the number of ply&#39;s of carbon fiber http://www.ijera.com/papers/Vol4_issue5/Version%202/J45025355.pdf</span>
+    <span class="n">ply_number</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
+
+
+<span class="c1"># Attributes below------------------------------------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="VerticalStabilizer.component_type"><a class="viewcode-back" href="../../../components/liftingsurfaces/verticalstab.html#components.liftingsurfaces.verticalstab.VerticalStabilizer.component_type">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">component_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This attribute names the component &#39;vt&#39; for horizontal stabilizer.</span>
+
+<span class="sd">        :return: Name of VT</span>
+<span class="sd">        :rtype: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s1">&#39;vt&#39;</span></div>
+
+<div class="viewcode-block" id="VerticalStabilizer.center_of_gravity"><a class="viewcode-back" href="../../../components/liftingsurfaces/verticalstab.html#components.liftingsurfaces.verticalstab.VerticalStabilizer.center_of_gravity">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">center_of_gravity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This finds the COG for the VT.</span>
+
+<span class="sd">        :return: ParaPy Point</span>
+<span class="sd">        :rtype: Point</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">solid</span><span class="o">.</span><span class="n">cog</span>
+        <span class="k">return</span> <span class="n">pos</span></div>
+
+<div class="viewcode-block" id="VerticalStabilizer.v_v"><a class="viewcode-back" href="../../../components/liftingsurfaces/verticalstab.html#components.liftingsurfaces.verticalstab.VerticalStabilizer.v_v">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">v_v</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This attribute estimates the VTP volume coefficient from statistical agricultural conventional aircraft</span>
+<span class="sd">        data.</span>
+
+<span class="sd">        :return: Estimated VT volume coefficient</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">v_vset</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="o">*</span> <span class="mf">1.0</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">0.054</span><span class="p">,</span> <span class="mf">0.036</span><span class="p">,</span> <span class="mf">0.011</span><span class="p">,</span> <span class="mf">0.022</span><span class="p">,</span> <span class="mf">0.034</span><span class="p">,</span> <span class="mf">0.024</span><span class="p">,</span> <span class="mf">0.022</span><span class="p">,</span> <span class="mf">0.033</span><span class="p">,</span> <span class="mf">0.035</span><span class="p">,</span> <span class="mf">0.035</span><span class="p">,</span> <span class="mf">0.032</span><span class="p">]]</span>
+        <span class="n">v_v_avg</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">v_vset</span><span class="p">)</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">v_vset</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">v_v_avg</span></div>
+
+<div class="viewcode-block" id="VerticalStabilizer.v_v_canard"><a class="viewcode-back" href="../../../components/liftingsurfaces/verticalstab.html#components.liftingsurfaces.verticalstab.VerticalStabilizer.v_v_canard">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">v_v_canard</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This attribute calculates the tail volume coefficient for a canard. This is done by rewriting the equation</span>
+<span class="sd">        for a conventional VT volume coefficient for S_v/S, equating it to the same equation of the canard. The canard</span>
+<span class="sd">        tail volume is thus a reduced tail volume coefficient (with the canard having a smaller tail arm).</span>
+
+<span class="sd">        :return: Estimated Canard VT volume coefficient</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">v_v_canard</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">lvc_canard</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">lvc</span><span class="p">)</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">v_v</span>
+        <span class="k">return</span> <span class="n">v_v_canard</span></div>
+
+<div class="viewcode-block" id="VerticalStabilizer.planform_area"><a class="viewcode-back" href="../../../components/liftingsurfaces/verticalstab.html#components.liftingsurfaces.verticalstab.VerticalStabilizer.planform_area">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">planform_area</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This attribute calculates the total tail surface area based on the estimated VT volume coefficient.</span>
+
+<span class="sd">        :return: VT planform area</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">configuration</span> <span class="ow">is</span> <span class="s1">&#39;conventional&#39;</span><span class="p">:</span>
+            <span class="n">s_v_req</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">v_v</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">wing_planform_area</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">wing_semi_span</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">lvc</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">s_v_req</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">v_v_canard</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">wing_planform_area</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">wing_semi_span</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">lvc_canard</span>
+        <span class="k">return</span> <span class="n">s_v_req</span></div>
+
+<div class="viewcode-block" id="VerticalStabilizer.vtwing_cut_loc"><a class="viewcode-back" href="../../../components/liftingsurfaces/verticalstab.html#components.liftingsurfaces.verticalstab.VerticalStabilizer.vtwing_cut_loc">[docs]</a>    <span class="nd">@Attribute</span><span class="p">(</span><span class="n">private</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">vtwing_cut_loc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This calculates the spanwise distance of the cut, inside of which, the VTP is inside the fuselage.</span>
+
+<span class="sd">        :return: VTP length within the fuselage</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">span</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">fuse_width_factor</span></div>
+
+<div class="viewcode-block" id="VerticalStabilizer.vtright_cut_plane"><a class="viewcode-back" href="../../../components/liftingsurfaces/verticalstab.html#components.liftingsurfaces.verticalstab.VerticalStabilizer.vtright_cut_plane">[docs]</a>    <span class="nd">@Attribute</span><span class="p">(</span><span class="n">private</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">vtright_cut_plane</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This makes a plane at the VTP span location where the fuselage is to end.</span>
+
+<span class="sd">        :return: VTP cut Plane ParaPy Geometry</span>
+<span class="sd">        :rtype: Plane</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Plane</span><span class="p">(</span><span class="n">reference</span><span class="o">=</span><span class="n">translate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vtwing_cut_loc</span><span class="p">),</span>
+                     <span class="n">normal</span><span class="o">=</span><span class="n">Vector</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="VerticalStabilizer.get_vtfuse_bounds"><a class="viewcode-back" href="../../../components/liftingsurfaces/verticalstab.html#components.liftingsurfaces.verticalstab.VerticalStabilizer.get_vtfuse_bounds">[docs]</a>    <span class="nd">@Attribute</span><span class="p">(</span><span class="n">private</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">get_vtfuse_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This attribute is obtaining (the dimensions of) a bounded box at a fuselage width factor of the semispan</span>
+<span class="sd">        which will be used to size the fuselage frames. These frames drive the shape of the fuselage.</span>
+
+<span class="sd">        :return: VTP fuselage section bounding box</span>
+<span class="sd">        :rtype: bbox</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">inner_part</span> <span class="o">=</span> <span class="n">PartitionedSolid</span><span class="p">(</span><span class="n">solid_in</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">solid</span><span class="p">,</span>
+                                      <span class="n">tool</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">vtright_cut_plane</span><span class="p">)</span><span class="o">.</span><span class="n">solids</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">faces</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">wires</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="c1">#  Above obtains a cross section of the wing, at the specified fuselage width factor.</span>
+
+        <span class="c1">#  mirrored_part = MirroredShape(shape_in=inner_part, reference_point=self.ht.final_wing.position,</span>
+        <span class="c1">#                              vector1=Vector(1, 0, 0),vector2=Vector(0, 0, 1))</span>
+        <span class="n">root</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">solid</span><span class="o">.</span><span class="n">wires</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="n">first_iter</span> <span class="o">=</span> <span class="n">Fused</span><span class="p">(</span><span class="n">inner_part</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+        <span class="c1">#  Fusion of the two wing cross sections.</span>
+        <span class="c1">#  second_iter = Fused(first_iter, mirrored_part)</span>
+
+        <span class="n">bounds</span> <span class="o">=</span> <span class="n">first_iter</span><span class="o">.</span><span class="n">bbox</span>
+        <span class="c1">#  Above gets the bounds of the wing fuselage bounding box for return.</span>
+        <span class="k">return</span> <span class="n">bounds</span></div>
+
+<div class="viewcode-block" id="VerticalStabilizer.solid"><a class="viewcode-back" href="../../../components/liftingsurfaces/verticalstab.html#components.liftingsurfaces.verticalstab.VerticalStabilizer.solid">[docs]</a>    <span class="nd">@Part</span>
+    <span class="k">def</span> <span class="nf">solid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This rotates the entire VT solid LiftingSurface instantiation by 90 deg.</span>
+
+<span class="sd">        :return: ParaPy rotated lofted solid wing geometry.</span>
+<span class="sd">        :rtype: RotatedShape</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">RotatedShape</span><span class="p">(</span><span class="n">shape_in</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">no_dihedral_solid</span><span class="p">,</span>
+                            <span class="n">rotation_point</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">no_dihedral_solid</span><span class="o">.</span><span class="n">position</span><span class="p">,</span>
+                            <span class="n">vector</span><span class="o">=</span><span class="n">Vector</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                            <span class="n">angle</span><span class="o">=</span><span class="n">radians</span><span class="p">(</span><span class="mi">90</span><span class="p">),</span>
+                            <span class="n">mesh_deflection</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mesh_deflection</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="VerticalStabilizer.internal_shape"><a class="viewcode-back" href="../../../components/liftingsurfaces/verticalstab.html#components.liftingsurfaces.verticalstab.VerticalStabilizer.internal_shape">[docs]</a>    <span class="nd">@Part</span>
+    <span class="k">def</span> <span class="nf">internal_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This is creating the bounded box at a fuselage width factor of the semispan which will be used to size the</span>
+<span class="sd">        fuselage frames. These frames drive the shape of the fuselage.</span>
+
+<span class="sd">        :return: VTP fuselage section bounding box</span>
+<span class="sd">        :rtype: Box</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Box</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get_vtfuse_bounds</span><span class="o">.</span><span class="n">width</span><span class="p">,</span>
+                   <span class="n">height</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get_vtfuse_bounds</span><span class="o">.</span><span class="n">height</span><span class="p">,</span>
+                   <span class="n">length</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get_vtfuse_bounds</span><span class="o">.</span><span class="n">length</span><span class="p">,</span>
+                   <span class="n">position</span><span class="o">=</span><span class="n">Position</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_vtfuse_bounds</span><span class="o">.</span><span class="n">center</span><span class="p">),</span>
+                   <span class="n">centered</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                   <span class="n">color</span><span class="o">=</span><span class="n">MyColors</span><span class="o">.</span><span class="n">cool_blue</span><span class="p">,</span>
+                   <span class="n">transparency</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+                   <span class="n">hidden</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="VerticalStabilizer.external_shape"><a class="viewcode-back" href="../../../components/liftingsurfaces/verticalstab.html#components.liftingsurfaces.verticalstab.VerticalStabilizer.external_shape">[docs]</a>    <span class="nd">@Part</span>
+    <span class="k">def</span> <span class="nf">external_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This defines the external shape for the ExternalBody class in definitions.</span>
+
+<span class="sd">        :return: VTP External Geometry</span>
+<span class="sd">        :rtype: ScaledShape</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">ScaledShape</span><span class="p">(</span><span class="n">shape_in</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">solid</span><span class="p">,</span> <span class="n">reference_point</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">hidden</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">parapy.gui</span> <span class="k">import</span> <span class="n">display</span>
+
+    <span class="n">obj</span> <span class="o">=</span> <span class="n">VerticalStabilizer</span><span class="p">()</span>
+    <span class="n">display</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, San Kilkis, Nelson Johnson.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'1.0',
+            LANGUAGE:'en',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,389 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>design.parametergenerator &mdash; KBE 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> KBE
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../main.html">Main UAV</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../definitions.html">Definitions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../directories.html">Directories</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../components/index.html">Components Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../components/battery.html">Li-PO Battery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../components/electronics/index.html">Electronics Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../components/electronics/electronics.html">Electronics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../components/electronics/flightcontroller.html">FlightController</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../components/electronics/speedcontroller.html">SpeedController</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../components/liftingsurfaces/index.html">LiftingSurface Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../components/liftingsurfaces/liftingsurfaceprim.html">LiftingSurface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../components/liftingsurfaces/wing.html">Wing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../components/liftingsurfaces/scissorplot.html">ScissorPlot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../components/liftingsurfaces/horizontalstab.html">HorizontalStabilizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../components/liftingsurfaces/verticalstab.html">VerticalStablilizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../components/liftingsurfaces/compoundstab.html">CompoundStabilizer</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../components/fuselage/index.html">Fuselage Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../components/fuselage/fframe.html">Fuselage Frame (FFrame)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../components/fuselage/fcone.html">Fuselage Nose/Tail Cone (FCone)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../components/fuselage/mframe.html">Motor Frame (MFrame)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../components/fuselage/fuselage.html">Automatic Fuselage Generator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../components/fuselage/boom.html">Boom</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../components/motor.html">Electric Motor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../components/propeller/index.html">Propeller Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../components/propeller/propparser.html">Propeller Parser</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../components/propeller/propeller.html">Propeller</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../components/eoir.html">Electro-Optical Infra-Red Camera</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../design/index.html">Design Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../design/designinput.html">Design Input</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../design/paramgen.html">Parameter Generator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../design/weightestimator.html">Class I and II Weight Estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../design/wingpowerloading.html">Thrust and Power Loading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../design/performance.html">Performance Verification</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../mycsv2dict.html">My CSV Dictionary</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">KBE</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>design.parametergenerator</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for design.parametergenerator</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="c1"># Useful package for checking working directory as well as the files inside this directory</span>
+
+<span class="c1"># Required ParaPy Modules</span>
+<span class="kn">from</span> <span class="nn">parapy.core</span> <span class="k">import</span> <span class="o">*</span>
+
+<span class="c1"># Importing Necessary Classes</span>
+<span class="kn">from</span> <span class="nn">wingpowerloading</span> <span class="k">import</span> <span class="n">WingPowerLoading</span>
+<span class="kn">from</span> <span class="nn">weightestimator</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">directories</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">designinput</span> <span class="k">import</span> <span class="n">valid_payloads</span>
+<span class="kn">from</span> <span class="nn">components</span> <span class="k">import</span> <span class="n">EOIR</span>
+<span class="kn">from</span> <span class="nn">definitions</span> <span class="k">import</span> <span class="n">warn_window</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Şan Kılkış&quot;</span><span class="p">,</span> <span class="s2">&quot;Nelson Johnson&quot;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ParameterGenerator&quot;</span><span class="p">]</span>
+<span class="n">__settable__</span> <span class="o">=</span> <span class="p">(</span><span class="kc">True</span> <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span> <span class="k">else</span> <span class="kc">False</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="ParameterGenerator"><a class="viewcode-back" href="../../design/paramgen.html#design.parametergenerator.ParameterGenerator">[docs]</a><span class="k">class</span> <span class="nc">ParameterGenerator</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; This class contains all the global design variables.</span>
+
+<span class="sd">    :param performance_goal: The goal for which the UAV should be optimized (i.e. &#39;endurance or &#39;range&#39;)</span>
+<span class="sd">    :type performance_goal: str</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">__icon__</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;ICON_DIR&#39;</span><span class="p">],</span> <span class="s1">&#39;parameters.png&#39;</span><span class="p">)</span>
+
+    <span class="n">performance_goal</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;endurance&#39;</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">OneOf</span><span class="p">([</span><span class="s1">&#39;endurance&#39;</span><span class="p">,</span> <span class="s1">&#39;range&#39;</span><span class="p">]),</span> <span class="n">settable</span><span class="o">=</span><span class="n">__settable__</span><span class="p">)</span>
+
+    <span class="n">goal_value</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">(),</span> <span class="n">settable</span><span class="o">=</span><span class="n">__settable__</span><span class="p">)</span>
+
+    <span class="n">weight_target</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;payload&#39;</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">OneOf</span><span class="p">([</span><span class="s1">&#39;payload&#39;</span><span class="p">,</span> <span class="s1">&#39;mtow&#39;</span><span class="p">]),</span> <span class="n">settable</span><span class="o">=</span><span class="n">__settable__</span><span class="p">)</span>
+
+    <span class="n">target_value</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">(),</span> <span class="n">settable</span><span class="o">=</span><span class="n">__settable__</span><span class="p">)</span>
+
+    <span class="n">payload_type</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;eoir&#39;</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">OneOf</span><span class="p">(</span><span class="n">valid_payloads</span><span class="p">()),</span> <span class="n">settable</span><span class="o">=</span><span class="n">__settable__</span><span class="p">)</span>  <span class="c1">#</span>
+
+    <span class="n">configuration</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;conventional&#39;</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">OneOf</span><span class="p">([</span><span class="s1">&#39;conventional&#39;</span><span class="p">]),</span><span class="n">settable</span><span class="o">=</span><span class="n">__settable__</span><span class="p">)</span>
+
+    <span class="n">handlaunch</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">bool</span><span class="p">),</span> <span class="n">settable</span><span class="o">=</span><span class="n">__settable__</span><span class="p">)</span>
+
+    <span class="n">portable</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">bool</span><span class="p">),</span> <span class="n">settable</span><span class="o">=</span><span class="n">__settable__</span><span class="p">)</span>
+
+    <span class="nd">@target_value</span><span class="o">.</span><span class="n">on_slot_change</span>
+    <span class="k">def</span> <span class="nf">payload_checker</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Adds a listener to the :param:`target_value` in order to alert the user that their desired payload has</span>
+<span class="sd">        been substituted by a commercially available EOIR sensor, in the future when multiple payload types are</span>
+<span class="sd">        available this &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_target</span> <span class="ow">is</span> <span class="s1">&#39;payload&#39;</span><span class="p">:</span>
+            <span class="n">actual_weight</span> <span class="o">=</span> <span class="n">EOIR</span><span class="p">(</span><span class="n">target_weight</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">target_value</span><span class="p">)</span><span class="o">.</span><span class="n">weight</span>
+            <span class="n">warn_window</span><span class="p">(</span><span class="s2">&quot;No payload matching a weight of </span><span class="si">%1.1f</span><span class="s2"> [kg] were found, instead a value&quot;</span>
+                         <span class="s2">&quot;of </span><span class="si">%1.1f</span><span class="s2"> [kg] will be used from now on&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_value</span><span class="p">,</span> <span class="n">actual_weight</span><span class="p">))</span>
+            <span class="nb">print</span> <span class="n">actual_weight</span>
+
+<div class="viewcode-block" id="ParameterGenerator.weightestimator"><a class="viewcode-back" href="../../design/paramgen.html#design.parametergenerator.ParameterGenerator.weightestimator">[docs]</a>    <span class="nd">@Part</span>
+    <span class="k">def</span> <span class="nf">weightestimator</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Instantiates the :class:`ClassOne` to perform initial weight estimations utilizing statisctics &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">ClassOne</span><span class="p">(</span><span class="n">weight_target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">weight_target</span><span class="p">,</span>
+                        <span class="n">target_value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">target_value</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_target</span> <span class="ow">is</span> <span class="s1">&#39;payload&#39;</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_value</span><span class="p">,</span>
+                        <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Class-I Weight Estimation&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ParameterGenerator.wingpowerloading"><a class="viewcode-back" href="../../design/paramgen.html#design.parametergenerator.ParameterGenerator.wingpowerloading">[docs]</a>    <span class="nd">@Part</span>
+    <span class="k">def</span> <span class="nf">wingpowerloading</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Instantiates the :class:`WingPowerLoading` to be able to choose a suitable design point WingPowerLoading &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">WingPowerLoading</span><span class="p">(</span><span class="n">weight_mtow</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">weight_mtow</span><span class="p">,</span>
+                                <span class="n">performance_goal</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">performance_goal</span><span class="p">,</span>
+                                <span class="nb">range</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">goal_value</span><span class="p">,</span>
+                                <span class="n">endurance</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">goal_value</span><span class="p">,</span>
+                                <span class="n">weight_payload</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">weight_payload</span><span class="p">,</span>
+                                <span class="n">handlaunch</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">handlaunch</span><span class="p">,</span>
+                                <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Design Point Selection&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ParameterGenerator.weight_mtow"><a class="viewcode-back" href="../../design/paramgen.html#design.parametergenerator.ParameterGenerator.weight_mtow">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">weight_mtow</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Fetches the output maximum take-off weight from the Class I weight estimation</span>
+
+<span class="sd">        :return: Maximum Take-Off Weight (MTOW) in SI kilogram [kg]</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">#  Here we obtain the MTOW of the UAV, from the Class I estimation in SI kilogram [kg]</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">weightestimator</span><span class="o">.</span><span class="n">weight_mtow</span></div>
+
+    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">weight_payload</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1">#  Here we obtain the payload mass of the UAV, from the Class I estimation.</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">weightestimator</span><span class="o">.</span><span class="n">weight_payload</span>
+
+    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">wing_planform_area</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1">#  Here we calculate the required wing loading from the mtow and design point.</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_mtow</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">wing_loading</span>
+
+    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">aspect_ratio</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1">#  Here we pull the UAV&#39;s aspect ratio from the design point.</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">wingpowerloading</span><span class="o">.</span><span class="n">designpoint</span><span class="p">[</span><span class="s1">&#39;aspect_ratio&#39;</span><span class="p">]</span>
+
+    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">lift_coef_max</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1">#  Here we pull the UAV&#39;s maximum lift coefficient from the design point.</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">wingpowerloading</span><span class="o">.</span><span class="n">designpoint</span><span class="p">[</span><span class="s1">&#39;lift_coefficient&#39;</span><span class="p">]</span>
+
+    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">stall_speed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">wingpowerloading</span><span class="o">.</span><span class="n">stall_speed</span>
+
+    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">design_speed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">wingpowerloading</span><span class="o">.</span><span class="n">cruise_parameters</span><span class="p">[</span><span class="s1">&#39;v_opt&#39;</span><span class="p">]</span>
+
+    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">power_loading</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1">#  Here we pull the UAV&#39;s power loading from the design point.</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">wingpowerloading</span><span class="o">.</span><span class="n">designpoint</span><span class="p">[</span><span class="s1">&#39;power_loading&#39;</span><span class="p">]</span>
+
+    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">wing_loading</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1">#  Here we pull the UAV&#39;s wing loading from the design point.</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">wingpowerloading</span><span class="o">.</span><span class="n">designpoint</span><span class="p">[</span><span class="s1">&#39;wing_loading&#39;</span><span class="p">]</span>
+
+    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">motor_power</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">((</span><span class="mf">9.81</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">power_loading</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_mtow</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">wingpowerloading</span><span class="o">.</span><span class="n">eta_prop</span>
+
+    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">rho</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">wingpowerloading</span><span class="o">.</span><span class="n">rho</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">parapy.gui</span> <span class="k">import</span> <span class="n">display</span>
+
+    <span class="n">obj</span> <span class="o">=</span> <span class="n">ParameterGenerator</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;ParameterGenerator&#39;</span><span class="p">)</span>
+    <span class="n">display</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, San Kilkis, Nelson Johnson.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'1.0',
+            LANGUAGE:'en',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

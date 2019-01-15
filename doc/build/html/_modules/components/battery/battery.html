@@ -1,0 +1,441 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>components.battery.battery &mdash; KBE 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> KBE
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../main.html">Main UAV</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../definitions.html">Definitions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../directories.html">Directories</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/index.html">Components Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/battery.html">Li-PO Battery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/electronics/index.html">Electronics Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/electronics/electronics.html">Electronics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/electronics/flightcontroller.html">FlightController</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/electronics/speedcontroller.html">SpeedController</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/liftingsurfaces/index.html">LiftingSurface Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/liftingsurfaceprim.html">LiftingSurface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/wing.html">Wing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/scissorplot.html">ScissorPlot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/horizontalstab.html">HorizontalStabilizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/verticalstab.html">VerticalStablilizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/compoundstab.html">CompoundStabilizer</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/fuselage/index.html">Fuselage Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/fuselage/fframe.html">Fuselage Frame (FFrame)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/fuselage/fcone.html">Fuselage Nose/Tail Cone (FCone)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/fuselage/mframe.html">Motor Frame (MFrame)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/fuselage/fuselage.html">Automatic Fuselage Generator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/fuselage/boom.html">Boom</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/motor.html">Electric Motor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/propeller/index.html">Propeller Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/propeller/propparser.html">Propeller Parser</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/propeller/propeller.html">Propeller</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/eoir.html">Electro-Optical Infra-Red Camera</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../design/index.html">Design Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../design/designinput.html">Design Input</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../design/paramgen.html">Parameter Generator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../design/weightestimator.html">Class I and II Weight Estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../design/wingpowerloading.html">Thrust and Power Loading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../design/performance.html">Performance Verification</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../mycsv2dict.html">My CSV Dictionary</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">KBE</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>components.battery.battery</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for components.battery.battery</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+
+<span class="kn">from</span> <span class="nn">parapy.geom</span> <span class="k">import</span> <span class="o">*</span>  <span class="c1"># \</span>
+<span class="kn">from</span> <span class="nn">parapy.core</span> <span class="k">import</span> <span class="o">*</span>  <span class="c1"># / Required ParaPy Modules</span>
+
+<span class="c1"># Other Modules</span>
+<span class="kn">from</span> <span class="nn">user</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">definitions</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">directories</span> <span class="k">import</span> <span class="o">*</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Battery&quot;</span><span class="p">,</span> <span class="s2">&quot;show_primitives&quot;</span><span class="p">]</span>
+
+
+<span class="c1"># A parameter for debugging, turns the visibility of miscellaneous parts ON/OFF</span>
+<span class="n">show_primitives</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># type: bool</span>
+
+
+<span class="c1"># TODO (TBD) Add power-draw requirement to the battery sizing</span>
+
+<div class="viewcode-block" id="Battery"><a class="viewcode-back" href="../../../components/battery.html#components.battery.Battery">[docs]</a><span class="k">class</span> <span class="nc">Battery</span><span class="p">(</span><span class="n">Component</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;  Battery.py is a file which automatically generates a battery part depending on parametric input of battery</span>
+<span class="sd">    weight, or battery capacity. Also maximum allowed width and height of the battery can parameterized to enable the</span>
+<span class="sd">    typical use-case of setting the width and height to be equal to that of the payload module to obtain a coherent</span>
+<span class="sd">    inner fuselage structure.</span>
+
+<span class="sd">    :return: ParaPy Geometry of the Battery(s)</span>
+
+<span class="sd">    :param sizing_target: Accepts either &#39;capacity&#39; or &#39;weight&#39; and sizes based on required capacity on the former</span>
+<span class="sd">    :type sizing_target: basestring</span>
+
+<span class="sd">    :param sizing_value: The sizing value corresponding to the current target</span>
+<span class="sd">    :type sizing_value: float</span>
+
+<span class="sd">    :param max_width: Sets the maximum allowed width of the battery in SI meter [m]</span>
+<span class="sd">    :type max_width: float</span>
+
+<span class="sd">    :param max_height: Sets the maximum allowed height of the battery in SI meter [m]</span>
+<span class="sd">    :type max_height: float</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">__initargs__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;sizing_target&quot;</span><span class="p">,</span> <span class="s2">&quot;sizing_value&quot;</span><span class="p">]</span>
+    <span class="n">__icon__</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;ICON_DIR&#39;</span><span class="p">],</span> <span class="s1">&#39;batteryIII.png&#39;</span><span class="p">)</span>
+
+    <span class="n">sizing_target</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;capacity&#39;</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">OneOf</span><span class="p">([</span><span class="s2">&quot;capacity&quot;</span><span class="p">,</span> <span class="s2">&quot;weight&quot;</span><span class="p">]))</span>
+    <span class="n">sizing_value</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">())</span>
+    <span class="n">max_width</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.15</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">())</span>
+    <span class="n">max_height</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">())</span>
+    <span class="n">label</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;LiPo Battery&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Battery.component_type"><a class="viewcode-back" href="../../../components/battery.html#components.battery.Battery.component_type">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">component_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This attribute names the component &#39;battery&#39; for Battery.</span>
+
+<span class="sd">        :return: Name of the Battery</span>
+<span class="sd">        :rtype: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s1">&#39;battery&#39;</span></div>
+
+<div class="viewcode-block" id="Battery.weight"><a class="viewcode-back" href="../../../components/battery.html#components.battery.Battery.weight">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">weight</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Total mass of the battery.</span>
+
+<span class="sd">        :return: Mass in SI kilogram</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_energy</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">constants</span><span class="p">[</span><span class="s1">&#39;energy_density&#39;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Battery.center_of_gravity"><a class="viewcode-back" href="../../../components/battery.html#components.battery.Battery.center_of_gravity">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">center_of_gravity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Location of the battery center of gravity w.r.t the origin.</span>
+
+<span class="sd">        :return: Location Tuple in SI meter</span>
+<span class="sd">        :rtype: Point</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">internal_shape</span><span class="o">.</span><span class="n">cog</span></div>
+
+<div class="viewcode-block" id="Battery.constants"><a class="viewcode-back" href="../../../components/battery.html#components.battery.Battery.constants">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">constants</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This attribute contains the battery constants.</span>
+
+<span class="sd">        :return: Dictionary With Battery Constants</span>
+<span class="sd">        :rtype: dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">mydict</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;energy_density&#39;</span><span class="p">:</span> <span class="mf">158.0</span><span class="p">,</span>            <span class="c1"># Wh/kg http://www.hardingenergy.com/lithium/</span>
+            <span class="s1">&#39;energy_volume&#39;</span><span class="p">:</span> <span class="mf">220.0</span> <span class="o">*</span> <span class="p">(</span><span class="mi">10</span><span class="o">**</span><span class="mi">3</span><span class="p">),</span>   <span class="c1"># Wh/m^3 http://www.hardingenergy.com/lithium/</span>
+            <span class="s1">&#39;minimum_volume&#39;</span><span class="p">:</span> <span class="mf">0.000015</span><span class="p">,</span>         <span class="c1"># m^3</span>
+            <span class="s1">&#39;power_density&#39;</span><span class="p">:</span> <span class="mi">430</span>                <span class="c1"># 430 W/kg http://www.hardingenergy.com/lithium/</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">mydict</span></div>
+
+<div class="viewcode-block" id="Battery.total_energy"><a class="viewcode-back" href="../../../components/battery.html#components.battery.Battery.total_energy">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">total_energy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This attribute calculates the required battery total energy.</span>
+
+<span class="sd">        :return: Battery Energy in Watt Hours</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sizing_target</span> <span class="o">==</span> <span class="s1">&#39;weight&#39;</span><span class="p">:</span>
+            <span class="n">e_bat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sizing_value</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">constants</span><span class="p">[</span><span class="s1">&#39;energy_density&#39;</span><span class="p">]</span>
+            <span class="c1"># Code to put a minimum weight to not break the code with div by zero</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sizing_value</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">minimum_weight</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ZeroDivisionError</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> [kg] results in a battery size that is too small to manufacture,&#39;</span>
+                                        <span class="s1">&#39; please change it to at least </span><span class="si">%s</span><span class="s1"> [kg]&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sizing_value</span><span class="p">,</span>
+                                                                                   <span class="bp">self</span><span class="o">.</span><span class="n">minimum_weight</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">e_bat</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">sizing_target</span> <span class="o">==</span> <span class="s1">&#39;capacity&#39;</span><span class="p">:</span>
+            <span class="c1"># Code to put a minimum size of capacity to not break the code with div by zero</span>
+            <span class="n">e_bat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sizing_value</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sizing_value</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">minimum_capacity</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ZeroDivisionError</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> [Wh] results in a battery size that is too small to manufacture,&#39;</span>
+                                        <span class="s1">&#39; please change it to at least </span><span class="si">%s</span><span class="s1"> [Wh]&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sizing_value</span><span class="p">,</span>
+                                                                                   <span class="bp">self</span><span class="o">.</span><span class="n">minimum_capacity</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">e_bat</span></div>
+
+<div class="viewcode-block" id="Battery.volume"><a class="viewcode-back" href="../../../components/battery.html#components.battery.Battery.volume">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">volume</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This attribute calculates the Battery Volume.</span>
+
+<span class="sd">        :return: Battery Volume</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">total_energy</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">constants</span><span class="p">[</span><span class="s1">&#39;energy_volume&#39;</span><span class="p">]</span></div>
+
+    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">width</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_width</span>
+
+    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">length</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">volume</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">battery_profile</span><span class="o">.</span><span class="n">area</span>
+        <span class="k">return</span> <span class="n">length</span>
+
+    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">height</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_height</span>
+
+    <span class="nd">@Attribute</span><span class="p">(</span><span class="n">private</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">minimum_capacity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">constants</span><span class="p">[</span><span class="s1">&#39;minimum_volume&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">constants</span><span class="p">[</span><span class="s1">&#39;energy_volume&#39;</span><span class="p">]</span>
+
+    <span class="nd">@Attribute</span><span class="p">(</span><span class="n">private</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">minimum_weight</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">minimum_capacity</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">constants</span><span class="p">[</span><span class="s1">&#39;energy_density&#39;</span><span class="p">]</span>
+
+<div class="viewcode-block" id="Battery.radius"><a class="viewcode-back" href="../../../components/battery.html#components.battery.Battery.radius">[docs]</a>    <span class="nd">@Attribute</span><span class="p">(</span><span class="n">private</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">radius</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Defines the radius in a way that prevents the battery_profile from self-destructing.</span>
+
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">min_dimension</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">min_dimension</span> <span class="o">/</span> <span class="mf">2.0</span></div>
+
+    <span class="c1"># --- Output Solid: -----------------------------------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="Battery.internal_shape"><a class="viewcode-back" href="../../../components/battery.html#components.battery.Battery.internal_shape">[docs]</a>    <span class="nd">@Part</span>
+    <span class="k">def</span> <span class="nf">internal_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">TranslatedShape</span><span class="p">(</span><span class="n">shape_in</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">battery_import</span><span class="p">,</span> <span class="n">displacement</span><span class="o">=</span><span class="n">Vector</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">x</span><span class="p">,</span>
+                                                                                 <span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">y</span><span class="p">,</span>
+                                                                                 <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">z</span><span class="p">),</span>
+                               <span class="n">color</span><span class="o">=</span><span class="n">MyColors</span><span class="o">.</span><span class="n">battery</span><span class="p">,</span>
+                               <span class="n">transparency</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span></div>
+
+    <span class="c1"># --- Primitives: -------------------------------------------------------------------------------------------------</span>
+
+    <span class="nd">@Part</span><span class="p">(</span><span class="n">in_tree</span><span class="o">=</span><span class="n">show_primitives</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">rectangle</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">RectangularFace</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_width</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_height</span><span class="p">,</span>
+                               <span class="n">position</span><span class="o">=</span><span class="n">YOZ</span><span class="p">)</span>
+
+    <span class="nd">@Part</span><span class="p">(</span><span class="n">in_tree</span><span class="o">=</span><span class="n">show_primitives</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">battery_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">FilletedFace</span><span class="p">(</span><span class="n">built_from</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rectangle</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">radius</span><span class="p">)</span>
+
+    <span class="nd">@Part</span><span class="p">(</span><span class="n">in_tree</span><span class="o">=</span><span class="n">show_primitives</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">battery_import</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">ExtrudedSolid</span><span class="p">(</span><span class="n">face_in</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">battery_profile</span><span class="p">,</span> <span class="n">distance</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">)</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">parapy.gui</span> <span class="k">import</span> <span class="n">display</span>
+
+    <span class="n">obj</span> <span class="o">=</span> <span class="n">Battery</span><span class="p">()</span>
+    <span class="n">display</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">background_image</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, San Kilkis, Nelson Johnson.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'1.0',
+            LANGUAGE:'en',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

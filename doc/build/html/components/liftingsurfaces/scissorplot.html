@@ -1,0 +1,617 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>ScissorPlot &mdash; KBE 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="HorizontalStabilizer" href="horizontalstab.html" />
+    <link rel="prev" title="Wing" href="wing.html" /> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> KBE
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../main.html">Main UAV</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../definitions.html">Definitions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../directories.html">Directories</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Components Module</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../battery.html">Li-PO Battery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../electronics/index.html">Electronics Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../electronics/electronics.html">Electronics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../electronics/flightcontroller.html">FlightController</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../electronics/speedcontroller.html">SpeedController</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">LiftingSurface Module</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="liftingsurfaceprim.html">LiftingSurface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="wing.html">Wing</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">ScissorPlot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="horizontalstab.html">HorizontalStabilizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="verticalstab.html">VerticalStablilizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="compoundstab.html">CompoundStabilizer</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../fuselage/index.html">Fuselage Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../fuselage/fframe.html">Fuselage Frame (FFrame)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../fuselage/fcone.html">Fuselage Nose/Tail Cone (FCone)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../fuselage/mframe.html">Motor Frame (MFrame)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../fuselage/fuselage.html">Automatic Fuselage Generator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../fuselage/boom.html">Boom</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../motor.html">Electric Motor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../propeller/index.html">Propeller Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../propeller/propparser.html">Propeller Parser</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../propeller/propeller.html">Propeller</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../eoir.html">Electro-Optical Infra-Red Camera</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../design/index.html">Design Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../design/designinput.html">Design Input</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../design/paramgen.html">Parameter Generator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../design/weightestimator.html">Class I and II Weight Estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../design/wingpowerloading.html">Thrust and Power Loading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../design/performance.html">Performance Verification</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../mycsv2dict.html">My CSV Dictionary</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">KBE</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Components Module</a> &raquo;</li>
+        
+          <li><a href="index.html">LiftingSurface Module</a> &raquo;</li>
+        
+      <li>ScissorPlot</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/components/liftingsurfaces/scissorplot.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-components.liftingsurfaces.scissorplot">
+<span id="scissorplot"></span><h1>ScissorPlot<a class="headerlink" href="#module-components.liftingsurfaces.scissorplot" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="components.liftingsurfaces.scissorplot.ScissorPlot">
+<em class="property">class </em><code class="descclassname">components.liftingsurfaces.scissorplot.</code><code class="descname">ScissorPlot</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/components/liftingsurfaces/scissorplot.html#ScissorPlot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.liftingsurfaces.scissorplot.ScissorPlot" title="Permalink to this definition">¶</a></dt>
+<dd><p>This script will generate a scissor plot to size the horizontal tail (HT). The required inputs are: the CG
+position, aerodynamic center position, the tail arm, the HT aspect ratio, HT span efficiency,
+the tail to main wing speed ratio, the wing pitching moment about the aerodynamic center, the wing lift slope,
+the c_l for controllability (derived in wing), and the allowable shift in center of gravity.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Required Tail Surface Area and Scissor Plot</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>x_cg</strong> (<em>float</em>) – The CG positon in SI meters.</li>
+<li><strong>x_ac</strong> (<em>float</em>) – The aerodynamic center positon in SI meters.</li>
+<li><strong>x_lemac</strong> (<em>float</em>) – The distance to the leading edge of the Mean Aerodynamic center in SI meters.</li>
+<li><strong>mac</strong> (<em>float</em>) – This is the MAC length.</li>
+<li><strong>AR</strong> (<em>float</em>) – This is the aspect ratio of the aircraft.</li>
+<li><strong>e</strong> (<em>float</em>) – This is the oswald efficiency factor of the aircraft.</li>
+<li><strong>CD0</strong> (<em>float</em>) – This is the zero-lift drag coefficient of the aircraft.</li>
+<li><strong>k_factor</strong> (<em>float</em>) – This is the k factor to correct the canard main wing’s C_L alpha due to canard downwash.</li>
+<li><strong>SM</strong> (<em>float</em>) – This is the required stability margin.</li>
+<li><strong>AR_h</strong> (<em>float</em>) – This is the assumed aspect ratio of the horizontal tail.</li>
+<li><strong>e_h</strong> (<em>float</em>) – This is the oswald efficiency factor of the HT.</li>
+<li><strong>VhV_conv</strong> (<em>float</em>) – This is the speed ratio for a conventional tail aircraft.</li>
+<li><strong>VhV_canard</strong> (<em>float</em>) – This is the speed ratio for a canard aircraft.</li>
+<li><strong>a_0</strong> (<em>float</em>) – This is the lift slope for a thin airfoil.</li>
+<li><strong>Cl_w</strong> (<em>float</em>) – This is the controllability lift coefficient of the wing at 1.2*V_s imported from wing.</li>
+<li><strong>C_mac</strong> (<em>float</em>) – This is the pitching moment about the aerodynamic center of the wing. This is calculated with     AVL in ‘wing.py’</li>
+<li><strong>Cla_w</strong> (<em>float</em>) – This is the lift curve slope of the wing. This is calculated with AVL in ‘wing.py’.</li>
+<li><strong>delta_xcg</strong> (<em>float</em>) – This is the assumed change in the cg location.</li>
+<li><strong>configuration</strong> (<em>str</em>) – This is a switch to determine the configuration.</li>
+<li><strong>lhc</strong> (<em>float</em>) – Derived input of the non-dimensionalized tail arm based on configuration choice</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="components.liftingsurfaces.scissorplot.ScissorPlot.AR">
+<code class="descname">AR</code><a class="headerlink" href="#components.liftingsurfaces.scissorplot.ScissorPlot.AR" title="Permalink to this definition">¶</a></dt>
+<dd><p>Below is the wing aspect ratio.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.scissorplot.ScissorPlot.AR_h">
+<code class="descname">AR_h</code><a class="reference internal" href="../../_modules/components/liftingsurfaces/scissorplot.html#ScissorPlot.AR_h"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.liftingsurfaces.scissorplot.ScissorPlot.AR_h" title="Permalink to this definition">¶</a></dt>
+<dd><p>Utilizes a relation based on reference pictures to obtain a ratio of the tail aspect ratio as a function of
+the main-wing</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.scissorplot.ScissorPlot.CD0">
+<code class="descname">CD0</code><a class="headerlink" href="#components.liftingsurfaces.scissorplot.ScissorPlot.CD0" title="Permalink to this definition">¶</a></dt>
+<dd><p>Below is the assumed zero lift drag coefficient</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.scissorplot.ScissorPlot.C_mac">
+<code class="descname">C_mac</code><a class="headerlink" href="#components.liftingsurfaces.scissorplot.ScissorPlot.C_mac" title="Permalink to this definition">¶</a></dt>
+<dd><p>Below is the pitching moment about the aerodynamic center of the wing. This is calculated with AVL in ‘wing.py’.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.scissorplot.ScissorPlot.Cl_w">
+<code class="descname">Cl_w</code><a class="headerlink" href="#components.liftingsurfaces.scissorplot.ScissorPlot.Cl_w" title="Permalink to this definition">¶</a></dt>
+<dd><p>Below is the controllability lift coefficient of the wing at 1.2*V_s imported from wing.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.scissorplot.ScissorPlot.Cla_w">
+<code class="descname">Cla_w</code><a class="headerlink" href="#components.liftingsurfaces.scissorplot.ScissorPlot.Cla_w" title="Permalink to this definition">¶</a></dt>
+<dd><p>Below is the lift curve slope of the wing. This is calculated with AVL in ‘wing.py’.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.scissorplot.ScissorPlot.SM">
+<code class="descname">SM</code><a class="headerlink" href="#components.liftingsurfaces.scissorplot.ScissorPlot.SM" title="Permalink to this definition">¶</a></dt>
+<dd><p>Below is the assumed Stability Margin.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.scissorplot.ScissorPlot.VhV_canard">
+<code class="descname">VhV_canard</code><em class="property"> = 1.0</em><a class="headerlink" href="#components.liftingsurfaces.scissorplot.ScissorPlot.VhV_canard" title="Permalink to this definition">¶</a></dt>
+<dd><p>Below is the speed ratio for a canard aircraft.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.scissorplot.ScissorPlot.VhV_conv">
+<code class="descname">VhV_conv</code><em class="property"> = 0.9219544457292888</em><a class="headerlink" href="#components.liftingsurfaces.scissorplot.ScissorPlot.VhV_conv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Below is the speed ratio for a conventional tail aircraft.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.scissorplot.ScissorPlot.a_0">
+<code class="descname">a_0</code><em class="property"> = 6.283185307179586</em><a class="headerlink" href="#components.liftingsurfaces.scissorplot.ScissorPlot.a_0" title="Permalink to this definition">¶</a></dt>
+<dd><p>Below is the lift slope for a thin airfoil.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.scissorplot.ScissorPlot.cl_h">
+<code class="descname">cl_h</code><a class="reference internal" href="../../_modules/components/liftingsurfaces/scissorplot.html#ScissorPlot.cl_h"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.liftingsurfaces.scissorplot.ScissorPlot.cl_h" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute returns the lift coefficient of the tail for the controllability case. The
+canard is assumed to be all moving.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">HT lift coefficient</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.scissorplot.ScissorPlot.cla_h">
+<code class="descname">cla_h</code><a class="reference internal" href="../../_modules/components/liftingsurfaces/scissorplot.html#ScissorPlot.cla_h"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.liftingsurfaces.scissorplot.ScissorPlot.cla_h" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute estimates the lift slope of a low sweep, low speed three dimensional wing.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">HT lift curve slope</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.scissorplot.ScissorPlot.cla_w_canard">
+<code class="descname">cla_w_canard</code><a class="reference internal" href="../../_modules/components/liftingsurfaces/scissorplot.html#ScissorPlot.cla_w_canard"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.liftingsurfaces.scissorplot.ScissorPlot.cla_w_canard" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute reduces the wing lift slope for the canard case. It is reducing the C_l alpha from AVL.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Canard main wing lift slope</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.scissorplot.ScissorPlot.configuration">
+<code class="descname">configuration</code><a class="headerlink" href="#components.liftingsurfaces.scissorplot.ScissorPlot.configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Below is a switch to determine the configuration.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.scissorplot.ScissorPlot.delta_xcg">
+<code class="descname">delta_xcg</code><a class="headerlink" href="#components.liftingsurfaces.scissorplot.ScissorPlot.delta_xcg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Below is the assumed change in the cg location.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.scissorplot.ScissorPlot.downwash_a">
+<code class="descname">downwash_a</code><a class="reference internal" href="../../_modules/components/liftingsurfaces/scissorplot.html#ScissorPlot.downwash_a"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.liftingsurfaces.scissorplot.ScissorPlot.downwash_a" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute estimates the wings change in downwash with angle of attack.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Downwash gradient of main wing</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.scissorplot.ScissorPlot.e">
+<code class="descname">e</code><a class="headerlink" href="#components.liftingsurfaces.scissorplot.ScissorPlot.e" title="Permalink to this definition">¶</a></dt>
+<dd><p>Below is the wing span efficiency factor</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.scissorplot.ScissorPlot.k_factor">
+<code class="descname">k_factor</code><a class="headerlink" href="#components.liftingsurfaces.scissorplot.ScissorPlot.k_factor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Below is the k factor to correct the canard main wing C_Lalpha due to canard downwash.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.scissorplot.ScissorPlot.lhc">
+<code class="descname">lhc</code><a class="reference internal" href="../../_modules/components/liftingsurfaces/scissorplot.html#ScissorPlot.lhc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.liftingsurfaces.scissorplot.ScissorPlot.lhc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Derived input of the non-dimensionalized tail arm based on configuration choice</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Non-dimensional tail arm</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.scissorplot.ScissorPlot.mac">
+<code class="descname">mac</code><a class="headerlink" href="#components.liftingsurfaces.scissorplot.ScissorPlot.mac" title="Permalink to this definition">¶</a></dt>
+<dd><p>Below is the MAC length</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.scissorplot.ScissorPlot.plot_scissordiagram">
+<code class="descname">plot_scissordiagram</code><a class="reference internal" href="../../_modules/components/liftingsurfaces/scissorplot.html#ScissorPlot.plot_scissordiagram"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.liftingsurfaces.scissorplot.ScissorPlot.plot_scissordiagram" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute will plot the scissor plot.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Scissor Plot</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">Plot</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.scissorplot.ScissorPlot.shs_control">
+<code class="descname">shs_control</code><a class="reference internal" href="../../_modules/components/liftingsurfaces/scissorplot.html#ScissorPlot.shs_control"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.liftingsurfaces.scissorplot.ScissorPlot.shs_control" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute calculates the required Sh/S for the controllability requirement as a function of CG
+position.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Required Sh/S for controllability</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.scissorplot.ScissorPlot.shs_req">
+<code class="descname">shs_req</code><a class="reference internal" href="../../_modules/components/liftingsurfaces/scissorplot.html#ScissorPlot.shs_req"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.liftingsurfaces.scissorplot.ScissorPlot.shs_req" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute will fit a linear spline to the controllability and stability curves to be able to address
+any value of Sh/S if probelems occur with the attribute ‘shs_sm’.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Required Sh/S</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.scissorplot.ScissorPlot.shs_sm">
+<code class="descname">shs_sm</code><a class="reference internal" href="../../_modules/components/liftingsurfaces/scissorplot.html#ScissorPlot.shs_sm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.liftingsurfaces.scissorplot.ScissorPlot.shs_sm" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute will calculate the required Sh/S based on the required cg shift.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Required Sh/S</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.scissorplot.ScissorPlot.shs_stability">
+<code class="descname">shs_stability</code><a class="reference internal" href="../../_modules/components/liftingsurfaces/scissorplot.html#ScissorPlot.shs_stability"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.liftingsurfaces.scissorplot.ScissorPlot.shs_stability" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute calculates the required Sh/S for the stability requirement as a function of CG position.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Required Sh/S for stability</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.scissorplot.ScissorPlot.x_ac">
+<code class="descname">x_ac</code><a class="headerlink" href="#components.liftingsurfaces.scissorplot.ScissorPlot.x_ac" title="Permalink to this definition">¶</a></dt>
+<dd><p>Below is the current Aerodynamic Center position</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.scissorplot.ScissorPlot.x_cg">
+<code class="descname">x_cg</code><a class="headerlink" href="#components.liftingsurfaces.scissorplot.ScissorPlot.x_cg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Below is the current COG position</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.scissorplot.ScissorPlot.x_cg_vs_mac">
+<code class="descname">x_cg_vs_mac</code><a class="reference internal" href="../../_modules/components/liftingsurfaces/scissorplot.html#ScissorPlot.x_cg_vs_mac"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.liftingsurfaces.scissorplot.ScissorPlot.x_cg_vs_mac" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute returns the non dimensional distance between the COG and the wing AC.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The distance between the COG and the wing AC in meters</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.scissorplot.ScissorPlot.x_lemac">
+<code class="descname">x_lemac</code><a class="headerlink" href="#components.liftingsurfaces.scissorplot.ScissorPlot.x_lemac" title="Permalink to this definition">¶</a></dt>
+<dd><p>Below is the current leading edge of the MAC position</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.scissorplot.ScissorPlot.xcg_range">
+<code class="descname">xcg_range</code><a class="reference internal" href="../../_modules/components/liftingsurfaces/scissorplot.html#ScissorPlot.xcg_range"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.liftingsurfaces.scissorplot.ScissorPlot.xcg_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute is a dummy list of x_cg used for plotting Sh/S.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">List of values of X_cg</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="horizontalstab.html" class="btn btn-neutral float-right" title="HorizontalStabilizer" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="wing.html" class="btn btn-neutral" title="Wing" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, San Kilkis, Nelson Johnson.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'1.0',
+            LANGUAGE:'en',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

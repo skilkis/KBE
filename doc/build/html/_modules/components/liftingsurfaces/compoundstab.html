@@ -1,0 +1,543 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>components.liftingsurfaces.compoundstab &mdash; KBE 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> KBE
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../main.html">Main UAV</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../definitions.html">Definitions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../directories.html">Directories</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/index.html">Components Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/battery.html">Li-PO Battery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/electronics/index.html">Electronics Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/electronics/electronics.html">Electronics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/electronics/flightcontroller.html">FlightController</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/electronics/speedcontroller.html">SpeedController</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/liftingsurfaces/index.html">LiftingSurface Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/liftingsurfaceprim.html">LiftingSurface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/wing.html">Wing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/scissorplot.html">ScissorPlot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/horizontalstab.html">HorizontalStabilizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/verticalstab.html">VerticalStablilizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/compoundstab.html">CompoundStabilizer</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/fuselage/index.html">Fuselage Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/fuselage/fframe.html">Fuselage Frame (FFrame)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/fuselage/fcone.html">Fuselage Nose/Tail Cone (FCone)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/fuselage/mframe.html">Motor Frame (MFrame)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/fuselage/fuselage.html">Automatic Fuselage Generator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/fuselage/boom.html">Boom</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/motor.html">Electric Motor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/propeller/index.html">Propeller Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/propeller/propparser.html">Propeller Parser</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/propeller/propeller.html">Propeller</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/eoir.html">Electro-Optical Infra-Red Camera</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../design/index.html">Design Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../design/designinput.html">Design Input</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../design/paramgen.html">Parameter Generator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../design/weightestimator.html">Class I and II Weight Estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../design/wingpowerloading.html">Thrust and Power Loading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../design/performance.html">Performance Verification</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../mycsv2dict.html">My CSV Dictionary</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">KBE</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>components.liftingsurfaces.compoundstab</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for components.liftingsurfaces.compoundstab</h1><div class="highlight"><pre>
+<span></span>
+<span class="c1">#  Required Modules</span>
+<span class="kn">from</span> <span class="nn">parapy.core</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">parapy.geom</span> <span class="k">import</span> <span class="o">*</span>
+
+<span class="kn">from</span> <span class="nn">components.liftingsurfaces</span> <span class="k">import</span> <span class="n">VerticalStabilizer</span><span class="p">,</span> <span class="n">HorizontalStabilizer</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="n">radians</span>
+<span class="kn">from</span> <span class="nn">user</span> <span class="k">import</span> <span class="n">MyColors</span>
+<span class="kn">from</span> <span class="nn">definitions</span> <span class="k">import</span> <span class="n">ExternalBody</span>
+<span class="kn">from</span> <span class="nn">directories</span> <span class="k">import</span> <span class="o">*</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Nelson Johnson&quot;</span><span class="p">,</span> <span class="s2">&quot;San Kilkis&quot;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;CompoundStabilizer&quot;</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="CompoundStabilizer"><a class="viewcode-back" href="../../../components/liftingsurfaces/compoundstab.html#components.liftingsurfaces.compoundstab.CompoundStabilizer">[docs]</a><span class="k">class</span> <span class="nc">CompoundStabilizer</span><span class="p">(</span><span class="n">ExternalBody</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; This class will instantiate the horizontal tail with the required area form the scissor plot. Also it will</span>
+<span class="sd">    instantiate the vertical tails and position them relative to one another in a &#39;boom tail&#39; conifguration.  It also</span>
+<span class="sd">    places a connector at the VT and HT intersection for the fuselage booms.</span>
+
+<span class="sd">    :returns: ParaPy Geometry of the VT</span>
+
+<span class="sd">    :param required_planform_area: This is the required horizontal tail area of the main wings from the stability \</span>
+<span class="sd">    analysis.</span>
+<span class="sd">    :type required_planform_area: float</span>
+
+<span class="sd">    :param wing_planform_area: This is the wing planfrom area in [m^2]</span>
+<span class="sd">    :type wing_planform_area: float</span>
+
+<span class="sd">    :param wing_mac_length: This is the MAC length of the wing in SI meters</span>
+<span class="sd">    :type wing_mac_length: float</span>
+
+<span class="sd">    :param wing_semi_span: This is the semispan of the wing in SI meters</span>
+<span class="sd">    :type wing_semi_span: float</span>
+
+<span class="sd">    :param lhc: This is non-dimensionalized horizontal tail arm for the conventional plane.</span>
+<span class="sd">    :type lhc: float</span>
+
+<span class="sd">    :param configuration: This is a switch to determine the configuration.</span>
+<span class="sd">    :type configuration: str</span>
+
+<span class="sd">    :param aspect_ratio: This is the assumed Aspect Ratio of the HT Surface. The VT surface is a fixed AR of 1.4</span>
+<span class="sd">    :type aspect_ratio: float</span>
+
+<span class="sd">    :param taper: This is the required Taper Ratio of the VT Surface.</span>
+<span class="sd">    :type taper: float</span>
+
+<span class="sd">    :param twist: This is the required Twist Angle of the Tip Airfoil w.r.t the Root Airfoil in degrees.</span>
+<span class="sd">    :type twist: float</span>
+
+<span class="sd">    :param color: Changes the color of the wing skin to the one defined in MyColors</span>
+<span class="sd">    :type color: tuple</span>
+
+<span class="sd">    :param ply_number: Changes the number of ply&#39;s of carbon fiber pre-preg.</span>
+<span class="sd">    :type ply_number: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">__icon__</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;ICON_DIR&#39;</span><span class="p">],</span> <span class="s1">&#39;ctail.png&#39;</span><span class="p">)</span>
+
+    <span class="c1">#: Below is the required horizontal tail area of the main wings from the stability analysis.</span>
+    <span class="n">required_planform_area</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">settable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="c1">#: Below is the required TOTAL wing area of the main wings.</span>
+    <span class="n">wing_planform_area</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">settable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="c1">#: Below is the MAC length of the wing</span>
+    <span class="n">wing_mac_length</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.43</span><span class="p">,</span> <span class="n">settable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="c1">#: Below is the semispan of the wing</span>
+    <span class="n">wing_semi_span</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">1.9</span><span class="p">,</span> <span class="n">settable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="c1">#: Below is the non-dimensionalized horizontal tail arm</span>
+    <span class="n">lhc</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">3.0</span><span class="p">,</span> <span class="n">settable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="c1">#: Below is a switch to determine the configuration.</span>
+    <span class="n">configuration</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;conventional&#39;</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">OneOf</span><span class="p">([</span><span class="s1">&#39;conventional&#39;</span><span class="p">]),</span> <span class="n">settable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="c1">#: Below is the assumed HT aspect ratio.</span>
+    <span class="n">aspect_ratio</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">5.0</span><span class="p">,</span> <span class="n">settable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="c1">#: Below is the assumed VT taper ratio.</span>
+    <span class="n">taper</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.35</span><span class="p">,</span> <span class="n">settable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="c1">#:  This is the wing twist for the VT.</span>
+    <span class="n">twist</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">settable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="c1">#: This value is used to set the default color of the wing-part</span>
+    <span class="n">color</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">MyColors</span><span class="o">.</span><span class="n">skin_color</span><span class="p">)</span>
+
+    <span class="c1">#: Changes the number of ply&#39;s of carbon fiber http://www.ijera.com/papers/Vol4_issue5/Version%202/J45025355.pdf</span>
+    <span class="n">ply_number</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
+
+<div class="viewcode-block" id="CompoundStabilizer.stabilizer_h"><a class="viewcode-back" href="../../../components/liftingsurfaces/compoundstab.html#components.liftingsurfaces.compoundstab.CompoundStabilizer.stabilizer_h">[docs]</a>    <span class="nd">@Part</span>
+    <span class="k">def</span> <span class="nf">stabilizer_h</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This is an instantiation of the :class:`HorizontalStabilizer` class with the required planform area from the</span>
+<span class="sd">        scissor plot.</span>
+
+<span class="sd">        :return: Horizontal Tail Object</span>
+<span class="sd">        :rtype: Fused</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">HorizontalStabilizer</span><span class="p">(</span><span class="n">position</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">,</span>
+                                    <span class="n">planform_area</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">required_planform_area</span><span class="p">,</span>
+                                    <span class="n">aspect_ratio</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">aspect_ratio</span><span class="p">,</span>
+                                    <span class="n">ply_number</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ply_number</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CompoundStabilizer.stabilizer_vright"><a class="viewcode-back" href="../../../components/liftingsurfaces/compoundstab.html#components.liftingsurfaces.compoundstab.CompoundStabilizer.stabilizer_vright">[docs]</a>    <span class="nd">@Part</span>
+    <span class="k">def</span> <span class="nf">stabilizer_vright</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This is an instantiation of the :class:`VerticalStabilizer` class with the current aircraft dimensions for</span>
+<span class="sd">        the right VT.</span>
+
+<span class="sd">        :return: Right Vertical Tail Object</span>
+<span class="sd">        :rtype: Fused</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">VerticalStabilizer</span><span class="p">(</span><span class="n">position</span><span class="o">=</span><span class="n">translate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">,</span>
+                                                     <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stabilizer_h</span><span class="o">.</span><span class="n">semi_span</span><span class="p">,</span>
+                                                     <span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stabilizer_h</span><span class="o">.</span><span class="n">solid</span><span class="o">.</span><span class="n">faces</span><span class="p">,</span>
+                                                                 <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="n">cog</span><span class="o">.</span><span class="n">y</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">cog</span><span class="o">.</span><span class="n">z</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">z</span><span class="p">),</span>
+                                  <span class="n">wing_planform_area</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">wing_planform_area</span><span class="p">,</span>
+                                  <span class="n">wing_mac_length</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">wing_mac_length</span><span class="p">,</span>
+                                  <span class="n">wing_semi_span</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">wing_semi_span</span><span class="p">,</span>
+                                  <span class="n">lvc</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">lhc</span><span class="p">,</span>
+                                  <span class="n">lvc_canard</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+                                  <span class="n">configuration</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">configuration</span><span class="p">,</span>
+                                  <span class="n">aspect_ratio</span><span class="o">=</span><span class="mf">1.4</span><span class="p">,</span>
+                                  <span class="n">taper</span><span class="o">=</span><span class="mf">0.35</span><span class="p">,</span>
+                                  <span class="n">twist</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CompoundStabilizer.stabilizer_vleft"><a class="viewcode-back" href="../../../components/liftingsurfaces/compoundstab.html#components.liftingsurfaces.compoundstab.CompoundStabilizer.stabilizer_vleft">[docs]</a>    <span class="nd">@Part</span>
+    <span class="k">def</span> <span class="nf">stabilizer_vleft</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This is an instantiation of the :class:`VerticalStabilizer` with the current aircraft dimensions for the \</span>
+<span class="sd">        left VT.</span>
+
+<span class="sd">        :return: Left Vertical Tail Object</span>
+<span class="sd">        :rtype: VerticalStabilizer</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">VerticalStabilizer</span><span class="p">(</span><span class="n">position</span><span class="o">=</span><span class="n">translate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">,</span>
+                                                     <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">stabilizer_h</span><span class="o">.</span><span class="n">semi_span</span><span class="p">,</span>
+                                                     <span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stabilizer_h</span><span class="o">.</span><span class="n">solid</span><span class="o">.</span><span class="n">faces</span><span class="p">,</span>
+                                                                 <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="n">cog</span><span class="o">.</span><span class="n">y</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">cog</span><span class="o">.</span><span class="n">z</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">z</span><span class="p">),</span>
+                                  <span class="n">wing_planform_area</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">wing_planform_area</span><span class="p">,</span>
+                                  <span class="n">wing_mac_length</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">wing_mac_length</span><span class="p">,</span>
+                                  <span class="n">wing_semi_span</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">wing_semi_span</span><span class="p">,</span>
+                                  <span class="n">lvc</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">lhc</span><span class="p">,</span>
+                                  <span class="n">lvc_canard</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">lhc</span><span class="p">,</span>
+                                  <span class="n">configuration</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">configuration</span><span class="p">,</span>
+                                  <span class="n">aspect_ratio</span><span class="o">=</span><span class="mf">1.4</span><span class="p">,</span>
+                                  <span class="n">taper</span><span class="o">=</span><span class="mf">0.35</span><span class="p">,</span>
+                                  <span class="n">twist</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CompoundStabilizer.weight"><a class="viewcode-back" href="../../../components/liftingsurfaces/compoundstab.html#components.liftingsurfaces.compoundstab.CompoundStabilizer.weight">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">weight</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Total mass of the compound tail.</span>
+
+<span class="sd">        :return: Mass in SI kilogram</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">stabilizer_h</span><span class="o">.</span><span class="n">weight</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">stabilizer_vright</span><span class="o">.</span><span class="n">weight</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">stabilizer_vleft</span><span class="o">.</span><span class="n">weight</span></div>
+
+<div class="viewcode-block" id="CompoundStabilizer.center_of_gravity"><a class="viewcode-back" href="../../../components/liftingsurfaces/compoundstab.html#components.liftingsurfaces.compoundstab.CompoundStabilizer.center_of_gravity">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">center_of_gravity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Location of the center of gravity of the compound stabilizer w.r.t the origin. This is calculated with</span>
+<span class="sd">        weighted averages.</span>
+
+<span class="sd">        :return: Location Tuple in SI meter</span>
+<span class="sd">        :rtype: Point</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">weights</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">stabilizer_h</span><span class="o">.</span><span class="n">weight</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stabilizer_vright</span><span class="o">.</span><span class="n">weight</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stabilizer_vleft</span><span class="o">.</span><span class="n">weight</span><span class="p">]</span>
+        <span class="n">cgs</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">stabilizer_h</span><span class="o">.</span><span class="n">center_of_gravity</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stabilizer_vright</span><span class="o">.</span><span class="n">center_of_gravity</span><span class="p">,</span>
+               <span class="bp">self</span><span class="o">.</span><span class="n">stabilizer_vleft</span><span class="o">.</span><span class="n">center_of_gravity</span><span class="p">]</span>
+        <span class="n">total_weight</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
+        <span class="n">cg_x</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">cgs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">x</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">weights</span><span class="p">))])</span> <span class="o">/</span> <span class="n">total_weight</span>
+        <span class="n">cg_y</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">cgs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">y</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">weights</span><span class="p">))])</span> <span class="o">/</span> <span class="n">total_weight</span>
+        <span class="n">cg_z</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">([</span><span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">cgs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">z</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">weights</span><span class="p">))])</span> <span class="o">/</span> <span class="n">total_weight</span>
+
+        <span class="k">return</span> <span class="n">Point</span><span class="p">(</span><span class="n">cg_x</span><span class="p">,</span> <span class="n">cg_y</span><span class="p">,</span> <span class="n">cg_z</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CompoundStabilizer.tail_joiner"><a class="viewcode-back" href="../../../components/liftingsurfaces/compoundstab.html#components.liftingsurfaces.compoundstab.CompoundStabilizer.tail_joiner">[docs]</a>    <span class="nd">@Attribute</span><span class="p">(</span><span class="n">private</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">tail_joiner</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This joins the tails and connector shafts together through a series of Fuse operations to be able to</span>
+<span class="sd">        present a single `external_shape` required for the .step file output.</span>
+
+<span class="sd">        :return: ParaPy Fused Boxes</span>
+<span class="sd">        :rtype: Fused</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Fusing Right Horizontal Tail:</span>
+        <span class="n">shape_in_r</span> <span class="o">=</span> <span class="n">Fused</span><span class="p">(</span><span class="n">shape_in</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stabilizer_h</span><span class="o">.</span><span class="n">solid</span><span class="p">,</span> <span class="n">tool</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stabilizer_vright</span><span class="o">.</span><span class="n">solid</span><span class="p">)</span>
+        <span class="n">shape_out_r</span> <span class="o">=</span> <span class="n">Fused</span><span class="p">(</span><span class="n">shape_in</span><span class="o">=</span><span class="n">shape_in_r</span><span class="p">,</span> <span class="n">tool</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">connector_right</span><span class="p">)</span>
+
+        <span class="c1"># Fusing Left Horizontal Tail:</span>
+        <span class="n">shape_in_l</span> <span class="o">=</span> <span class="n">Fused</span><span class="p">(</span><span class="n">shape_in</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stabilizer_h</span><span class="o">.</span><span class="n">ht_mirror</span><span class="p">,</span> <span class="n">tool</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stabilizer_vleft</span><span class="o">.</span><span class="n">solid</span><span class="p">)</span>
+        <span class="n">shape_out_l</span> <span class="o">=</span> <span class="n">Fused</span><span class="p">(</span><span class="n">shape_in</span><span class="o">=</span><span class="n">shape_in_l</span><span class="p">,</span> <span class="n">tool</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">connector_left</span><span class="p">)</span>
+
+        <span class="n">shape_out</span> <span class="o">=</span> <span class="n">Fused</span><span class="p">(</span><span class="n">shape_in</span><span class="o">=</span><span class="n">shape_out_r</span><span class="p">,</span> <span class="n">tool</span><span class="o">=</span><span class="n">shape_out_l</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">shape_out</span></div>
+
+<div class="viewcode-block" id="CompoundStabilizer.critical_thickness"><a class="viewcode-back" href="../../../components/liftingsurfaces/compoundstab.html#components.liftingsurfaces.compoundstab.CompoundStabilizer.critical_thickness">[docs]</a>    <span class="nd">@Attribute</span><span class="p">(</span><span class="n">private</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">critical_thickness</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This attribute finds the larger airfoil thickness of the HT or VT stabilizers to then be able to</span>
+<span class="sd">        construct the tail-boom shaft with a radius equal to this larger thickness.</span>
+
+<span class="sd">        :return: The larger airfoil thickness of the HT or VT</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">horizontal_tail_thickness</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stabilizer_h</span><span class="o">.</span><span class="n">solid</span><span class="o">.</span><span class="n">faces</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="n">cog</span><span class="o">.</span><span class="n">y</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">height</span>
+        <span class="n">vertical_tail_thickness</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stabilizer_vright</span><span class="o">.</span><span class="n">solid</span><span class="o">.</span><span class="n">faces</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="n">cog</span><span class="o">.</span><span class="n">z</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">length</span>
+        <span class="k">if</span> <span class="n">horizontal_tail_thickness</span> <span class="o">&gt;=</span> <span class="n">vertical_tail_thickness</span><span class="p">:</span>
+            <span class="n">critical_thickness</span> <span class="o">=</span> <span class="n">horizontal_tail_thickness</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">critical_thickness</span> <span class="o">=</span> <span class="n">vertical_tail_thickness</span>
+        <span class="k">return</span> <span class="n">critical_thickness</span></div>
+
+<div class="viewcode-block" id="CompoundStabilizer.tail_shaft_circle"><a class="viewcode-back" href="../../../components/liftingsurfaces/compoundstab.html#components.liftingsurfaces.compoundstab.CompoundStabilizer.tail_shaft_circle">[docs]</a>    <span class="nd">@Attribute</span><span class="p">(</span><span class="n">private</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">tail_shaft_circle</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This attribute makes a circle with thickness found from &#39;critical_thickness&#39; attribute and extrudes it</span>
+<span class="sd">        along the HT tip chord.</span>
+
+<span class="sd">        :return: Boom Connector Cross-Section and Extrude</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_profile</span> <span class="o">=</span> <span class="n">Circle</span><span class="p">(</span><span class="n">position</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stabilizer_vright</span><span class="o">.</span><span class="n">position</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">critical_thickness</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1.5</span><span class="p">)</span>
+        <span class="n">_extrude</span> <span class="o">=</span> <span class="n">ExtrudedSolid</span><span class="p">(</span><span class="n">island</span><span class="o">=</span><span class="n">_profile</span><span class="p">,</span> <span class="n">distance</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stabilizer_h</span><span class="o">.</span><span class="n">root_chord</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">_profile</span><span class="p">,</span> <span class="n">_extrude</span></div>
+
+<div class="viewcode-block" id="CompoundStabilizer.internal_shape"><a class="viewcode-back" href="../../../components/liftingsurfaces/compoundstab.html#components.liftingsurfaces.compoundstab.CompoundStabilizer.internal_shape">[docs]</a>    <span class="nd">@Attribute</span><span class="p">(</span><span class="n">private</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">internal_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This is the internal shape of the compound stabilizer. It is None because the current app uses a boom tail\</span>
+<span class="sd">        structure instead of a single fuselage, and thus there is no shape to present for the fuselage builder.</span>
+
+<span class="sd">        :rtype: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="CompoundStabilizer.boom_plane"><a class="viewcode-back" href="../../../components/liftingsurfaces/compoundstab.html#components.liftingsurfaces.compoundstab.CompoundStabilizer.boom_plane">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">boom_plane</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Defines the XZ-plane that is coincident with the boom connector.</span>
+
+<span class="sd">        :return: Boom XZ Plane</span>
+<span class="sd">        :rtype: Plane</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Plane</span><span class="p">(</span><span class="n">reference</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tail_shaft_circle</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">center</span><span class="p">,</span>
+                     <span class="n">normal</span><span class="o">=</span><span class="n">Vector</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                     <span class="n">binormal</span><span class="o">=</span><span class="n">Vector</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="CompoundStabilizer.connector_right"><a class="viewcode-back" href="../../../components/liftingsurfaces/compoundstab.html#components.liftingsurfaces.compoundstab.CompoundStabilizer.connector_right">[docs]</a>    <span class="nd">@Part</span>
+    <span class="k">def</span> <span class="nf">connector_right</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This rotates the extruded right boom shaft connector to point in the X direction.</span>
+
+<span class="sd">        :return: Right Boom Connector</span>
+<span class="sd">        :rtype: RotatedShape</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">RotatedShape</span><span class="p">(</span><span class="n">shape_in</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tail_shaft_circle</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                            <span class="n">rotation_point</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tail_shaft_circle</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">center</span><span class="p">,</span>
+                            <span class="n">vector</span><span class="o">=</span><span class="n">Vector</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                            <span class="n">angle</span><span class="o">=</span><span class="n">radians</span><span class="p">(</span><span class="mi">90</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="CompoundStabilizer.connector_left"><a class="viewcode-back" href="../../../components/liftingsurfaces/compoundstab.html#components.liftingsurfaces.compoundstab.CompoundStabilizer.connector_left">[docs]</a>    <span class="nd">@Part</span>
+    <span class="k">def</span> <span class="nf">connector_left</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This rotates the extruded left boom shaft connector to point in the X direction.</span>
+
+<span class="sd">        :return: Left Boom Connector</span>
+<span class="sd">        :rtype: MirroredShape</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">MirroredShape</span><span class="p">(</span><span class="n">shape_in</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">connector_right</span><span class="p">,</span>
+                             <span class="n">reference_point</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">,</span>
+                             <span class="n">vector1</span><span class="o">=</span><span class="n">Vector</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">vector2</span><span class="o">=</span><span class="n">Vector</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="CompoundStabilizer.component_type"><a class="viewcode-back" href="../../../components/liftingsurfaces/compoundstab.html#components.liftingsurfaces.compoundstab.CompoundStabilizer.component_type">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">component_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This attribute names the component &#39;ct&#39; for compound stabilizer.</span>
+
+<span class="sd">        :return: Name of Compound Tail Configuration</span>
+<span class="sd">        :rtype: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s1">&#39;ct&#39;</span></div>
+
+<div class="viewcode-block" id="CompoundStabilizer.external_shape"><a class="viewcode-back" href="../../../components/liftingsurfaces/compoundstab.html#components.liftingsurfaces.compoundstab.CompoundStabilizer.external_shape">[docs]</a>    <span class="nd">@Part</span>
+    <span class="k">def</span> <span class="nf">external_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; This defines the external shape for the ExternalBody class in definitions.</span>
+
+<span class="sd">        :return: CompoundStabilizer External Geometry</span>
+<span class="sd">        :rtype: ScaledShape</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">ScaledShape</span><span class="p">(</span><span class="n">shape_in</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tail_joiner</span><span class="p">,</span> <span class="n">reference_point</span><span class="o">=</span><span class="n">Point</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">factor</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">hidden</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">parapy.gui</span> <span class="k">import</span> <span class="n">display</span>
+
+    <span class="n">obj</span> <span class="o">=</span> <span class="n">CompoundStabilizer</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Compound Tail&#39;</span><span class="p">)</span>
+    <span class="n">display</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, San Kilkis, Nelson Johnson.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'1.0',
+            LANGUAGE:'en',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

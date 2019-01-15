@@ -1,16 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-""" eoir.py is a file which automatically generates an EO/IR Imaging system on parametric input of battery weight,
- """
 
-# TODO Comment the whole code
-# TODO add attributes necessary for fuselage class
-# TODO add database as input w/ custom validator function
+from parapy.geom import *  # \
+from parapy.core import *  # / Required ParaPy Modules
 
-# Required ParaPy Modules
-from parapy.core import *
-from parapy.geom import *
+# Component Class Definition
+from definitions import *
 
 # Necessary Modules for Data Processing
 from directories import *
@@ -20,27 +16,75 @@ from my_csv2dict import *
 # Custom Colors
 from user import *
 
+# GUI Browser
+from Tkinter import *
+import tkFileDialog
+
 __all__ = ["EOIR"]
+__author__ = "Şan Kılkış"
+
+#: A parameter for debugging, turns the visibility of miscellaneous parts ON/OFF
+__show_primitives = False  # type: bool
 
 
-class EOIR(GeomBase):
+class EOIR(ExternalBody):
+    """  This script will generate the parametric Electro-Optical Infra-Ied camera as a payload. There are 7 cameras
+    which span the entire payload range of 1 to 20 kg.
+
+    :returns: ParaPy Geometry of the Horizontal Tail Surface
+
+    :param target_weight: This is the target payload weight.
+    :type target_weight: float
+    """
 
     __initargs__ = ["target_weight", "camera_name", "position"]
+    __icon__ = os.path.join(DIRS['ICON_DIR'], 'camera.png')
 
-    # A parameter for debugging, turns the visibility of miscellaneous parts ON/OFF
+    #: A parameter for debugging, turns the visibility of miscellaneous parts ON/OFF
     __show_primitives = False  # type: bool
 
     target_weight = Input(0.2, validator=val.Positive())
-    camera_name = Input(None)
-    position = Input(YOZ)
+    camera_name = Input('Not Specified')
+
+    @Attribute
+    def browse_cameras(self):
+        """ Allows the user to easily choose amongst available cameras with a GUI File-Browser.
+
+        :return: Sets the `cameras_name` to the value chosen in the GUI Browser
+        """
+        root = Tk()
+        root.withdraw()
+        path = tkFileDialog.askopenfilename(initialdir=DIRS['EOIR_DATA_DIR'], title="Select Camera",
+                                            filetypes=(("Camera Data Files", "*.csv"), ("All Files", "*.*")))
+        root.destroy()
+
+        valid_dir = DIRS['EOIR_DATA_DIR'].replace('\\', '/')
+        if path.find(valid_dir) is -1:
+            error_window("Custom Cameras must be placed in the pre-allocated directory")
+            return 'Camera selection failed, please invalidate and run-again'
+        else:
+            if len(path) > 0:
+                setattr(self, 'camera_name', str(path.split('.')[-2].split('/')[-1]))  # Selects the motor_name
+            return 'Camera has been successfully chosen, invalidate to run-again'
+
+    @Input
+    def label(self):
+        """Overwrites the inherited slot `label` with the chosen camera_name
+
+        :return: Name of Camera
+        :rtype: str
+        """
+        return self.specs['name']
 
     @Attribute
     def specs(self):
-        if self.camera_name is None:
-            selected_camera_specs = [num[1] for num in self.camera_database if num[0] == self.camera_selector]
-            return selected_camera_specs[0]
+        if self.camera_name == 'Not Specified':
+            selected_camera_specs = [num[1] for num in self.camera_database if num[0] == self.camera_selector][0]
+            selected_camera_specs['name'] = self.camera_selector
         else:
-            return read_csv(self.camera_name, DIRS['EOIR_DATA_DIR'])
+            selected_camera_specs = read_csv(self.camera_name, DIRS['EOIR_DATA_DIR'])
+            selected_camera_specs['name'] = self.camera_name
+        return selected_camera_specs
 
     @Attribute
     def camera_database(self):
@@ -62,32 +106,31 @@ class EOIR(GeomBase):
         return selected_camera
 
     @Attribute
+    def component_type(self):
+        return 'payload'
+
+    @Attribute
     def weight(self):
         return self.specs['weight']
 
-    @Attribute
-    def bbox_intern(self):
-        self.internal_shape.bbox.color = MyColors.deep_red
-        return self.internal_shape.bbox
-
-    @Attribute
+    @Attribute(private=True)
     def box_width(self):
         return self.specs['box_dimensions'][0] / 1000.0
 
-    @Attribute
+    @Attribute(private=True)
     def box_length(self):
         return self.specs['box_dimensions'][1] / 1000.0
 
-    @Attribute
+    @Attribute(private=True)
     def box_height(self):
         return self.specs['box_dimensions'][2] / 1000.0
 
-    @Attribute
+    @Attribute(private=True)
     def gimbal_radius(self):
         diameter = self.specs['gimbal_dimensions'][0]  # Diameter is specified in mm
         return diameter / (2 * 1000.0)
 
-    @Attribute
+    @Attribute(private=True)
     def gimbal_height(self):  # Total height of the gimbal arm (neglecting gimbal_radius)
         min_height = self.gimbal_radius * 1.1
         read_height = self.specs['gimbal_dimensions'][1] / 1000.0
@@ -96,9 +139,26 @@ class EOIR(GeomBase):
         else:
             return read_height
 
-    @Attribute
+    @Attribute(private=True)
     def exposed_height(self):
         return (self.specs['gimbal_dimensions'][2] / 1000.0) - self.gimbal_radius
+
+    @Attribute
+    def center_of_gravity(self):
+        """ The center of gravity of the EOIR sensor is assumed to be the center of the bottom face
+
+        :return: EOIR Center of gravity
+        :rtype: Point
+        """
+        return self.internal_shape.faces[4].cog
+
+    @Attribute
+    def text_label_position(self):
+        """ Overwrites the default text_label position to put it closer to the gimbal
+
+        :rtype: Point
+        """
+        return self.gimbal.edges[0].midpoint
 
     # --- Output Solids: ----------------------------------------------------------------------------------------------
 
@@ -110,8 +170,8 @@ class EOIR(GeomBase):
                                                       'x', -self.position.y,
                                                       'y', self.position.x,
                                                       'z', self.position.z),
-                                color=MyColors.dark_grey)
-
+                                color=MyColors.deep_red,
+                                transparency=0.23)
 
     @Part
     def gimbal(self):
@@ -120,13 +180,16 @@ class EOIR(GeomBase):
                                                    self.position.y, self.position.z - self.exposed_height),
                                color=MyColors.light_grey)
 
-    # TODO Investigate if making this a compound improves performance
     @Part
     def camera_body(self):
         return TranslatedShape(shape_in=self.camera_body_import,
                                displacement=Vector(self.position.x + (self.box_length / 2.0),
                                                    self.position.y, self.position.z - self.exposed_height),
                                color=MyColors.light_grey)
+
+    @Part
+    def external_shape(self):
+        return Fused(self.gimbal, self.camera_body, hidden=True, label=self.label)
 
     # --- Primitives: -------------------------------------------------------------------------------------------------
 
@@ -183,8 +246,4 @@ if __name__ == '__main__':
 
     obj = EOIR()
     display(obj)
-
-
-
-
 

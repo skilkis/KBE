@@ -1,0 +1,551 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>components.motor.motor &mdash; KBE 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> KBE
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../main.html">Main UAV</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../definitions.html">Definitions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../directories.html">Directories</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/index.html">Components Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/battery.html">Li-PO Battery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/electronics/index.html">Electronics Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/electronics/electronics.html">Electronics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/electronics/flightcontroller.html">FlightController</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/electronics/speedcontroller.html">SpeedController</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/liftingsurfaces/index.html">LiftingSurface Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/liftingsurfaceprim.html">LiftingSurface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/wing.html">Wing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/scissorplot.html">ScissorPlot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/horizontalstab.html">HorizontalStabilizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/verticalstab.html">VerticalStablilizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/liftingsurfaces/compoundstab.html">CompoundStabilizer</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/fuselage/index.html">Fuselage Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/fuselage/fframe.html">Fuselage Frame (FFrame)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/fuselage/fcone.html">Fuselage Nose/Tail Cone (FCone)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/fuselage/mframe.html">Motor Frame (MFrame)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/fuselage/fuselage.html">Automatic Fuselage Generator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/fuselage/boom.html">Boom</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/motor.html">Electric Motor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/propeller/index.html">Propeller Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/propeller/propparser.html">Propeller Parser</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../components/propeller/propeller.html">Propeller</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../components/eoir.html">Electro-Optical Infra-Red Camera</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../design/index.html">Design Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../design/designinput.html">Design Input</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../design/paramgen.html">Parameter Generator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../design/weightestimator.html">Class I and II Weight Estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../design/wingpowerloading.html">Thrust and Power Loading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../design/performance.html">Performance Verification</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../mycsv2dict.html">My CSV Dictionary</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">KBE</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>components.motor.motor</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for components.motor.motor</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="c1">#:  Required ParaPy Modules</span>
+<span class="kn">from</span> <span class="nn">parapy.geom</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">parapy.core</span> <span class="k">import</span> <span class="o">*</span>
+
+<span class="kn">from</span> <span class="nn">definitions</span> <span class="k">import</span> <span class="o">*</span>
+
+<span class="c1">#:  Required Modules</span>
+<span class="kn">from</span> <span class="nn">my_csv2dict</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">directories</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">os</span> <span class="k">import</span> <span class="n">listdir</span>
+<span class="kn">from</span> <span class="nn">user</span> <span class="k">import</span> <span class="n">MyColors</span>
+<span class="kn">from</span> <span class="nn">Tkinter</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">tkFileDialog</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Şan Kılkış&quot;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Motor&quot;</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="Motor"><a class="viewcode-back" href="../../../components/motor.html#components.motor.Motor">[docs]</a><span class="k">class</span> <span class="nc">Motor</span><span class="p">(</span><span class="n">Component</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; This class will create an electric motor.</span>
+
+<span class="sd">    :return: ParaPy Geometry of the Electric Motor</span>
+
+<span class="sd">    :param target_power: This is the motor target power.</span>
+<span class="sd">    :type target_power: float</span>
+
+<span class="sd">    :param browse_motors: Allows the user to easily choose amongst available motors with a GUI File-Browser.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">__initargs__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;target_power&quot;</span><span class="p">,</span> <span class="s2">&quot;motor_name&quot;</span><span class="p">,</span> <span class="s2">&quot;position&quot;</span><span class="p">]</span>
+    <span class="n">__icon__</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;ICON_DIR&#39;</span><span class="p">],</span> <span class="s1">&#39;motor.png&#39;</span><span class="p">)</span>
+
+    <span class="c1">#: A parameter for debugging, turns the visibility of miscellaneous parts ON/OFF</span>
+    <span class="n">__show_primitives</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="n">target_power</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">100.0</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Positive</span><span class="p">())</span>
+
+    <span class="n">motor_name</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;Not Specified&#39;</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">str</span><span class="p">))</span>
+
+    <span class="n">integration</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="s1">&#39;pusher&#39;</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">OneOf</span><span class="p">([</span><span class="s2">&quot;pusher&quot;</span><span class="p">,</span> <span class="s2">&quot;puller&quot;</span><span class="p">]))</span>
+
+    <span class="n">position</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">Position</span><span class="p">(</span><span class="n">Point</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)),</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="n">Position</span><span class="p">))</span>
+
+<div class="viewcode-block" id="Motor.browse_motors"><a class="viewcode-back" href="../../../components/motor.html#components.motor.Motor.browse_motors">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">browse_motors</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Allows the user to easily choose amongst available motors with a GUI File-Browser.</span>
+
+<span class="sd">        :return: Sets the `motor_name` to the value chosen in the GUI Browser</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">root</span> <span class="o">=</span> <span class="n">Tk</span><span class="p">()</span>
+        <span class="n">root</span><span class="o">.</span><span class="n">withdraw</span><span class="p">()</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">tkFileDialog</span><span class="o">.</span><span class="n">askopenfilename</span><span class="p">(</span><span class="n">initialdir</span><span class="o">=</span><span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;MOTOR_DATA_DIR&#39;</span><span class="p">],</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Select Motor&quot;</span><span class="p">,</span>
+                                            <span class="n">filetypes</span><span class="o">=</span><span class="p">((</span><span class="s2">&quot;Motor Data Files&quot;</span><span class="p">,</span> <span class="s2">&quot;*.csv&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;All Files&quot;</span><span class="p">,</span> <span class="s2">&quot;*.*&quot;</span><span class="p">)))</span>
+        <span class="n">root</span><span class="o">.</span><span class="n">destroy</span><span class="p">()</span>
+
+        <span class="n">valid_dir</span> <span class="o">=</span> <span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;MOTOR_DATA_DIR&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">valid_dir</span><span class="p">)</span> <span class="ow">is</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">error_window</span><span class="p">(</span><span class="s2">&quot;Custom motors must be placed in the pre-allocated directory&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="s1">&#39;Motor selection failed, please invalidate and run-again&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;motor_name&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>  <span class="c1"># Selects the motor_name</span>
+            <span class="k">return</span> <span class="s1">&#39;Motor has been successfully chosen, invalidate to run-again&#39;</span></div>
+
+<div class="viewcode-block" id="Motor.database_path"><a class="viewcode-back" href="../../../components/motor.html#components.motor.Motor.database_path">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">database_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; The default absolute directory of the Motor Database</span>
+
+<span class="sd">        :rtype: unicode &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;MOTOR_DATA_DIR&#39;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Motor.label"><a class="viewcode-back" href="../../../components/motor.html#components.motor.Motor.label">[docs]</a>    <span class="nd">@Input</span>
+    <span class="k">def</span> <span class="nf">label</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Overwrites the inherited slot `label&#39; with the chosen motor_name</span>
+
+<span class="sd">        :rtype: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">specs</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Motor.component_type"><a class="viewcode-back" href="../../../components/motor.html#components.motor.Motor.component_type">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">component_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;prop&#39;</span></div>
+
+    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">specs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor_name</span> <span class="o">==</span> <span class="s1">&#39;Not Specified&#39;</span><span class="p">:</span>
+            <span class="n">selected_motor_specs</span> <span class="o">=</span> <span class="p">[</span><span class="n">num</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor_database</span> <span class="k">if</span> <span class="n">num</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor_selector</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">selected_motor_specs</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor_selector</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">selected_motor_specs</span> <span class="o">=</span> <span class="n">read_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">motor_name</span><span class="p">,</span> <span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;MOTOR_DATA_DIR&#39;</span><span class="p">])</span>
+            <span class="n">selected_motor_specs</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor_name</span>
+        <span class="k">return</span> <span class="n">selected_motor_specs</span>
+
+    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">motor_database</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">database_path</span> <span class="o">=</span> <span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;MOTOR_DATA_DIR&#39;</span><span class="p">]</span>
+        <span class="n">motor_names</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">listdir</span><span class="p">(</span><span class="n">database_path</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;csv&#39;</span><span class="p">)]</span>
+        <span class="n">motors</span> <span class="o">=</span> <span class="p">[[</span><span class="n">name</span><span class="p">,</span> <span class="n">read_csv</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">database_path</span><span class="p">)]</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">motor_names</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">motors</span>
+
+<div class="viewcode-block" id="Motor.motor_selector"><a class="viewcode-back" href="../../../components/motor.html#components.motor.Motor.motor_selector">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">motor_selector</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; An attribute which selects a motor based on input of target power. A tolerance of 10% is added to this \</span>
+<span class="sd">        value in order to allow the algorithm to select a slightly under-powered motor and utilize it&#39;s burst power \</span>
+<span class="sd">        to meet the requirement. This can be set to zero in the code if desired with the variable &#39;tolerance&#39; below. \</span>
+<span class="sd">        Finally, a condition is added to select the lightest motor from the list of available motors.</span>
+
+<span class="sd">        :return: Name of the selected motor</span>
+<span class="sd">        :rtype: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">tolerance</span> <span class="o">=</span> <span class="mf">0.1</span>
+        <span class="n">motor_list</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([[</span><span class="n">name</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">name</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;constant_power&#39;</span><span class="p">],</span> <span class="n">name</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;weight&#39;</span><span class="p">]]</span>
+                             <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor_database</span><span class="p">],</span>
+                            <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="n">allowed_motors</span> <span class="o">=</span> <span class="p">[[</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">abs</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_power</span><span class="p">),</span> <span class="n">i</span><span class="p">[</span><span class="mi">2</span><span class="p">]]</span>
+                          <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">motor_list</span> <span class="k">if</span> <span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_power</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">tolerance</span><span class="p">)]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">allowed_motors</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The target power of </span><span class="si">%.2f</span><span class="s1"> [W] is too large to find a suitable motor&#39;</span>
+                             <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_power</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">error_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">allowed_motors</span><span class="p">]</span>
+            <span class="n">weight_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">allowed_motors</span><span class="p">]</span>
+            <span class="n">idx1</span> <span class="o">=</span> <span class="n">error_list</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">error_list</span><span class="p">))</span>  <span class="c1">#: Index of minimum error (provided power - desired)</span>
+            <span class="n">idx2</span> <span class="o">=</span> <span class="n">weight_list</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">weight_list</span><span class="p">))</span>  <span class="c1">#: Index of minimum weight</span>
+            <span class="k">if</span> <span class="n">idx1</span> <span class="o">!=</span> <span class="n">idx2</span><span class="p">:</span>  <span class="c1">#: Code to prefer minimum error over minimum weight</span>
+                <span class="n">selected_index</span> <span class="o">=</span> <span class="n">idx1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">selected_index</span> <span class="o">=</span> <span class="n">idx2</span>
+            <span class="n">selected_motor</span> <span class="o">=</span> <span class="n">allowed_motors</span><span class="p">[</span><span class="n">selected_index</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">selected_motor</span></div>
+
+<div class="viewcode-block" id="Motor.weight"><a class="viewcode-back" href="../../../components/motor.html#components.motor.Motor.weight">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">weight</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Total mass of the motor</span>
+
+<span class="sd">        :return: Mass in SI kilogram</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">specs</span><span class="p">[</span><span class="s1">&#39;weight&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="mf">1000.0</span></div>
+
+<div class="viewcode-block" id="Motor.center_of_gravity"><a class="viewcode-back" href="../../../components/motor.html#components.motor.Motor.center_of_gravity">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">center_of_gravity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Location of the motor center of gravity w.r.t the origin (Assumed to be in the middle of the motor body)</span>
+
+<span class="sd">        :return: Location Tuple in SI meter</span>
+<span class="sd">        :rtype: Point</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">internal_shape</span><span class="o">.</span><span class="n">cog</span></div>
+
+<div class="viewcode-block" id="Motor.diameter"><a class="viewcode-back" href="../../../components/motor.html#components.motor.Motor.diameter">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">diameter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; The outer diameter of the motor body</span>
+
+<span class="sd">        :return: Diameter in SI meter</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">specs</span><span class="p">[</span><span class="s1">&#39;diameter&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="mf">1000.0</span></div>
+
+<div class="viewcode-block" id="Motor.length"><a class="viewcode-back" href="../../../components/motor.html#components.motor.Motor.length">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">length</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; The length of the motor body</span>
+
+<span class="sd">        :rtype: Length in SI meter</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">specs</span><span class="p">[</span><span class="s1">&#39;length&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="mf">1000.0</span></div>
+
+<div class="viewcode-block" id="Motor.shaft_diameter"><a class="viewcode-back" href="../../../components/motor.html#components.motor.Motor.shaft_diameter">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">shaft_diameter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; The outer diameter of the motor shaft</span>
+
+<span class="sd">        :return: Diameter in SI meter</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">specs</span><span class="p">[</span><span class="s1">&#39;shaft_diameter&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="mf">1000.</span></div>
+
+<div class="viewcode-block" id="Motor.shaft_length"><a class="viewcode-back" href="../../../components/motor.html#components.motor.Motor.shaft_length">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">shaft_length</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; The protruding length of the motor shaft</span>
+
+<span class="sd">        :return: Length in SI meter</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mf">0.3</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">length</span></div>
+
+<div class="viewcode-block" id="Motor.power"><a class="viewcode-back" href="../../../components/motor.html#components.motor.Motor.power">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">power</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Pulls the corresponding `field_names` `constant_power` and `burst_power` from the dictionary `specs`. \</span>
+<span class="sd">        This is done to minimize the amount of characters necessary to call these parameters. Index 0 of the list is \</span>
+<span class="sd">        `constant_power` and Index 1 is `burst_power`.</span>
+
+<span class="sd">        :rtype: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">specs</span><span class="p">[</span><span class="s1">&#39;constant_power&#39;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">specs</span><span class="p">[</span><span class="s1">&#39;burst_power&#39;</span><span class="p">]]</span></div>
+
+<div class="viewcode-block" id="Motor.efficiency"><a class="viewcode-back" href="../../../components/motor.html#components.motor.Motor.efficiency">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">efficiency</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Assumed motor efficiency is at the higher-end of typical values and equal to 90% \</span>
+<span class="sd">        http://www.radiocontrolinfo.com/brushless-motor-efficiency/</span>
+
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mf">0.9</span></div>
+
+<div class="viewcode-block" id="Motor.extrude_direction"><a class="viewcode-back" href="../../../components/motor.html#components.motor.Motor.extrude_direction">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">extrude_direction</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Defines the extrude direction as a `vector` of the motor-body as well as the shaft. To access this dict \</span>
+<span class="sd">        use the `field_names`: `body` and `shaft` respectively.</span>
+
+<span class="sd">        :rtype: dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">integration</span> <span class="o">==</span> <span class="s1">&#39;pusher&#39;</span><span class="p">:</span>
+            <span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">Vx_</span>
+            <span class="n">shaft</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">Vx</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">Vx</span>
+            <span class="n">shaft</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">Vx_</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;body&#39;</span><span class="p">:</span> <span class="n">body</span><span class="p">,</span> <span class="s1">&#39;shaft&#39;</span><span class="p">:</span> <span class="n">shaft</span><span class="p">}</span></div>
+
+<div class="viewcode-block" id="Motor.chamfer_edges"><a class="viewcode-back" href="../../../components/motor.html#components.motor.Motor.chamfer_edges">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">chamfer_edges</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Rejects the line edge which will only have 2 sample_points</span>
+
+<span class="sd">        :return: Edge table of circular edges of the motor-body</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">edges</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor_body_import</span><span class="o">.</span><span class="n">edges</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">sample_points</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">edges</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">edges</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span></div>
+
+    <span class="c1"># --- Output Parts: -----------------------------------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="Motor.internal_shape"><a class="viewcode-back" href="../../../components/motor.html#components.motor.Motor.internal_shape">[docs]</a>    <span class="nd">@Part</span>
+    <span class="k">def</span> <span class="nf">internal_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Chamfers the edges of `motor_body_import` to better resemble the shape of RimFire engines</span>
+
+<span class="sd">        :return: Motor &#39;internal_shape&#39;</span>
+<span class="sd">        :rtype: ChamferedSolid</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">ChamferedSolid</span><span class="p">(</span><span class="n">built_from</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">motor_body_import</span><span class="p">,</span>
+                              <span class="n">distance</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">shaft_diameter</span><span class="p">,</span>
+                              <span class="n">edge_table</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">chamfer_edges</span><span class="p">,</span>  <span class="c1">#: Flagged as an error but works fine</span>
+                              <span class="n">color</span><span class="o">=</span><span class="n">MyColors</span><span class="o">.</span><span class="n">gold</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Motor.shaft"><a class="viewcode-back" href="../../../components/motor.html#components.motor.Motor.shaft">[docs]</a>    <span class="nd">@Part</span>
+    <span class="k">def</span> <span class="nf">shaft</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Creates the motor shaft as an `ExtrudedSolid` in the direction specified in `extrude_direction`</span>
+
+<span class="sd">        :return: Motor Shaft</span>
+<span class="sd">        :rtype: ExtrudedSolid</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">ExtrudedSolid</span><span class="p">(</span><span class="n">island</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">shaft_circle</span><span class="p">,</span>
+                             <span class="n">distance</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">shaft_length</span><span class="p">,</span>
+                             <span class="n">direction</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">extrude_direction</span><span class="p">[</span><span class="s1">&#39;shaft&#39;</span><span class="p">],</span>
+                             <span class="n">color</span><span class="o">=</span><span class="n">MyColors</span><span class="o">.</span><span class="n">dark_grey</span><span class="p">)</span></div>
+
+    <span class="c1">#: --- Primitives: -------------------------------------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="Motor.motor_circle"><a class="viewcode-back" href="../../../components/motor.html#components.motor.Motor.motor_circle">[docs]</a>    <span class="nd">@Part</span><span class="p">(</span><span class="n">in_tree</span><span class="o">=</span><span class="n">__show_primitives</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">motor_circle</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Creates the circle that is used to extrude and form the motor body</span>
+
+<span class="sd">        :return: Circle used for Motor Body Extrusion</span>
+<span class="sd">        :rtype: Circle</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Circle</span><span class="p">(</span><span class="n">position</span><span class="o">=</span><span class="n">translate</span><span class="p">(</span><span class="n">YOZ</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">y</span><span class="p">,</span>
+                                         <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">z</span><span class="p">,</span>
+                                         <span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">x</span><span class="p">),</span>
+                      <span class="n">radius</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">diameter</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Motor.shaft_circle"><a class="viewcode-back" href="../../../components/motor.html#components.motor.Motor.shaft_circle">[docs]</a>    <span class="nd">@Part</span><span class="p">(</span><span class="n">in_tree</span><span class="o">=</span><span class="n">__show_primitives</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">shaft_circle</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Creates the circle that is used to extrude and form the motor shaft</span>
+
+<span class="sd">        :return: Circle used for Motor Shaft Extrusion</span>
+<span class="sd">        :rtype: Circle</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Circle</span><span class="p">(</span><span class="n">position</span><span class="o">=</span><span class="n">translate</span><span class="p">(</span><span class="n">YOZ</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">z</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">x</span><span class="p">),</span>
+                      <span class="n">radius</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">shaft_diameter</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Motor.motor_body_import"><a class="viewcode-back" href="../../../components/motor.html#components.motor.Motor.motor_body_import">[docs]</a>    <span class="nd">@Part</span><span class="p">(</span><span class="n">in_tree</span><span class="o">=</span><span class="n">__show_primitives</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">motor_body_import</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Creates the motor body as an `ExtrudedSolid` in the direction specified in `extrude_direction`</span>
+
+<span class="sd">        :return: Motor Body</span>
+<span class="sd">        :rtype: ExtrudedSolid</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">ExtrudedSolid</span><span class="p">(</span><span class="n">island</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">motor_circle</span><span class="p">,</span>
+                             <span class="n">distance</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">,</span>
+                             <span class="n">direction</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">extrude_direction</span><span class="p">[</span><span class="s1">&#39;body&#39;</span><span class="p">])</span></div></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">parapy.gui</span> <span class="k">import</span> <span class="n">display</span>
+
+    <span class="n">obj</span> <span class="o">=</span> <span class="n">Motor</span><span class="p">()</span>
+    <span class="n">display</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, San Kilkis, Nelson Johnson.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'1.0',
+            LANGUAGE:'en',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

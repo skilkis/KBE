@@ -5,7 +5,10 @@
 """
 import os
 import re
+import shutil
 import subprocess
+import sys
+from directories import DIRS
 
 try:
     import tkinter as tk  # Python 3
@@ -17,14 +20,17 @@ try:
 except ImportError:
     from ConfigParser import ConfigParser  # Python 2
 
-import sys
+try:
+    FileNotFoundError  # Python 3
+except NameError:
+    FileNotFoundError = IOError  # Python 2
+
 __IS_PYTHON_3__ = not sys.version_info[0] < 3
 
 if __IS_PYTHON_3__:
     from tempfile import TemporaryDirectory
 else:
     # simple class which provides TemporaryDirectory-esque functionality
-    import shutil
     import tempfile
     class TemporaryDirectory(object):
         def __init__(self, suffix='', prefix='', dir=None):
@@ -37,6 +43,7 @@ __status__ = "Development"
 
 
 __MODULE_DIR__ = os.path.dirname(__file__)
+__EXE_DIR__ = DIRS['AVL_DIR']
 CONFIG_FILE = 'config.cfg'
 
 
@@ -105,15 +112,21 @@ class Case(Input):
             # if a parameter object is given, add to the dict
             if isinstance(value, Parameter):
                 self.parameters[key] = value
-            # if the key is an existing case parameter, set the value
-            elif key in self.CASE_PARAMETERS.keys():
-                param_str = self.CASE_PARAMETERS[key]
-                self.parameters[param_str].value = value
-            # if an unknown key-value pair is given, assume its a control and create a parameter
             else:
-                param_str = key
-                self.controls.append(key)
-                self.parameters[param_str] = Parameter(name=param_str, value=value)
+                is_added = False
+                # if the key is an existing case parameter, set the value
+                if key in self.CASE_PARAMETERS.keys():
+                    param_str = self.CASE_PARAMETERS[key]
+                    self.parameters[param_str].value = value
+                    is_added = True
+                if key in self.CASE_STATES.keys():
+                    self.states[key].value = value
+                    is_added = True
+                # if an unknown key-value pair is given, assume its a control and create a parameter
+                if not is_added:
+                    param_str = key
+                    self.controls.append(key)
+                    self.parameters[param_str] = Parameter(name=param_str, value=value)
 
     def _set_default_parameters(self):
         # parameters default to 0.0
@@ -195,7 +208,10 @@ class Session(object):
                                    for key, value in parser.items(section)}
 
         settings = dict()
-        settings['avl_bin'] = self._check_bin(config['environment']['executable'])
+        if config['environment']['executable'] != 'avl':
+            settings['avl_bin'] = self._check_bin(config['environment']['executable'])
+        else:
+            settings['avl_bin'] = self._check_bin(__EXE_DIR__)
 
         # show stdout of avl
         if config['environment']['printoutput'] == 'yes':
@@ -244,6 +260,12 @@ class Session(object):
         self.model_file = self.base_name + '.avl'
         with open(os.path.join(self.temp_dir.name, self.model_file), 'w') as avl_file:
             avl_file.write(self.geometry.create_input())
+
+    def _copy_airfoils(self):
+        airfoil_names = self.geometry.get_external_airfoil_names()
+        current_dir = os.getcwd()
+        for airfoil in airfoil_names:
+            shutil.copy(os.path.join(current_dir, airfoil), self.temp_dir.name)
 
     def _write_cases(self):
         # AVL is limited to 25 cases
@@ -294,6 +316,7 @@ class Session(object):
 
         if not self._calculated:
             self._write_geometry()
+            self._copy_airfoils()
 
             if self.cases is not None:
                 self._write_cases()
@@ -313,7 +336,6 @@ class Session(object):
                                     stdout=open(os.devnull, 'w') if not self.config['show_stdout'] else None,
                                     bufsize=0,  # Buffer size required for direct stdin/stdout access
                                     cwd=self.temp_dir.name)
-
 
     def get_results(self):
         if self._results is None:
@@ -336,10 +358,12 @@ class Session(object):
         process = self._get_avl_process()
 
         tk_root = tk.Tk()
+        tk_root.update()
         app = CloseWindow(on_open=lambda: process.stdin.write(run.encode()),
                           on_close=lambda: process.stdin.write("\n\nquit\n".encode()),
                           master=tk_root)
         app.mainloop()
+        tk_root.destroy()
 
 
 class OutputReader(object):

@@ -1,0 +1,568 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>design.performance &mdash; KBE 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> KBE
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../main.html">Main UAV</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../definitions.html">Definitions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../directories.html">Directories</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../components/index.html">Components Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../components/battery.html">Li-PO Battery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../components/electronics/index.html">Electronics Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../components/electronics/electronics.html">Electronics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../components/electronics/flightcontroller.html">FlightController</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../components/electronics/speedcontroller.html">SpeedController</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../components/liftingsurfaces/index.html">LiftingSurface Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../components/liftingsurfaces/liftingsurfaceprim.html">LiftingSurface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../components/liftingsurfaces/wing.html">Wing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../components/liftingsurfaces/scissorplot.html">ScissorPlot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../components/liftingsurfaces/horizontalstab.html">HorizontalStabilizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../components/liftingsurfaces/verticalstab.html">VerticalStablilizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../components/liftingsurfaces/compoundstab.html">CompoundStabilizer</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../components/fuselage/index.html">Fuselage Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../components/fuselage/fframe.html">Fuselage Frame (FFrame)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../components/fuselage/fcone.html">Fuselage Nose/Tail Cone (FCone)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../components/fuselage/mframe.html">Motor Frame (MFrame)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../components/fuselage/fuselage.html">Automatic Fuselage Generator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../components/fuselage/boom.html">Boom</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../components/motor.html">Electric Motor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../components/propeller/index.html">Propeller Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../components/propeller/propparser.html">Propeller Parser</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../components/propeller/propeller.html">Propeller</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../components/eoir.html">Electro-Optical Infra-Red Camera</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../design/index.html">Design Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../design/designinput.html">Design Input</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../design/paramgen.html">Parameter Generator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../design/weightestimator.html">Class I and II Weight Estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../design/wingpowerloading.html">Thrust and Power Loading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../design/performance.html">Performance Verification</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../mycsv2dict.html">My CSV Dictionary</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">KBE</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>design.performance</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for design.performance</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="kn">from</span> <span class="nn">parapy.core</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">components</span> <span class="k">import</span> <span class="n">Motor</span><span class="p">,</span> <span class="n">Propeller</span><span class="p">,</span> <span class="n">Wing</span><span class="p">,</span> <span class="n">Battery</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">matplotlib.patches</span> <span class="k">as</span> <span class="nn">ptch</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="n">pi</span><span class="p">,</span> <span class="n">sqrt</span>
+<span class="kn">from</span> <span class="nn">directories</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="k">import</span> <span class="n">interp1d</span>
+<span class="kn">from</span> <span class="nn">user</span> <span class="k">import</span> <span class="n">MyColors</span><span class="p">,</span> <span class="n">rgb</span>
+<span class="kn">from</span> <span class="nn">definitions</span> <span class="k">import</span> <span class="n">warn_window</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;San Kilkis&quot;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Performance&quot;</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="Performance"><a class="viewcode-back" href="../../design/performance.html#design.performance.Performance">[docs]</a><span class="k">class</span> <span class="nc">Performance</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; This class calculates the end performance of the UAV created in the KBE GUI. This verifies that the UAV will</span>
+<span class="sd">    fulfill the mission requirements.</span>
+
+<span class="sd">    :param motor_in: The instantated motor (typically passed from myUAV)</span>
+<span class="sd">    :type motor_in: Motor</span>
+
+<span class="sd">    :param propeller: The instantated propeller (typically passed from myUAV)</span>
+<span class="sd">    :type propeller: Propeller</span>
+
+<span class="sd">    :param wing_in: The instantated wing passed (typically passed from myUAV)</span>
+<span class="sd">    :type wing_in: Wing</span>
+
+<span class="sd">    :param weight_mtow: Final Maximum Take-Off Weight in SI kilogram [kg]</span>
+<span class="sd">    :type weight_mtow: float</span>
+
+<span class="sd">    :param parasitic_drag: Computed Parasitic Drag Coefficient</span>
+<span class="sd">    :type parasitic_drag: float</span>
+
+<span class="sd">    :param oswald_factor: Oswald Span Efficiency Factor</span>
+<span class="sd">    :type parasitic_drag: float</span>
+
+<span class="sd">    :param cg_valid: Switch case used to judge if the performance prediction is valid</span>
+<span class="sd">    :type cg_valid: bool</span>
+
+<span class="sd">    :param stall_buffer: Safety Factor to create a buffer between Endurance/Cruise velocity and the Stall Speed</span>
+<span class="sd">    :type stall_buffer: float</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">__initargs__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;parasitic_drag&quot;</span><span class="p">]</span>
+    <span class="n">__icon__</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;ICON_DIR&#39;</span><span class="p">],</span> <span class="s1">&#39;performance.png&#39;</span><span class="p">)</span>
+
+    <span class="c1">#: Instantiated Motor Object</span>
+    <span class="n">motor_in</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">Motor</span><span class="p">(),</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="n">Motor</span><span class="p">))</span>
+
+    <span class="c1">#: Instantiated Propeller Object</span>
+    <span class="n">propeller_in</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">Propeller</span><span class="p">(),</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="n">Propeller</span><span class="p">))</span>
+
+    <span class="c1">#: Instantiated Battery Object</span>
+    <span class="n">battery_in</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">Battery</span><span class="p">(),</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="n">Battery</span><span class="p">))</span>
+
+    <span class="c1">#: Instantiated Wing Object</span>
+    <span class="n">wing_in</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">Wing</span><span class="p">(),</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="n">Wing</span><span class="p">))</span>
+
+    <span class="c1">#: The Maximum Take-Off Weight from bottoms-up Class II in SI kilogram [kg]</span>
+    <span class="n">weight_mtow</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">5.0</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">float</span><span class="p">))</span>
+
+    <span class="c1">#: The Parasitic Drag Coefficient (C_D_0)</span>
+    <span class="n">parasitic_drag</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">float</span><span class="p">))</span>
+
+    <span class="c1">#: Oswald Span Efficiency Factor</span>
+    <span class="n">oswald_factor</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">0.85</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Instance</span><span class="p">(</span><span class="nb">float</span><span class="p">))</span>
+
+    <span class="c1">#: Switch Case to determine if the C.G. has converged prior to running the Performance Estimation</span>
+    <span class="n">cg_valid</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="c1">#: Safety Factor to create a buffer between flight speed and stall speed</span>
+    <span class="n">stall_buffer</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">validator</span><span class="o">=</span><span class="n">val</span><span class="o">.</span><span class="n">Range</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">))</span>
+
+<div class="viewcode-block" id="Performance.stall_speed"><a class="viewcode-back" href="../../design/performance.html#design.performance.Performance.stall_speed">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">stall_speed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Computes the new stall speed caused by change in MTOW in Class II (bottoms-up) as compared to the initial \</span>
+<span class="sd">        estimate from Class I</span>
+
+<span class="sd">        :return: Stall Speed in SI meter per second [m/s]</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">sqrt</span><span class="p">((</span><span class="mi">2</span> <span class="o">*</span> <span class="mf">9.81</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">weight_mtow</span><span class="p">)</span> <span class="o">/</span>
+                    <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wing_in</span><span class="o">.</span><span class="n">rho</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">wing_in</span><span class="o">.</span><span class="n">lift_coef_max</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">wing_in</span><span class="o">.</span><span class="n">planform_area</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="Performance.power_available"><a class="viewcode-back" href="../../design/performance.html#design.performance.Performance.power_available">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">power_available</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Grabs the available shaft power of the engine from the provided motor. Index 0 refers to continuous power \</span>
+<span class="sd">        and Index 1 refers to the burst power of the engine</span>
+
+<span class="sd">        :rtype: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor_in</span><span class="o">.</span><span class="n">power</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor_in</span><span class="o">.</span><span class="n">power</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Performance.propeller_eta_curve"><a class="viewcode-back" href="../../design/performance.html#design.performance.Performance.propeller_eta_curve">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">propeller_eta_curve</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Fetches the propeller efficiency curve as a function of airspeed from the provided propeller</span>
+
+<span class="sd">        :rtype: interpld</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">propeller_in</span><span class="o">.</span><span class="n">propeller_selector</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Performance.eta_curve_bounds"><a class="viewcode-back" href="../../design/performance.html#design.performance.Performance.eta_curve_bounds">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">eta_curve_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Defines the bounds of the propeller curve to not address values that are not covered by the propeller data \</span>
+<span class="sd">        index 0 refers to the minimum velocity and index 1 refers to the maximum velocity</span>
+
+<span class="sd">        :rtype: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">propeller_in</span><span class="o">.</span><span class="n">propeller_selector</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Performance.prop_speed_range"><a class="viewcode-back" href="../../design/performance.html#design.performance.Performance.prop_speed_range">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">prop_speed_range</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Defines the True Airspeed (TAS) range used for the analysis through use of the minimum and maximum values \</span>
+<span class="sd">        available in propeller data so as to not force data extrapolation.</span>
+
+<span class="sd">        :return: Range of True Airspeeds (TAS) in SI meter per second [m/s]</span>
+<span class="sd">        :rtype: numpy array</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eta_curve_bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">eta_curve_bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">100</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Performance.speed_range"><a class="viewcode-back" href="../../design/performance.html#design.performance.Performance.speed_range">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">speed_range</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; An auxillary range to the :attr:`prop_speed_range` to be able to better display the induced drag curve</span>
+
+<span class="sd">        :return: Range of True Airspeeds (TAS) in SI meter per second [m/s]</span>
+<span class="sd">        :rtype: numpy array</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">cg_valid</span><span class="p">:</span>
+            <span class="n">warn_window</span><span class="p">(</span><span class="s1">&#39;Please run the c.g. convergence attribute in the root, before estimating Performance&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">eta_curve_bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">100</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Performance.dynamic_pressures"><a class="viewcode-back" href="../../design/performance.html#design.performance.Performance.dynamic_pressures">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">dynamic_pressures</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Creates a range of dynamic pressurs corresponding to the range of flight speeds from :attr:`speed_range`</span>
+
+<span class="sd">        :return: Range of Dynamic Pressures in SI Pascal [Pa]</span>
+<span class="sd">        :rtype: numpy array</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">wing_in</span><span class="o">.</span><span class="n">rho</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">speed_range</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span></div>
+
+    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">lift_coefficients</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weight_mtow</span> <span class="o">*</span> <span class="mf">9.81</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dynamic_pressures</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">wing_in</span><span class="o">.</span><span class="n">planform_area</span><span class="p">)</span>
+
+    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">drag_coefficients</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parasitic_drag</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lift_coefficients</span> <span class="o">/</span> <span class="p">(</span><span class="n">pi</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">wing_in</span><span class="o">.</span><span class="n">aspect_ratio</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">oswald_factor</span><span class="p">))</span>
+
+    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">parasite_power</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parasitic_drag</span> \
+               <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">dynamic_pressures</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">wing_in</span><span class="o">.</span><span class="n">planform_area</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_range</span>
+
+    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">induced_power</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">lift_coefficients</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">pi</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">wing_in</span><span class="o">.</span><span class="n">aspect_ratio</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">oswald_factor</span><span class="p">))</span> \
+               <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dynamic_pressures</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">wing_in</span><span class="o">.</span><span class="n">planform_area</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_range</span><span class="p">)</span>
+
+    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">power_required</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parasite_power</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">induced_power</span>
+
+<div class="viewcode-block" id="Performance.endurance_velocity"><a class="viewcode-back" href="../../design/performance.html#design.performance.Performance.endurance_velocity">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">endurance_velocity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Computes the optimum endurance velocity utilizing the maximum positive difference between the power \</span>
+<span class="sd">        available and required curves. If this value is too close to the stall speed (which is determined by the input \</span>
+<span class="sd">        &#39;stall_buffer&#39;, then the non-optimum but safe value is returned instead.</span>
+
+<span class="sd">        :return: Optimum endurance velocity in SI meter per second [m/s]</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">diff</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">power_available_cont</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">power_required</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">speed_range</span><span class="p">))]</span>
+        <span class="n">idx_e</span> <span class="o">=</span> <span class="n">diff</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">diff</span><span class="p">))</span>
+        <span class="n">safe_speed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stall_buffer</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">stall_speed</span>
+        <span class="n">calc_speed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_range</span><span class="p">[</span><span class="n">idx_e</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">calc_speed</span> <span class="o">&gt;=</span> <span class="n">safe_speed</span><span class="p">:</span>
+            <span class="n">safe</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">safe</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="nb">print</span> <span class="s1">&#39;Computed optimum endurance velocity of </span><span class="si">%1.2f</span><span class="s1"> [m/s] is too close to the stall speed! Instead a value&#39;</span>\
+                  <span class="s1">&#39; safety factor has been added to the stall speed and returned&#39;</span> <span class="o">%</span> <span class="n">calc_speed</span>
+        <span class="k">return</span> <span class="n">calc_speed</span> <span class="k">if</span> <span class="n">safe</span> <span class="k">else</span> <span class="n">safe_speed</span></div>
+
+<div class="viewcode-block" id="Performance.cruise_velocity"><a class="viewcode-back" href="../../design/performance.html#design.performance.Performance.cruise_velocity">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">cruise_velocity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Computes the optimum cruise velocity utilizing the maximum tangent between velocity axis and the power \</span>
+<span class="sd">        required curves. If this value is too close to the stall speed (which is determined by the input \</span>
+<span class="sd">        &#39;stall_buffer&#39;, then the non-optimum but safe value is returned instead.</span>
+
+<span class="sd">        :return: Optimum cruise velocity in SI meter per second [m/s]</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">diff</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">speed_range</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">tangent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">power_required</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_range</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">local_tangent</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">power_required</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">power_required</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">/</span> \
+                            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">speed_range</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_range</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">diff</span> <span class="o">=</span> <span class="n">diff</span> <span class="o">+</span> <span class="p">[(</span><span class="nb">abs</span><span class="p">(</span><span class="n">tangent</span> <span class="o">-</span> <span class="n">local_tangent</span><span class="p">))]</span>
+        <span class="n">idx_c</span> <span class="o">=</span> <span class="n">diff</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">diff</span><span class="p">))</span>
+        <span class="n">safe_speed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stall_buffer</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">stall_speed</span>
+        <span class="n">calc_speed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_range</span><span class="p">[</span><span class="n">idx_c</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">calc_speed</span> <span class="o">&gt;=</span> <span class="n">safe_speed</span><span class="p">:</span>
+            <span class="n">safe</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">safe</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="nb">print</span> <span class="s1">&#39;Computed optimum cruise velocity of </span><span class="si">%1.2f</span><span class="s1"> [m/s] is too close to the stall speed! Instead a value&#39;</span> \
+                  <span class="s1">&#39; safety factor has been added to the stall speed and returned&#39;</span> <span class="o">%</span> <span class="n">calc_speed</span>
+        <span class="k">return</span> <span class="n">calc_speed</span> <span class="k">if</span> <span class="n">safe</span> <span class="k">else</span> <span class="n">safe_speed</span></div>
+
+<div class="viewcode-block" id="Performance.maximum_velocity"><a class="viewcode-back" href="../../design/performance.html#design.performance.Performance.maximum_velocity">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">maximum_velocity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Computes the maximum flight velocity utilizing the burst-power curve of the motor.</span>
+
+<span class="sd">        :return: Maximum velocity in SI meter per second [m/s]</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">diff</span> <span class="o">=</span> <span class="p">[</span><span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">power_available_burst</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">power_required</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">speed_range</span><span class="p">))]</span>
+        <span class="n">idx_m</span> <span class="o">=</span> <span class="n">diff</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">diff</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_range</span><span class="p">[</span><span class="n">idx_m</span><span class="p">]</span> <span class="k">if</span> <span class="n">idx_m</span> <span class="ow">is</span> <span class="ow">not</span> <span class="o">-</span><span class="mi">1</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_range</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Performance.power_spline"><a class="viewcode-back" href="../../design/performance.html#design.performance.Performance.power_spline">[docs]</a>    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">power_spline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Creates a linear-spline of the power required curve to be able to call any velocity value.</span>
+
+<span class="sd">        :rtype: interp1d</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">interp1d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">speed_range</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">power_required</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="s1">&#39;extrapolate&#39;</span><span class="p">)</span></div>
+
+    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">endurance</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">velocity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">endurance_velocity</span>
+        <span class="n">prop_eta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">propeller_eta_curve</span><span class="p">(</span><span class="n">velocity</span><span class="p">)</span>
+        <span class="n">hours</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">battery_in</span><span class="o">.</span><span class="n">total_energy</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor_in</span><span class="o">.</span><span class="n">efficiency</span> <span class="o">*</span> <span class="n">prop_eta</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">power_spline</span><span class="p">(</span><span class="n">velocity</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">hours</span>
+
+    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">range</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">velocity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cruise_velocity</span>
+        <span class="n">prop_eta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">propeller_eta_curve</span><span class="p">(</span><span class="n">velocity</span><span class="p">)</span>
+        <span class="n">hours</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">battery_in</span><span class="o">.</span><span class="n">total_energy</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor_in</span><span class="o">.</span><span class="n">efficiency</span> <span class="o">*</span> <span class="n">prop_eta</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">power_spline</span><span class="p">(</span><span class="n">velocity</span><span class="p">))</span>
+        <span class="n">range_km</span> <span class="o">=</span> <span class="mf">3.6</span> <span class="o">*</span> <span class="n">hours</span> <span class="o">*</span> <span class="n">velocity</span>
+        <span class="k">return</span> <span class="n">range_km</span>
+
+    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">eta_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">propeller_eta_curve</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">i</span><span class="p">))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">prop_speed_range</span><span class="p">]</span>
+
+    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">power_available_cont</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">power_available</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">eta_values</span><span class="p">]</span>
+
+    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">power_available_burst</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">power_available</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">eta_values</span><span class="p">]</span>
+
+    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">plot_airspeed_vs_power</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="s1">&#39;PowerDiagram&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;ggplot&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Power Available and Required as a Function of True Airspeed&#39;</span><span class="p">)</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prop_speed_range</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">power_available_cont</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Continuous Power&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prop_speed_range</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">power_available_burst</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Burst Power&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">speed_range</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">parasite_power</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Parasitic&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">speed_range</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">induced_power</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Induced&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">speed_range</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">power_required</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Required&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Plotting Velocities</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stall_speed</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-.&#39;</span><span class="p">,</span>
+                    <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$V_{\mathrm</span><span class="si">{stall}</span><span class="s1">}=</span><span class="si">%1.2f</span><span class="s1">$&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">stall_speed</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">endurance_velocity</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">rgb</span><span class="p">(</span><span class="n">MyColors</span><span class="o">.</span><span class="n">deep_green</span><span class="p">),</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-.&#39;</span><span class="p">,</span>
+                    <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$V_{\mathrm</span><span class="si">{end}</span><span class="s1">}=</span><span class="si">%1.2f</span><span class="s1">$&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">endurance_velocity</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cruise_velocity</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">endurance_velocity</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cruise_velocity</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-.&#39;</span><span class="p">,</span>
+                        <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$V_{\mathrm</span><span class="si">{cruise}</span><span class="s1">}=</span><span class="si">%1.2f</span><span class="s1">$&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">cruise_velocity</span><span class="p">)</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">maximum_velocity</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">rgb</span><span class="p">(</span><span class="n">MyColors</span><span class="o">.</span><span class="n">deep_purple</span><span class="p">),</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-.&#39;</span><span class="p">,</span>
+                    <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$V_{\mathrm</span><span class="si">{max}</span><span class="s1">}=</span><span class="si">%1.2f</span><span class="s1">$&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">maximum_velocity</span><span class="p">)</span>
+
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+        <span class="n">stall_zone</span> <span class="o">=</span> <span class="n">ptch</span><span class="o">.</span><span class="n">Rectangle</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">stall_speed</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor_in</span><span class="o">.</span><span class="n">power</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">stall_zone</span><span class="p">)</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$V_{\mathrm</span><span class="si">{TAS}</span><span class="s1">}$ [m/s]&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Power [W]&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed_range</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor_in</span><span class="o">.</span><span class="n">power</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fname</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;USER_DIR&#39;</span><span class="p">],</span> <span class="s1">&#39;plots&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">.pdf&#39;</span> <span class="o">%</span> <span class="n">fig</span><span class="o">.</span><span class="n">get_label</span><span class="p">()),</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;pdf&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s1">&#39;Figure Plotted and Saved&#39;</span>
+
+    <span class="nd">@Attribute</span>
+    <span class="k">def</span> <span class="nf">plot_lift_to_drag</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="s1">&#39;LiftvsDrag&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;ggplot&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Lift to Drag Ratio as a Function of True Airspeed&#39;</span><span class="p">)</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">speed_range</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lift_coefficients</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">drag_coefficients</span><span class="p">)</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$V_{\mathrm</span><span class="si">{TAS}</span><span class="s1">}$ [m/s]&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Lift to Drag Ratio [-]&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fname</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">DIRS</span><span class="p">[</span><span class="s1">&#39;USER_DIR&#39;</span><span class="p">],</span> <span class="s1">&#39;plots&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">.pdf&#39;</span> <span class="o">%</span> <span class="n">fig</span><span class="o">.</span><span class="n">get_label</span><span class="p">()),</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;pdf&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s1">&#39;Figure Plotted and Saved&#39;</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">parapy.gui</span> <span class="k">import</span> <span class="n">display</span>
+
+    <span class="n">obj</span> <span class="o">=</span> <span class="n">Performance</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Performance Analysis&#39;</span><span class="p">)</span>
+    <span class="n">display</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, San Kilkis, Nelson Johnson.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'1.0',
+            LANGUAGE:'en',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

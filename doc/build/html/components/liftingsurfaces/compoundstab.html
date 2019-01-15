@@ -1,0 +1,595 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>CompoundStabilizer &mdash; KBE 1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Fuselage Module" href="../fuselage/index.html" />
+    <link rel="prev" title="VerticalStablilizer" href="verticalstab.html" /> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> KBE
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../main.html">Main UAV</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../definitions.html">Definitions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../directories.html">Directories</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Components Module</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../battery.html">Li-PO Battery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../electronics/index.html">Electronics Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../electronics/electronics.html">Electronics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../electronics/flightcontroller.html">FlightController</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../electronics/speedcontroller.html">SpeedController</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">LiftingSurface Module</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="liftingsurfaceprim.html">LiftingSurface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="wing.html">Wing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scissorplot.html">ScissorPlot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="horizontalstab.html">HorizontalStabilizer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="verticalstab.html">VerticalStablilizer</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">CompoundStabilizer</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../fuselage/index.html">Fuselage Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../fuselage/fframe.html">Fuselage Frame (FFrame)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../fuselage/fcone.html">Fuselage Nose/Tail Cone (FCone)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../fuselage/mframe.html">Motor Frame (MFrame)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../fuselage/fuselage.html">Automatic Fuselage Generator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../fuselage/boom.html">Boom</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../motor.html">Electric Motor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../propeller/index.html">Propeller Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../propeller/propparser.html">Propeller Parser</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../propeller/propeller.html">Propeller</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../eoir.html">Electro-Optical Infra-Red Camera</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../design/index.html">Design Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../design/designinput.html">Design Input</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../design/paramgen.html">Parameter Generator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../design/weightestimator.html">Class I and II Weight Estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../design/wingpowerloading.html">Thrust and Power Loading</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../design/performance.html">Performance Verification</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../mycsv2dict.html">My CSV Dictionary</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">KBE</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Components Module</a> &raquo;</li>
+        
+          <li><a href="index.html">LiftingSurface Module</a> &raquo;</li>
+        
+      <li>CompoundStabilizer</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/components/liftingsurfaces/compoundstab.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-components.liftingsurfaces.compoundstab">
+<span id="compoundstabilizer"></span><h1>CompoundStabilizer<a class="headerlink" href="#module-components.liftingsurfaces.compoundstab" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="components.liftingsurfaces.compoundstab.CompoundStabilizer">
+<em class="property">class </em><code class="descclassname">components.liftingsurfaces.compoundstab.</code><code class="descname">CompoundStabilizer</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/components/liftingsurfaces/compoundstab.html#CompoundStabilizer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.liftingsurfaces.compoundstab.CompoundStabilizer" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class will instantiate the horizontal tail with the required area form the scissor plot. Also it will
+instantiate the vertical tails and position them relative to one another in a ‘boom tail’ conifguration.  It also
+places a connector at the VT and HT intersection for the fuselage booms.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">ParaPy Geometry of the VT</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>required_planform_area</strong> (<em>float</em>) – This is the required horizontal tail area of the main wings from the stability     analysis.</li>
+<li><strong>wing_planform_area</strong> (<em>float</em>) – This is the wing planfrom area in [m^2]</li>
+<li><strong>wing_mac_length</strong> (<em>float</em>) – This is the MAC length of the wing in SI meters</li>
+<li><strong>wing_semi_span</strong> (<em>float</em>) – This is the semispan of the wing in SI meters</li>
+<li><strong>lhc</strong> (<em>float</em>) – This is non-dimensionalized horizontal tail arm for the conventional plane.</li>
+<li><strong>configuration</strong> (<em>str</em>) – This is a switch to determine the configuration.</li>
+<li><strong>aspect_ratio</strong> (<em>float</em>) – This is the assumed Aspect Ratio of the HT Surface. The VT surface is a fixed AR of 1.4</li>
+<li><strong>taper</strong> (<em>float</em>) – This is the required Taper Ratio of the VT Surface.</li>
+<li><strong>twist</strong> (<em>float</em>) – This is the required Twist Angle of the Tip Airfoil w.r.t the Root Airfoil in degrees.</li>
+<li><strong>color</strong> (<em>tuple</em>) – Changes the color of the wing skin to the one defined in MyColors</li>
+<li><strong>ply_number</strong> (<em>int</em>) – Changes the number of ply’s of carbon fiber pre-preg.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="components.liftingsurfaces.compoundstab.CompoundStabilizer.aspect_ratio">
+<code class="descname">aspect_ratio</code><a class="headerlink" href="#components.liftingsurfaces.compoundstab.CompoundStabilizer.aspect_ratio" title="Permalink to this definition">¶</a></dt>
+<dd><p>Below is the assumed HT aspect ratio.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.compoundstab.CompoundStabilizer.boom_plane">
+<code class="descname">boom_plane</code><a class="reference internal" href="../../_modules/components/liftingsurfaces/compoundstab.html#CompoundStabilizer.boom_plane"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.liftingsurfaces.compoundstab.CompoundStabilizer.boom_plane" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the XZ-plane that is coincident with the boom connector.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Boom XZ Plane</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">Plane</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.compoundstab.CompoundStabilizer.center_of_gravity">
+<code class="descname">center_of_gravity</code><a class="reference internal" href="../../_modules/components/liftingsurfaces/compoundstab.html#CompoundStabilizer.center_of_gravity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.liftingsurfaces.compoundstab.CompoundStabilizer.center_of_gravity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Location of the center of gravity of the compound stabilizer w.r.t the origin. This is calculated with
+weighted averages.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Location Tuple in SI meter</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">Point</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.compoundstab.CompoundStabilizer.color">
+<code class="descname">color</code><a class="headerlink" href="#components.liftingsurfaces.compoundstab.CompoundStabilizer.color" title="Permalink to this definition">¶</a></dt>
+<dd><p>This value is used to set the default color of the wing-part</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.compoundstab.CompoundStabilizer.component_type">
+<code class="descname">component_type</code><a class="reference internal" href="../../_modules/components/liftingsurfaces/compoundstab.html#CompoundStabilizer.component_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.liftingsurfaces.compoundstab.CompoundStabilizer.component_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute names the component ‘ct’ for compound stabilizer.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Name of Compound Tail Configuration</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.compoundstab.CompoundStabilizer.configuration">
+<code class="descname">configuration</code><a class="headerlink" href="#components.liftingsurfaces.compoundstab.CompoundStabilizer.configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Below is a switch to determine the configuration.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.compoundstab.CompoundStabilizer.connector_left">
+<code class="descname">connector_left</code><a class="reference internal" href="../../_modules/components/liftingsurfaces/compoundstab.html#CompoundStabilizer.connector_left"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.liftingsurfaces.compoundstab.CompoundStabilizer.connector_left" title="Permalink to this definition">¶</a></dt>
+<dd><p>This rotates the extruded left boom shaft connector to point in the X direction.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Left Boom Connector</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">MirroredShape</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.compoundstab.CompoundStabilizer.connector_right">
+<code class="descname">connector_right</code><a class="reference internal" href="../../_modules/components/liftingsurfaces/compoundstab.html#CompoundStabilizer.connector_right"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.liftingsurfaces.compoundstab.CompoundStabilizer.connector_right" title="Permalink to this definition">¶</a></dt>
+<dd><p>This rotates the extruded right boom shaft connector to point in the X direction.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Right Boom Connector</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">RotatedShape</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.compoundstab.CompoundStabilizer.critical_thickness">
+<code class="descname">critical_thickness</code><a class="reference internal" href="../../_modules/components/liftingsurfaces/compoundstab.html#CompoundStabilizer.critical_thickness"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.liftingsurfaces.compoundstab.CompoundStabilizer.critical_thickness" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute finds the larger airfoil thickness of the HT or VT stabilizers to then be able to
+construct the tail-boom shaft with a radius equal to this larger thickness.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The larger airfoil thickness of the HT or VT</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.compoundstab.CompoundStabilizer.external_shape">
+<code class="descname">external_shape</code><a class="reference internal" href="../../_modules/components/liftingsurfaces/compoundstab.html#CompoundStabilizer.external_shape"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.liftingsurfaces.compoundstab.CompoundStabilizer.external_shape" title="Permalink to this definition">¶</a></dt>
+<dd><p>This defines the external shape for the ExternalBody class in definitions.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">CompoundStabilizer External Geometry</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">ScaledShape</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.compoundstab.CompoundStabilizer.internal_shape">
+<code class="descname">internal_shape</code><a class="reference internal" href="../../_modules/components/liftingsurfaces/compoundstab.html#CompoundStabilizer.internal_shape"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.liftingsurfaces.compoundstab.CompoundStabilizer.internal_shape" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the internal shape of the compound stabilizer. It is None because the current app uses a boom tail        structure instead of a single fuselage, and thus there is no shape to present for the fuselage builder.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.compoundstab.CompoundStabilizer.lhc">
+<code class="descname">lhc</code><a class="headerlink" href="#components.liftingsurfaces.compoundstab.CompoundStabilizer.lhc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Below is the non-dimensionalized horizontal tail arm</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.compoundstab.CompoundStabilizer.ply_number">
+<code class="descname">ply_number</code><a class="headerlink" href="#components.liftingsurfaces.compoundstab.CompoundStabilizer.ply_number" title="Permalink to this definition">¶</a></dt>
+<dd><p>Changes the number of ply’s of carbon fiber <a class="reference external" href="http://www.ijera.com/papers/Vol4_issue5/Version%202/J45025355.pdf">http://www.ijera.com/papers/Vol4_issue5/Version%202/J45025355.pdf</a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.compoundstab.CompoundStabilizer.required_planform_area">
+<code class="descname">required_planform_area</code><a class="headerlink" href="#components.liftingsurfaces.compoundstab.CompoundStabilizer.required_planform_area" title="Permalink to this definition">¶</a></dt>
+<dd><p>Below is the required horizontal tail area of the main wings from the stability analysis.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.compoundstab.CompoundStabilizer.stabilizer_h">
+<code class="descname">stabilizer_h</code><a class="reference internal" href="../../_modules/components/liftingsurfaces/compoundstab.html#CompoundStabilizer.stabilizer_h"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.liftingsurfaces.compoundstab.CompoundStabilizer.stabilizer_h" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is an instantiation of the <code class="xref py py-class docutils literal notranslate"><span class="pre">HorizontalStabilizer</span></code> class with the required planform area from the
+scissor plot.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Horizontal Tail Object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">Fused</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.compoundstab.CompoundStabilizer.stabilizer_vleft">
+<code class="descname">stabilizer_vleft</code><a class="reference internal" href="../../_modules/components/liftingsurfaces/compoundstab.html#CompoundStabilizer.stabilizer_vleft"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.liftingsurfaces.compoundstab.CompoundStabilizer.stabilizer_vleft" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is an instantiation of the <code class="xref py py-class docutils literal notranslate"><span class="pre">VerticalStabilizer</span></code> with the current aircraft dimensions for the         left VT.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Left Vertical Tail Object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="verticalstab.html#components.liftingsurfaces.verticalstab.VerticalStabilizer" title="components.liftingsurfaces.verticalstab.VerticalStabilizer">VerticalStabilizer</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.compoundstab.CompoundStabilizer.stabilizer_vright">
+<code class="descname">stabilizer_vright</code><a class="reference internal" href="../../_modules/components/liftingsurfaces/compoundstab.html#CompoundStabilizer.stabilizer_vright"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.liftingsurfaces.compoundstab.CompoundStabilizer.stabilizer_vright" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is an instantiation of the <code class="xref py py-class docutils literal notranslate"><span class="pre">VerticalStabilizer</span></code> class with the current aircraft dimensions for
+the right VT.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Right Vertical Tail Object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">Fused</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.compoundstab.CompoundStabilizer.tail_joiner">
+<code class="descname">tail_joiner</code><a class="reference internal" href="../../_modules/components/liftingsurfaces/compoundstab.html#CompoundStabilizer.tail_joiner"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.liftingsurfaces.compoundstab.CompoundStabilizer.tail_joiner" title="Permalink to this definition">¶</a></dt>
+<dd><p>This joins the tails and connector shafts together through a series of Fuse operations to be able to
+present a single <cite>external_shape</cite> required for the .step file output.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">ParaPy Fused Boxes</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">Fused</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.compoundstab.CompoundStabilizer.tail_shaft_circle">
+<code class="descname">tail_shaft_circle</code><a class="reference internal" href="../../_modules/components/liftingsurfaces/compoundstab.html#CompoundStabilizer.tail_shaft_circle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.liftingsurfaces.compoundstab.CompoundStabilizer.tail_shaft_circle" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute makes a circle with thickness found from ‘critical_thickness’ attribute and extrudes it
+along the HT tip chord.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Boom Connector Cross-Section and Extrude</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.compoundstab.CompoundStabilizer.taper">
+<code class="descname">taper</code><a class="headerlink" href="#components.liftingsurfaces.compoundstab.CompoundStabilizer.taper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Below is the assumed VT taper ratio.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.compoundstab.CompoundStabilizer.twist">
+<code class="descname">twist</code><a class="headerlink" href="#components.liftingsurfaces.compoundstab.CompoundStabilizer.twist" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the wing twist for the VT.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.compoundstab.CompoundStabilizer.weight">
+<code class="descname">weight</code><a class="reference internal" href="../../_modules/components/liftingsurfaces/compoundstab.html#CompoundStabilizer.weight"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#components.liftingsurfaces.compoundstab.CompoundStabilizer.weight" title="Permalink to this definition">¶</a></dt>
+<dd><p>Total mass of the compound tail.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Mass in SI kilogram</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.compoundstab.CompoundStabilizer.wing_mac_length">
+<code class="descname">wing_mac_length</code><a class="headerlink" href="#components.liftingsurfaces.compoundstab.CompoundStabilizer.wing_mac_length" title="Permalink to this definition">¶</a></dt>
+<dd><p>Below is the MAC length of the wing</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.compoundstab.CompoundStabilizer.wing_planform_area">
+<code class="descname">wing_planform_area</code><a class="headerlink" href="#components.liftingsurfaces.compoundstab.CompoundStabilizer.wing_planform_area" title="Permalink to this definition">¶</a></dt>
+<dd><p>Below is the required TOTAL wing area of the main wings.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="components.liftingsurfaces.compoundstab.CompoundStabilizer.wing_semi_span">
+<code class="descname">wing_semi_span</code><a class="headerlink" href="#components.liftingsurfaces.compoundstab.CompoundStabilizer.wing_semi_span" title="Permalink to this definition">¶</a></dt>
+<dd><p>Below is the semispan of the wing</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../fuselage/index.html" class="btn btn-neutral float-right" title="Fuselage Module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="verticalstab.html" class="btn btn-neutral" title="VerticalStablilizer" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, San Kilkis, Nelson Johnson.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'1.0',
+            LANGUAGE:'en',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

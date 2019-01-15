@@ -1,0 +1,6 @@
+Directories
+===============================
+
+.. automodule:: directories
+   :members:
+
