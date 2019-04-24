@@ -87,7 +87,7 @@ class HorizontalStabilizer(ExternalBody, LiftingSurface):
     airfoil_choice = Input('NACA0012')
 
     #: Changes the number of ply's of carbon fiber http://www.ijera.com/papers/Vol4_issue5/Version%202/J45025355.pdf
-    ply_number = Input(4, validator=val.Instance(int))
+    ply_number = Input(4, validator=val.IsInstance(int))
 
     @offset.on_slot_change
     def sweep_validator(self):

@@ -40,9 +40,9 @@ class ParameterGenerator(Base):
 
     configuration = Input('conventional', validator=val.OneOf(['conventional']),settable=__settable__)
 
-    handlaunch = Input(True, validator=val.Instance(bool), settable=__settable__)
+    handlaunch = Input(True, validator=val.IsInstance(bool), settable=__settable__)
 
-    portable = Input(True, validator=val.Instance(bool), settable=__settable__)
+    portable = Input(True, validator=val.IsInstance(bool), settable=__settable__)
 
     @target_value.on_slot_change
     def payload_checker(self):

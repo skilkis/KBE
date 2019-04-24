@@ -34,16 +34,16 @@ class Fuselage(ExternalBody):
 
     #: Type of containers at each station, possible entries (nose, container, motor, tail)
     #: :type: str list
-    compartment_type = Input(['', ''], validator=val.Instance(list))
+    compartment_type = Input(['', ''], validator=val.IsInstance(list))
 
     #: Parts that the fuselage will be sized for, these must correspond to the entries given in `compartment_type`
     #: :type: list
     # sizing_parts = Input()
-    sizing_parts = Input([None, None], validator=val.Instance(list))
+    sizing_parts = Input([None, None], validator=val.IsInstance(list))
 
     #: Disables Automatic Fuselage Frame (FFrame) Creation and allows instead manual user-input to set the shape
     #: :type: bool
-    auto_fuselage_disable = Input(False, validator=val.Instance(bool))
+    auto_fuselage_disable = Input(False, validator=val.IsInstance(bool))
 
     #: Sets the Padding Factor between Fuselage Sizing Parts
     #: :type: bool
@@ -51,15 +51,15 @@ class Fuselage(ExternalBody):
 
     #: Initiates the automatic frame minimization WARNING: May lead to intersecting surfaces
     #: :type: bool
-    minimize_frames = Input(False, validator=val.Instance(bool))
+    minimize_frames = Input(False, validator=val.IsInstance(bool))
 
     #: Linearly joins the frames of the center fuselage WARNING: May lead to errors at the tail cone
     #: :type: bool
-    ruled = Input(False, validator=val.Instance(bool))
+    ruled = Input(False, validator=val.IsInstance(bool))
 
     #: Toggles transparency of the fuselage
     #: :type: bool
-    make_transparent = Input(False, validator=val.Instance(bool))
+    make_transparent = Input(False, validator=val.IsInstance(bool))
 
     #: Sets the color of the fuselage (Overwritten from the default yellow)
     #: :type: str or Tuple
@@ -67,7 +67,7 @@ class Fuselage(ExternalBody):
 
     #: Changes the number of ply's of carbon fiber http://www.ijera.com/papers/Vol4_issue5/Version%202/J45025355.pdf
     #: :type: tuple
-    ply_number = Input(3, validator=val.Instance(int))
+    ply_number = Input(3, validator=val.IsInstance(int))
 
     @compartment_type.on_slot_change
     def compartment_validator(self):

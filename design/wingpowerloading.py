@@ -92,7 +92,7 @@ class WingPowerLoading(Base):
     weight_payload = Input(0.2, validator=val.Positive(), settable=__settable__)
 
     #: Switch case to determine if the user requires the UAV to be hand launched which affects the stall speed
-    handlaunch = Input(True, validator=val.Instance(bool), settable=__settable__)
+    handlaunch = Input(True, validator=val.IsInstance(bool), settable=__settable__)
 
     #: STD ISA Sea Level Density in SI kilogram per meter cubed [kg/m^3]
     rho = Input(1.225, validator=val.Positive(), settable=__settable__)
@@ -101,7 +101,7 @@ class WingPowerLoading(Base):
     rho_cr = Input(0.9091, validator=val.Positive(), settable=__settable__)
 
     #: This is a list of three C_lmax's that the wing is assumed to generate. This creates multiple lines on the plots.
-    maximum_lift_coefficient = Input([1.0, 1.25, 1.5], val.Instance(list))
+    maximum_lift_coefficient = Input([1.0, 1.25, 1.5], val.IsInstance(list))
 
     #: This is the assumed propeller efficiency.
     eta_prop = Input(0.7, validator=val.Positive())

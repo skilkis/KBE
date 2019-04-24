@@ -91,7 +91,7 @@ class DesignInput(Base):
     configuration = Input('conventional', validator=val.OneOf(['conventional']))
 
     #: Sets the design point of the UAV to be hand-launchable
-    handlaunch = Input(True, validator=val.Instance(bool))
+    handlaunch = Input(True, validator=val.IsInstance(bool))
 
     @target_value.on_slot_change
     def weight_checker(self):

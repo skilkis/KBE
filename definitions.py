@@ -41,7 +41,7 @@ class VisualCG(GeomBase):
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'cg.png')
     __initargs__ = ["vis_cog"]
 
-    vis_cog = Input(Point(0, 0, 0), validator=val.Instance(Point))
+    vis_cog = Input(Point(0, 0, 0), validator=val.IsInstance(Point))
     scale = Input(0.01, validator=val.Positive())
     color = Input('yellow')
 
@@ -76,10 +76,10 @@ class Component(GeomBase):
 
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'gear.png')
 
-    position = Input(Position(Point(0, 0, 0)), validator=val.Instance(Position))  # Locks Orientation to that defined inside the component
-    inside_fuselage = Input(True, validator=val.Instance(bool))  # Defaults to treating the component as a `sizing_part` used in fuselage construction
-    hide_labels = Input(True, validator=val.Instance(bool))
-    hide_cg = Input(True, validator=val.Instance(bool))
+    position = Input(Position(Point(0, 0, 0)), validator=val.IsInstance(Position))  # Locks Orientation to that defined inside the component
+    inside_fuselage = Input(True, validator=val.IsInstance(bool))  # Defaults to treating the component as a `sizing_part` used in fuselage construction
+    hide_labels = Input(True, validator=val.IsInstance(bool))
+    hide_cg = Input(True, validator=val.IsInstance(bool))
 
     @Attribute
     def component_type(self):
@@ -157,7 +157,7 @@ class ExternalBody(Component):
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'air.png')
 
     material_choice = Input('cfrp', validator=val.OneOf(['cfrp']))
-    ply_number = Input(1, validator=val.Instance(int))
+    ply_number = Input(1, validator=val.IsInstance(int))
 
     @Attribute
     def weight(self):

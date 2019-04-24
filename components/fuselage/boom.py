@@ -35,16 +35,16 @@ class Boom(ExternalBody):
 
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'booms.png')
 
-    wing_in = Input(Wing(), validator=val.Instance(Wing))
+    wing_in = Input(Wing(), validator=val.IsInstance(Wing))
 
-    tail_in = Input(CompoundStabilizer(), validator=val.Instance(CompoundStabilizer))
+    tail_in = Input(CompoundStabilizer(), validator=val.IsInstance(CompoundStabilizer))
 
     diameter_factor = Input(0.75, validator=val.Between(0.5, 1.0))
 
     #: Changes the number of ply's of carbon fiber http://www.ijera.com/papers/Vol4_issue5/Version%202/J45025355.pdf
-    ply_number = Input(3, validator=val.Instance(int))
+    ply_number = Input(3, validator=val.IsInstance(int))
 
-    color = Input(MyColors.dark_grey, validator=val.Instance(tuple))
+    color = Input(MyColors.dark_grey, validator=val.IsInstance(tuple))
 
     @Attribute
     def center_of_gravity(self):

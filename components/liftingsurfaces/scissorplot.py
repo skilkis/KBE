@@ -88,16 +88,16 @@ class ScissorPlot(Base):
 
 #  This block of code contains the inputs. ########---------------------------------------------------------------------
     #: Below is the current COG position
-    x_cg = Input(0.3, validator=val.Instance(float), settable=__settable__)
+    x_cg = Input(0.3, validator=val.IsInstance(float), settable=__settable__)
 
     #: Below is the current Aerodynamic Center position
-    x_ac = Input(0.1, validator=val.Instance(float), settable=__settable__)
+    x_ac = Input(0.1, validator=val.IsInstance(float), settable=__settable__)
 
     #: Below is the current leading edge of the MAC position
-    x_lemac = Input(0.0, validator=val.Instance(float), settable=__settable__)
+    x_lemac = Input(0.0, validator=val.IsInstance(float), settable=__settable__)
 
     #: Below is the MAC length
-    mac = Input(1.0, validator=val.Instance(float), settable=__settable__)
+    mac = Input(1.0, validator=val.IsInstance(float), settable=__settable__)
 
     #: Below is the wing aspect ratio.
     AR = Input(9.0, validator=val.Range(1.0, 30.0), settable=__settable__)

@@ -38,11 +38,11 @@ class Motor(Component):
 
     target_power = Input(100.0, validator=val.Positive())
 
-    motor_name = Input('Not Specified', validator=val.Instance(str))
+    motor_name = Input('Not Specified', validator=val.IsInstance(str))
 
     integration = Input('pusher', validator=val.OneOf(["pusher", "puller"]))
 
-    position = Input(Position(Point(0, 0, 0)), validator=val.Instance(Position))
+    position = Input(Position(Point(0, 0, 0)), validator=val.IsInstance(Position))
 
     @Attribute
     def browse_motors(self):
