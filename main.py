@@ -22,8 +22,8 @@ import copy
 import xlwt
 import matplotlib.pyplot as plt
 
-
 # TODO (TBD) Visualize performance in the GUI through the addition of bar-charts utilizing ParaPy Boxes
+
 
 class UAV(DesignInput):
     """  This class will generate UAV aircraft. It inherits from 'DesignInput.py' so that the input requirements are

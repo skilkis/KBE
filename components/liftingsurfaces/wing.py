@@ -81,10 +81,10 @@ class Wing(ExternalBody, LiftingSurface):
     fuse_width_factor = Input(0.07, validator=val.Range(0.001, 0.1))
 
     #: Below is a switch to hide/show the bbox of the wing section within the fuselage.
-    hide_bbox = Input(False, validator=val.Instance(bool))
+    hide_bbox = Input(False, validator=val.IsInstance(bool))
 
     #: Overwrites input from LiftingSurface to hide the Mean Aerodynamic Chord part
-    hide_mac = Input(True, validator=val.Instance(bool))
+    hide_mac = Input(True, validator=val.IsInstance(bool))
 
     #: Below is the chosen mesh deflection. It's is an optimum point between a good quality render and performance
     mesh_deflection = Input(0.0001, validator=val.Range(0.00001, 0.001))
@@ -93,7 +93,7 @@ class Wing(ExternalBody, LiftingSurface):
     color = Input(MyColors.skin_color)
 
     #: Changes the number of ply's of carbon fiber http://www.ijera.com/papers/Vol4_issue5/Version%202/J45025355.pdf
-    ply_number = Input(5, validator=val.Instance(int))
+    ply_number = Input(5, validator=val.IsInstance(int))
 
     #: Fixes the wing in place in order to use it as the datum for other parts
     position = Input(Position(XOY), settable=False)

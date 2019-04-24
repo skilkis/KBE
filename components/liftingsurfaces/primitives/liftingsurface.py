@@ -98,13 +98,13 @@ class LiftingSurface(GeomBase):
         return None
 
     #: Boolean below allows the MAC curve to be shown on the wing when changed in the GUI to False.
-    hide_mac = Input(True, validator=val.Instance(bool))
+    hide_mac = Input(True, validator=val.IsInstance(bool))
 
     #: Boolean below allows the leading edge line to be shown (without dihedral).
-    hide_leading_edge = Input(True, validator=val.Instance(bool))
+    hide_leading_edge = Input(True, validator=val.IsInstance(bool))
 
     #: A switch case that determines if the `planform_area` is half of the total required area
-    is_half = Input(False, validator=val.Instance(bool))
+    is_half = Input(False, validator=val.IsInstance(bool))
 
     #: The default value is an optimum between a good quality render and performance.
     mesh_deflection = Input(0.0001, validator=val.Range(0.00001, 0.001))

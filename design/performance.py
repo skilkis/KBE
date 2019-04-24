@@ -48,25 +48,25 @@ class Performance(Base):
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'performance.png')
 
     #: Instantiated Motor Object
-    motor_in = Input(Motor(), validator=val.Instance(Motor))
+    motor_in = Input(Motor(), validator=val.IsInstance(Motor))
 
     #: Instantiated Propeller Object
-    propeller_in = Input(Propeller(), validator=val.Instance(Propeller))
+    propeller_in = Input(Propeller(), validator=val.IsInstance(Propeller))
 
     #: Instantiated Battery Object
-    battery_in = Input(Battery(), validator=val.Instance(Battery))
+    battery_in = Input(Battery(), validator=val.IsInstance(Battery))
 
     #: Instantiated Wing Object
-    wing_in = Input(Wing(), validator=val.Instance(Wing))
+    wing_in = Input(Wing(), validator=val.IsInstance(Wing))
 
     #: The Maximum Take-Off Weight from bottoms-up Class II in SI kilogram [kg]
-    weight_mtow = Input(5.0, validator=val.Instance(float))
+    weight_mtow = Input(5.0, validator=val.IsInstance(float))
 
     #: The Parasitic Drag Coefficient (C_D_0)
-    parasitic_drag = Input(0.02, validator=val.Instance(float))
+    parasitic_drag = Input(0.02, validator=val.IsInstance(float))
 
     #: Oswald Span Efficiency Factor
-    oswald_factor = Input(0.85, validator=val.Instance(float))
+    oswald_factor = Input(0.85, validator=val.IsInstance(float))
 
     #: Switch Case to determine if the C.G. has converged prior to running the Performance Estimation
     cg_valid = Input(False)

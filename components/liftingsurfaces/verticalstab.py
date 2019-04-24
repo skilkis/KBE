@@ -82,11 +82,11 @@ class VerticalStabilizer(ExternalBody, LiftingSurface):
     wing_semi_span = Input(1.9, validator=val.Positive())
 
     #: Below is non-dimensionalized vertical tail arm for the conventional plane.
-    lvc = Input(3.0, validator=val.Instance(float))
+    lvc = Input(3.0, validator=val.IsInstance(float))
 
     #: Below is non-dimensionalized vertical tail arm for the canard plane. Note for the canard the VTP is is much
     # closer to the main wing!
-    lvc_canard = Input(0.5, validator=val.Instance(float))
+    lvc_canard = Input(0.5, validator=val.IsInstance(float))
 
     #: Below is a switch to determine the configuration.
     configuration = Input('conventional', validator=val.OneOf(['canard', 'conventional']))
@@ -95,7 +95,7 @@ class VerticalStabilizer(ExternalBody, LiftingSurface):
     aspect_ratio = Input(1.4, validator=val.Positive())
 
     #: This overwrites the is_half parameter from the class `LiftingSurface`.
-    is_half = Input(True, validator=val.Instance(bool))
+    is_half = Input(True, validator=val.IsInstance(bool))
 
     #: Below is the assumed VT taper ratio.
     taper = Input(0.35, validator=val.Range(0.1, 1.0))
@@ -116,7 +116,7 @@ class VerticalStabilizer(ExternalBody, LiftingSurface):
     airfoil_choice = Input('NACA0012')
 
     #: Changes the number of ply's of carbon fiber http://www.ijera.com/papers/Vol4_issue5/Version%202/J45025355.pdf
-    ply_number = Input(3, validator=val.Instance(int))
+    ply_number = Input(3, validator=val.IsInstance(int))
 
 
 # Attributes below------------------------------------------------------------------------------------------------------

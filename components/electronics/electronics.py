@@ -31,9 +31,9 @@ class Electronics(Component):
     __icon__ = os.path.join(DIRS['ICON_DIR'], 'electronics.png')
 
     #  If multiple motors put in, give [] within input parentheses
-    motor_in = Input(Motor(), validator=val.Instance(Motor))
+    motor_in = Input(Motor(), validator=val.IsInstance(Motor))
 
-    label = Input('Electronics', validator=val.Instance(str))
+    label = Input('Electronics', validator=val.IsInstance(str))
 
     @Attribute
     def component_type(self):

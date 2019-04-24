@@ -88,7 +88,7 @@ class CompoundStabilizer(ExternalBody):
     color = Input(MyColors.skin_color)
 
     #: Changes the number of ply's of carbon fiber http://www.ijera.com/papers/Vol4_issue5/Version%202/J45025355.pdf
-    ply_number = Input(3, validator=val.Instance(int))
+    ply_number = Input(3, validator=val.IsInstance(int))
 
     @Part
     def stabilizer_h(self):

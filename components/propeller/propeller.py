@@ -59,7 +59,7 @@ class Propeller(ExternalBody):
     #:  A parameter for debugging, turns the visibility of miscellaneous parts ON/OFF
     __show_primitives = False  # type: bool
 
-    motor = Input(Motor(integration='puller'), validator=val.Instance(Motor))
+    motor = Input(Motor(integration='puller'), validator=val.IsInstance(Motor))
     design_speed = Input(15, validator=val.Range(0, 50))
 
     #: Sets the default directory for the propeller data files
